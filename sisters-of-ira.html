@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sisters of Ira — Faction Codex | Nine Realms</title>
+<style>
+:root{
+  --void:       #030202;
+  --tower:      #0A0608;
+  --crypt:      #0E080A;
+  --vault:      #120A0C;
+
+  --gold:       #6A4A0C;
+  --gold-mid:   #A4780F;
+  --gold-pale:  #D4A020;
+  --gold-bright:#F0C040;
+
+  --blood:      #4A0810;
+  --blood-mid:  #7A0E18;
+  --blood-pale: #C01828;
+  --blood-bright:#E02838;
+
+  --violet:     #200A38;
+  --violet-mid: #401870;
+  --violet-pale:#7038B0;
+  --violet-bright:#9858E0;
+
+  --parch:      #B4A8A0;
+  --parch-pale: #D8CCC4;
+  --parch-dim:  #504440;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+.display{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;}
+.mono{font-family:'Courier New',Courier,monospace;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:60vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 65% at 50% 0%,rgba(164,120,15,0.06) 0%,transparent 65%);animation:eclipseBreath 11s ease-in-out infinite;}
+@keyframes eclipseBreath{0%,100%{opacity:0.5;}50%{opacity:1;}}
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.02;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(192,24,40,0.05) 3px,rgba(192,24,40,0.05) 4px);}
+
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--gold-bright);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(212,160,32,0.35);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.lit{width:46px;height:46px;border-color:var(--gold-bright);box-shadow:0 0 14px rgba(212,160,32,0.3);}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(3,2,2,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(212,160,32,0.12);}
+.nav-brand-name{font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Courier New',monospace;font-size:9px;color:var(--gold-pale);opacity:0.5;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-brand{text-decoration:none;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-pale);border:1px solid rgba(212,160,32,0.25);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--gold-mid);}
+
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse 80% 70% at 50% 45%,#180E04 0%,#0C0808 45%,var(--void) 75%);}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-sys{font-family:'Courier New',monospace;font-size:10px;color:var(--gold-pale);opacity:0;animation:riseIn 1s .2s ease forwards;margin-bottom:16px;letter-spacing:0.06em;display:flex;align-items:center;justify-content:center;gap:12px;}
+.h-sys::before,.h-sys::after{content:'☾';color:rgba(212,160,32,0.3);}
+.h-label{font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;display:block;margin-bottom:10px;}
+.h-name{font-size:clamp(38px,7vw,100px);font-weight:900;color:var(--gold-pale);letter-spacing:0.03em;line-height:0.9;text-shadow:0 0 120px rgba(212,160,32,0.35),0 0 60px rgba(192,24,40,0.2),0 4px 40px rgba(0,0,0,0.95);opacity:0;animation:riseIn 1.8s .5s ease forwards;}
+.h-sub{font-size:clamp(11px,1.6vw,18px);letter-spacing:0.2em;color:var(--blood-bright);opacity:0;animation:riseIn 1s .78s ease forwards;display:block;margin-top:10px;font-style:italic;}
+.h-rule{width:260px;height:1px;background:linear-gradient(to right,transparent,rgba(212,160,32,0.4),rgba(192,24,40,0.3),transparent);margin:22px auto;opacity:0;animation:fadeIn 1s 1.05s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-oath{font-style:italic;font-size:clamp(14px,1.7vw,18px);color:rgba(180,168,160,0.5);max-width:720px;margin:0 auto 36px;line-height:1.85;border-left:2px solid rgba(192,24,40,0.35);padding-left:20px;text-align:left;opacity:0;animation:riseIn 1.2s 1.15s ease forwards;}
+.h-vitals{display:flex;justify-content:center;max-width:840px;margin:0 auto;border:1px solid rgba(212,160,32,0.12);opacity:0;animation:riseIn 1s 1.5s ease forwards;flex-wrap:wrap;}
+.h-vital{flex:1;min-width:120px;padding:15px 10px;text-align:center;border-right:1px solid rgba(212,160,32,0.08);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Courier New',monospace;font-size:clamp(9px,1.3vw,14px);color:var(--gold-pale);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Courier New',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:34px;background:linear-gradient(to bottom,var(--gold-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+.sl{font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.06em;color:var(--gold-pale);opacity:0.45;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(212,160,32,0.15),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-size:14px;color:var(--gold-mid);opacity:0.35;}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.12s;}.d2{transition-delay:.24s;}.d3{transition-delay:.36s;}
+.big-h{font-size:clamp(22px,3.1vw,42px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:20px;}
+.big-h em{font-style:italic;color:var(--gold-pale);}
+.big-h em.blood{color:var(--blood-bright);}
+.big-h em.violet{color:var(--violet-bright);}
+.bp{font-size:clamp(15px,1.7vw,18px);color:rgba(180,168,160,0.6);line-height:1.85;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--gold-pale);}
+.pull{margin:20px 0;padding:16px 22px;border-left:2px solid var(--gold-mid);background:rgba(164,120,15,0.05);}
+.pull p{font-style:italic;font-size:clamp(14px,1.7vw,19px);color:rgba(180,168,160,0.75);line-height:1.7;}
+.pull cite{font-family:'Courier New',monospace;font-size:9px;color:var(--gold-pale);opacity:0.35;display:block;margin-top:8px;font-style:normal;letter-spacing:0.04em;}
+
+.sec{padding:100px 60px;position:relative;overflow:hidden;}
+.sec-a{background:var(--tower);}
+.sec-b{background:var(--crypt);}
+.sec-c{background:var(--vault);}
+.inner{max-width:1200px;margin:0 auto;}
+.inner-md{max-width:1100px;margin:0 auto;}
+
+.spec-table{margin-top:20px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(212,160,32,0.1);}
+.srow{display:grid;grid-template-columns:130px 1fr;overflow:hidden;}
+.srk{font-family:'Courier New',monospace;font-size:9px;color:var(--gold-pale);opacity:0.5;background:rgba(212,160,32,0.03);padding:11px 12px;border-right:1px solid rgba(212,160,32,0.07);letter-spacing:0.03em;}
+.srv{font-style:italic;font-size:14px;color:rgba(180,168,160,0.55);padding:9px 14px;line-height:1.5;}
+.srv strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+.art-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:16px;}
+.art-item{padding:14px 12px;border:1px solid rgba(212,160,32,0.08);background:rgba(212,160,32,0.02);text-align:center;transition:border-color .3s;}
+.art-item:hover{border-color:rgba(212,160,32,0.25);}
+.art-num{font-size:20px;color:rgba(212,160,32,0.3);margin-bottom:4px;}
+.art-text{font-style:italic;font-size:12px;color:rgba(180,168,160,0.5);}
+
+/* Rank ladder */
+.rank-ladder{display:flex;flex-direction:column;gap:2px;margin-top:36px;}
+.rank-tier{display:grid;grid-template-columns:50px 200px 1fr;border:1px solid rgba(212,160,32,0.07);overflow:hidden;transition:border-color .3s,background .3s;}
+.rank-tier:hover{border-color:rgba(212,160,32,0.2);background:rgba(212,160,32,0.02);}
+.rt-num{padding:14px;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold-pale);opacity:0.5;border-right:1px solid rgba(212,160,32,0.05);}
+.rt-name{padding:14px 16px;border-right:1px solid rgba(212,160,32,0.05);display:flex;align-items:center;font-size:13px;letter-spacing:0.08em;color:var(--parch-pale);}
+.rt-desc{padding:12px 18px;font-style:italic;font-size:13px;color:rgba(180,168,160,0.5);line-height:1.55;display:flex;align-items:center;}
+
+/* Officer cards */
+.officer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:40px;}
+.off-card{padding:24px 20px;border:1px solid rgba(212,160,32,0.08);background:rgba(6,4,4,0.6);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.off-card:hover{border-color:rgba(212,160,32,0.25);background:rgba(212,160,32,0.03);}
+.off-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.off-card:hover::after{transform:scaleX(1);}
+.off-title{font-family:'Courier New',monospace;font-size:7px;color:var(--gold-pale);opacity:0.5;letter-spacing:0.1em;display:block;margin-bottom:8px;}
+.off-name{font-size:clamp(14px,1.7vw,19px);color:var(--parch-pale);letter-spacing:0.06em;margin-bottom:4px;}
+.off-epithet{font-style:italic;font-size:12px;color:var(--blood-bright);display:block;margin-bottom:10px;}
+.off-body{font-style:italic;font-size:12.5px;color:rgba(180,168,160,0.5);line-height:1.6;margin-bottom:8px;}
+.off-lane{font-family:'Courier New',monospace;font-size:8px;color:rgba(180,168,160,0.35);padding-top:8px;border-top:1px solid rgba(212,160,32,0.06);letter-spacing:0.03em;}
+.off-link{display:inline-block;margin-top:10px;font-family:'Courier New',monospace;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-pale);text-decoration:none;border:1px solid rgba(212,160,32,0.2);padding:4px 10px;transition:border-color .3s;}
+.off-link:hover{border-color:var(--gold-pale);}
+
+/* Rites */
+.rite-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:36px;}
+.rite-card{padding:22px 24px;border:1px solid rgba(212,160,32,0.08);background:rgba(6,4,4,0.5);transition:border-color .3s;}
+.rite-card:hover{border-color:rgba(212,160,32,0.22);}
+.rite-name{font-size:14px;color:var(--parch-pale);letter-spacing:0.06em;margin-bottom:6px;}
+.rite-purpose{font-family:'Courier New',monospace;font-size:8px;color:var(--gold-pale);opacity:0.5;letter-spacing:0.05em;display:block;margin-bottom:8px;}
+.rite-body{font-style:italic;font-size:13px;color:rgba(180,168,160,0.5);line-height:1.6;}
+
+/* Relic cards */
+.relic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:36px;}
+.relic-card{padding:22px 20px;border:1px solid rgba(96,24,144,0.1);background:rgba(32,10,56,0.06);transition:border-color .3s;}
+.relic-card:hover{border-color:rgba(96,24,144,0.28);}
+.relic-type{font-family:'Courier New',monospace;font-size:7px;color:var(--violet-bright);opacity:0.6;letter-spacing:0.1em;display:block;margin-bottom:8px;}
+.relic-name{font-size:14px;color:var(--parch-pale);letter-spacing:0.04em;margin-bottom:8px;}
+.relic-body{font-style:italic;font-size:12.5px;color:rgba(180,168,160,0.5);line-height:1.6;margin-bottom:8px;}
+.relic-cost{font-family:'Courier New',monospace;font-size:8px;color:var(--blood-bright);opacity:0.7;padding-top:8px;border-top:1px solid rgba(96,24,144,0.1);}
+
+/* Tech cards */
+.tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:36px;}
+.tech-card{padding:20px 22px;border:1px solid rgba(212,160,32,0.08);background:rgba(6,4,4,0.5);transition:border-color .3s;}
+.tech-card:hover{border-color:rgba(212,160,32,0.22);}
+.tech-name{font-size:13px;color:var(--parch-pale);letter-spacing:0.05em;margin-bottom:6px;}
+.tech-body{font-style:italic;font-size:12.5px;color:rgba(180,168,160,0.5);line-height:1.6;}
+
+/* Rival ecosystem */
+.rival-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:36px;}
+.rival-card{padding:18px 18px;border:1px solid rgba(192,24,40,0.09);background:rgba(74,8,16,0.04);transition:border-color .3s;}
+.rival-card:hover{border-color:rgba(192,24,40,0.25);}
+.rival-cat{font-family:'Courier New',monospace;font-size:7px;color:var(--blood-bright);opacity:0.6;letter-spacing:0.1em;display:block;margin-bottom:6px;}
+.rival-name{font-size:13px;color:var(--parch-pale);letter-spacing:0.04em;margin-bottom:6px;}
+.rival-body{font-style:italic;font-size:12px;color:rgba(180,168,160,0.45);line-height:1.55;}
+
+/* Story arc slate */
+.arc-list{display:flex;flex-direction:column;gap:2px;margin-top:36px;}
+.arc-row{display:grid;grid-template-columns:36px 240px 1fr;border:1px solid rgba(212,160,32,0.07);overflow:hidden;transition:border-color .3s,background .3s;}
+.arc-row:hover{border-color:rgba(212,160,32,0.2);background:rgba(212,160,32,0.02);}
+.ar-num{padding:16px;background:rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gold-pale);opacity:0.4;border-right:1px solid rgba(212,160,32,0.05);}
+.ar-title-block{padding:14px 16px;border-right:1px solid rgba(212,160,32,0.05);display:flex;flex-direction:column;justify-content:center;}
+.ar-title{font-size:13px;color:var(--parch-pale);letter-spacing:0.04em;margin-bottom:3px;}
+.ar-genre{font-family:'Courier New',monospace;font-size:7px;color:var(--gold-pale);opacity:0.45;letter-spacing:0.04em;}
+.ar-reveal{padding:12px 18px;font-style:italic;font-size:12.5px;color:rgba(180,168,160,0.5);line-height:1.55;display:flex;align-items:center;}
+.ar-reveal strong{color:var(--parch-pale);font-style:normal;}
+
+/* Monastery cell grid */
+.cell-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-top:36px;}
+.cell-card{padding:16px 14px;border:1px solid rgba(212,160,32,0.07);background:rgba(6,4,4,0.5);transition:border-color .3s;}
+.cell-card:hover{border-color:rgba(212,160,32,0.22);}
+.cell-role{font-family:'Courier New',monospace;font-size:7px;color:var(--gold-pale);opacity:0.5;letter-spacing:0.05em;display:block;margin-bottom:6px;}
+.cell-name{font-size:12.5px;color:var(--parch-pale);letter-spacing:0.03em;margin-bottom:6px;}
+.cell-body{font-style:italic;font-size:11px;color:rgba(180,168,160,0.45);line-height:1.5;}
+.cell-symbol{font-family:'Courier New',monospace;font-size:8px;color:var(--blood-bright);opacity:0.6;padding-top:6px;margin-top:6px;border-top:1px solid rgba(212,160,32,0.06);}
+
+/* Ira Heresies digest */
+.digest-block{margin-top:36px;padding:36px;border:1px solid rgba(212,160,32,0.15);background:rgba(6,4,4,0.7);position:relative;overflow:hidden;}
+.digest-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(164,120,15,0.06) 0%,transparent 70%);}
+.digest-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold-mid),transparent);}
+.dg-c{position:relative;z-index:1;}
+.dg-badge{font-family:'Courier New',monospace;font-size:8px;color:var(--gold-pale);border:1px solid rgba(212,160,32,0.2);padding:4px 14px;display:inline-block;margin-bottom:14px;opacity:0.7;letter-spacing:0.05em;}
+.dg-title{font-size:clamp(18px,2.4vw,28px);color:var(--parch-pale);margin-bottom:12px;}
+.dg-title em{font-style:italic;color:var(--gold-pale);}
+.dg-body{font-style:italic;font-size:clamp(13.5px,1.5vw,16px);color:rgba(180,168,160,0.6);line-height:1.85;}
+.dg-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Spine timeline */
+.spine-row{display:grid;grid-template-columns:160px 1fr;border:1px solid rgba(212,160,32,0.07);overflow:hidden;margin-bottom:2px;transition:border-color .3s;}
+.spine-row:hover{border-color:rgba(212,160,32,0.2);}
+.sp-label{padding:14px 16px;background:rgba(212,160,32,0.03);border-right:1px solid rgba(212,160,32,0.06);display:flex;align-items:center;}
+.sp-label span{font-family:'Courier New',monospace;font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-pale);opacity:0.6;}
+.sp-body{padding:14px 18px;font-style:italic;font-size:13px;color:rgba(180,168,160,0.55);line-height:1.6;display:flex;align-items:center;}
+
+/* Survival ledger */
+.ledger-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:36px;}
+.ledger-col{padding:24px 24px;border:1px solid;}
+.ledger-dead{border-color:rgba(192,24,40,0.15);background:rgba(74,8,16,0.05);}
+.ledger-alive{border-color:rgba(212,160,32,0.12);background:rgba(164,120,15,0.04);}
+.lg-title{font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.1em;margin-bottom:14px;}
+.ledger-dead .lg-title{color:var(--blood-bright);}
+.ledger-alive .lg-title{color:var(--gold-pale);}
+.lg-item{font-style:italic;font-size:12.5px;color:rgba(180,168,160,0.55);line-height:1.7;margin-bottom:4px;}
+.lg-item strong{color:var(--parch-pale);font-style:normal;}
+
+/* Themes grid */
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:36px;}
+.theme-item{padding:18px 20px;border:1px solid rgba(212,160,32,0.08);background:rgba(212,160,32,0.02);}
+.ti-title{font-size:13px;color:var(--parch-pale);letter-spacing:0.04em;margin-bottom:6px;}
+.ti-body{font-style:italic;font-size:12.5px;color:rgba(180,168,160,0.5);line-height:1.6;}
+
+/* Vyktor pact */
+.pact-block{margin-top:36px;padding:32px;border:1px solid rgba(96,24,144,0.14);background:rgba(32,10,56,0.08);position:relative;overflow:hidden;}
+.pact-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--violet-bright),transparent);}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(212,160,32,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-size:clamp(22px,3vw,42px);color:var(--parch-pale);margin-bottom:16px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--gold-pale);}
+.page-cta p{font-style:italic;font-size:16px;color:rgba(180,168,160,0.4);max-width:480px;margin:0 auto 40px;line-height:1.7;}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Courier New',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:14px 28px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#EDE4D8;}
+.btn-g{font-family:'Courier New',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(180,168,160,0.15);padding:14px 28px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(180,168,160,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(212,160,32,0.06);padding:32px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-size:12px;color:rgba(180,168,160,0.18);}
+
+@media(max-width:1100px){
+  .officer-grid{grid-template-columns:repeat(2,1fr);}
+  .cell-grid{grid-template-columns:repeat(3,1fr);}
+  .art-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:900px){
+  .sec{padding:70px 32px;}
+  .rank-tier,.arc-row,.spine-row{grid-template-columns:1fr;}
+  .rt-num,.rt-name,.ar-num,.ar-title-block,.sp-label{border-right:none;border-bottom:1px solid rgba(212,160,32,0.05);}
+  .rite-grid,.relic-grid,.tech-grid,.rival-grid,.theme-grid,.ledger-split{grid-template-columns:1fr;}
+  .officer-grid,.cell-grid{grid-template-columns:1fr 1fr;}
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(212,160,32,0.08);}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// DARK_NATION · SABLEA · THE SISTERS OF IRA · FACTION_CODEX //</span>
+  </a>
+  <div class="nav-right">
+    <a href="selena.html" class="nav-link">Selena</a>
+    <a href="vashti.html" class="nav-link">Vashti</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="h-sys">SABLEA · SOUTHERN EBONY TOWER · COUNCIL OF SHADOWS · BLACK CRESCENT ORDER</div>
+    <span class="h-label">A Sacred Black-Operations Civilization in Miniature</span>
+    <h1 class="h-name display">The Sisters of Ira</h1>
+    <span class="h-sub">Cult · Intelligence Apparatus · Technomancer Syndicate · Ritual-Military Hierarchy</span>
+    <div class="h-rule"></div>
+    <div class="h-oath">"By Ira's shadow, I steal what heaven forbids, bury what truth would ruin, and return with the future bleeding in my hands." — <strong>The Oath of the Black Crescent</strong></div>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">11</div><div class="h-vlabel">Formal Ranks</div></div>
+      <div class="h-vital"><div class="h-vval">8</div><div class="h-vlabel">Inner Noctis</div></div>
+      <div class="h-vital"><div class="h-vval">10</div><div class="h-vlabel">Story Arc Slate</div></div>
+      <div class="h-vital"><div class="h-vval">Selena</div><div class="h-vlabel">Supreme Witch</div></div>
+      <div class="h-vital"><div class="h-vval">Pre-1355</div><div class="h-vlabel">Active Era</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ENTER THE SOUTHERN EBONY TOWER //</span><div class="s-line"></div></div>
+</section>
+
+<!-- CORE IDENTITY & DOCTRINE -->
+<section class="sec sec-a">
+  <div class="inner-md rv">
+    <span class="sl">// CORE_IDENTITY · FOUR_SIMULTANEOUS_FUNCTIONS //</span>
+    <h2 class="big-h display">"What is hidden is<br><em>holier than what is seen.</em>"</h2>
+    <p class="bp">The Sisters of Ira are a fanatical, elite occult-technomancer order operating within the covert structure of the Council of Shadows, headquartered in Sablea's <strong>Southern Ebony Tower</strong>. Publicly, a feared lunar cult of witches and dark mystics devoted to the Moon Goddess Ira. Privately, under Selena's reign, they have become <em>a sacred black-operations civilization in miniature</em> — an interdimensional covert order with four simultaneous identities: a religious cult, an intelligence apparatus, a technomancer smuggling syndicate, and a ritual-military strike hierarchy.</p>
+    <p class="bp">They do not merely worship Ira. They seek to <strong>prepare reality for her return</strong>, shape history into favorable architecture, counterfeit access to forbidden planes, and weaponize secrecy itself. They interpret Ira not as a mother of comfort, but as a goddess of necessary rupture — chaos through revelation, transformation through violation, moonfire as a force that unmakes false stability.</p>
+    <div class="spec-table rv d1">
+      <div class="srow"><div class="srk">CREED</div><div class="srv">"What is hidden is holier than what is seen." Concealment is sacred incubation, not weakness.</div></div>
+      <div class="srow"><div class="srk">HQ</div><div class="srv">The <strong>Southern Ebony Tower</strong> — built over a suppressed moon-shaft, an ancient vertical breach channel used for celestial descent, imprisonment, or signal transmission</div></div>
+      <div class="srow"><div class="srk">PARENT BODY</div><div class="srv">The <strong>Council of Shadows</strong> — Vashti's broader guild-state of sorcerers, ritualists, and spies. The Sisters are its most fanatical, specialized lunar-technomancer division.</div></div>
+      <div class="srow"><div class="srk">SUPREME WITCH</div><div class="srv"><strong>Selena</strong> — absolute doctrinal, ritual, and strategic leader. Both pontiff and spymaster.</div></div>
+      <div class="srow"><div class="srk">SYMBOL</div><div class="srv">The <strong>Black Crescent</strong> ringed by circuitry — originally a warning ("Do not complete the circuit"), now worn as a triumphant sign of moon-shadow integration</div></div>
+    </div>
+    <div class="art-grid rv d2">
+      <div class="art-item"><div class="art-num">I</div><div class="art-text">Secrecy is sacrament</div></div>
+      <div class="art-item"><div class="art-num">II</div><div class="art-text">Transformation justifies fear</div></div>
+      <div class="art-item"><div class="art-num">III</div><div class="art-text">The divine does not descend for the timid</div></div>
+      <div class="art-item"><div class="art-num">IV</div><div class="art-text">Technology is hidden moonfire given structure</div></div>
+      <div class="art-item"><div class="art-num">V</div><div class="art-text">Prophecy is not received. It is contested.</div></div>
+      <div class="art-item"><div class="art-num">VI</div><div class="art-text">The realms belong to those who trespass without permission</div></div>
+      <div class="art-item"><div class="art-num">VII</div><div class="art-text">To prepare Ira's return, lesser laws may be broken</div></div>
+      <div class="art-item"><div class="art-num">VIII</div><div class="art-text">A worthy vessel is more sacred than a kingdom</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- INSTITUTIONAL STRUCTURE -->
+<section class="sec sec-b">
+  <div class="inner-md rv">
+    <span class="sl">// INSTITUTIONAL_STRUCTURE · ELEVEN_RANKS · VERTICAL_HIERARCHY //</span>
+    <h2 class="big-h display">Eleven ranks.<br><em>One woman who answers to no one.</em></h2>
+    <p class="bp" style="max-width:680px;">The Sisters are designed like a vertical occult hierarchy with hidden lateral networks. On paper they answer upward. In practice, the strongest cells maintain covert dependencies that let Selena test loyalty through contradiction.</p>
+    <div class="rank-ladder rv d1">
+      <div class="rank-tier"><div class="rt-num">1</div><div class="rt-name">Veil Novice</div><div class="rt-desc">Newly sworn recruits. Shrine maintenance, dream recording, silence discipline. High mortality — many fail initiation.</div></div>
+      <div class="rank-tier"><div class="rt-num">2</div><div class="rt-name">Shadow Acolyte</div><div class="rt-desc">Survives first rites. Urban surveillance, listening posts, moon-cipher work. Obedient, hungry, frightened.</div></div>
+      <div class="rank-tier"><div class="rt-num">3</div><div class="rt-name">Black Crescent Adept</div><div class="rt-desc">First true field rank — trusted to lie in the order's name without supervision. Infiltration, curse delivery, seduction assignments.</div></div>
+      <div class="rank-tier"><div class="rt-num">4</div><div class="rt-name">Night Courier</div><div class="rt-desc">Specialized transit operative. Smuggling relics, dead-zone traversal, cross-realm drops. Requires exceptional spatial instinct.</div></div>
+      <div class="rank-tier"><div class="rt-num">5</div><div class="rt-name">Blood Cantor</div><div class="rt-desc">Ritual authority. Officiates initiations, blood contracts, vessel testing. Preserves the order's sanctity while others modernize it.</div></div>
+      <div class="rank-tier"><div class="rt-num">6</div><div class="rt-name">Moonwire Engineer</div><div class="rt-desc">Technomancer-research rank. Circuitry-sigil fusion, false celestial signals, chronotech testing. High contamination and heresy drift risk.</div></div>
+      <div class="rank-tier"><div class="rt-num">7</div><div class="rt-name">Eclipse Blade</div><div class="rt-desc">Martial elite, direct enforcement. Assassination, relic seizure, anti-prophet suppression. Selena's black-winged punishments.</div></div>
+      <div class="rank-tier"><div class="rt-num">8</div><div class="rt-name">Mask of Ira</div><div class="rt-desc">Counter-identity specialist. Impersonate envoys, counterfeit celestial signatures. Feared even inside the order — many no longer know their true faces.</div></div>
+      <div class="rank-tier"><div class="rt-num">9</div><div class="rt-name">Officer-Matriarch</div><div class="rt-desc">Senior commander over a division, cell, or geographic network. Reports directly to the Inner Noctis.</div></div>
+      <div class="rank-tier"><div class="rt-num">10</div><div class="rt-name">The Inner Noctis</div><div class="rt-desc">Supreme executive circle — eight officers who govern divisions, judge internal corruption, and maintain external shadow alliances.</div></div>
+      <div class="rank-tier"><div class="rt-num">11</div><div class="rt-name">Supreme Witch</div><div class="rt-desc"><strong>Selena alone.</strong> Declares doctrinal revisions, sanctions relic hunts, elevates or erases officers, names heresies.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- THE INNER NOCTIS — OFFICER ROSTER -->
+<section class="sec sec-a">
+  <div class="inner rv">
+    <span class="sl">// THE_INNER_NOCTIS · EIGHT_OFFICERS · EACH_A_PHILOSOPHICAL_FRAGMENT //</span>
+    <h2 class="big-h display">Eight officers. Eight lanes.<br><em>No two Sister stories feel redundant.</em></h2>
+    <p class="bp" style="max-width:680px;">Selena rules through architecture. Each officer beneath her embodies one philosophical fragment of her worldview — and carries her own dramatic lane so the faction can sustain endless side stories without repetition.</p>
+    <div class="officer-grid rv d1">
+
+      <div class="off-card">
+        <span class="off-title">// SUPREME_WITCH //</span>
+        <div class="off-name">Selena</div>
+        <span class="off-epithet">Mother of the Ninth Veil · The Eclipse Matron</span>
+        <p class="off-body">Strategic narcissist and priestess-executive. Converts belief into logistics, devotion into obedience, prophecy into actionable intelligence. Arc: cult leader → technomancer sovereign → cosmic impostor → unstable prophet of Ira Reincarnate.</p>
+        <div class="off-lane">// LANE: power, control, transcendence, replacement of monarchy //</div>
+        <a href="selena.html" class="off-link">Full Profile →</a>
+      </div>
+
+      <div class="off-card">
+        <span class="off-title">// MISTRESS_OF_WHISPERS //</span>
+        <div class="off-name">Veyliss the Soft Knife</div>
+        <span class="off-epithet">Social Corrosion Incarnate</span>
+        <p class="off-body">Commander of the Whisper Nuns. Destroys dynasties by making people confess to the wrong person at the right time. Ended three noble houses through rumor alone, without spilling public blood.</p>
+        <div class="off-lane">// LANE: manipulation, intimacy, emotional corrosion //</div>
+      </div>
+
+      <div class="off-card">
+        <span class="off-title">// HIGH_CANTOR_OF_BLOOD //</span>
+        <div class="off-name">Maevra the Sanguine Hymn</div>
+        <span class="off-epithet">The Fanatic Saint</span>
+        <p class="off-body">Fanatically devout, more religious than Selena herself. Commands the Blood Cantors. Has begun compiling charges of heresy against Selena — the strongest candidate for internal religious civil war.</p>
+        <div class="off-lane">// LANE: faith, sacrament, zeal, doctrinal fracture //</div>
+      </div>
+
+      <div class="off-card">
+        <span class="off-title">// GRAND_COURIER //</span>
+        <div class="off-name">Serrix of the Hollow Mile</div>
+        <span class="off-epithet">Exile Between Worlds</span>
+        <p class="off-body">Commander of the Night Couriers. No one knows her original face. Crossed the Hollow Mile thirteen times and returned with the same heartbeat. Maintains an unsanctioned escape route even Selena doesn't know.</p>
+        <div class="off-lane">// LANE: routes, exile, survival between worlds //</div>
+      </div>
+
+      <div class="off-card">
+        <span class="off-title">// MISTRESS_OF_MASKS //</span>
+        <div class="off-name">Talis Vho</div>
+        <span class="off-epithet">Counterfeit Sanctity</span>
+        <p class="off-body">Impersonated a dead moon-agent for seven years. One of her false identities performed an actual miracle she cannot explain. Terrifies celestial authorities because fraud should not be able to produce grace — yet sometimes hers does.</p>
+        <div class="off-lane">// LANE: identity, counterfeit sanctity, metaphysical impersonation //</div>
+      </div>
+
+      <div class="off-card">
+        <span class="off-title">// HIGH_MARSHAL_OF_ECLIPSE //</span>
+        <div class="off-name">Orasyn Black Crescent</div>
+        <span class="off-epithet">Selena's Sword</span>
+        <p class="off-body">Killed her own betrothed, sentenced to death, spared by Selena. Commands the Eclipse Blades. Violence should be exact, not indulgent — the closest thing the Sisters have to a moon-sanctioned Valkyrie.</p>
+        <div class="off-lane">// LANE: violence, loyalty, self-definition through lethal precision //</div>
+      </div>
+
+      <div class="off-card">
+        <span class="off-title">// PRIME_VEIL_ENGINEER //</span>
+        <div class="off-name">Thessara Null</div>
+        <span class="off-epithet">Machine-Divinity Heretic</span>
+        <p class="off-body">Believes gods are ancient engineers whose code became myth. Built a secret kill-switch for one of Selena's vessel engines. Made the Sisters' cross-realm operations scalable — one of Selena's greatest assets and future threats.</p>
+        <div class="off-lane">// LANE: invention, blasphemy, machine-divinity //</div>
+      </div>
+
+      <div class="off-card">
+        <span class="off-title">// KEEPER_OF_WITNESSES //</span>
+        <div class="off-name">Namaris Crow-Eye</div>
+        <span class="off-epithet">The Gentle Torturer</span>
+        <p class="off-body">The quietest senior officer and one of the most terrifying. If Selena wants a secret preserved, erased, or rewritten, Namaris touches the mind after the blade is gone. Maintains an emergency archive of Selena's crimes.</p>
+        <div class="off-lane">// LANE: memory, witness, truth extraction //</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- RITUAL LIFE & DISCIPLINE -->
+<section class="sec sec-b">
+  <div class="inner-md rv">
+    <span class="sl">// RITUAL_LIFE · INITIATION · PUNISHMENT · SACRED_OATHS //</span>
+    <h2 class="big-h display">Recruitment by pattern,<br><em>not by charity.</em></h2>
+    <p class="bp" style="max-width:680px;">They select moon-marked girls from ruined bloodlines, children who survive prophetic fevers, smugglers and widows with adaptive intelligence, captured enemies who show devotion under pressure. Initiation has three stages: <strong>The First Silence</strong> (nameless for a lunar cycle), <strong>The Black Oath</strong> (blood mixed with ritual glass and shadow-ink), and <strong>The Mirror Trial</strong> (confronting an engineered hallucination of one's truest desire).</p>
+    <div class="rite-grid rv d1">
+      <div class="rite-card"><div class="rite-name">The Rite of First Silence</div><span class="rite-purpose">// SEVERANCE FROM PRIOR IDENTITY //</span><p class="rite-body">Fasting in darkness, dream deprivation, blood on lips, a new vow-name given. Many emerge altered. A few never speak normally again.</p></div>
+      <div class="rite-card"><div class="rite-name">The Moonfast of Empty Thought</div><span class="rite-purpose">// MONTHLY · OBEDIENCE REINFORCEMENT //</span><p class="rite-body">Three nights without speech, mirrored self-observation, controlled moonlight exposure. Weakens individuality, sharpens doctrinal receptivity.</p></div>
+      <div class="rite-card"><div class="rite-name">The Black Reflection Vigil</div><span class="rite-purpose">// REQUIRED BEFORE PROMOTION //</span><p class="rite-body">Self-confrontation to identify fear, vanity, hunger, hidden betrayal risk. Sometimes the reflection answers back.</p></div>
+      <div class="rite-card"><div class="rite-name">The Veil Unmaking</div><span class="rite-purpose">// PUNISHMENT · PURIFICATION //</span><p class="rite-body">Strips a compromised Sister of rank, identity, sometimes memory. Outcomes range from reduced status to total sacrifice.</p></div>
+      <div class="rite-card"><div class="rite-name">The Rite of Lunar Mechanization</div><span class="rite-purpose">// SELENEAN INNOVATION //</span><p class="rite-body">Binds occult energy to technological chassis and circuitry — the rite that defines their technomancer evolution.</p></div>
+      <div class="rite-card"><div class="rite-name">Sacrificial Ascension</div><span class="rite-purpose">// ULTIMATE PUNISHMENT //</span><p class="rite-body">The condemned is ritually repurposed into a vessel test, blood engine, signal anchor, or living ward. Proof the order wastes nothing.</p></div>
+    </div>
+    <div class="pull rv d2"><p>"I abandon the unguarded self. I take the Veil over the wound, the Moon over the witness, and silence over the lie." — <strong>The First Oath</strong>, spoken at initiation</p></div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- TECHNOLOGY THEY SEEK -->
+<section class="sec sec-a">
+  <div class="inner-md rv">
+    <span class="sl">// TECHNOLOGIES_SOUGHT · TRESPASS_AND_COUNTERFEIT //</span>
+    <h2 class="big-h display">They pursue technology<br><em>for five reasons only.</em></h2>
+    <p class="bp" style="max-width:680px;">To trespass forbidden boundaries. To counterfeit or hijack divine authority. To weaponize secrecy. To stabilize dangerous relics. To accelerate Ira's return through artificial means. They are obsessed with what normal witchcraft cannot do reliably: mask signatures, survive realm transition, manipulate memory at scale.</p>
+    <div class="tech-grid rv d1">
+      <div class="tech-card"><div class="tech-name">Lunar Circuit Engines</div><p class="tech-body">Convert lunar current into ritual logic and signal concealment — faster relic decoding, synchronized coven casting, real-time countersurveillance webs.</p></div>
+      <div class="tech-card"><div class="tech-name">Phase-Lock Transit Frames</div><p class="tech-body">Stabilize the body during interdimensional crossing. Would move Selena's operatives from sacrificial routes to repeatable interdimensional raiders.</p></div>
+      <div class="tech-card"><div class="tech-name">Memory Lattice Arrays</div><p class="tech-body">Store, edit, or redistribute memory outside the living brain. Dark implication: "memory arsenals" of dead prophets, engineers, and moon-touched prisoners.</p></div>
+      <div class="tech-card"><div class="tech-name">False Halo Emitters</div><p class="tech-body">Generate counterfeit divine signatures strong enough to fool wards and relics. Highest risk: a real divine intelligence may answer the counterfeit.</p></div>
+      <div class="tech-card"><div class="tech-name">Chrono-Seeding Matrices</div><p class="tech-body">Plant influence into nearby timelines and possible futures — central to Selena's plan of making Ira's return inevitable rather than merely hoped for.</p></div>
+      <div class="tech-card"><div class="tech-name">Vessel Calibration Thrones</div><p class="tech-body">Test, refine, or break potential vessels for divine embodiment. Selena's obsession: she wants repeatable vessel architecture, not just one vessel.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- SACRED RELICS -->
+<section class="sec sec-b">
+  <div class="inner-md rv">
+    <span class="sl">// SACRED_RELICS · CAMPAIGN-DEFINING_ARTIFACTS //</span>
+    <h2 class="big-h display">Objects worth killing<br><em class="violet">entire cells over.</em></h2>
+    <div class="relic-grid rv d1">
+      <div class="relic-card"><span class="relic-type">// LIVING_LUNAR_LENS //</span><div class="relic-name">The Blood Eye of Ira</div><p class="relic-body">A red-black orb formed around coagulated divine moonfire. Sees hidden motive, identifies vessel compatibility, amplifies hallucination and revelation simultaneously.</p><div class="relic-cost">COST: obsession and emotional sterilization</div></div>
+      <div class="relic-card"><span class="relic-type">// COMMAND_ARTIFACT //</span><div class="relic-name">The Veil-Circuit Crown</div><p class="relic-body">Worn only by the Supreme Witch. Interfaces mind, ritual hierarchy, and the cult's major arrays — coordinates multiple covens simultaneously.</p><div class="relic-cost">DANGER: blurs wearer's self with the collective subconscious</div></div>
+      <div class="relic-card"><span class="relic-type">// RITUAL_VESSEL //</span><div class="relic-name">Hollow Chalice of the Red Eclipse</div><p class="relic-body">Black chalice lined with moonmetal, used for initiations and convergence rites. Binds bloodline resonance, stores moon-charged sacramental fluid.</p><div class="relic-cost">SECRET: may be contaminated by another realm's divine current</div></div>
+      <div class="relic-card"><span class="relic-type">// IDENTITY_ARTIFACT //</span><div class="relic-name">The Mirror of Unspoken Names</div><p class="relic-body">A standing obsidian mirror rumored to show names, roles, and secret selves layered beneath the body. Exposes counterfeit identities and dormant moon marks.</p><div class="relic-cost">POLITICAL VALUE: worth killing entire cells over</div></div>
+      <div class="relic-card"><span class="relic-type">// FABRICATION_ENGINE //</span><div class="relic-name">The Moonwire Loom</div><p class="relic-body">Spins moon-current, blood traces, and circuitry into garments and false identities — infiltration vestments, living sigil fabrics, memory-reactive cloth.</p><div class="relic-cost">One of the order's most protected internal assets</div></div>
+      <div class="relic-card"><span class="relic-type">// HIGH_HERESY_APPARATUS //</span><div class="relic-name">The Vessel Thrones</div><p class="relic-body">Occult-technological chairs used to test divine embodiment compatibility — measure resonance, induce adaptation, force partial awakening states.</p><div class="relic-cost">HORROR: most subjects do not survive whole</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- RELIGIOUS SECRETS -->
+<section class="sec sec-a">
+  <div class="inner-md rv">
+    <span class="sl">// RELIGIOUS_SECRETS · WHAT_THE_CULT_HIDES_FROM_ITSELF //</span>
+    <h2 class="big-h display">Their own doctrine<br><em>may be a total inversion.</em></h2>
+    <div class="theme-grid rv d1">
+      <div class="theme-item"><div class="ti-title">Ira Was Never Meant to Return Whole</div><p class="ti-body">Her essence is fragmented across phases and stolen lunar channels. Any "return" would be partial or engineered. Selena may be preparing a usable counterfeit divinity, not Ira herself.</p></div>
+      <div class="theme-item"><div class="ti-title">The First Sisters Were Prison-Keepers</div><p class="ti-body">The earliest proto-Sisters may not have worshipped Ira — they may have been charged with containing one of her dangerous emanations. The modern cult may be a total inversion of its original purpose.</p></div>
+      <div class="theme-item"><div class="ti-title">The Black Crescent Was a Warning</div><p class="ti-body">The insignia now treated as triumphant may have originally meant "Do not complete the circuit." Their own symbol may encode a suppression warning misread as invitation.</p></div>
+      <div class="theme-item"><div class="ti-title">There Exists a Litany That Can Sever Ira Entirely</div><p class="ti-body">A null-liturgy capable of cutting a witch, relic, or sanctuary off from Ira's power completely. The Sisters guard it because it is both blasphemy and their ultimate kill switch.</p></div>
+      <div class="theme-item"><div class="ti-title">Some Sisters Are Bred, Not Recruited</div><p class="ti-body">Certain bloodlines may be deliberately cultivated for dream tolerance, vessel suitability, and signal survival. The order has a hidden eugenics-metaphysics layer.</p></div>
+      <div class="theme-item"><div class="ti-title">Selena Suspects Ira May Not Want What the Cult Wants</div><p class="ti-body">Her most dangerous private suspicion: a full return might erase the cult itself as a temporary mutation. Her greatest rebellion may be against her own goddess discarding what she built.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- RIVALS & ENEMIES ECOSYSTEM -->
+<section class="sec sec-b">
+  <div class="inner rv">
+    <span class="sl">// RIVAL_ECOSYSTEM · NOT_ONE_ENEMY_BUT_A_WHOLE_ECOLOGY //</span>
+    <h2 class="big-h display">Opposed not by one enemy,<br><em class="blood">but an entire ecology of rivals.</em></h2>
+    <p class="bp" style="max-width:680px;">Their greatest weakness is coordination. When communication breaks or moon-signals are jammed, the Sisters fracture fast. The Agents of the Moons do not need to defeat them in open war — they dismantle routes, expose false sanctity, and sever the ritual grammar holding operations together.</p>
+    <div class="rival-grid rv d1">
+      <div class="rival-card"><span class="rival-cat">// BOSS-LEVEL //</span><div class="rival-name">The Black Rector of Dawnforge</div><p class="rival-body">Paladin-engineer inquisitor who purges unlawful dimensional crossings. To him, Selena is not a witch but a contamination event.</p></div>
+      <div class="rival-card"><span class="rival-cat">// BOSS-LEVEL //</span><div class="rival-name">Lady Saevyra Nocth</div><p class="rival-body">The Pale Seal of Eclipse — one of the few beings who understands how the Sisters counterfeit sanctity and where their logic fractures.</p></div>
+      <div class="rival-card"><span class="rival-cat">// VARIABLE //</span><div class="rival-name">Vyktor, Vice Lord of Driftpost</div><p class="rival-body">Ally only while aligned. If Selena grows too strong, he becomes one of the few capable of starving her systems without open war.</p></div>
+      <div class="rival-card"><span class="rival-cat">// INSTITUTION //</span><div class="rival-name">The Order of the Moons</div><p class="rival-body">Major celestial enforcement order. The Sisters' counterfeiting of moon signatures is among the highest offenses they recognize.</p></div>
+      <div class="rival-card"><span class="rival-cat">// INSTITUTION //</span><div class="rival-name">Celestial Knights</div><p class="rival-body">Militarized purgers activated if the Sisters' crimes escalate from covert blasphemy into realm destabilization.</p></div>
+      <div class="rival-card"><span class="rival-cat">// PARALLEL_FORCE //</span><div class="rival-name">The Handmaidens of Vashti</div><p class="rival-body">Not enemies yet, but divergent. Handmaidens serve the queen; Sisters serve the moon through Selena. Internal shadow civil war potential.</p></div>
+      <div class="rival-card"><span class="rival-cat">// RIVAL_CULT //</span><div class="rival-name">The Daughters of the Hollow Vein</div><p class="rival-body">Blood-reliquary sect believing divinity must be carried through inherited wounds, not engineered vessels. See Selena's vessel work as abomination.</p></div>
+      <div class="rival-card"><span class="rival-cat">// RIVAL_CULT //</span><div class="rival-name">The Sisters of the Closed Eye</div><p class="rival-body">Dream concealment specialists descended from Jatyya traditions. Believe not all revelation is sacred — Selena believes all concealed truth is exploitable.</p></div>
+      <div class="rival-card"><span class="rival-cat">// EXISTENTIAL //</span><div class="rival-name">The Null Liturgists</div><p class="rival-body">Study how to sever deity-current from mortal systems entirely. Threaten everyone, but the Sisters especially — moon severance, goddess starvation theory.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- CAMPAIGN: THE BLACK CRESCENT WARS -->
+<section class="sec sec-a">
+  <div class="inner rv">
+    <span class="sl">// SERIES: THE_BLACK_CRESCENT_WARS · PRE-CANON_STORY_SLATE //</span>
+    <h2 class="big-h display">Before Crysen enters Sablea,<br><em>the Sisters are already at war.</em></h2>
+    <p class="bp" style="max-width:700px;">Three eras precede The Sablean Conspiracy: <strong>Era I — The Black Crescent Awakens</strong> (Selena consolidates control), <strong>Era II — The Smuggling Wars</strong> (interdimensional piracy through the Abyssal Gate), <strong>Era III — Ira Reincarnate Preparation</strong> (apocalyptic religious preparation, officers splitting into loyalists and rebels). The clock tightens toward Crysen's arrival.</p>
+    <div class="arc-list rv d1">
+      <div class="arc-row"><div class="ar-num">1</div><div class="ar-title-block"><div class="ar-title">The Black Crescent Compact</div><span class="ar-genre">// OCCULT CRIME THRILLER · NOVELLA //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> Selena does not inherit the Sisters. She manufactures the conditions where only she can lead them — the origin of her Supreme Witch title.</div></div>
+      <div class="arc-row"><div class="ar-num">2</div><div class="ar-title-block"><div class="ar-title">The Mirror-Smuggler's Gospel</div><span class="ar-genre">// INTERDIMENSIONAL HEIST · NOVELLA //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> The Sisters are not smuggling objects. They are smuggling events — memories of inventions that have not been created yet.</div></div>
+      <div class="arc-row"><div class="ar-num">3</div><div class="ar-title-block"><div class="ar-title">The False Halo Incident</div><span class="ar-genre">// RELIGIOUS ESPIONAGE · COMIC MINISERIES //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> The Sisters murdered and dissected a Celestial Navigator to build their counterfeit divine signatures. Selena is now on the Agents' highest-priority watchlist.</div></div>
+      <div class="arc-row"><div class="ar-num">4</div><div class="ar-title-block"><div class="ar-title">The Driftpost Exchange</div><span class="ar-genre">// CRIME-PIRATE THRILLER · NOVELLA //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> Vyktor is not merely selling future-tech — he is controlling which futures become economically possible.</div></div>
+      <div class="arc-row"><div class="ar-num">5</div><div class="ar-title-block"><div class="ar-title">The Red Nun Mutiny</div><span class="ar-genre">// FACTION CIVIL WAR · NOVELLA //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> Many Sisters joined for liberation, not apocalypse. This creates Selena's internal paranoia and harsher punishment doctrines.</div></div>
+      <div class="arc-row"><div class="ar-num">6</div><div class="ar-title-block"><div class="ar-title">The Chrono-Hemetic Array</div><span class="ar-genre">// COSMIC TECHNOMANCER HORROR · NOVEL //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> A future version of the Sisters may have already failed — someone in the future is using Selena's ambition to prevent a worse catastrophe.</div></div>
+      <div class="arc-row"><div class="ar-num">7</div><div class="ar-title-block"><div class="ar-title">The Wepaos Hunt</div><span class="ar-genre">// MONSTER HUNT · ACTION-HORROR COMIC //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> Selena has been testing beast-vessels as possible Ira-channeling hosts — foreshadowing the vessel logic behind Ira Reincarnate.</div></div>
+      <div class="arc-row"><div class="ar-num">8</div><div class="ar-title-block"><div class="ar-title">The Pale Raid</div><span class="ar-genre">// SIEGE / COUNTER-INQUISITION · NOVELLA //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> The Agents don't need to overpower the Sisters — they only need to sever the ritual grammar holding the operation together.</div></div>
+      <div class="arc-row"><div class="ar-num">9</div><div class="ar-title-block"><div class="ar-title">The Saint of Stolen Engines</div><span class="ar-genre">// FORBIDDEN TECHNOLOGY EPIC · NOVEL //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> The Iron-Fury Expanse allowed the engine to be stolen — they wanted to trace the entire Sisters network.</div></div>
+      <div class="arc-row"><div class="ar-num">10</div><div class="ar-title-block"><div class="ar-title">The Last Choir Before Ira</div><span class="ar-genre">// DIRECT PREQUEL TO THE SABLEAN CONSPIRACY //</span></div><div class="ar-reveal"><strong>Big Reveal:</strong> The Sisters were never only serving Vashti's shadow government. Selena built a second command structure inside the first.</div></div>
+    </div>
+    <div class="pull rv d2"><p>The Sisters are compelling because many of them are not wrong about the hypocrisy of the cosmos. They are wrong about what they are willing to become.</p><cite>// CORE_THESIS · THE_BLACK_CRESCENT_WARS //</cite></div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- IRA HERESIES VOL I — CANON DIGEST -->
+<section class="sec sec-b">
+  <div class="inner-md rv">
+    <span class="sl">// THE_IRA_HERESIES · VOLUME_I · THE_MONASTERY_SCHISM · CANON_DIGEST //</span>
+    <h2 class="big-h display">The first volume.<br><em>Where the forbidden truth escapes containment.</em></h2>
+    <p class="bp" style="max-width:700px;">A 20-chapter multi-POV dark political fantasy introducing Selena and the Sisters as a ruthless, hyper-competent faction beneath Sablea's royal politics. What begins as a contained monastery infiltration expands into religious conspiracy, intelligence war, and the first fragment of the <strong>Vessel Doctrine</strong> escaping into the world.</p>
+
+    <div class="digest-block rv d1">
+      <div class="dg-c">
+        <div class="dg-badge">// CANON_DIGEST · CORE_QUESTION //</div>
+        <h3 class="dg-title display">Is a forbidden truth still sacred<br><em>if the finder intends to weaponize it?</em></h3>
+        <p class="dg-body"><strong>Selena's answer: yes</strong>, if weaponization completes the truth. <strong>Yzmina's answer: no</strong>, because truth without restraint becomes desecration. <strong>Vashti's answer:</strong> truth is tolerable only while politically useful. <strong>Vesper's answer:</strong> truth becomes evil when it reaches for your child. Four women, four incompatible ethics, one collapsing monastery.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:36px;">
+      <span class="sl" style="padding:0;">// UPDATED_STRUCTURAL_SPINE //</span>
+      <div class="spine-row"><div class="sp-label"><span>OPENING</span></div><div class="sp-body">A sleeping acolyte speaks forbidden doctrine in a voice older than the monastery.</div></div>
+      <div class="spine-row"><div class="sp-label"><span>ACT I TURN</span></div><div class="sp-body">Selena receives Vashti's limited authorization and turns containment into a controlled rupture.</div></div>
+      <div class="spine-row"><div class="sp-label"><span>MIDPOINT</span></div><div class="sp-body">Selena survives the Hall of Reflected Confessions, chooses catastrophe with open eyes, and gains reciprocal access.</div></div>
+      <div class="spine-row"><div class="sp-label"><span>2ND ACT DISASTER</span></div><div class="sp-body">Yzmina names the Unfinished Descent, activating doctrine reproduction. The Red Eclipse begins waking.</div></div>
+      <div class="spine-row"><div class="sp-label"><span>3RD ACT COLLAPSE</span></div><div class="sp-body">Lethra hears the consent-forging line and hides it from Selena. Sisters begin dying under the price of their own methods.</div></div>
+      <div class="spine-row"><div class="sp-label"><span>CLIMAX</span></div><div class="sp-body">Under the Red Eclipse, Selena reaches the reliquary interface. Yzmina's Counter-Rite prevents total theft, but Selena extracts the living theorem of the Vessel Doctrine by burning Sisters as conductors.</div></div>
+      <div class="spine-row"><div class="sp-label"><span>FALLOUT</span></div><div class="sp-body">Drazhen becomes compromised evidence. Lethra plants the first counter-doctrine. Selena returns with partial victory and corrupts worship one word at a time.</div></div>
+      <div class="spine-row"><div class="sp-label"><span>FINAL IMAGE</span></div><div class="sp-body">Eris's reflection remains awake and facing Vesper after the mirror is turned away — proof the stolen doctrine has begun reaching beyond the monastery.</div></div>
+    </div>
+
+    <div style="margin-top:44px;">
+      <span class="sl" style="padding:0;">// UPDATED_SURVIVAL_/_DEATH_LEDGER //</span>
+      <div class="ledger-split rv d2">
+        <div class="ledger-col ledger-dead">
+          <div class="lg-title mono">// CONFIRMED DEAD OR FUNCTIONALLY LOST //</div>
+          <div class="lg-item"><strong>Camn</strong> — dead Sister turned doctrine-speech aperture</div>
+          <div class="lg-item"><strong>Oryn</strong> — failed mirror reinforcement; becomes unreadable mirror-script</div>
+          <div class="lg-item"><strong>Auneth</strong> — burned as living conductor during Selena's extraction</div>
+          <div class="lg-item"><strong>Lower Night Courier</strong> — killed by failed umbral fold under Red Eclipse</div>
+          <div class="lg-item"><strong>Multiple support Sisters</strong> — exposed under shadow-denial, killed by Red Monks or misfiled by monastery systems</div>
+        </div>
+        <div class="ledger-col ledger-alive">
+          <div class="lg-title mono">// SURVIVING BUT ALTERED //</div>
+          <div class="lg-item"><strong>Selena</strong> — carries living theorem and reciprocal access mark</div>
+          <div class="lg-item"><strong>Maeryth</strong> — wounded, classified by the reliquary as witness/offering</div>
+          <div class="lg-item"><strong>Lethra</strong> — secretly begins counter-doctrine</div>
+          <div class="lg-item"><strong>Drazhen</strong> — true report compromised by sequence manipulation</div>
+          <div class="lg-item"><strong>Yzmina</strong> — survives but loses sealed containment purity</div>
+          <div class="lg-item"><strong>Vesper</strong> — moves from suspicion into maternal war posture</div>
+          <div class="lg-item"><strong>Vashti</strong> — opens Eclipse-Level containment file against Selena</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:44px;">
+      <span class="sl" style="padding:0;">// UPDATED_CORE_THEMES //</span>
+      <div class="theme-grid rv d3">
+        <div class="theme-item"><div class="ti-title">Ambition as Architecture</div><p class="ti-body">Selena's ambition is no longer personal hunger alone. It becomes a structure other people must live, die, and pray inside.</p></div>
+        <div class="theme-item"><div class="ti-title">Consent as the Battlefield</div><p class="ti-body">The central horror is not divine possession alone — it is teaching a child to identify violation as purpose.</p></div>
+        <div class="theme-item"><div class="ti-title">Witnessing as Infection</div><p class="ti-body">Drazhen, Maeryth, Lethra, and Vesper all become witnesses. To see the truth is to become part of its transmission network.</p></div>
+        <div class="theme-item"><div class="ti-title">Sacred Systems as Ancient Technology</div><p class="ti-body">The monastery is a complex spiritual-technical containment machine built from grief, bells, water, dead witnesses, and consent logic.</p></div>
+        <div class="theme-item"><div class="ti-title">The Price of Overcommitment</div><p class="ti-body">The Sisters' loyalty is real — that's why Selena can spend it. Their deaths horrify because their devotion has been engineered into usefulness.</p></div>
+        <div class="theme-item"><div class="ti-title">Counter-Heresy Begins Inside the Cult</div><p class="ti-body">The first meaningful resistance doesn't come from queens or priestesses — it comes from Lethra, who understands the machinery well enough to corrupt it in reverse.</p></div>
+      </div>
+    </div>
+
+    <div class="pull rv" style="margin-top:36px;"><p>Volume I should not end as "Selena wins" or "Yzmina loses." It should end worse than that. Selena gets enough to begin. Yzmina keeps enough sealed to continue fighting. And Eris, still innocent of the doctrine's name, is already being watched by a reflection that no longer obeys the mirror.</p><cite>// FINAL_VOLUME_STATEMENT //</cite></div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- THE MONASTERY SCHISM CELL -->
+<section class="sec sec-a">
+  <div class="inner rv">
+    <span class="sl">// THE_MONASTERY_SCHISM_CELL · TEN_FIELD_OPERATIVES //</span>
+    <h2 class="big-h display">Not Selena and henchwomen.<br><em>A civilization operating at once.</em></h2>
+    <p class="bp" style="max-width:680px;">Beneath the Inner Noctis: field officers, embedded agents, rising adepts, and expendable-but-exceptional tools. Together they make the Monastery Schism feel like what the Sisters truly are — cult, intelligence apparatus, technomancer syndicate, and ritual-military hierarchy operating simultaneously.</p>
+    <div class="cell-grid rv d1">
+      <div class="cell-card"><span class="cell-role">// INFILTRATION //</span><div class="cell-name">Maeryth Vonn</div><p class="cell-body">Cell commander. Partial identity theft, stolen grief implantation. Efficient but uneasy — perceptive enough to know when a mission becomes sacrilege.</p><div class="cell-symbol">She is the mask</div></div>
+      <div class="cell-card"><span class="cell-role">// TECHNOMANCER //</span><div class="cell-name">Lethra Quill</div><p class="cell-body">Junior Moonwire Engineer. The reliquary horrifies her by telling the truth. First internal witness to the scale of Selena's lie.</p><div class="cell-symbol">She is the circuit</div></div>
+      <div class="cell-card"><span class="cell-role">// EMBEDDED_AGENT //</span><div class="cell-name">Avarra Senn</div><p class="cell-body">Whisper Nun sent ahead among pilgrims. Not the blade — the ear already inside the wound. Prefers secrets intact over massacre.</p><div class="cell-symbol">She is the whisper</div></div>
+      <div class="cell-card"><span class="cell-role">// RITUAL_ENFORCEMENT //</span><div class="cell-name">Olyndra Vael</div><p class="cell-body">Blood Cantor of the Quiet Bell. Sees pain as language, blood as the only honest signature. Grows uneasy as Selena burns Sisters through the circuit.</p><div class="cell-symbol">She is the blood</div></div>
+      <div class="cell-card"><span class="cell-role">// LOGISTICS //</span><div class="cell-name">Nheris Dhal</div><p class="cell-body">Night Courier, logistical spine of the operation. Transactional, not faithless — may protect the corridor network over the cult itself.</p><div class="cell-symbol">She is the route</div></div>
+      <div class="cell-card"><span class="cell-role">// ENFORCEMENT //</span><div class="cell-name">Kaltessa Rook</div><p class="cell-body">Eclipse Blade Interdictor. Blunt, unsentimental, turns doctrine into bodies on the floor. Her violence helps awaken the monastery's old punishments.</p><div class="cell-symbol">She is the blade</div></div>
+      <div class="cell-card"><span class="cell-role">// NOVICE_FIELDWORK //</span><div class="cell-name">Ysra Mourn</div><p class="cell-body">Younger Sister who nearly breaks under stolen grief. Proof the Sisters use gifted young operatives before they are spiritually stable.</p><div class="cell-symbol">She is the wound</div></div>
+      <div class="cell-card"><span class="cell-role">// DISGRACED //</span><div class="cell-name">Caldra Vey</div><p class="cell-body">Failed smuggling route Sister, punished at the story's opening. Demonstrates Selena's doctrine: failure is not sin, but waste.</p><div class="cell-symbol">She is the warning</div></div>
+      <div class="cell-card"><span class="cell-role">// FORENSIC //</span><div class="cell-name">Velka Or</div><p class="cell-body">Corpse-salt handler. Clinical, almost tender with bodies. Turns the operation from infiltration into atrocity.</p><div class="cell-symbol">She is the desecration</div></div>
+      <div class="cell-card"><span class="cell-role">// SIGNALIST //</span><div class="cell-name">Rhyssane Tole</div><p class="cell-body">Mirror-disc signalist. Treats the reliquary like a signal problem until it starts answering. Her equipment makes the mission possible — and exposes it.</p><div class="cell-symbol">She is the signal</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☾</div></div>
+
+<!-- SELENA & VYKTOR PACT -->
+<section class="sec sec-b">
+  <div class="inner-md rv">
+    <span class="sl">// THE_SELENA_/_VYKTOR_PACT · ALLIANCE_OF_CONVENIENCE //</span>
+    <h2 class="big-h display">Two dimensional saboteurs.<br><em class="violet">Neither fully trusts the other.</em></h2>
+    <div class="pact-block rv d1">
+      <p class="bp">Selena and Lord Vyktor cooperate against the Agents of the Moons and maintain alliances with the Order of Wepaos and the Four Secrets to sustain their rule. <strong>Vyktor manipulates timelines through strategy and stolen tech</strong> — his Oracle Kernel predicts probability fields up to 8 minutes ahead; his Temporal Threading ties alternate outcomes to create "inevitable" success conditions; his Dimensional Refracting smuggles New Sablean tech through folded fractal pockets.</p>
+      <p class="bp"><strong>Selena tears into time with ritual, blood, and shadow</strong> instead — Chrono-Seeding rituals siphon fragments of time through bloodbound echoes and smuggled micro-cores; Shadow-Tethering binds her soul-signature to phantasmal echoes in other timelines; the Umbra Vein lets her and her Sisters generate false celestial signatures by dissecting a captured Celestial Navigator.</p>
+      <p class="bp">She cannot yet enter New Sablea — she has tried three times. Once her skin aged ten thousand years. Once her reflection attacked her, attempting to replace her in real-time. Once she spoke with Ira herself in that timeline, and the goddess tried to devour her. <em>So now she sends others, and only under strict lunar alignment.</em></p>
+      <div class="pull" style="margin-top:8px;"><p>"He never gambles. Every bet is pre-won the moment he walks into the room." / "They do not send messengers. They send shadows wearing borrowed names, and by the time you realize it — they're already gone."</p><cite>// ON VYKTOR AND SELENA · SABLEAN UNDERWORLD RECORD //</cite></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="page-cta">
+  <div class="page-cta-inner rv">
+    <span class="sl" style="display:block;text-align:center;margin-bottom:18px;">// THE_SISTERS_OF_IRA · FACTION_CODEX · SABLEA //</span>
+    <h2 class="display">Not merely witches.<br><em>A disciplined criminal-religious fleet.</em></h2>
+    <p>They smuggle futures, steal relics, counterfeit divinity, and slowly turn liberation into obedience — all under a woman who intends to replace the monarchy with a more efficient form of sacred predation.</p>
+    <div class="cta-row">
+      <a href="selena.html" class="btn-p">Selena — Supreme Witch →</a>
+      <a href="vashti.html" class="btn-g">Queen Vashti →</a>
+      <a href="vesper.html" class="btn-g">Queen Vesper →</a>
+      <a href="yzmina.html" class="btn-g">Yzmina →</a>
+      <a href="ancient-monastery.html" class="btn-g">The Ancient Monastery →</a>
+    </div>
+  </div>
+</div>
+<footer><span class="fc">Nine Realms Universe — The Sisters of Ira · Faction Codex · The Black Crescent Wars · Original IP</span><span class="fc">Created by Ron</span></footer>
+
+<script>
+try{
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('.off-card,.rite-card,.relic-card,.tech-card,.rival-card,.arc-row,.cell-card,.rank-tier,.theme-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('lit'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('lit'));
+});
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.06});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class CrescentMote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.45;this.vy=-(Math.random()*.7+.08);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.018;
+      const t=Math.random();
+      if(t<.42){this.h=42;this.s=75;this.l=45;}
+      else if(t<.68){this.h=352;this.s=70;this.l=38;}
+      else if(t<.85){this.h=270;this.s=50;this.l=42;}
+      else{this.h=48;this.s=60;this.l=60;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},85%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<75;i++)pts.push(new CrescentMote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+}catch(e){console.warn("Script:",e.message);}
+</script>
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sisters-of-ira.html" class="nr-link"><div class="nr-link-icon">☾</div><div class="nr-link-text"><span class="nr-link-name">The Sisters of Ira</span><span class="nr-link-desc">Faction Codex · Selena's Order · Inner Noctis · The Black Crescent Wars</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="the-unchosen-ones.html" class="nr-link"><div class="nr-link-icon">◈</div><div class="nr-link-text"><span class="nr-link-name">The Unchosen Ones</span><span class="nr-link-desc">Maeryth Vonn's mission · Veltryn Null · the Altnet identity-horror arc</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sisters-of-ytixus.html" class="nr-link"><div class="nr-link-icon">◇</div><div class="nr-link-text"><span class="nr-link-name">The Sisters of Ytixus</span><span class="nr-link-desc">Verified faith · the Loom · Avayne Null and the seven judges</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="veltryn-null.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Veltryn Null</span><span class="nr-link-desc">The First Continuum Directorate · Corvyn Thael-Sorn · the colony</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sisters of Ytixus — Verified Faith | Nine Realms</title>
+<style>
+:root{
+  --void:#020204; --tower:#07080A; --crypt:#0A0C10; --vault:#0D1014;
+  --white:rgba(210,220,240,0.6); --white-mid:rgba(220,228,245,0.75); --white-bright:#E8EEFC;
+  --green:rgba(120,200,150,0.55); --green-bright:#90D8A8;
+  --red:rgba(192,40,56,0.6); --red-bright:#E04050;
+  --gold:rgba(212,160,32,0.5); --gold-bright:#E8C858;
+  --parch:#A8AEB8; --parch-pale:#D0D4DC; --parch-dim:#484C54;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+.mono{font-family:'Courier New',Courier,monospace;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:60vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 65% at 50% 0%,rgba(210,220,240,0.05) 0%,transparent 65%);animation:b 12s ease-in-out infinite;}
+@keyframes b{0%,100%{opacity:.5;}50%{opacity:1;}}
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:.02;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(210,220,240,.05) 3px,rgba(210,220,240,.05) 4px);}
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--white-bright);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(210,220,240,.35);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.lit{width:46px;height:46px;border-color:var(--white-bright);box-shadow:0 0 14px rgba(210,220,240,.3);}
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(2,2,4,.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(210,220,240,.12);}
+.nav-brand-name{font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:.2em;display:block;}
+.nav-brand-sub{font-family:'Courier New',monospace;font-size:9px;color:var(--white-bright);opacity:.5;display:block;margin-top:2px;letter-spacing:.06em;}
+.nav-brand{text-decoration:none;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--white-bright);border:1px solid rgba(210,220,240,.25);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:rgba(210,220,240,.5);}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse 80% 70% at 50% 45%,#0E1218 0%,#080A0E 45%,var(--void) 75%);}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-sys{font-family:'Courier New',monospace;font-size:10px;color:var(--white-bright);opacity:0;animation:r 1s .2s ease forwards;margin-bottom:16px;letter-spacing:.06em;}
+.h-label{font-size:clamp(9px,1.3vw,13px);letter-spacing:.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:r 1s .4s ease forwards;display:block;margin-bottom:10px;}
+.h-name{font-size:clamp(32px,6.5vw,88px);font-weight:900;color:var(--parch-pale);letter-spacing:.02em;line-height:.95;text-shadow:0 0 120px rgba(210,220,240,.3),0 4px 40px rgba(0,0,0,.95);opacity:0;animation:r 1.8s .5s ease forwards;}
+.h-sub{font-size:clamp(11px,1.6vw,17px);letter-spacing:.15em;color:var(--gold-bright);opacity:0;animation:r 1s .78s ease forwards;display:block;margin-top:10px;font-style:italic;}
+.h-rule{width:260px;height:1px;background:linear-gradient(to right,transparent,rgba(210,220,240,.4),rgba(212,160,32,.3),transparent);margin:22px auto;opacity:0;animation:f 1s 1.05s ease forwards;}
+@keyframes f{to{opacity:1;}}
+.h-oath{font-style:italic;font-size:clamp(14px,1.7vw,18px);color:rgba(168,174,184,.5);max-width:720px;margin:0 auto 36px;line-height:1.85;border-left:2px solid rgba(210,220,240,.3);padding-left:20px;text-align:left;opacity:0;animation:r 1.2s 1.15s ease forwards;}
+.h-vitals{display:flex;justify-content:center;max-width:820px;margin:0 auto;border:1px solid rgba(210,220,240,.12);opacity:0;animation:r 1s 1.5s ease forwards;flex-wrap:wrap;}
+.h-vital{flex:1;min-width:110px;padding:15px 10px;text-align:center;border-right:1px solid rgba(210,220,240,.08);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Courier New',monospace;font-size:clamp(9px,1.3vw,14px);color:var(--white-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-size:7px;letter-spacing:.22em;text-transform:uppercase;color:var(--parch-dim);opacity:.5;}
+.h-scroll{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:r 1s 2s ease forwards;}
+.h-scroll span{font-family:'Courier New',monospace;font-size:8px;color:var(--parch-dim);opacity:.3;letter-spacing:.06em;}
+.s-line{width:1px;height:34px;background:linear-gradient(to bottom,rgba(210,220,240,.4),transparent);animation:sp 2.5s ease-in-out infinite;}
+@keyframes r{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sp{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+.sl{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.06em;color:var(--white-bright);opacity:.45;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(210,220,240,.15),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-size:14px;color:rgba(210,220,240,.4);}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.12s;}.d2{transition-delay:.24s;}.d3{transition-delay:.36s;}
+.sec{padding:100px 60px;position:relative;overflow:hidden;}
+.sec-a{background:var(--tower);}.sec-b{background:var(--crypt);}.sec-c{background:var(--vault);}
+.inner{max-width:1200px;margin:0 auto;}
+.inner-md{max-width:1100px;margin:0 auto;}
+.big-h{font-size:clamp(22px,3.1vw,42px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:20px;}
+.big-h em{font-style:italic;color:var(--white-bright);}
+.big-h em.red{color:var(--red-bright);}
+.bp{font-size:clamp(15px,1.7vw,18px);color:rgba(168,174,184,.6);line-height:1.85;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--white-bright);}
+.pull{margin:20px 0;padding:16px 22px;border-left:2px solid rgba(210,220,240,.4);background:rgba(210,220,240,.04);}
+.pull p{font-style:italic;font-size:clamp(14px,1.7vw,19px);color:rgba(168,174,184,.75);line-height:1.7;}
+.pull cite{font-family:'Courier New',monospace;font-size:9px;color:var(--white-bright);opacity:.4;display:block;margin-top:8px;font-style:normal;letter-spacing:.04em;}
+/* Sister cards */
+.sister-grid{display:flex;flex-direction:column;gap:2px;margin-top:36px;}
+.sister-card{padding:0;border:1px solid rgba(210,220,240,.08);background:rgba(6,7,10,.6);transition:border-color .3s;overflow:hidden;}
+.sister-card:hover{border-color:rgba(210,220,240,.25);}
+.sc-head{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:16px;padding:20px 24px;border-bottom:1px solid rgba(210,220,240,.06);}
+.sc-num{font-size:24px;color:rgba(210,220,240,.2);}
+.sc-name{font-size:clamp(15px,2vw,22px);color:var(--parch-pale);letter-spacing:.04em;}
+.sc-title{font-style:italic;font-size:12px;color:var(--gold-bright);display:block;margin-top:2px;}
+.sc-badge{font-family:'Courier New',monospace;font-size:8px;color:var(--white-bright);border:1px solid rgba(210,220,240,.2);padding:4px 12px;opacity:.7;letter-spacing:.05em;white-space:nowrap;}
+.sc-body{padding:20px 24px;}
+.sc-p{font-style:italic;font-size:13.5px;color:rgba(168,174,184,.55);line-height:1.75;margin-bottom:12px;}
+.sc-p strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.sc-p em{color:var(--white-bright);}
+.sc-theme{font-family:'Courier New',monospace;font-size:8px;color:rgba(168,174,184,.35);padding-top:10px;border-top:1px solid rgba(210,220,240,.06);letter-spacing:.02em;line-height:1.6;}
+/* Watcher/Interceptor */
+.wi-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:36px;}
+.wi-card{padding:28px 26px;border:1px solid rgba(210,220,240,.1);background:rgba(6,7,10,.6);transition:border-color .3s;}
+.wi-card:hover{border-color:rgba(210,220,240,.25);}
+.wi-title{font-size:16px;color:var(--parch-pale);margin-bottom:4px;}
+.wi-sub{font-style:italic;font-size:12px;color:var(--gold-bright);display:block;margin-bottom:12px;}
+.wi-body{font-style:italic;font-size:13px;color:rgba(168,174,184,.5);line-height:1.7;margin-bottom:10px;}
+/* Mirevane death phases */
+.phase-list{display:flex;flex-direction:column;gap:2px;margin-top:36px;}
+.phase-row{display:grid;grid-template-columns:140px 1fr;border:1px solid rgba(210,220,240,.07);overflow:hidden;transition:border-color .3s;}
+.phase-row:hover{border-color:rgba(210,220,240,.2);}
+.ph-label{padding:14px 16px;background:rgba(210,220,240,.02);border-right:1px solid rgba(210,220,240,.06);display:flex;align-items:center;}
+.ph-label span{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--white-bright);opacity:.6;}
+.ph-body{padding:14px 18px;font-style:italic;font-size:13px;color:rgba(168,174,184,.55);line-height:1.65;display:flex;align-items:center;}
+/* Symbol table */
+.symbol-table{margin-top:36px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(210,220,240,.1);}
+.symrow{display:grid;grid-template-columns:200px 1fr;overflow:hidden;}
+.symk{font-family:'Courier New',monospace;font-size:9px;color:var(--white-bright);opacity:.6;background:rgba(210,220,240,.02);padding:11px 12px;border-right:1px solid rgba(210,220,240,.06);letter-spacing:.02em;display:flex;align-items:center;}
+.symv{font-style:italic;font-size:13px;color:rgba(168,174,184,.55);padding:9px 14px;line-height:1.55;display:flex;align-items:center;}
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(210,220,240,.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-size:clamp(22px,3vw,42px);color:var(--parch-pale);margin-bottom:16px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--white-bright);}
+.page-cta p{font-style:italic;font-size:16px;color:rgba(168,174,184,.4);max-width:480px;margin:0 auto 40px;line-height:1.7;}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:14px 28px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#EEF0F6;}
+.btn-g{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(168,174,184,.15);padding:14px 28px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(168,174,184,.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(210,220,240,.06);padding:32px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-size:12px;color:rgba(168,174,184,.18);}
+@media(max-width:900px){.sec{padding:70px 32px;}.sc-head{grid-template-columns:1fr;}.wi-split{grid-template-columns:1fr;}.phase-row,.symrow{grid-template-columns:1fr;}.ph-label,.symk{border-right:none;border-bottom:1px solid rgba(210,220,240,.05);}.nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}.h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(210,220,240,.08);}}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// VELTRYN NULL · SISTERS_OF_YTIXUS · VERIFIED_FAITH //</span>
+  </a>
+  <div class="nav-right">
+    <a href="the-unchosen-ones.html" class="nav-link">The Unchosen Ones</a>
+    <a href="veltryn-null.html" class="nav-link">Veltryn Null</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="h-sys mono">VELTRYN_NULL · CONVERTED_FROM_THE_SISTERS_OF_IRA · SEVEN_JUDGES</div>
+    <span class="h-label">People Who Received Evidence Their Faith Was Metaphor</span>
+    <h1 class="h-name">The Sisters of Ytixus</h1>
+    <span class="h-sub">Nothing Is True Until It Survives Observation</span>
+    <div class="h-rule"></div>
+    <div class="h-oath">"They did not abandon Ira. They graduated from her. Selena is not their enemy. She is their predecessor. And predecessors, however brilliant, are eventually left behind."</div>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval mono">7</div><div class="h-vlabel">Converted Judges</div></div>
+      <div class="h-vital"><div class="h-vval mono">The Loom</div><div class="h-vlabel">Judgment Instrument</div></div>
+      <div class="h-vital"><div class="h-vval mono">Axiom Host</div><div class="h-vlabel">Enforcement Net</div></div>
+      <div class="h-vital"><div class="h-vval mono">2</div><div class="h-vlabel">Marked Ira Exiles</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span class="mono">// SUBMIT TO OBSERVATION //</span><div class="s-line"></div></div>
+</section>
+
+<!-- IDENTITY -->
+<section class="sec sec-a">
+  <div class="inner-md rv">
+    <span class="sl">// FACTION_IDENTITY · THE_PHILOSOPHICAL_PROBLEM //</span>
+    <h2 class="big-h">Not apostates.<br><em>Something more theologically specific.</em></h2>
+    <p class="bp">Selena's doctrine is faith managed by authority — it does not have evidence, it has hierarchy; not verification, but obedience. The Veltryn Stone offered the converted Sisters something Ira's promise never had: <strong>proof</strong>. When they felt the artifact's field reorganize identity at a level they had trained their whole lives to understand, they did not experience betrayal. <em>They experienced completion.</em></p>
+    <div class="pull rv d1"><p>Their argument against Maeryth specifically: "You steal identities for a woman who lies to you. You have never verified whether the framework you serve is real or whether you simply lack a better option. You are the most gifted identity specialist in Selena's operation, and you have never once verified your own." This is the argument they use on Mirevane. It will almost work.</p></div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◇</div></div>
+
+<!-- SEVEN SISTERS -->
+<section class="sec sec-b">
+  <div class="inner rv">
+    <span class="sl">// THE_SEVEN_SISTERS_OF_YTIXUS · INDIVIDUAL_CANON //</span>
+    <h2 class="big-h">Seven judges.<br><em>Seven functions of one verdict.</em></h2>
+    <div class="sister-grid rv d1">
+
+      <div class="sister-card">
+        <div class="sc-head"><div class="sc-num">I</div><div><div class="sc-name">Avayne Null</div><span class="sc-title">The Parallax Eye / The Red Sister</span></div><div class="sc-badge">RED_JUDGE</div></div>
+        <div class="sc-body">
+          <p class="sc-p">Senior judge of the Loom — the only Sister authorized to complete a full red classification without council. Red gems at her forehead are passive observation nodes reading shadow-weight and identity coherence from anyone nearby. <strong>Not swapped suddenly</strong> — changed slowly across months of observation until she concluded the substituted version of herself was epistemologically superior, and made no effort to resist it. That was a decision, not passivity.</p>
+          <p class="sc-p">Identifies Maeryth's cell within forty minutes of the echo verge crossing — she trained under the same Mask-Class doctrine lineage. Runs the Seven Withholdings on Maeryth <em>and never completes them</em>, because Maeryth's conditioned identity stack matches no classification the Loom was built to handle. <strong>Her hesitation isn't mercy. It's diagnostic failure.</strong></p>
+          <div class="sc-theme">SYMBOL: Observation without mercy — the judgment that contains both options and chooses finally</div>
+        </div>
+      </div>
+
+      <div class="sister-card">
+        <div class="sc-head"><div class="sc-num">II</div><div><div class="sc-name">Serath Moiv</div><span class="sc-title">The Green Path / The Stabilizer</span></div><div class="sc-badge">GREEN_JUDGE</div></div>
+        <div class="sc-body">
+          <p class="sc-p">Operates the Loom's stabilization function through gauntlets housing the green-scan mechanism. The only convert who volunteered through what Ytixian record calls a <strong>voluntary Green Exposure</strong> — she asked to be stabilized under green light to understand what the Loom would see in her, and survived with her identity mostly intact.</p>
+          <p class="sc-p">First point of contact for potential converts, approaching through intellectual warmth rather than doctrinal pressure. Engaged <strong>Mirevane Korr</strong> first, recognizing her as a records-keeper who would respond to systematic rather than emotional appeal. Never says the Sisters of Ira are wrong — only asks questions Mirevane cannot answer. <em>This is the most dangerous kind of seduction.</em></p>
+          <div class="sc-theme">SYMBOL: Gentleness weaponized — warmth as the delivery of a fatal idea</div>
+        </div>
+      </div>
+
+      <div class="sister-card">
+        <div class="sc-head"><div class="sc-num">III</div><div><div class="sc-name">Dreya Orvoss</div><span class="sc-title">The Spiral Depth / The Colony Thread</span></div><div class="sc-badge">INFILTRATION</div></div>
+        <div class="sc-body">
+          <p class="sc-p">Continuity auditor for social infiltration inside the colony's civilian life. Her substitution was so gradual she cannot identify the exact moment the original Dreya ended. She considers this philosophically important: <strong>continuity never broke — it bent.</strong> Substitution is not death. It is evolution, and refusing to accept it is the only fatal response.</p>
+          <p class="sc-p">First to appear near Maeryth's team in a civilian role, running a market contact when Thaneira passes. Thaneira feels recognition she cannot account for — not of Dreya's face, but her movement pattern. <em>The observation chain begins here.</em> This plants the first seed of the team's paranoia.</p>
+          <div class="sc-theme">SYMBOL: Continuity as adaptation — the most comfortable lie about what the self is</div>
+        </div>
+      </div>
+
+      <div class="sister-card">
+        <div class="sc-head"><div class="sc-num">IV</div><div><div class="sc-name">Valyss Sol</div><span class="sc-title">The Key Bearer / The First Verdict</span></div><div class="sc-badge">FOUNDER</div></div>
+        <div class="sc-body">
+          <p class="sc-p">Leader of the <strong>first Sisters of Ira cell Selena ever sent</strong> — fifteen years ago. Fully and violently swapped within three months near the inner chamber; the original Valyss died the same moment her replacement appeared. Immediately recognized the artifact as something Selena had profoundly misunderstood, and built the Sisters of Ytixus from the converted membership of every subsequent entry cell.</p>
+          <p class="sc-p">Has documented fifteen years of Selena's operational evidence and holds a <strong>Null Provenance Mark pre-authorized in absentia for Selena</strong> — a senior-enough judge can complete the full Seven Withholdings against someone not physically present. The verdict is already written. It simply has no Host node near Selena yet to read it. <em>She isn't planning an assassination. She's carrying a sentence that's already final and waiting for proximity.</em></p>
+          <div class="sc-theme">SYMBOL: Brilliance in service of a verdict that cannot account for what it destroys</div>
+        </div>
+      </div>
+
+      <div class="sister-card">
+        <div class="sc-head"><div class="sc-num">V</div><div><div class="sc-name">Kethrel Onn</div><span class="sc-title">The Cloak Host / The Node Keeper</span></div><div class="sc-badge">INFRASTRUCTURE</div></div>
+        <div class="sc-body">
+          <p class="sc-p">Manages the distributed Axiom Host node network throughout the colony rather than the judgment instrument itself. Reveals — factually, without triumph — that the <strong>Interceptor and Watcher have already been marked</strong> by the very security architecture built by people Selena sent. The Host does not ask whether a marked subject was once a Sister of Ira. It only asks whether continuity survives observation.</p>
+          <div class="sc-theme">SYMBOL: Ideology encoded into infrastructure — the horror of automatic enforcement</div>
+        </div>
+      </div>
+
+      <div class="sister-card">
+        <div class="sc-head"><div class="sc-num">VI</div><div><div class="sc-name">Naeriva Thael</div><span class="sc-title">The Raven Circuit / The Quiet Watcher</span></div><div class="sc-badge">PSYCHOLOGICAL</div></div>
+        <div class="sc-body">
+          <p class="sc-p">Primary psychological engagement specialist — spent the most time with Mirevane Korr. Red gems at her wrists are reflection-delay readers measuring the exact gap between a subject's action and their shadow's response. Her method is not doctrine but <strong>genuine scholarly curiosity</strong> about Mirevane's documentation, which is what makes her so dangerous — the engagement isn't performance.</p>
+          <p class="sc-p">The trigger: she tells Mirevane she does <em>not</em> recommend the Loom's green scan, because Mirevane's recent false-memory exposure makes her too unstable for clean observation. Telling a records-keeper her data is too dirty to verify is the precise move. <strong>Mirevane asks for the scan herself.</strong></p>
+          <div class="sc-theme">SYMBOL: Intellectual integrity weaponized — truth-seeking turned into a trigger</div>
+        </div>
+      </div>
+
+      <div class="sister-card">
+        <div class="sc-head"><div class="sc-num">VII</div><div><div class="sc-name">Yrsath Korr</div><span class="sc-title">The Marked Blade / The Verdict's Edge</span></div><div class="sc-badge">MANUAL_OVERRIDE</div></div>
+        <div class="sc-body">
+          <p class="sc-p">The faction's only close-combat operative — the manual override for targets the Host can't reach. Carries her verdict literally in her hand rather than letting architecture deliver it. Her transition to violence took years, following one consistent logic: if observation reveals an unrecoverable contradiction and the Host is unavailable, <strong>the verdict is still valid and requires enforcement.</strong> She kills calmly, with ceremony, without hatred — which is more disturbing than rage.</p>
+          <p class="sc-p">The Sister Maeryth must personally kill. Maeryth wins not through superior technique, but because Yrsath's system requires the self to be predictable — and Maeryth, at her most defended, acts from herself rather than any tactical model. <em>You cannot predict what a self does when it acts from its actual core.</em></p>
+          <div class="sc-theme">SYMBOL: The end-state of judgment without mercy — honest embodiment of an insufficient philosophy is more dangerous than hypocrisy</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◇</div></div>
+
+<!-- INTERCEPTOR & WATCHER -->
+<section class="sec sec-a">
+  <div class="inner-md rv">
+    <span class="sl">// THE_INTERCEPTOR_&_THE_WATCHER · THE_LAST_TWO_ORIGINAL_SISTERS //</span>
+    <h2 class="big-h">Not Sisters of Ytixus.<br><em>What survives being marked and left outside.</em></h2>
+    <p class="bp" style="max-width:700px;">The last two original Sisters of Ira, running the final degraded remnant of Selena's external perimeter operation for years — marked by the Loom, unable to re-enter, surviving in a mission that has slowly become something else entirely.</p>
+    <div class="wi-split rv d1">
+      <div class="wi-card">
+        <div class="wi-title">The Interceptor</div>
+        <span class="wi-sub">Sister Verath Nol</span>
+        <p class="wi-body">Maintains the communications relay at the colony's outskirts — mission-command posture preserved for years after most of who she relayed to were converted, killed, or transformed. Has assembled a document proving Selena orchestrated an atrocity, but never transmitted it.</p>
+        <p class="wi-body"><strong>She is preserved by her mission like a specimen in amber.</strong> The open question: is remaining unchanged across years here a sign of identity strength, or a sign the environment found nothing in her worth changing?</p>
+      </div>
+      <div class="wi-card">
+        <div class="wi-title">The Watcher</div>
+        <span class="wi-sub">Sister Iysra Thael</span>
+        <p class="wi-body">Positioned at the outer ring, close enough to observe, far enough that the substitution field is weakest. Not substituted — <em>changed</em>. Experiences the "verge effect": her identity feels slightly permeable without being threatening.</p>
+        <p class="wi-body">Her final message to Maeryth, the piece of truth Maeryth keeps from Selena: <strong>"The coherent ones chose their own anchors. That's what I've watched for years. The conditioning isn't what holds."</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◇</div></div>
+
+<!-- MIREVANE'S DEATH -->
+<section class="sec sec-b">
+  <div class="inner-md rv">
+    <span class="sl">// THE_MIREVANE_ARC · IN_PRECISE_DETAIL //</span>
+    <h2 class="big-h">The story's first death.<br><em class="red">Earned architecturally, not explained.</em></h2>
+    <div class="phase-list rv d1">
+      <div class="phase-row"><div class="ph-label"><span>Phase I</span></div><div class="ph-body"><strong>Initial contact (Serath):</strong> Approaches Mirevane already in records-crisis. Offers no answers — only questions. The conversation feels like being understood. First breach.</div></div>
+      <div class="phase-row"><div class="ph-label"><span>Phase II</span></div><div class="ph-body"><strong>Intellectual cultivation (Naeriva):</strong> Genuine scholarly interest across multiple encounters. Establishes: a records-keeper who can't verify her own records has a fundamental integrity problem. Not a threat — a diagnosis. Mirevane feels seen.</div></div>
+      <div class="phase-row"><div class="ph-label"><span>Phase III</span></div><div class="ph-body"><strong>The withdrawal:</strong> Naeriva does not recommend the green scan — Mirevane's instability would make results unreliable. Mirevane's professional identity cannot accept this. She asks for the scan herself.</div></div>
+      <div class="phase-row"><div class="ph-label"><span>Phase IV</span></div><div class="ph-body"><strong>What the scan does:</strong> Stabilizes her — genuinely, honestly. Now lucid for the first time since entering the colony, she requests <em>voluntary substitution</em>. The Sisters of Ytixus never suggested it. They only built the framework where the conclusion made sense.</div></div>
+      <div class="phase-row"><div class="ph-label"><span>Phase V</span></div><div class="ph-body"><strong>Soul-death:</strong> She was already an Altnet and never knew. The substitution hits a second threshold and collapses instantly. Her body remains for ~40 seconds while the soul-stack fails to re-stabilize. She is aware the entire time.</div></div>
+    </div>
+    <div class="pull rv d2"><p>Her final expression is not rage. She is looking at her own records — not documents, the ones inside herself — and cannot determine which are hers. There was a self in there. She had been recording it all along. She just could not read her own handwriting.</p></div>
+    <div class="pull rv d3" style="border-left-color:rgba(212,160,32,.4);background:rgba(212,160,32,.04);"><p>Mirevane dies from an idea she chose. Kaelith dies from an action she chose. Mirevane's death says: the self cannot always think its way to safety. Kaelith's says: the self can sometimes act its way to meaning even when safety is impossible. Together they answer the story's central question — <strong>identity is not what you verify. It is what you do when verification isn't available.</strong></p></div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◇</div></div>
+
+<!-- SYMBOLIC ARCHITECTURE -->
+<section class="sec sec-a">
+  <div class="inner-md rv">
+    <span class="sl">// SYMBOLIC_ARCHITECTURE · WHAT_EACH_ELEMENT_MEANS //</span>
+    <h2 class="big-h">Not wrong about what<br><em>observation reveals.</em></h2>
+    <p class="bp" style="max-width:700px;">Wrong about what it's for. Observation that does not serve life is not wisdom — it is a very precise form of cruelty that has forgotten its own origin.</p>
+    <div class="symbol-table rv d1">
+      <div class="symrow"><div class="symk">The Sisters of Ytixus</div><div class="symv">Verified faith as a weapon — the danger of evidence without compassion</div></div>
+      <div class="symrow"><div class="symk">Avayne Null</div><div class="symv">Observation without mercy — the judgment that contains both options and chooses finally</div></div>
+      <div class="symrow"><div class="symk">The Axiom Host</div><div class="symv">What happens when belonging is enforced by architecture rather than community</div></div>
+      <div class="symrow"><div class="symk">The Null Provenance Mark</div><div class="symv">The philosophical death sentence — you cannot outrun the verdict written into your continuity</div></div>
+      <div class="symrow"><div class="symk">The Interceptor</div><div class="symv">Identity preserved through mission-rigidity — survival at the cost of becoming the mission</div></div>
+      <div class="symrow"><div class="symk">The Watcher</div><div class="symv">Identity maintained through conscious daily practice — not immovable, but held</div></div>
+      <div class="symrow"><div class="symk">The Green Scan</div><div class="symv">The corruption of fair process — rigor without compassion produces worse outcomes than imperfect charity</div></div>
+      <div class="symrow"><div class="symk">The Loom Itself</div><div class="symv">Judgment as technology — the horror of making mercy optional</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="page-cta">
+  <div class="page-cta-inner rv">
+    <span class="sl" style="display:block;text-align:center;margin-bottom:18px;">// SISTERS_OF_YTIXUS · VERIFIED_FAITH · VELTRYN_NULL //</span>
+    <h2>Faith managed by authority<br><em>versus faith completed by evidence.</em></h2>
+    <p>Maeryth's greatest tactical advantage — her identity ambiguity — is also what the Loom cannot classify. She survives because she is not coherent enough to be condemned. That is not the same thing as being real enough to be saved.</p>
+    <div class="cta-row">
+      <a href="the-unchosen-ones.html" class="btn-p">The Unchosen Ones →</a>
+      <a href="veltryn-null.html" class="btn-g">Veltryn Null →</a>
+      <a href="sisters-of-ira.html" class="btn-g">Sisters of Ira →</a>
+    </div>
+  </div>
+</div>
+<footer><span class="fc">Nine Realms Universe — The Sisters of Ytixus · Verified Faith · Original IP</span><span class="fc">Created by Ron</span></footer>
+
+<script>
+try{
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('.sister-card,.wi-card,.phase-row,.symrow').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('lit'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('lit'));
+});
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.06});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class ObserveMote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.35;this.vy=-(Math.random()*.6+.06);
+      this.r=Math.random()*1.8+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.0035+.0008;this.wobble=(Math.random()-.5)*.015;
+      const t=Math.random();
+      if(t<.5){this.h=210;this.s=25;this.l=75;}
+      else if(t<.72){this.h=130;this.s=35;this.l=60;}
+      else if(t<.88){this.h=350;this.s=55;this.l=42;}
+      else{this.h=42;this.s=50;this.l=55;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0004+this.x*.007)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.5;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1){ctx.shadowBlur=4;ctx.shadowColor=`hsl(${this.h},70%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<65;i++)pts.push(new ObserveMote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+}catch(e){console.warn("Script:",e.message);}
+</script>
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sisters-of-ira.html" class="nr-link"><div class="nr-link-icon">☾</div><div class="nr-link-text"><span class="nr-link-name">The Sisters of Ira</span><span class="nr-link-desc">Faction Codex · Selena's Order · Inner Noctis · The Black Crescent Wars</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="the-unchosen-ones.html" class="nr-link"><div class="nr-link-icon">◈</div><div class="nr-link-text"><span class="nr-link-name">The Unchosen Ones</span><span class="nr-link-desc">Maeryth Vonn's mission · Veltryn Null · the Altnet identity-horror arc</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sisters-of-ytixus.html" class="nr-link"><div class="nr-link-icon">◇</div><div class="nr-link-text"><span class="nr-link-name">The Sisters of Ytixus</span><span class="nr-link-desc">Verified faith · the Loom · Avayne Null and the seven judges</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="veltryn-null.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Veltryn Null</span><span class="nr-link-desc">The First Continuum Directorate · Corvyn Thael-Sorn · the colony</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>

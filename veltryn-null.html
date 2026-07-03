@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veltryn Null — The First Continuum Directorate | Nine Realms</title>
+<style>
+:root{
+  --void:#020403; --tower:#060A08; --crypt:#080E0B; --vault:#0B120E;
+  --teal:rgba(80,180,160,0.55); --teal-mid:rgba(90,190,170,0.7); --teal-bright:#70D0B8;
+  --gold:rgba(212,175,90,0.55); --gold-bright:#E8C878;
+  --red:rgba(192,60,50,0.55); --red-bright:#D86858;
+  --parch:#A8B0AC; --parch-pale:#D0D6D2; --parch-dim:#48504C;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+.mono{font-family:'Courier New',Courier,monospace;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:60vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 65% at 50% 0%,rgba(80,180,160,0.06) 0%,transparent 65%);animation:b 12s ease-in-out infinite;}
+@keyframes b{0%,100%{opacity:.5;}50%{opacity:1;}}
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:.02;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(80,180,160,.05) 3px,rgba(80,180,160,.05) 4px);}
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--teal-bright);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(112,208,184,.35);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.lit{width:46px;height:46px;border-color:var(--teal-bright);box-shadow:0 0 14px rgba(112,208,184,.3);}
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(2,4,3,.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(112,208,184,.12);}
+.nav-brand-name{font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:.2em;display:block;}
+.nav-brand-sub{font-family:'Courier New',monospace;font-size:9px;color:var(--teal-bright);opacity:.5;display:block;margin-top:2px;letter-spacing:.06em;}
+.nav-brand{text-decoration:none;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal-bright);border:1px solid rgba(112,208,184,.25);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:rgba(112,208,184,.5);}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse 80% 70% at 50% 45%,#0C1410 0%,#080C0A 45%,var(--void) 75%);}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-sys{font-family:'Courier New',monospace;font-size:10px;color:var(--teal-bright);opacity:0;animation:r 1s .2s ease forwards;margin-bottom:16px;letter-spacing:.06em;}
+.h-label{font-size:clamp(9px,1.3vw,13px);letter-spacing:.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:r 1s .4s ease forwards;display:block;margin-bottom:10px;}
+.h-name{font-size:clamp(34px,6.8vw,92px);font-weight:900;color:var(--parch-pale);letter-spacing:.02em;line-height:.95;text-shadow:0 0 120px rgba(112,208,184,.3),0 4px 40px rgba(0,0,0,.95);opacity:0;animation:r 1.8s .5s ease forwards;}
+.h-sub{font-size:clamp(11px,1.6vw,17px);letter-spacing:.15em;color:var(--gold-bright);opacity:0;animation:r 1s .78s ease forwards;display:block;margin-top:10px;font-style:italic;}
+.h-rule{width:260px;height:1px;background:linear-gradient(to right,transparent,rgba(112,208,184,.4),rgba(212,175,90,.3),transparent);margin:22px auto;opacity:0;animation:f 1s 1.05s ease forwards;}
+@keyframes f{to{opacity:1;}}
+.h-oath{font-style:italic;font-size:clamp(14px,1.7vw,18px);color:rgba(168,176,172,.5);max-width:720px;margin:0 auto 36px;line-height:1.85;border-left:2px solid rgba(112,208,184,.3);padding-left:20px;text-align:left;opacity:0;animation:r 1.2s 1.15s ease forwards;}
+.h-vitals{display:flex;justify-content:center;max-width:820px;margin:0 auto;border:1px solid rgba(112,208,184,.12);opacity:0;animation:r 1s 1.5s ease forwards;flex-wrap:wrap;}
+.h-vital{flex:1;min-width:110px;padding:15px 10px;text-align:center;border-right:1px solid rgba(112,208,184,.08);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Courier New',monospace;font-size:clamp(9px,1.3vw,14px);color:var(--teal-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-size:7px;letter-spacing:.22em;text-transform:uppercase;color:var(--parch-dim);opacity:.5;}
+.h-scroll{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:r 1s 2s ease forwards;}
+.h-scroll span{font-family:'Courier New',monospace;font-size:8px;color:var(--parch-dim);opacity:.3;letter-spacing:.06em;}
+.s-line{width:1px;height:34px;background:linear-gradient(to bottom,rgba(112,208,184,.4),transparent);animation:sp 2.5s ease-in-out infinite;}
+@keyframes r{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sp{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+.sl{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.06em;color:var(--teal-bright);opacity:.45;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(112,208,184,.15),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-size:14px;color:rgba(112,208,184,.4);}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.12s;}.d2{transition-delay:.24s;}.d3{transition-delay:.36s;}
+.sec{padding:100px 60px;position:relative;overflow:hidden;}
+.sec-a{background:var(--tower);}.sec-b{background:var(--crypt);}.sec-c{background:var(--vault);}
+.inner{max-width:1200px;margin:0 auto;}
+.inner-md{max-width:1100px;margin:0 auto;}
+.big-h{font-size:clamp(22px,3.1vw,42px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:20px;}
+.big-h em{font-style:italic;color:var(--teal-bright);}
+.bp{font-size:clamp(15px,1.7vw,18px);color:rgba(168,176,172,.6);line-height:1.85;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--teal-bright);}
+.pull{margin:20px 0;padding:16px 22px;border-left:2px solid rgba(112,208,184,.4);background:rgba(112,208,184,.04);}
+.pull p{font-style:italic;font-size:clamp(14px,1.7vw,19px);color:rgba(168,176,172,.75);line-height:1.7;}
+.pull cite{font-family:'Courier New',monospace;font-size:9px;color:var(--teal-bright);opacity:.4;display:block;margin-top:8px;font-style:normal;letter-spacing:.04em;}
+/* Corvyn profile */
+.profile-block{margin-top:36px;padding:36px;border:1px solid rgba(112,208,184,.15);background:rgba(6,10,8,.7);position:relative;overflow:hidden;}
+.profile-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(112,208,184,.5),transparent);}
+.pb-badge{font-family:'Courier New',monospace;font-size:8px;color:var(--teal-bright);border:1px solid rgba(112,208,184,.2);padding:4px 14px;display:inline-block;margin-bottom:14px;opacity:.7;letter-spacing:.05em;}
+.pb-title{font-size:clamp(18px,2.6vw,32px);color:var(--parch-pale);margin-bottom:6px;}
+.pb-sub{font-style:italic;font-size:13px;color:var(--gold-bright);display:block;margin-bottom:16px;}
+.pb-body{font-style:italic;font-size:clamp(13.5px,1.5vw,16px);color:rgba(168,176,172,.6);line-height:1.85;margin-bottom:14px;}
+.pb-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+/* Class hierarchy */
+.class-list{display:flex;flex-direction:column;gap:2px;margin-top:36px;}
+.class-row{display:grid;grid-template-columns:44px 220px 1fr;border:1px solid rgba(112,208,184,.07);overflow:hidden;transition:border-color .3s;}
+.class-row:hover{border-color:rgba(112,208,184,.2);}
+.cl-num{padding:14px;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--teal-bright);opacity:.5;border-right:1px solid rgba(112,208,184,.05);}
+.cl-name{padding:14px 16px;border-right:1px solid rgba(112,208,184,.05);display:flex;align-items:center;font-size:13px;letter-spacing:.04em;color:var(--parch-pale);}
+.cl-desc{padding:12px 18px;font-style:italic;font-size:12.5px;color:rgba(168,176,172,.5);line-height:1.55;display:flex;align-items:center;}
+/* Officer table */
+.officer-table{margin-top:36px;display:flex;flex-direction:column;gap:2px;}
+.off-row{display:grid;grid-template-columns:180px 220px 1fr;border:1px solid rgba(112,208,184,.07);overflow:hidden;transition:border-color .3s,background .3s;}
+.off-row:hover{border-color:rgba(112,208,184,.2);background:rgba(112,208,184,.02);}
+.off-name-cell{padding:14px 16px;background:rgba(112,208,184,.02);border-right:1px solid rgba(112,208,184,.05);display:flex;align-items:center;font-size:12.5px;letter-spacing:.03em;color:var(--parch-pale);}
+.off-theme-cell{padding:14px 16px;border-right:1px solid rgba(112,208,184,.05);display:flex;align-items:center;font-style:italic;font-size:12px;color:var(--gold-bright);}
+.off-manifest-cell{padding:12px 18px;font-style:italic;font-size:12.5px;color:rgba(168,176,172,.5);line-height:1.55;display:flex;align-items:center;}
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(112,208,184,.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-size:clamp(22px,3vw,42px);color:var(--parch-pale);margin-bottom:16px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--teal-bright);}
+.page-cta p{font-style:italic;font-size:16px;color:rgba(168,176,172,.4);max-width:480px;margin:0 auto 40px;line-height:1.7;}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:14px 28px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#EAF2EE;}
+.btn-g{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(168,176,172,.15);padding:14px 28px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(168,176,172,.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(112,208,184,.06);padding:32px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-size:12px;color:rgba(168,176,172,.18);}
+@media(max-width:900px){.sec{padding:70px 32px;}.class-row,.off-row{grid-template-columns:1fr;}.cl-num,.cl-name,.off-name-cell,.off-theme-cell{border-right:none;border-bottom:1px solid rgba(112,208,184,.05);}.nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}.h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(112,208,184,.08);}}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// VELTRYN_NULL · FIRST_CONTINUUM_DIRECTORATE · THE_COLONY //</span>
+  </a>
+  <div class="nav-right">
+    <a href="the-unchosen-ones.html" class="nav-link">The Unchosen Ones</a>
+    <a href="sisters-of-ytixus.html" class="nav-link">Ytixus</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="h-sys mono">SEALED_COLONY · ARTIFACT_TEMPLE · TWELVE_DIRECTORATE_OFFICERS</div>
+    <span class="h-label">Systems Are More Dangerous Than Villains</span>
+    <h1 class="h-name">Veltryn Null</h1>
+    <span class="h-sub">The First Continuum Directorate</span>
+    <div class="h-rule"></div>
+    <div class="h-oath">"The colony is not a monument to evil. It is a monument to what happens when reasonable people make reasonable choices in unreasonable conditions for long enough that the reasonable choices accumulate into an unreasonable outcome."</div>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval mono">12</div><div class="h-vlabel">Directorate Officers</div></div>
+      <div class="h-vital"><div class="h-vval mono">Veltryn Stone</div><div class="h-vlabel">The Artifact</div></div>
+      <div class="h-vital"><div class="h-vval mono">4</div><div class="h-vlabel">Class Tiers</div></div>
+      <div class="h-vital"><div class="h-vval mono">Detonated</div><div class="h-vlabel">Final Status</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span class="mono">// ENTER THE INNER CONTINUUM //</span><div class="s-line"></div></div>
+</section>
+
+<!-- STRUCTURAL OVERVIEW -->
+<section class="sec sec-a">
+  <div class="inner-md rv">
+    <span class="sl">// STRUCTURAL_OVERVIEW · MILITARY_+_RELIGIOUS_+_RESEARCH //</span>
+    <h2 class="big-h">Not a monster.<br><em>A structure that became one.</em></h2>
+    <p class="bp">The <strong>First Continuum Directorate</strong> emerged from the collapse of the original Veltryn Null Research Colony's leadership across decades of substitution events, coups, and schisms. No single officer is the story's villain — the Directorate <em>as a whole</em> is, because the system they built absorbed their individual moral agency and now runs on institutional momentum no one controls. <strong>The original researchers were good people building a structure to contain a danger. The structure eventually became the danger.</strong></p>
+    <p class="bp">Every officer speaks in three registers simultaneously — administrative, military, theological — and none of them notice the fusion anymore.</p>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">✦</div></div>
+
+<!-- CORVYN -->
+<section class="sec sec-b">
+  <div class="inner-md rv">
+    <span class="sl">// ADMIRAL_CORVYN_THAEL-SORN · SUPREME_COMMANDER //</span>
+    <h2 class="big-h">The hero is no longer<br><em>morally clean.</em></h2>
+    <div class="profile-block rv d1">
+      <div class="pb-badge">// THE_TEMPORAL_STRATEGIST · SUPREME_MILITARY_&_ADMINISTRATIVE_COMMANDER //</div>
+      <h3 class="pb-title">Admiral Corvyn Thael-Sorn</h3>
+      <span class="pb-sub">Right diagnosis. Catastrophically wrong solution.</span>
+      <p class="pb-body">Original identity: the colony's <strong>fourth-generation Director of Temporal Assessment</strong> — a deliberate, careful man who believed information gathered across sufficient time allowed decisions without violence. His substitution was <em>self-authorized</em> — a deliberate research exposure inside the artifact's inner ring, because he wanted to understand what he was studying from the inside.</p>
+      <p class="pb-body">The original Corvyn believed the colony's purpose was to contain the artifact until Sablea could safely receive the knowledge. <strong>The Altnet Corvyn believes the colony's purpose is to become what Sablea should be</strong> — and that withholding the artifact's truth was itself a form of violence. He is one of three people who know the artifact's full cosmological origin: a fragment of a failed Dawnforge construct, its connection to Ytixus real but indirect. He compartmentalizes this deliberately — if the Ytixus penitents knew it was technology rather than pure divine artifact, the Chaplain's authority would fracture and colony theology would collapse.</p>
+      <p class="pb-body">He sees Maeryth's extraction team coming through pattern recognition, not precognition, and plans to let extraction complete, then take the samples and release the team — a message to Selena that the colony exists and is ready to negotiate. <strong>He does not know about the sleeper cell's detonation order.</strong> This is the single miscalculation that ends everything. He dies in the Directorate's central command room when the bubble collapses — the colony's institutional memory, taken with everything else.</p>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">✦</div></div>
+
+<!-- CLASS STRUCTURE -->
+<section class="sec sec-a">
+  <div class="inner-md rv">
+    <span class="sl">// COLONY_CLASS_STRUCTURE · THE_ARISTOCRACY_OF_THE_ACCIDENT //</span>
+    <h2 class="big-h">The unaffected are the colony's<br><em>most valuable and least powerful people.</em></h2>
+    <div class="class-list rv d1">
+      <div class="class-row"><div class="cl-num">I</div><div class="cl-name">The Directorate</div><div class="cl-desc">Administrative apex. Twelve officers governing the colony's military, religious, and research functions simultaneously.</div></div>
+      <div class="class-row"><div class="cl-num">II</div><div class="cl-name">Altnet Command Class</div><div class="cl-desc">Substituted individuals whose replacement selves demonstrated superior capability and were elevated through Selection protocols.</div></div>
+      <div class="class-row"><div class="cl-num">III</div><div class="cl-name">Research & Engineering</div><div class="cl-desc">Both substituted and enhanced — the colony's intellectual labor force, studying the artifact that shaped many of them.</div></div>
+      <div class="class-row"><div class="cl-num">IV</div><div class="cl-name">Labor & Security Force</div><div class="cl-desc">Substituted individuals whose replacement selves were assessed as functionally useful but not strategically elevated.</div></div>
+      <div class="class-row" style="border-color:rgba(212,175,90,0.2);"><div class="cl-num" style="color:var(--gold-bright);">◆</div><div class="cl-name">The Unaffected Originals</div><div class="cl-desc"><strong>Families, children, Morning Account practitioners</strong> who maintained coherence through deliberate anchor-practice. The colony's most valuable demographic and least politically powerful one — the deepest moral wound beneath the Directorate's self-justification.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">✦</div></div>
+
+<!-- OFFICER MASTER TABLE -->
+<section class="sec sec-b">
+  <div class="inner rv">
+    <span class="sl">// THE_TWELVE_OFFICERS · 90S_THRILLER_THEME_INTEGRATION //</span>
+    <h2 class="big-h">Every officer chose the system<br><em>over the self at a specific, identifiable moment.</em></h2>
+    <p class="bp" style="max-width:700px;">The story neither dismisses nor excuses any of their reasons. Each had one.</p>
+    <div class="officer-table rv d1">
+      <div class="off-row"><div class="off-name-cell">Corvyn Thael-Sorn</div><div class="off-theme-cell">The Hero Is No Longer Morally Clean</div><div class="off-manifest-cell">Right diagnosis, catastrophically wrong solution — <em>Heat's</em> McCauley architecture</div></div>
+      <div class="off-row"><div class="off-name-cell">Vael Ossyr</div><div class="off-theme-cell">The Line Between Law and Crime Is Thin</div><div class="off-manifest-cell">The enforcer who built atrocity into procedure — <em>Training Day's</em> institutional corruption</div></div>
+      <div class="off-row"><div class="off-name-cell">Drestyn Morvael</div><div class="off-theme-cell">Revenge Is Satisfying But Morally Poisonous</div><div class="off-manifest-cell">Legitimate grievance weaponized into theological mandate — <em>Oldboy's</em> architecture at civilization scale</div></div>
+      <div class="off-row"><div class="off-name-cell">Soten Krae</div><div class="off-theme-cell">Paranoia Becomes Rational</div><div class="off-manifest-cell">Built a security system to compensate for his own unreliable perceptions — distributed surveillance made architectural</div></div>
+      <div class="off-row"><div class="off-name-cell">Ellvys Quorn</div><div class="off-theme-cell">Reality Is Mediated or Artificial</div><div class="off-manifest-cell">His identity merged with his research until both are the same document</div></div>
+      <div class="off-row"><div class="off-name-cell">Rynden Mast</div><div class="off-theme-cell">Fate and Chaos Overwhelm Control</div><div class="off-manifest-cell">The engineer who designs for failure modes because control is temporary</div></div>
+      <div class="off-row"><div class="off-name-cell">Serne Volth</div><div class="off-theme-cell">Violence Reveals and Destroys Character</div><div class="off-manifest-cell">The scientist whose clarity about his work blinds him to its applications — <em>Se7en's</em> precision-as-methodology horror</div></div>
+      <div class="off-row"><div class="off-name-cell">Caelyx Voss</div><div class="off-theme-cell">Trauma Repeats Unless Confronted</div><div class="off-manifest-cell">Institutionalized collective trauma into research protocol</div></div>
+      <div class="off-row"><div class="off-name-cell">Mavryn Thull</div><div class="off-theme-cell">Systems More Dangerous Than Villains</div><div class="off-manifest-cell">The founder who cannot redirect the institution she built — bureaucratic inevitability at mythic scale</div></div>
+      <div class="off-row"><div class="off-name-cell">Tael Vorn</div><div class="off-theme-cell">Masculinity in Crisis (inverted)</div><div class="off-manifest-cell">The capable woman who serves a deteriorating institution because no alternative presents itself</div></div>
+      <div class="off-row"><div class="off-name-cell">Rheyss Mast</div><div class="off-theme-cell">Urban Alienation Breeds Moral Numbness</div><div class="off-manifest-cell">The augmented enforcer who experiences purpose as function rather than meaning</div></div>
+      <div class="off-row"><div class="off-name-cell">Sevar Noll</div><div class="off-theme-cell">Memory Is Unreliable but Necessary</div><div class="off-manifest-cell">Performs forgetting to protect what he knows — Maeryth's mid-game technical contact, captured after she leaves him</div></div>
+    </div>
+    <div class="pull rv d2"><p>Violence does not decide the philosophical argument. Maeryth's team wins — survives, extracts, completes the mission. The Sisters of Ytixus' argument is not defeated. Valyss Sol escapes. The doctrine survives. <strong>The combat decided who lived and who died. It did not decide who was right.</strong> The winner inherits the moral weight of winning, not the moral clarity of righteousness. Maeryth wins and carries the colony's dead. She does not get to not carry them just because she won.</p></div>
+  </div>
+</section>
+
+<div class="page-cta">
+  <div class="page-cta-inner rv">
+    <span class="sl" style="display:block;text-align:center;margin-bottom:18px;">// VELTRYN_NULL · FIRST_CONTINUUM_DIRECTORATE //</span>
+    <h2>A monument to what happens<br><em>when reasonable choices accumulate.</em></h2>
+    <p>Some inside are monsters. Some are children. Some are victims. Some are former originals. Some are Altnets who never asked to be created. This moral complexity is what makes the final detonation unbearable.</p>
+    <div class="cta-row">
+      <a href="the-unchosen-ones.html" class="btn-p">The Unchosen Ones →</a>
+      <a href="sisters-of-ytixus.html" class="btn-g">Sisters of Ytixus →</a>
+      <a href="sisters-of-ira.html" class="btn-g">Sisters of Ira →</a>
+    </div>
+  </div>
+</div>
+<footer><span class="fc">Nine Realms Universe — Veltryn Null · First Continuum Directorate · Original IP</span><span class="fc">Created by Ron</span></footer>
+
+<script>
+try{
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('.class-row,.off-row,.profile-block').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('lit'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('lit'));
+});
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.06});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class SystemMote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.4;this.vy=-(Math.random()*.65+.07);
+      this.r=Math.random()*1.9+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.0038+.0009;this.wobble=(Math.random()-.5)*.016;
+      const t=Math.random();
+      if(t<.48){this.h=165;this.s=45;this.l=55;}
+      else if(t<.72){this.h=42;this.s=55;this.l=58;}
+      else if(t<.88){this.h=0;this.s=45;this.l=45;}
+      else{this.h=175;this.s=25;this.l=70;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.00045+this.x*.0075)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.5;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=4;ctx.shadowColor=`hsl(${this.h},70%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<68;i++)pts.push(new SystemMote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+}catch(e){console.warn("Script:",e.message);}
+</script>
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sisters-of-ira.html" class="nr-link"><div class="nr-link-icon">☾</div><div class="nr-link-text"><span class="nr-link-name">The Sisters of Ira</span><span class="nr-link-desc">Faction Codex · Selena's Order · Inner Noctis · The Black Crescent Wars</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="the-unchosen-ones.html" class="nr-link"><div class="nr-link-icon">◈</div><div class="nr-link-text"><span class="nr-link-name">The Unchosen Ones</span><span class="nr-link-desc">Maeryth Vonn's mission · Veltryn Null · the Altnet identity-horror arc</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sisters-of-ytixus.html" class="nr-link"><div class="nr-link-icon">◇</div><div class="nr-link-text"><span class="nr-link-name">The Sisters of Ytixus</span><span class="nr-link-desc">Verified faith · the Loom · Avayne Null and the seven judges</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="veltryn-null.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Veltryn Null</span><span class="nr-link-desc">The First Continuum Directorate · Corvyn Thael-Sorn · the colony</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
