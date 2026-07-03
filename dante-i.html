@@ -1394,7 +1394,7 @@ const mainNav=document.getElementById('mainNav');
 if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
 
 const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
-document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
 
 }catch(e){console.warn("Script:",e.message);}
 </script>

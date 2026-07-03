@@ -575,8 +575,15 @@ body::before{
 }
 .biome-tile{
   position:relative;overflow:hidden;
-  background:var(--ash);
-  cursor:pointer;
+  background:linear-gradient(135deg,#100808,#1A0C0A);
+  border:1px solid rgba(212,176,144,0.06);
+  padding:22px 24px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  transition:border-color .4s ease,background .4s ease;
+}
+.biome-tile:hover{
+  border-color:rgba(212,176,144,0.22);
+  background:linear-gradient(135deg,#160A08,#220E0A);
 }
 .biome-tile:nth-child(1){grid-column:span 5;grid-row:span 2;}
 .biome-tile:nth-child(2){grid-column:span 4;grid-row:span 1;}
@@ -587,36 +594,15 @@ body::before{
 .biome-tile:nth-child(7){grid-column:span 4;grid-row:span 1;}
 .biome-tile:nth-child(8){grid-column:span 4;grid-row:span 1;}
 
-.biome-tile img{
-  width:100%;height:100%;
-  object-fit:cover;display:block;
-  filter:brightness(0.7) saturate(0.9);
-  transition:filter .5s ease,transform .6s cubic-bezier(.16,1,.3,1);
-}
-.biome-tile:hover img{
-  filter:brightness(0.9) saturate(1.2);
-  transform:scale(1.04);
-}
-.biome-tile-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(6,3,10,0.7) 0%,transparent 50%);
-  pointer-events:none;
-}
 .biome-tile-label{
-  position:absolute;bottom:14px;left:16px;
   font-family:'Cinzel',serif;font-size:8px;
   letter-spacing:0.3em;text-transform:uppercase;
-  color:rgba(212,176,144,0.6);pointer-events:none;
+  color:rgba(212,176,144,0.6);margin-bottom:8px;display:block;
 }
-
-/* Placeholder for tiles without images yet -->  */
-.biome-tile.placeholder{
-  background:linear-gradient(135deg,#100808,#1A0C0A);
-  display:flex;align-items:center;justify-content:center;
-}
-.biome-tile.placeholder .placeholder-text{
-  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;
-  text-transform:uppercase;color:rgba(192,64,32,0.2);
+.biome-tile-desc{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;line-height:1.65;
+  color:rgba(200,168,112,0.42);
 }
 
 /* ═══════════════════════════════
@@ -1252,55 +1238,46 @@ footer{
 <section class="biome-section">
   <div class="biome-section-inner">
     <div class="biome-header reveal">
-      <span class="section-label">The Ashura Biome · Visual Archive</span>
+      <span class="section-label">The Ashura Biome · Terrain &amp; Geography</span>
       <h2 class="biome-title">Landscapes of<br><em>the Emberous Dominion</em></h2>
       <p class="biome-subtitle">
         Volcanic terrain, magma flows, forge cities, and ember skies —
-        the visual world of Ashura from your Canva biome collection.
+        the geography that shapes every city-state's culture and conflict.
       </p>
     </div>
 
     <div class="biome-mosaic reveal">
-      <!-- Replace src values with your actual Canva image URLs or local paths -->
       <div class="biome-tile">
-        <img src="https://media.canva.com/v2/image-resize/format:JPG/height:550/quality:92/uri:ifs%3A%2F%2FM%2F67fefd10-c71f-4787-b54b-87bb6e64f852/watermark:F/width:550?csig=AAAAAAAAAAAAAAAAAAAAAPvPeSdtwe3-NtB89Wsz0QN0qwp5wQiCo7ze7CVifwgF&exp=1773844853&osig=AAAAAAAAAAAAAAAAAAAAAPvjsaRiRtaDiiEnAy2by5m62uvCboragLImEJdYTCVF&signer=media-rpc&x-canva-quality=thumbnail_large" alt="Ashura Biome" loading="lazy" decoding="async" width="550" height="550"/>
-        <div class="biome-tile-overlay"></div>
         <span class="biome-tile-label">Volcanic Terrain</span>
+        <p class="biome-tile-desc">The dominion's spine — a chain of active calderas ringing Valyra's throne, where the ground itself is never fully cool and city foundations are built to flex, not resist.</p>
       </div>
       <div class="biome-tile">
-        <img src="https://media.canva.com/v2/image-resize/format:JPG/height:200/quality:75/uri:ifs%3A%2F%2FM%2F405c3cd8-79e7-4ef6-8852-4ff50c1b88f1/watermark:F/width:133?csig=AAAAAAAAAAAAAAAAAAAAAAXwVbzjlPrNLUiPX91iA8RW40-Mb2kPK-TY5BOjA9W4&exp=1773845242&osig=AAAAAAAAAAAAAAAAAAAAAAtlGzZSiWcOPQ2nZmFiecV_ngrK9FYUtvLVxHuOhvYK&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 2" loading="lazy" decoding="async" width="133" height="200"/>
-        <div class="biome-tile-overlay"></div>
         <span class="biome-tile-label">Ember Fields</span>
+        <p class="biome-tile-desc">Open plains where cooled ash gives way to permanent low fires. Farmed by those who've learned to work between the flames rather than around them.</p>
       </div>
       <div class="biome-tile">
-        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F957881ec-b887-4fc2-a288-93f86d424a68/watermark:F/width:133?csig=AAAAAAAAAAAAAAAAAAAAAMsbLva-nKEEPzU8Fi6SbVc7IKfwmBuzrpWw8g9FCIYD&exp=1773844151&osig=AAAAAAAAAAAAAAAAAAAAAJwhYdyNDo_HjH6j4tKHSqiJQ_LemwuliDpbAbKsys9M&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 3" loading="lazy" decoding="async" width="133" height="200"/>
-        <div class="biome-tile-overlay"></div>
         <span class="biome-tile-label">Magma Flows</span>
+        <p class="biome-tile-desc">Rivers of slow-moving fire that redraw the map every generation. Ashuran engineers channel them deliberately — power source, weapon, and border all at once.</p>
       </div>
       <div class="biome-tile">
-        <img src="https://media.canva.com/v2/image-resize/format:JPG/height:200/quality:75/uri:ifs%3A%2F%2FM%2Fb6251e7e-251a-4e7c-896a-e620b0cc2411/watermark:F/width:133?csig=AAAAAAAAAAAAAAAAAAAAAFIT7Tq9DF04pIFxsKMpy45rTOaPIYMbmWOG8Bl-sIxu&exp=1773844315&osig=AAAAAAAAAAAAAAAAAAAAAALbk6SYJKP_YzMwCtLv-YGrv0xOtQK7Dp36-A-Ay6qi&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 4" loading="lazy" decoding="async" width="133" height="200"/>
-        <div class="biome-tile-overlay"></div>
         <span class="biome-tile-label">Ashen Plains</span>
+        <p class="biome-tile-desc">The grey, wind-scoured lowlands left behind by centuries of eruption. Sparse, haunted, and the site of more than one buried city-state.</p>
       </div>
       <div class="biome-tile">
-        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fed7b049c-d6d0-4207-9423-16ce8baf5a2d/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAANihrQWrak9_24x7Jm1W0PEhi1dsje4cpL8JXF9CtErb&exp=1773842773&osig=AAAAAAAAAAAAAAAAAAAAADByrwBsYa5-61_P_6mFyZemgljc2tvBg3ogB_xODRfJ&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 5" loading="lazy" decoding="async" width="200" height="200"/>
-        <div class="biome-tile-overlay"></div>
         <span class="biome-tile-label">Forge District</span>
+        <p class="biome-tile-desc">Ashura's industrial heart — foundries built directly over geothermal vents, where the Flameheart Core's forges never go cold.</p>
       </div>
       <div class="biome-tile">
-        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F1699c58d-653c-4d92-9292-fd7a005013b1/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAALP12MDIlMiAXzf24b-cBegRppC1jcR1N9rV86Gk_Ryp&exp=1773843544&osig=AAAAAAAAAAAAAAAAAAAAAEae4KkMXFeWJehDMckEhkSQtEUBL9SHkbnbU-ZC6mCj&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 6" loading="lazy" decoding="async" width="200" height="200"/>
-        <div class="biome-tile-overlay"></div>
         <span class="biome-tile-label">Crimson Skies</span>
+        <p class="biome-tile-desc">Ash-lit atmosphere that stains every sunset the color of embers. Sailors and pilgrims read omens in how deep the red runs.</p>
       </div>
       <div class="biome-tile">
-        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F2da97630-3709-4ced-abc0-210cc4de26b4/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAMpiuPPsC8BdckY_Voy00Ptf4dW60gL1d5_UGpt0mvQB&exp=1773842710&osig=AAAAAAAAAAAAAAAAAAAAAJHMcpjzNLUfDQoBbh_ilIu5crWBJ3MLvN0VvKeDvyIz&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 7" loading="lazy" decoding="async" width="200" height="200"/>
-        <div class="biome-tile-overlay"></div>
         <span class="biome-tile-label">Volcanic Citadel</span>
+        <p class="biome-tile-desc">Fortified strongholds carved directly into dormant cones — nearly impossible to besiege, and colder inside than the terrain around them suggests.</p>
       </div>
       <div class="biome-tile">
-        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F7d845329-d85e-4f2b-b8f5-f7f6cc0952fa/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAOWBRYrfKT6SdJsUMiseNp9vD7twUUX5-MY2UbBsLkL9&exp=1773845209&osig=AAAAAAAAAAAAAAAAAAAAALWcxHtEKnewMZy671ZIc-YN7RRoMD3vLwAHY1hJnBJI&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 8" loading="lazy" decoding="async" width="200" height="200"/>
-        <div class="biome-tile-overlay"></div>
         <span class="biome-tile-label">Ember Mines</span>
+        <p class="biome-tile-desc">Deep-shaft mines where Ashura draws its rarest ore and Essence-touched minerals, worked by guilds who answer to no single city-state.</p>
       </div>
     </div>
   </div>
