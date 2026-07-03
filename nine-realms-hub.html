@@ -849,6 +849,20 @@ body:hover .cur-dot { width: 6px; height: 6px; }
   pointer-events: none;
 }
 
+.featured-emblem {
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 3/4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(80px,10vw,140px);
+  color: rgba(212,184,150,0.18);
+  background: radial-gradient(ellipse at center, rgba(184,115,42,0.06) 0%, transparent 70%);
+  border: 1px solid rgba(212,184,150,0.08);
+  animation: featuredFloat 10s ease-in-out infinite;
+}
+
 .featured-badge {
   position: absolute;
   top: 32px; left: -24px;
@@ -1364,6 +1378,10 @@ footer {
         Each realm is a world unto itself — distinct in aesthetic,
         culture, and conflict, yet bound by the same ancient threads
         of prophecy and power.
+        <br><br>
+        <a href="nine-realms-map.html" style="display:inline-flex;align-items:center;gap:10px;font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-pale);text-decoration:none;border-bottom:1px solid rgba(212,184,150,0.25);padding-bottom:3px;">
+          🗺 View Interactive Map <span>→</span>
+        </a>
       </p>
     </div>
 
@@ -1514,11 +1532,7 @@ footer {
     <div class="featured-image reveal">
       <div class="featured-image-frame"></div>
       <div class="featured-badge">Featured Character</div>
-      <img
-        src="/mnt/user-data/uploads/IMG_6262.jpeg"
-        alt="Lady Crysen — The Ascendant Balance"
-        loading="lazy"
-      />
+      <div class="featured-emblem" aria-hidden="true">✦</div>
     </div>
 
     <div class="featured-lore">
@@ -1544,8 +1558,40 @@ footer {
         <span class="featured-trait">Oracle Born</span>
         <span class="featured-trait">Verdantia</span>
       </div>
-      <a href="#" class="featured-link reveal reveal-delay-2">
+      <a href="crysen-showcase.html" class="featured-link reveal reveal-delay-2">
         Read Her Full Chronicle
+        <span class="featured-link-arrow">→</span>
+      </a>
+      <a href="characters.html" class="featured-link reveal reveal-delay-2" style="margin-left:28px;">
+        View All Characters
+        <span class="featured-link-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="rule-ornate"><span class="rule-ornate-mark">✦</span></div>
+
+<!-- ═══ LORE ═══ -->
+<section style="background: var(--ink);" id="lore">
+  <div class="manifesto">
+    <div class="manifesto-aside reveal">
+      <div class="manifesto-aside-num">◈</div>
+      <span class="manifesto-aside-label">Settings. Systems. Factions.</span>
+    </div>
+    <div class="manifesto-body">
+      <span class="section-label reveal">The Foundation</span>
+      <h2 class="manifesto-headline reveal">
+        Beyond faces and thrones<br>
+        <em>lies the world itself.</em>
+      </h2>
+      <p class="manifesto-text reveal reveal-delay-1">
+        The magic systems that bind the realms together, the sacred and
+        forbidden places that shape their history, and the factions
+        maneuvering in the spaces between nations.
+      </p>
+      <a href="lore.html" class="featured-link reveal reveal-delay-2">
+        Explore the Lore
         <span class="featured-link-arrow">→</span>
       </a>
     </div>
@@ -1716,6 +1762,16 @@ document.addEventListener('mousemove', e => {
   ring.style.left = rx+'px'; ring.style.top = ry+'px';
   requestAnimationFrame(loop);
 })();
+
+// ── Nav scroll ──
+const mainNav = document.getElementById('mainNav');
+if (mainNav) window.addEventListener('scroll', () => mainNav.classList.toggle('scrolled', scrollY > 50));
+
+// ── Scroll reveal ──
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.07});
+document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
 
 }catch(e){console.warn("Script:",e.message);}
 </script>
