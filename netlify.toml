@@ -15,3 +15,68 @@
   to = "/:page.html"
   status = 200
   force = false
+
+# ─── External image sources ──────────────────────────────────────
+# Domains that may be transformed through the Netlify Image CDN
+# (/.netlify/images?url=…). The Ashura biome gallery pulls artwork
+# from Canva's media host; allowlist it so those URLs can be optimized.
+[images]
+  remote_images = ["https://media\\.canva\\.com/.*"]
+
+# ─── Caching ─────────────────────────────────────────────────────
+# HTML pages: the browser always revalidates, but Netlify's edge serves
+# the cached copy instantly and refreshes it in the background. The
+# Netlify-CDN-Cache-Control header is consumed by the edge and stripped
+# before it reaches the browser, so page updates still appear promptly.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, max-age=0, must-revalidate, stale-while-revalidate=86400"
+
+# Fingerprinted/static assets: cache hard in the browser for a year.
+# These rules are inert until such files exist (the site is inline-only
+# today) and cost nothing, but keep future CSS/JS/fonts/images fast.
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.jpeg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.avif"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
