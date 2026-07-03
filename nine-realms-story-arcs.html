@@ -876,6 +876,28 @@ footer{
   <span class="footer-copy">© Nine Realms Universe — Original IP · All story arcs and characters are original works</span>
   <span class="footer-copy">Created by Ron</span>
 </footer>
+
+<script>
+try{
+
+/* Cursor */
+const dot=document.getElementById('curDot');
+const ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.arc-entry').forEach(el=>revObs.observe(el));
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
 <!-- ═══════════════════════════════════════
      UNIVERSAL NINE REALMS LORE NAVIGATOR
 ═══════════════════════════════════════ -->
