@@ -890,6 +890,9 @@ document.querySelectorAll('.daughter-card,.reign-era,.legacy-item,.side-seraphin
 const nav=document.getElementById('mainNav');
 window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
 
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+
 }catch(e){console.warn("Script:",e.message);}
 </script>
 
