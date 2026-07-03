@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yzmina — The Eternal Dark Priestess | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #040308;
+  --deep:      #070510;
+  --ancient:   #0A0814;
+  --shrine:    #0D0B18;
+  --monastery: #10101C;
+
+  /* Ancient gold — Third Generation */
+  --gold:      #604010;
+  --gold-mid:  #906018;
+  --gold-pale: #C89030;
+  --gold-bright:#E8B050;
+
+  /* Ira crimson-twilight — possession */
+  --ira:       #600818;
+  --ira-mid:   #8A1020;
+  --ira-pale:  #C03040;
+  --ira-bright:#E85060;
+
+  /* Moonlight silver — divine */
+  --silver:    #506080;
+  --silver-pale:#8098C0;
+  --silver-bright:#B0C4E0;
+
+  /* Current — shadow grey */
+  --shade:     #2A2840;
+  --shade-mid: #404060;
+  --shade-pale:#6068A0;
+  --shade-bright:#909EC8;
+
+  /* Moon white */
+  --moon:      #D8D0E8;
+  --moon-pale: #EDE8F8;
+
+  --parch:     #B8B0A8;
+  --parch-pale:#DED8D0;
+  --parch-dim: #585050;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Ambient moonlight — eternal */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 40% 50% at 25% 0%,rgba(192,48,64,0.04) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 50% at 75% 0%,rgba(144,152,192,0.04) 0%,transparent 60%);
+  animation:twinMoons 18s ease-in-out infinite;}
+@keyframes twinMoons{0%,100%{opacity:0.6;}50%{opacity:1;}}
+
+/* Ancient grain */
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px;}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--gold-pale);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:30px;height:30px;border:1px solid rgba(144,96,24,0.45);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.ancient{width:48px;height:48px;border-color:var(--gold-pale);box-shadow:0 0 14px rgba(144,96,24,0.25);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(4,3,8,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(144,96,24,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:var(--gold-pale);opacity:0.6;letter-spacing:0.12em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-pale);border:1px solid rgba(144,96,24,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--gold-mid);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,#180A14 0%,#0E0810 40%,var(--void) 70%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Twin moon halos */
+.moon-halo{position:absolute;top:18%;left:50%;transform:translateX(-50%);display:flex;gap:80px;pointer-events:none;z-index:1;}
+.mh-ara,.mh-ira{width:50px;height:50px;border-radius:50%;animation:moonHalo 8s ease-in-out infinite;}
+.mh-ara{background:radial-gradient(circle,rgba(192,48,64,0.2) 0%,transparent 70%);border:1px solid rgba(192,48,64,0.12);animation-delay:0s;}
+.mh-ira{background:radial-gradient(circle,rgba(144,152,192,0.2) 0%,transparent 70%);border:1px solid rgba(144,152,192,0.12);animation-delay:4s;}
+@keyframes moonHalo{0%,100%{opacity:0.4;transform:scale(1);}50%{opacity:1;transform:scale(1.12);}}
+
+/* Ancient monastery arch decoration */
+.arch-deco{position:absolute;bottom:0;left:0;right:0;height:30vh;pointer-events:none;z-index:1;opacity:0.15;background:linear-gradient(to top,rgba(16,12,24,1) 0%,transparent 100%);}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-era{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:var(--gold-pale);text-transform:uppercase;opacity:0;animation:riseIn 1.2s .2s ease forwards;margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.h-era::before,.h-era::after{content:'';display:block;width:40px;height:1px;background:linear-gradient(to right,transparent,var(--gold-mid));}
+.h-era::after{transform:scaleX(-1);}
+.h-title-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.45em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(60px,12vw,150px);font-weight:900;
+  color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;
+  text-shadow:0 0 120px rgba(192,48,64,0.4),0 0 60px rgba(144,96,24,0.2),0 4px 40px rgba(0,0,0,0.9);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-sub{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,1.7vw,19px);font-weight:400;color:var(--gold-pale);letter-spacing:0.2em;display:block;margin-top:8px;opacity:0;animation:riseIn 1s .8s ease forwards;}
+.h-rule{width:1px;height:0;background:linear-gradient(to bottom,var(--gold-mid),transparent);margin:22px auto;animation:lineGrow 1s 1.1s ease forwards;}
+@keyframes lineGrow{to{height:50px;}}
+.h-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,21px);color:rgba(184,176,168,0.4);max-width:720px;margin:0 auto 40px;line-height:1.8;opacity:0;animation:riseIn 1.2s 1.2s ease forwards;}
+.h-vitals{display:flex;justify-content:center;max-width:700px;margin:0 auto;border:1px solid rgba(144,96,24,0.15);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:16px 14px;text-align:center;border-right:1px solid rgba(144,96,24,0.1);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,2vw,22px);color:var(--gold-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--parch-dim);opacity:0.3;}
+.s-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;text-transform:uppercase;color:var(--gold-pale);opacity:0.5;display:block;margin-bottom:18px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(144,96,24,0.18),transparent);}
+.orn span{position:relative;background:var(--void);padding:0 20px;font-size:18px;color:var(--gold-mid);opacity:0.4;z-index:1;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--gold-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(184,176,168,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--gold-pale);}
+.pull-gold{margin:22px 0;padding:18px 24px;border-left:2px solid var(--gold-mid);background:rgba(144,96,24,0.04);}
+.pull-gold p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(184,176,168,0.75);line-height:1.75;}
+.pull-gold cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+.pull-ira{margin:22px 0;padding:18px 24px;border-left:2px solid var(--ira-mid);background:rgba(138,16,32,0.04);}
+.pull-ira p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(184,176,168,0.75);line-height:1.75;}
+.pull-ira cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--ira-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+
+/* ═══ GENERATION TIMELINE ═══ */
+.gen-timeline{padding:70px 60px;background:var(--ancient);}
+.gt-inner{max-width:1100px;margin:0 auto;}
+.gen-bar{display:flex;gap:0;margin-top:36px;border:1px solid rgba(144,96,24,0.1);}
+.gen-cell{flex:1;padding:24px 22px;border-right:1px solid rgba(144,96,24,0.08);position:relative;transition:background .3s;}
+.gen-cell:last-child{border-right:none;}
+.gen-cell:hover{background:rgba(144,96,24,0.03);}
+.gen-cell.current-gen{background:rgba(144,96,24,0.04);border-right-color:rgba(144,96,24,0.12);}
+.gen-num{font-family:'Cinzel Decorative',serif;font-size:28px;color:var(--gold-mid);opacity:0.15;line-height:1;margin-bottom:6px;}
+.gen-cell.current-gen .gen-num{opacity:0.3;}
+.gen-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:5px;}
+.gen-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(184,176,168,0.4);line-height:1.5;}
+.gen-cell.current-gen .gen-desc{color:rgba(184,176,168,0.6);}
+.gen-badge{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-pale);border:1px solid rgba(144,96,24,0.25);padding:3px 10px;display:inline-block;margin-top:8px;opacity:0.7;}
+
+/* ═══ ORIGIN — THREE ERAS ═══ */
+.origin-sec{padding:110px 60px;background:var(--shrine);position:relative;overflow:hidden;}
+.origin-sec::before{content:'YZMINA';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(100px,18vw,240px);font-weight:900;color:rgba(144,96,24,0.025);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.or-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.or-aside .big-y{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,13vw,170px);font-weight:400;color:rgba(144,96,24,0.09);line-height:1;margin-left:-6px;}
+.or-aside-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:var(--gold-pale);opacity:0.5;text-transform:uppercase;}
+.or-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(184,176,168,0.3);margin-top:6px;line-height:1.6;}
+.origin-trail{margin-top:28px;display:flex;flex-direction:column;gap:2px;}
+.ot-step{display:flex;gap:10px;padding:10px 14px;border:1px solid rgba(144,96,24,0.08);background:rgba(144,96,24,0.02);align-items:flex-start;transition:border-color .3s;}
+.ot-step:hover{border-color:rgba(144,96,24,0.2);}
+.ots-dot{width:5px;height:5px;border-radius:50%;background:var(--gold-mid);flex-shrink:0;margin-top:7px;opacity:0.6;}
+.ots-text{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(184,176,168,0.5);line-height:1.5;}
+.ots-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:40px;}
+.pg-cell{padding:16px 18px;border:1px solid rgba(144,96,24,0.08);background:rgba(144,96,24,0.02);transition:border-color .3s,background .3s;}
+.pg-cell:hover{border-color:rgba(144,96,24,0.22);background:rgba(144,96,24,0.05);}
+.pg-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-pale);opacity:0.4;display:block;margin-bottom:5px;}
+.pg-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(184,176,168,0.6);line-height:1.5;}
+
+/* ═══ THE RITUAL ═══ */
+.ritual-sec{padding:110px 60px;background:var(--ancient);position:relative;overflow:hidden;}
+.ritual-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(138,16,32,0.06) 0%,transparent 70%);}
+.ritual-inner{max-width:1100px;margin:0 auto;}
+
+/* Three ritual phases */
+.ritual-phases{display:flex;flex-direction:column;gap:3px;margin-top:52px;}
+.phase{border:1px solid;overflow:hidden;transition:border-color .3s;}
+.ph-1{border-color:rgba(144,96,24,0.1);background:linear-gradient(160deg,#0E0C06 0%,#0A0A08 100%);}
+.ph-2{border-color:rgba(138,16,32,0.12);background:linear-gradient(160deg,#0E0806 0%,#0A0608 100%);}
+.ph-3{border-color:rgba(192,48,64,0.14);background:linear-gradient(160deg,#140608 0%,#0E0408 100%);}
+.ph-1:hover{border-color:rgba(144,96,24,0.28);}
+.ph-2:hover{border-color:rgba(138,16,32,0.3);}
+.ph-3:hover{border-color:rgba(192,48,64,0.35);}
+.ph-layout{display:grid;grid-template-columns:180px 1fr;position:relative;}
+.ph-1::before,.ph-2::before,.ph-3::before{content:'';position:absolute;inset:0;pointer-events:none;}
+.ph-1::before{background:radial-gradient(ellipse 50% 40% at 10% 50%,rgba(144,96,24,0.07) 0%,transparent 70%);}
+.ph-2::before{background:radial-gradient(ellipse 50% 40% at 10% 50%,rgba(138,16,32,0.07) 0%,transparent 70%);}
+.ph-3::before{background:radial-gradient(ellipse 50% 40% at 10% 50%,rgba(192,48,64,0.08) 0%,transparent 70%);}
+.ph-aside{padding:40px 28px;border-right:1px solid rgba(184,176,168,0.05);display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;}
+.ph-num{font-family:'Cinzel Decorative',serif;font-size:52px;line-height:1;opacity:0.1;margin-bottom:8px;transition:opacity .3s;}
+.phase:hover .ph-num{opacity:0.22;}
+.ph-1 .ph-num{color:var(--gold-bright);}
+.ph-2 .ph-num{color:var(--ira-pale);}
+.ph-3 .ph-num{color:var(--ira-bright);}
+.ph-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;padding:4px 12px;border:1px solid;display:inline-block;opacity:0.7;}
+.ph-1 .ph-tag{color:rgba(200,144,48,0.8);border-color:rgba(144,96,24,0.3);}
+.ph-2 .ph-tag{color:var(--ira-pale);border-color:rgba(138,16,32,0.3);}
+.ph-3 .ph-tag{color:var(--ira-bright);border-color:rgba(192,48,64,0.35);}
+.ph-body{padding:40px 44px;position:relative;z-index:1;}
+.ph-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,32px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;}
+.ph-subtitle{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;}
+.ph-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(184,176,168,0.55);line-height:1.85;}
+.ph-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ph-1 .ph-text em{color:rgba(200,144,48,0.7);}
+.ph-2 .ph-text em{color:var(--ira-pale);}
+.ph-3 .ph-text em{color:var(--ira-bright);}
+.ph-events{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+.ph-chip{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;padding:4px 12px;border:1px solid;opacity:0.55;}
+.ph-1 .ph-chip{color:rgba(200,144,48,0.8);border-color:rgba(144,96,24,0.2);}
+.ph-2 .ph-chip{color:var(--ira-pale);border-color:rgba(138,16,32,0.2);}
+.ph-3 .ph-chip{color:var(--ira-bright);border-color:rgba(192,48,64,0.25);}
+
+/* ═══ THREE STATES ═══ */
+.three-states{padding:110px 60px;background:var(--monastery);}
+.states-inner{max-width:1200px;margin:0 auto;}
+.states-header{text-align:center;margin-bottom:60px;}
+.states-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.states-title em{font-style:italic;color:var(--gold-bright);}
+.states-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(184,176,168,0.4);max-width:560px;margin:0 auto;line-height:1.75;}
+
+/* State I — Supreme Dark Sorceress — gold */
+.state-card{padding:44px 40px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;margin-bottom:3px;}
+.sc-gold{border-color:rgba(144,96,24,0.12);background:linear-gradient(160deg,#0E0C06 0%,#0A0A08 100%);}
+.sc-ira{border-color:rgba(192,48,64,0.14);background:linear-gradient(160deg,#120608 0%,#0E0508 100%);}
+.sc-priestess{border-color:rgba(64,64,96,0.14);background:linear-gradient(160deg,#080A10 0%,#060810 100%);}
+.sc-gold:hover{border-color:rgba(144,96,24,0.3);}
+.sc-ira:hover{border-color:rgba(192,48,64,0.35);}
+.sc-priestess:hover{border-color:rgba(64,64,96,0.3);}
+.sc-gold::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(144,96,24,0.07) 0%,transparent 70%);}
+.sc-ira::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(192,48,64,0.08) 0%,transparent 70%);}
+.sc-priestess::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(64,64,96,0.06) 0%,transparent 70%);}
+
+/* Top accent */
+.state-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.state-card:hover::after{transform:scaleX(1);}
+.sc-gold::after{background:linear-gradient(to right,transparent,var(--gold-mid),transparent);}
+.sc-ira::after{background:linear-gradient(to right,transparent,var(--ira-pale),transparent);}
+.sc-priestess::after{background:linear-gradient(to right,transparent,var(--shade-bright),transparent);}
+
+.sc-inner{position:relative;z-index:1;}
+.sc-header{display:grid;grid-template-columns:1fr auto;align-items:start;gap:20px;margin-bottom:20px;}
+.sc-era{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;opacity:0.5;display:block;margin-bottom:8px;}
+.sc-gold .sc-era{color:var(--gold-pale);}
+.sc-ira .sc-era{color:var(--ira-pale);}
+.sc-priestess .sc-era{color:var(--shade-bright);}
+.sc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,2.8vw,36px);font-weight:400;color:var(--parch-pale);line-height:1.05;}
+.sc-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;display:block;margin-top:4px;}
+.sc-period{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;padding:4px 14px;border:1px solid;display:inline-block;opacity:0.65;white-space:nowrap;}
+.sc-gold .sc-period{color:var(--gold-bright);border-color:rgba(144,96,24,0.3);}
+.sc-ira .sc-period{color:var(--ira-bright);border-color:rgba(192,48,64,0.3);}
+.sc-priestess .sc-period{color:var(--shade-bright);border-color:rgba(64,64,96,0.3);}
+.sc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(184,176,168,0.55);line-height:1.85;margin-bottom:16px;}
+.sc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.sc-gold .sc-body em{color:var(--gold-pale);}
+.sc-ira .sc-body em{color:var(--ira-pale);}
+.sc-priestess .sc-body em{color:var(--shade-bright);}
+
+/* Ability rows within each state */
+.ability-rows{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:16px;}
+.ab-row{padding:14px 18px;border:1px solid rgba(184,176,168,0.06);background:rgba(4,2,8,0.4);transition:border-color .3s,background .3s;}
+.ab-row:hover{border-color:rgba(184,176,168,0.15);background:rgba(4,2,8,0.6);}
+.abr-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:5px;}
+.abr-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(184,176,168,0.45);line-height:1.6;}
+
+/* ═══ ENRAGED STATE ═══ */
+.enraged{padding:100px 60px;background:var(--shrine);position:relative;overflow:hidden;}
+.enraged::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(192,48,64,0.07) 0%,transparent 70%);}
+.en-inner{max-width:1100px;margin:0 auto;}
+.en-block{
+  margin-top:52px;padding:40px 44px;
+  border:1px solid rgba(192,48,64,0.15);
+  background:linear-gradient(160deg,rgba(16,4,8,1) 0%,rgba(10,4,6,1) 100%);
+  position:relative;overflow:hidden;
+}
+.en-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(192,48,64,0.07) 0%,transparent 70%);}
+.en-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ira-pale),transparent);}
+.en-c{position:relative;z-index:1;}
+.en-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:var(--ira-pale);border:1px solid rgba(192,48,64,0.25);padding:5px 16px;display:inline-block;margin-bottom:16px;opacity:0.7;}
+.en-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,40px);font-weight:400;color:var(--parch-pale);margin-bottom:12px;}
+.en-title em{font-style:italic;color:var(--ira-bright);}
+.en-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:20px;}
+.en-aspect{padding:18px 20px;border:1px solid rgba(192,48,64,0.1);background:rgba(4,2,8,0.5);}
+.ea-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ira-pale);opacity:0.55;display:block;margin-bottom:6px;}
+.ea-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(184,176,168,0.5);line-height:1.7;}
+.ea-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.en-warning{margin-top:20px;padding:14px 20px;border-left:2px solid rgba(192,48,64,0.3);background:rgba(192,48,64,0.03);font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(184,176,168,0.5);line-height:1.8;}
+.en-warning strong{color:var(--parch-pale);font-style:normal;}
+
+/* ═══ DARK PRIESTESS — LEGACY ═══ */
+.priestess-legacy{padding:110px 60px;background:var(--monastery);}
+.pl-inner{max-width:1100px;margin:0 auto;}
+.pl-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.pl-card{padding:32px 28px;border:1px solid rgba(64,64,96,0.1);background:rgba(4,2,10,0.5);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.pl-card:hover{border-color:rgba(64,64,96,0.25);background:rgba(64,64,96,0.04);}
+.pl-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--shade-pale),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.pl-card:hover::before{transform:scaleX(1);}
+.plc-glyph{font-size:20px;margin-bottom:10px;opacity:0.5;display:block;}
+.plc-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.8vw,18px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:7px;}
+.plc-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(184,176,168,0.5);line-height:1.75;}
+.plc-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Sablea's rebirth — full-width entry */
+.pl-rebirth{
+  grid-column:span 2;
+  padding:32px 36px;
+  border:1px solid rgba(144,96,24,0.1);background:rgba(144,96,24,0.03);
+}
+.plr-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-pale);opacity:0.55;display:block;margin-bottom:10px;}
+.plr-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(184,176,168,0.55);line-height:1.85;}
+.plr-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ CLOSING — THE PROMISE OF IRA ═══ */
+.promise{
+  padding:110px 60px;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,#1A0810 0%,var(--void) 70%);
+  text-align:center;position:relative;overflow:hidden;
+}
+.pr-inner{max-width:800px;margin:0 auto;position:relative;z-index:1;}
+.pr-glyph{font-size:44px;margin-bottom:20px;opacity:0.35;display:block;}
+.pr-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,4vw,52px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:16px;}
+.pr-title em{font-style:italic;color:var(--ira-bright);}
+.pr-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,2vw,22px);color:rgba(184,176,168,0.45);line-height:1.9;margin-bottom:44px;max-width:640px;margin-left:auto;margin-right:auto;}
+.pr-body strong{color:var(--parch-pale);font-style:normal;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(144,96,24,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--gold-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(184,176,168,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#F0E8E0;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(184,176,168,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(184,176,168,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(144,96,24,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(184,176,168,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .gen-timeline,.origin-sec,.ritual-sec,.three-states,.enraged,.priestess-legacy,.promise,.page-cta{padding:80px 40px;}
+  .or-inner{grid-template-columns:1fr;gap:40px;}
+  .ph-layout{grid-template-columns:1fr;} .ph-aside{border-right:none;border-bottom:1px solid rgba(184,176,168,0.05);padding:24px 28px;}
+  .ability-rows{grid-template-columns:1fr;}
+  .en-grid{grid-template-columns:1fr;}
+  .pl-grid{grid-template-columns:1fr;} .pl-rebirth{grid-column:span 1;}
+  .gen-bar{flex-direction:column;}
+  .gen-cell{border-right:none;border-bottom:1px solid rgba(144,96,24,0.08);}
+  .gen-cell:last-child{border-bottom:none;}
+  .profile-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(144,96,24,0.1);}.h-vital:last-child{border-bottom:none;}
+  .gen-timeline,.origin-sec,.ritual-sec,.three-states,.enraged,.priestess-legacy,.promise,.page-cta{padding:60px 24px;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">Sablea · Ancient Monastery · Eternal Dark Priestess</span>
+  </a>
+  <div class="nav-right">
+    <a href="vesper.html" class="nav-link">Queen Vesper</a>
+    <a href="vashti.html" class="nav-link">Queen Vashti</a>
+    <a href="sablea-city.html" class="nav-link">Sablea</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="moon-halo"><div class="mh-ara"></div><div class="mh-ira"></div></div>
+  <div class="arch-deco"></div>
+  <div class="hero-content">
+    <p class="h-era">Third Generation · The Age of Enlightenment · Over 700 Years Ago</p>
+    <span class="h-title-label">Former Supreme Dark Sorceress · Former Vessel of Ira · Eternal Dark Priestess</span>
+    <h1 class="h-name">Yzmina</h1>
+    <span class="h-sub">She purged a corrupt age. She survived a goddess. She is still here.</span>
+    <div class="h-rule"></div>
+    <p class="h-tagline">The Old Dark Clergy summoned Ira through her as a pawn. Ira had other intentions. When the purge was over and the goddess withdrew, Yzmina was the only vessel to survive Celestial Possession — left immortal, immensely powerful, and permanently marked by the one force in the Nine Realms that cannot be owned.</p>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">700+</div><div class="h-vlabel">Years Living</div></div>
+      <div class="h-vital"><div class="h-vval">I</div><div class="h-vlabel">Vessel to Survive</div></div>
+      <div class="h-vital"><div class="h-vval">☽</div><div class="h-vlabel">Marked by Ira</div></div>
+      <div class="h-vital"><div class="h-vval">∞</div><div class="h-vlabel">Still Guarding</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>Enter the Ancient Monastery</span><div class="s-line"></div></div>
+</section>
+
+<!-- GENERATION TIMELINE -->
+<section class="gen-timeline">
+  <div class="gt-inner">
+    <div class="rv">
+      <span class="sl">The Generations of Sablea · Where Yzmina Stands in Time</span>
+      <h2 class="big-h">She predates the queens<br><em>by over seven centuries.</em></h2>
+    </div>
+    <div class="gen-bar rv d1">
+      <div class="gen-cell">
+        <div class="gen-num">I</div>
+        <div class="gen-name">First Generation</div>
+        <p class="gen-desc">Sablea's founding — the original clans, the first towers, the first blood pacts with the desert's dark energy. The Moons not yet organized into formal worship.</p>
+      </div>
+      <div class="gen-cell">
+        <div class="gen-num">II</div>
+        <div class="gen-name">Second Generation</div>
+        <p class="gen-desc">The rise of formal theocracy. Early Moon worship begins. The Ancient Monastery is established. The first Clergy forms around the worship of Dugneas, Moon God of Cultural Festivals.</p>
+      </div>
+      <div class="gen-cell current-gen">
+        <div class="gen-num">III</div>
+        <div class="gen-name">Third Generation</div>
+        <p class="gen-desc">The Age of Enlightenment — and its corruption. The Old Dark Clergy at the height of their indulgent power. The ritual. The purge. Yzmina's ascension and transformation.</p>
+        <div class="gen-badge">Yzmina's Era</div>
+      </div>
+      <div class="gen-cell">
+        <div class="gen-num">IV</div>
+        <div class="gen-name">Fourth Generation</div>
+        <p class="gen-desc">Sablea remade. The dual reverence of Ara and Ira replaces Dugneas. The Shadow Elite emerges. The hybrid government of theocracy and oligarchy takes root. Yzmina as its guardian.</p>
+      </div>
+      <div class="gen-cell">
+        <div class="gen-num">NOW</div>
+        <div class="gen-name">Present Era</div>
+        <p class="gen-desc">Queens Vesper and Vashti rule. The Ancient Monastery still stands. Yzmina still guards it. The prophecy of Ira's reincarnation — into Eris — is the echo of everything she survived.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shrine);"><span>☽</span></div>
+
+<!-- ORIGIN -->
+<section class="origin-sec">
+  <div class="or-inner">
+    <div class="rv">
+      <div class="or-aside">
+        <div class="big-y">Y</div>
+        <span class="or-aside-tag">Supreme Dark Sorceress · Born Into Mystic Lineage</span>
+        <p class="or-aside-note">Her family was betrayed and executed by a rival coven. She channeled grief and rage into forbidden texts and dark arts. Her rise became legendary. Then the Old Dark Clergy found her — and presented her with promises of power they never intended to keep.</p>
+        <div class="origin-trail" style="margin-top:24px;">
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Born into esteemed Sablean mystic lineage</strong> — displayed an innate aptitude for magic that outstripped her peers from childhood</span></div>
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Family betrayed and executed</strong> by a rival coven — channeled grief and rage into forbidden texts, delving into the dark arts</span></div>
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Rose to Supreme Dark Sorceress</strong> — her name synonymous with awe and terror, capable of destroying armies and bending shadow to her will</span></div>
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Approached by the Old Dark Clergy</strong> with reverence and deceit — promised ascension as Ira's herald; actually intended as a disposable pawn in their ritual</span></div>
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>The only vessel to survive Celestial Possession</strong> — left immortal, changed beyond mortality, permanently marked by Ira's essence</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">Before the Ritual · The Woman She Was</span>
+      <h2 class="big-h">Her magic was as sharp and unpredictable<br><em>as Ira's own twilight.</em></h2>
+      <p class="bp">Born into a lineage of esteemed Sablean mystics, Yzmina displayed an innate aptitude for magic that outstripped her peers by childhood. But her rise was neither smooth nor untainted. After her family was betrayed and executed by a rival coven, <strong>Yzmina channeled her grief and rage into forbidden texts and dark arts</strong>, her growing reputation as a fearsome sorceress spreading across the Nine Realms. Her name became synonymous with both awe and terror.</p>
+      <p class="bp">It was said she had bartered with the Moons themselves for her knowledge, though she denied these claims. <em>She could destroy armies, summon ethereal storms, and bend shadow to her will.</em> When the Old Dark Clergy approached her, they did so with reverence and deceit — presenting her with promises of power and legacy, appealing to her pride and pain. What they did not tell her was that they intended to <strong>sacrifice her</strong> — not as a herald of Ira's will, but as a disposable pawn in their misguided ritual.</p>
+      <div class="pull-gold rv d2"><p>"Magic as sharp and unpredictable as Ira's twilight — she could destroy armies, summon ethereal storms, and bend shadow to her will. It was said she had bartered with the Moons themselves for her knowledge."</p><cite>— The Sablean Chronicles · Third Generation Records · Ancient Monastery Archive</cite></div>
+      <div class="profile-grid rv d3">
+        <div class="pg-cell"><span class="pg-label">Era</span><span class="pg-val">Third Generation — The Age of Enlightenment · Over 700 years before the present day</span></div>
+        <div class="pg-cell"><span class="pg-label">Current Title</span><span class="pg-val">Dark Priestess of the Ancient Monastery · Eternal guardian of Sablea's sacred traditions</span></div>
+        <div class="pg-cell"><span class="pg-label">Status</span><span class="pg-val">Immortal — soul devoured and replaced by Ira's mark · Neither fully mortal nor divine · Bound to the Monastery</span></div>
+        <div class="pg-cell"><span class="pg-label">Role in Present</span><span class="pg-val">Preserver of the Moons' legacy · Mentor to the worthy · Living warning about the cost of unchecked ambition</span></div>
+        <div class="pg-cell"><span class="pg-label">The Mark</span><span class="pg-val">Ira's essence remains ingrained in her being — in moments of fury, she can summon 1/3 of Ira's power. She rarely does.</span></div>
+        <div class="pg-cell"><span class="pg-label">Legacy</span><span class="pg-val">The reason Sablea worships Ara and Ira today. The reason the Shadow Elite exists. The reason the Ancient Monastery is sacred.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--ancient);"><span>🩸</span></div>
+
+<!-- THE RITUAL — THREE PHASES -->
+<section class="ritual-sec">
+  <div class="ritual-inner">
+    <div class="rv">
+      <span class="sl">The Ritual of Celestial Possession · The Night That Remade Sablea</span>
+      <h2 class="big-h">
+        They summoned a goddess<br>
+        <em>they thought they could control.</em>
+      </h2>
+      <p class="bp" style="max-width:660px;">The Old Dark Clergy spent decades seeking a perfect vessel — one of divine lineage, bound to the Moons, yet stained with a mortal's unforgivable sins. In Yzmina, they found everything they needed and understood nothing of what they were actually doing. Ira is no passive deity. She embodied chaos, wrath, and transformation. Their triumphant chants faltered as Yzmina's crimson eyes glowed with divine fury.</p>
+    </div>
+    <div class="ritual-phases">
+      <!-- PHASE 1 -->
+      <div class="phase ph-1 rv">
+        <div class="ph-layout">
+          <div class="ph-aside"><div class="ph-num">I</div><div class="ph-tag">The Setup</div></div>
+          <div class="ph-body">
+            <h3 class="ph-title">The False Promise</h3>
+            <p class="ph-subtitle">The Old Dark Clergy · Decades of Preparation · Deliberate Deception</p>
+            <p class="ph-text">The Third Generation of Sablea was marked by its decadent devotion to <strong>Dugneas</strong>, the Moon God of Cultural Festivals — his influence thriving in celebrations of excess, indulgence, and fleeting pleasures. The Old Dark Clergy embraced these ideals with unchecked fervor, <em>their worship of Dugneas hollow, more a tool for control than true reverence.</em> Amid the crumbling fabric of Sablean society, whispers of Ira's Wrath began to spread. The Clergy, blinded by arrogance, sought to harness Ira's chaotic power to cement their rule — turning to the <strong>forbidden spell of Celestial Possession</strong>, requiring a perfect vessel: one of divine lineage, broken in spirit, stained with unforgivable sins.</p>
+            <div class="ph-events"><span class="ph-chip">Age of decadent excess</span><span class="ph-chip">Dugneas worship as control</span><span class="ph-chip">Ira's Wrath foretold</span><span class="ph-chip">Vessel sought for decades</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- PHASE 2 -->
+      <div class="phase ph-2 rv">
+        <div class="ph-layout">
+          <div class="ph-aside"><div class="ph-num">II</div><div class="ph-tag">The Ritual</div></div>
+          <div class="ph-body">
+            <h3 class="ph-title">The Celestial Hall</h3>
+            <p class="ph-subtitle">The Ancient Monastery · The Obsidian Chalice · The Fatal Miscalculation</p>
+            <p class="ph-text">Yzmina was brought to the <strong>Celestial Hall</strong> — a grand chamber within the Ancient Monastery adorned with glowing glyphs and ancient obelisks humming with forbidden energy. The <strong>Obsidian Chalice of Ira</strong>, filled with sacrificial blood gathered from dozens of offerings, stood at the ritual's center. The Clergy surrounded her, chanting the ancient incantations that would summon Ira's celestial spirit. The ritual began. Ira's essence descended. The air burned with unholy power. The Clergy rejoiced — only to realize, <em>too late</em>, their fatal error. Ira was no passive deity to be summoned and tamed. She embodied chaos, wrath, and transformation. As her spirit possessed Yzmina, the chants faltered as crimson eyes glowed with divine fury.</p>
+            <div class="ph-events"><span class="ph-chip">The Celestial Hall</span><span class="ph-chip">Obsidian Chalice of Ira</span><span class="ph-chip">Ritual complete</span><span class="ph-chip">The Clergy's fatal error</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- PHASE 3 -->
+      <div class="phase ph-3 rv">
+        <div class="ph-layout">
+          <div class="ph-aside"><div class="ph-num">III</div><div class="ph-tag">The Purge</div></div>
+          <div class="ph-body">
+            <h3 class="ph-title">The Purge of Old Sablea</h3>
+            <p class="ph-subtitle">Ira's Wrath · The End of the Third Generation · Sablea Remade</p>
+            <p class="ph-text">Unlike others before her, Yzmina's body did not wither under Ira's possession — it <strong>thrived</strong>, her physical form adapting to house the celestial energy coursing through her. Ira's wrath was swift and merciless. The Clergy members fell as she wielded Yzmina's body like a divine weapon — conjuring <em>living shadows that strangled the life from their throats</em> and summoning rivers of blood that consumed the halls of the Monastery. The purge extended across Sablea: cities burned as Ira's will manifested in plagues of fire and ash, targeting the corrupted elite and their sycophants. <strong>The faithful were spared to witness the fall of their oppressors.</strong> When the purge was complete, Ira's spirit retreated — leaving Yzmina alive but forever changed. Her soul had been devoured. Replaced by Ira's mark.</p>
+            <div class="ph-events"><span class="ph-chip">Clergy destroyed</span><span class="ph-chip">Sablea purged of corruption</span><span class="ph-chip">Ira's spirit withdraws</span><span class="ph-chip">Yzmina alone survives</span><span class="ph-chip">Immortality granted</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--monastery);"><span>✦</span></div>
+
+<!-- THREE STATES -->
+<section class="three-states">
+  <div class="states-inner">
+    <div class="states-header rv">
+      <span class="sl">Three Lives in One Existence · Seven Centuries of Transformation</span>
+      <h2 class="states-title">Three States.<br><em>One Eternal Being.</em></h2>
+      <p class="states-intro">From conqueror to vessel to guardian — the same woman across three entirely different modes of existence, each carrying the weight of what came before.</p>
+    </div>
+
+    <!-- STATE I — SUPREME DARK SORCERESS -->
+    <div class="state-card sc-gold rv">
+      <div class="sc-inner">
+        <div class="sc-header">
+          <div>
+            <span class="sc-era">State I · Before the Ritual</span>
+            <h3 class="sc-name">Supreme Dark Sorceress</h3>
+            <span class="sc-tag">Offensive · Calculated · The Conqueror</span>
+          </div>
+          <div class="sc-period">Third Generation · Age of Enlightenment</div>
+        </div>
+        <p class="sc-body">In her prime, Yzmina's command over dark magic was unrivaled. Her spells were as unpredictable as the twilight Ira represents — <em>shifting between destructive chaos and calculated precision</em>. Many of these abilities remain with her, though tempered by centuries of wisdom and restraint. She could lay waste to entire armies and rewrite the balance of power in the Nine Realms. She was feared because she deserved to be.</p>
+        <div class="ability-rows">
+          <div class="ab-row"><div class="abr-name">Eclipse Blade</div><p class="abr-desc">A blade of pure shadow sharp enough to sever steel — absorbs the life force of those it strikes, healing Yzmina or empowering her next attack.</p></div>
+          <div class="ab-row"><div class="abr-name">Twilight Tempest</div><p class="abr-desc">A storm of silver and crimson energy bombarding entire armies with destructive orbs — creating chaotic zones where magic itself malfunctions.</p></div>
+          <div class="ab-row"><div class="abr-name">Nether Chains</div><p class="abr-desc">Black chains forged from the essence of the Veins — bind and drain the strength of enemies, rendering even the mightiest warriors immobile.</p></div>
+          <div class="ab-row"><div class="abr-name">Umbral Warding · Phase Slip · Mirror of Dusk</div><p class="abr-desc">Defensive mastery: absorbing incoming attacks and redirecting them · becoming incorporeal shadow to evade physical and magical strikes · creating perfect shadow clones to misdirect enemies.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATE II — IRA REINCARNATE -->
+    <div class="state-card sc-ira rv">
+      <div class="sc-inner">
+        <div class="sc-header">
+          <div>
+            <span class="sc-era">State II · During the Possession</span>
+            <h3 class="sc-name">Ira Reincarnate</h3>
+            <span class="sc-tag">Divine · Unstoppable · A Harbinger of Chaos</span>
+          </div>
+          <div class="sc-period">The Night of the Purge · Third Generation</div>
+        </div>
+        <p class="sc-body">When Ira's spirit possessed her, Yzmina's powers were amplified to a divine scale — transforming her into a living extension of the Moon Goddess's wrath. <strong>As Ira Reincarnate, Yzmina was a harbinger of chaos</strong>, wielding Ira's celestial power to enforce her will and purge Sablea of its corrupt rulers. She was a paradox of celestial beauty and destructive rage. <em>Her power was uncontested, but her humanity nearly drowned in the chaos of Ira's presence.</em></p>
+        <div class="ability-rows">
+          <div class="ab-row"><div class="abr-name">Living Shadows</div><p class="abr-desc">Animate shadows — creatures born of Ira's essence — summoned to do her bidding, overwhelming foes with sheer numbers and insidious tactics.</p></div>
+          <div class="ab-row"><div class="abr-name">Blinding Light of the Moons</div><p class="abr-desc">A searing burst of silver light that blinds vision and scorches the magical essence of spellcasters caught in its radius — rendering them powerless.</p></div>
+          <div class="ab-row"><div class="abr-name">Orbs of Cataclysm</div><p class="abr-desc">Glowing red orbs that upon contact unleash explosive bursts capable of leveling buildings and disintegrating everything in their path.</p></div>
+          <div class="ab-row"><div class="abr-name">Aura of Twilight Flame</div><p class="abr-desc">An intense heat capable of vaporizing foes who draw too close — simultaneously destabilizing nearby spells, causing magic to spiral out of control.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATE III — DARK PRIESTESS -->
+    <div class="state-card sc-priestess rv">
+      <div class="sc-inner">
+        <div class="sc-header">
+          <div>
+            <span class="sc-era">State III · Eternal Present</span>
+            <h3 class="sc-name">Dark Priestess of the Ancient Monastery</h3>
+            <span class="sc-tag">Guardian · Penance · Still Formidable — Do Not Test</span>
+          </div>
+          <div class="sc-period">Fourth Generation → Present Day · 700+ Years</div>
+        </div>
+        <p class="sc-body">After Ira's spirit withdrew, Yzmina dedicated herself to penance and reflection. As the Dark Priestess, she serves as the eternal guardian of the Ancient Monastery — overseeing Sablea's sacred traditions and protecting its foundations. <strong>She views her role as penance for her actions as Ira's vessel.</strong> While she no longer craves power, <em>she will not hesitate to summon her full might to protect Sablea and its sacred traditions</em>. Few are foolish enough to challenge her. Those who do rarely survive to tell the tale.</p>
+        <div class="ability-rows">
+          <div class="ab-row"><div class="abr-name">Full Arsenal — Retained</div><p class="abr-desc">All abilities from her Supreme Dark Sorceress state remain with her — tempered by centuries of wisdom and restraint. The restraint is her choice. The power is not diminished.</p></div>
+          <div class="ab-row"><div class="abr-name">Ira's Mark — Partial Access</div><p class="abr-desc">Can summon 1/3 of Ira's power in an Enraged State. Rarely does. Fears the echoes of Ira's influence threatening to consume her once more. This fear is wisdom, not weakness.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shrine);"><span>🩸</span></div>
+
+<!-- ENRAGED STATE -->
+<section class="enraged">
+  <div class="en-inner">
+    <div class="rv">
+      <span class="sl">The Remnant · What Ira Left Behind</span>
+      <h2 class="big-h">The goddess withdrew.<br><em>Not entirely.</em></h2>
+      <p class="bp" style="max-width:620px;">Though Ira's spirit has long since departed, the mark of Ira remains deeply ingrained in Yzmina's being. In moments of desperation or fury, she can summon a fraction of the power that once remade Sablea. She does so only when she must — because she remembers what it felt like to be consumed.</p>
+    </div>
+    <div class="en-block rv d1">
+      <div class="en-c">
+        <div class="en-badge">// ENRAGED STATE · ONE THIRD OF IRA'S POWER · ACTIVE THRESHOLD: DESPERATION //</div>
+        <h3 class="en-title">The <em>Enraged State</em></h3>
+        <div class="en-grid">
+          <div class="en-aspect"><span class="ea-label">Increased Power</span><p class="ea-body">While enraged, Yzmina's magic is amplified — granting a significant boost in offensive capabilities. Her spells <strong>burn brighter, strike harder</strong>, fueled by the chaotic energy of Ira's moon. A reminder, for those who witness it, of exactly what she survived.</p></div>
+          <div class="en-aspect"><span class="ea-label">Shadow Dominion</span><p class="ea-body">While enraged, she can command the shadows of her environment to rise and fight for her. <strong>Walls of darkness engulf her enemies. Tendrils lash out in unrelenting fury.</strong> The shadows do not need to be instructed. They know what she wants.</p></div>
+          <div class="en-aspect"><span class="ea-label">The Cost</span><p class="ea-body">The longer she remains enraged, the faster her energy drains. Each spell <strong>weakens her physical form</strong> — forcing her into a purely offensive role. She sacrifices defense and longevity for overwhelming force. She accepts this. She does not accept it often.</p></div>
+        </div>
+        <div class="en-warning"><strong>Yzmina rarely enters this state</strong> — because she fears the echoes of Ira's influence threatening to consume her once more. This is the most honest self-assessment she has ever offered: that she fears what she carries. This is also why she has survived 700 years when those who feared nothing did not.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--monastery);"><span>☾</span></div>
+
+<!-- DARK PRIESTESS LEGACY -->
+<section class="priestess-legacy">
+  <div class="pl-inner">
+    <div class="rv">
+      <span class="sl">The Aftermath · What the Purge Built · Sablea's Foundation</span>
+      <h2 class="big-h">She did not survive the goddess<br><em>to watch what she built collapse.</em></h2>
+      <p class="bp" style="max-width:660px;">After the purge, Yzmina became the architect of Sablea's rebirth. As the only vessel to survive Celestial Possession, she was both revered and feared. She adopted the title of Dark Priestess of the Ancient Monastery, dedicating herself to maintaining Sablea's sacred traditions while guiding its future. Everything that defines Sablea today flows through what she built in the Fourth Generation.</p>
+    </div>
+    <div class="pl-grid rv d1">
+      <div class="pl-card">
+        <span class="plc-glyph">☽☾</span>
+        <div class="plc-name">Dual Reverence of Ara and Ira</div>
+        <p class="plc-desc">Yzmina guided Sablea's transition from the indulgent worship of Dugneas to the <strong>dual reverence of Ara and Ira</strong> — whose duality of light and shadow, order and chaos, defined the Fourth Generation and every generation since. This is her most lasting transformation of Sablean culture.</p>
+      </div>
+      <div class="pl-card">
+        <span class="plc-glyph">👁</span>
+        <div class="plc-name">The Shadow Elite — Her Inheritance</div>
+        <p class="plc-desc">The Shadow Elite emerged as Sablea's true power structure in the Fourth Generation — a council of influential figures operating under Ira's philosophy — with <strong>Queen Vesper and Queen Vashti serving as their divine-appointed leaders.</strong> Yzmina is the reason this structure exists. She is also the only person alive who remembers why it was designed the way it was.</p>
+      </div>
+      <div class="pl-card">
+        <span class="plc-glyph">🏛</span>
+        <div class="plc-name">The Ancient Monastery</div>
+        <p class="plc-desc">The site of the ritual — now the site of her guardianship. She has spent 700 years ensuring that the Celestial Hall remains what she left it: a sacred chamber, not a weapon's workshop. Her presence there is a reminder and a warning simultaneously.</p>
+      </div>
+      <div class="pl-card">
+        <span class="plc-glyph">📖</span>
+        <div class="plc-name">Mentor to the Worthy</div>
+        <p class="plc-desc">Yzmina shares her vast knowledge with those she deems worthy — and she is selective. <strong>Her lessons are rigorous and unyielding</strong>, forcing students to confront their weaknesses and uncover their potential. Those who study under her come away permanently changed. Most survive the process.</p>
+      </div>
+      <!-- Sablea's Rebirth -->
+      <div class="pl-rebirth">
+        <span class="plr-label">The Promise of Ira · The Condition of Her Immortality</span>
+        <p class="plr-body">Ira's favor did not come without cost. Yzmina's eternal life was granted not as a reward but as a condition — she would remain bound to the Ancient Monastery, guarding its secrets and ensuring the balance between faith and governance. Her existence serves as a reminder of Ira's wrath and a warning to those who seek to misuse the Moons' power. <strong>Through her, Ira's will reshaped Sablea into the kingdom it is today</strong> — a realm of shadows and secrets, ruled by devotion and ambition. Yet the price of Ira's favor lingers in Yzmina's eyes, where the light of the Moons flickers endlessly, <em>neither fully mortal nor divine, forever bound to a destiny written in blood.</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="promise">
+  <div class="pr-inner rv">
+    <span class="pr-glyph">☽ ✦ ☾</span>
+    <h2 class="pr-title">Neither mortal nor divine.<br><em>Forever bound.</em></h2>
+    <p class="pr-body">Yzmina is a symbol of redemption and power — a guardian of Sablea's legacy and a living reminder of the dangers of unchecked ambition. Her story is one of transformation: from conqueror to protector, from chaos to balance. <strong>She carries the weight of what she was, in service of what she has chosen to be.</strong> The light of the Moons flickers endlessly in her eyes. She has been watching for 700 years. She will be watching for 700 more.</p>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('lit');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('lit');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=200;this.s=50;this.l=52;}
+      else if(t<.72){this.h=340;this.s=55;this.l=42;}
+      else if(t<.86){this.h=200+20;this.s=50-15;this.l=52+15;}
+      else{this.h=340+10;this.s=55-10;this.l=42+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

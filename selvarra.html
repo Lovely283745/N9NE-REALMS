@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High Priestess Selvarra Lyne — The Immortal Flame | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:       #020304;
+  --deep:       #040508;
+  --sanctum:    #07080C;
+  --shrine:     #0A0B10;
+  --veil:       #0E0F14;
+
+  /* Stellar core — cold white precision */
+  --stellar:    rgba(220,230,255,0.08);
+  --star-mid:   rgba(200,215,255,0.4);
+  --star-pale:  rgba(220,230,255,0.65);
+  --star-bright:#E8EEFF;
+  --star-hot:   #FFFFFF;
+
+  /* Obsidian rosary — the contained dark */
+  --obs:        #0A0810;
+  --obs-mid:    #1A1428;
+  --obs-pale:   #3A2860;
+  --obs-bright: #6040A0;
+
+  /* Thermal amber — the flame beneath the veil */
+  --heat:       rgba(180,100,20,0.5);
+  --heat-mid:   rgba(210,130,30,0.6);
+  --heat-pale:  rgba(240,160,40,0.8);
+  --heat-bright:#F0A030;
+
+  /* Ward crimson — lethal infrastructure */
+  --ward:       rgba(140,20,20,0.6);
+  --ward-mid:   rgba(180,30,30,0.7);
+  --ward-bright:#C04040;
+
+  --parch:      #A8A8B8;
+  --parch-pale: #C8C8D8;
+  --parch-dim:  #404050;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Stellar ambient — cold precise light from above */
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:60vh;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 50% 60% at 50% 0%,rgba(180,190,240,0.04) 0%,transparent 65%);
+  animation:stellarBreath 14s ease-in-out infinite;}
+@keyframes stellarBreath{0%,100%{opacity:0.5;}50%{opacity:1;}}
+
+/* Hymn-line scan — sacred bureaucratic texture */
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(180,190,240,0.012) 0px,rgba(180,190,240,0.012) 1px,transparent 1px,transparent 6px);
+  opacity:1;}
+
+/* Cursor — precise, circular like a rosary bead */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--star-pale);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:26px;height:26px;border:1px solid rgba(200,215,255,0.3);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.observe{width:44px;height:44px;border-color:var(--star-pale);box-shadow:0 0 14px rgba(200,215,255,0.2);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(2,3,4,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(200,215,255,0.06);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--star-pale);opacity:0.45;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--star-pale);border:1px solid rgba(200,215,255,0.2);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:rgba(200,215,255,0.45);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,#0C0C14 0%,#070810 45%,var(--void) 75%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Hymn-lines — vertical sacred architecture */
+.hymn-l,.hymn-r{position:absolute;top:0;bottom:0;width:1px;pointer-events:none;z-index:1;}
+.hymn-l{left:15%;background:linear-gradient(to bottom,transparent,rgba(200,215,255,0.06),transparent);}
+.hymn-r{right:15%;background:linear-gradient(to bottom,transparent,rgba(200,215,255,0.06),transparent);}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-sys{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--star-pale);opacity:0;animation:riseIn 1s .2s ease forwards;margin-bottom:18px;letter-spacing:0.06em;display:flex;align-items:center;justify-content:center;gap:10px;}
+.h-sys::before,.h-sys::after{content:'//';color:rgba(200,215,255,0.25);}
+.h-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;display:block;margin-bottom:10px;}
+.h-pre{font-family:'Cinzel',serif;font-size:clamp(9px,1.2vw,12px);letter-spacing:0.4em;text-transform:uppercase;color:var(--star-pale);opacity:0;animation:riseIn 1s .5s ease forwards;display:block;margin-bottom:6px;opacity:0.6;}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(42px,8vw,110px);font-weight:900;
+  color:var(--star-bright);letter-spacing:0.04em;line-height:0.88;
+  text-shadow:0 0 120px rgba(200,215,255,0.25),0 0 60px rgba(180,190,240,0.15),0 4px 40px rgba(0,0,0,0.95);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-epithet{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(14px,2vw,26px);font-weight:400;
+  color:var(--heat-bright);letter-spacing:0.2em;
+  opacity:0;animation:riseIn 1s .8s ease forwards;display:block;margin-top:8px;
+}
+.h-rule{width:240px;height:1px;background:linear-gradient(to right,transparent,rgba(200,215,255,0.2),rgba(180,100,20,0.2),transparent);margin:20px auto;opacity:0;animation:fadeIn 1s 1.1s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-doctrine{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(14px,1.8vw,19px);color:rgba(168,168,184,0.4);
+  max-width:680px;margin:0 auto 36px;line-height:1.8;
+  opacity:0;animation:riseIn 1.2s 1.2s ease forwards;
+}
+.h-vitals{display:flex;justify-content:center;max-width:780px;margin:0 auto;border:1px solid rgba(200,215,255,0.07);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:16px 10px;text-align:center;border-right:1px solid rgba(200,215,255,0.06);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Share Tech Mono',monospace;font-size:clamp(10px,1.5vw,16px);color:var(--star-pale);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--star-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--star-pale);opacity:0.4;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(200,215,255,0.1),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(200,215,255,0.2);letter-spacing:0.12em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--star-pale);}
+.big-h em.heat{color:var(--heat-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(168,168,184,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--star-pale);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid rgba(200,215,255,0.15);background:rgba(200,215,255,0.02);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,20px);color:rgba(168,168,184,0.7);line-height:1.75;}
+.pull cite{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--star-pale);opacity:0.35;display:block;margin-top:10px;font-style:normal;letter-spacing:0.05em;}
+.warn-pull{margin:22px 0;padding:18px 24px;border-left:2px solid rgba(140,20,20,0.5);background:rgba(140,20,20,0.04);}
+.warn-pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,20px);color:rgba(168,168,184,0.7);line-height:1.75;}
+
+/* ═══ PROFILE ═══ */
+.profile-sec{padding:110px 60px;background:var(--sanctum);position:relative;overflow:hidden;}
+.profile-sec::before{content:'SELVARRA';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(100px,17vw,220px);font-weight:900;color:rgba(200,215,255,0.018);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;letter-spacing:0.05em;}
+.prof-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.prof-aside .big-s{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(200,215,255,0.06);line-height:1;margin-left:-6px;}
+.prof-aside-tag{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--star-pale);opacity:0.4;letter-spacing:0.06em;}
+
+/* Spec table */
+.spec-table{margin-top:24px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(200,215,255,0.07);}
+.srow{display:grid;grid-template-columns:110px 1fr;overflow:hidden;}
+.srk{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--star-pale);opacity:0.4;background:rgba(200,215,255,0.02);padding:11px 12px;border-right:1px solid rgba(200,215,255,0.05);letter-spacing:0.04em;}
+.srv{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,168,184,0.55);padding:9px 14px;line-height:1.5;}
+.srv strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ THE ROSARY — THREN'KAI VORYN ═══ */
+.rosary-sec{padding:110px 60px;background:var(--veil);position:relative;overflow:hidden;}
+.rosary-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(60,40,100,0.06) 0%,transparent 70%);}
+.rosary-inner{max-width:1200px;margin:0 auto;}
+
+/* Five cycles */
+.cycles-grid{display:flex;flex-direction:column;gap:2px;margin-top:52px;}
+.cycle{border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.cycle.c1{border-color:rgba(200,215,255,0.08);background:linear-gradient(160deg,#080810 0%,#060808 100%);}
+.cycle.c2{border-color:rgba(240,160,40,0.08);background:linear-gradient(160deg,#100C04 0%,#0C0804 100%);}
+.cycle.c3{border-color:rgba(180,60,20,0.1);background:linear-gradient(160deg,#120604 0%,#0C0402 100%);}
+.cycle.c4{border-color:rgba(140,30,140,0.09);background:linear-gradient(160deg,#0C0610 0%,#08040C 100%);}
+.cycle.c5{border-color:rgba(180,20,20,0.12);background:linear-gradient(160deg,#140404 0%,#0C0202 100%);}
+.cycle:hover{}.cycle.c1:hover{border-color:rgba(200,215,255,0.22);}
+.cycle.c2:hover{border-color:rgba(240,160,40,0.25);}
+.cycle.c3:hover{border-color:rgba(180,60,20,0.3);}
+.cycle.c4:hover{border-color:rgba(140,30,140,0.28);}
+.cycle.c5:hover{border-color:rgba(180,20,20,0.35);}
+.cycle::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.cycle:hover::before{transform:scaleX(1);}
+.c1::before{background:linear-gradient(to right,transparent,rgba(200,215,255,0.35),transparent);}
+.c2::before{background:linear-gradient(to right,transparent,var(--heat-bright),transparent);}
+.c3::before{background:linear-gradient(to right,transparent,rgba(220,80,30,0.7),transparent);}
+.c4::before{background:linear-gradient(to right,transparent,rgba(160,40,160,0.7),transparent);}
+.c5::before{background:linear-gradient(to right,transparent,var(--ward-bright),transparent);}
+
+.cycle-inner{display:grid;grid-template-columns:220px 1fr;position:relative;z-index:1;}
+.cy-label{padding:28px 24px;border-right:1px solid rgba(200,215,255,0.05);display:flex;flex-direction:column;justify-content:center;}
+.cy-num{font-family:'Cinzel Decorative',serif;font-size:clamp(28px,4vw,52px);font-weight:400;line-height:1;margin-bottom:8px;opacity:0.35;}
+.c1 .cy-num{color:var(--star-bright);}
+.c2 .cy-num{color:var(--heat-bright);}
+.c3 .cy-num{color:rgba(220,80,30,0.9);}
+.c4 .cy-num{color:rgba(160,40,160,0.9);}
+.c5 .cy-num{color:var(--ward-bright);}
+.cy-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.6vw,16px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:4px;}
+.cy-pyric{font-family:'Share Tech Mono',monospace;font-size:9px;opacity:0.35;display:block;margin-bottom:6px;letter-spacing:0.05em;}
+.c1 .cy-pyric{color:var(--star-pale);}
+.c2 .cy-pyric,.c3 .cy-pyric{color:var(--heat-pale);}
+.c4 .cy-pyric{color:rgba(160,40,160,0.8);}
+.c5 .cy-pyric{color:var(--ward-bright);}
+.cy-function{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;line-height:1.5;}
+.cy-body{padding:28px 32px;}
+.cy-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,184,0.55);line-height:1.85;margin-bottom:14px;}
+.cy-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.c1 .cy-desc em{color:var(--star-pale);}
+.c2 .cy-desc em,.c3 .cy-desc em{color:var(--heat-pale);}
+.c4 .cy-desc em{color:rgba(160,40,160,0.8);}
+.c5 .cy-desc em{color:var(--ward-bright);}
+/* Bead names */
+.bead-names{display:flex;flex-wrap:wrap;gap:4px;padding-top:12px;border-top:1px solid rgba(200,215,255,0.06);}
+.bead{font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 10px;border:1px solid;letter-spacing:0.04em;opacity:0.6;}
+.c1 .bead{color:var(--star-pale);border-color:rgba(200,215,255,0.12);}
+.c2 .bead{color:var(--heat-pale);border-color:rgba(240,160,40,0.2);}
+.c3 .bead{color:rgba(220,80,30,0.8);border-color:rgba(180,60,20,0.2);}
+.c4 .bead{color:rgba(160,40,160,0.8);border-color:rgba(140,30,140,0.2);}
+.c5 .bead{color:var(--ward-bright);border-color:rgba(180,20,20,0.25);}
+
+/* Crown Ember + Anchors */
+.crown-block{margin-top:2px;padding:36px 40px;border:1px solid rgba(200,215,255,0.15);background:linear-gradient(160deg,#0C0C14 0%,#08080E 100%);position:relative;overflow:hidden;}
+.crown-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(200,215,255,0.05) 0%,transparent 70%);}
+.crown-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(200,215,255,0.5),transparent);}
+.cb-c{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.6fr;gap:60px;align-items:start;}
+.crown-aside{}
+.ca-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--star-pale);border:1px solid rgba(200,215,255,0.2);padding:4px 14px;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.ca-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3vw,38px);font-weight:400;color:var(--star-bright);line-height:1.05;margin-bottom:6px;}
+.ca-pyric{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--star-pale);opacity:0.4;letter-spacing:0.06em;display:block;margin-bottom:10px;}
+.ca-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,184,0.6);line-height:1.85;}
+.ca-body strong{color:var(--star-bright);font-style:normal;font-weight:500;}
+.anchors-list{display:flex;flex-direction:column;gap:2px;}
+.anchor-row{padding:14px 18px;border:1px solid rgba(200,215,255,0.07);background:rgba(200,215,255,0.015);transition:border-color .3s;}
+.anchor-row:hover{border-color:rgba(200,215,255,0.18);}
+.ar-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.4vw,15px);letter-spacing:0.12em;color:var(--parch-pale);margin-bottom:3px;}
+.ar-fn{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(168,168,184,0.45);line-height:1.5;}
+
+/* ═══ THE ORDER ═══ */
+.order-sec{padding:110px 60px;background:var(--sanctum);}
+.order-inner{max-width:1200px;margin:0 auto;}
+/* Hierarchy */
+.hierarchy{display:flex;flex-direction:column;gap:2px;margin-top:52px;}
+.rank-row{display:grid;grid-template-columns:200px 100px 1fr;border:1px solid rgba(200,215,255,0.06);overflow:hidden;transition:border-color .3s,background .3s;}
+.rank-row:hover{border-color:rgba(200,215,255,0.18);background:rgba(200,215,255,0.02);}
+.rr-title{padding:16px 18px;border-right:1px solid rgba(200,215,255,0.05);background:rgba(200,215,255,0.02);display:flex;flex-direction:column;justify-content:center;}
+.rrt-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.5vw,15px);letter-spacing:0.12em;color:var(--parch-pale);margin-bottom:3px;}
+.rrt-tier{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--star-pale);opacity:0.4;letter-spacing:0.04em;}
+.rr-level{padding:16px 14px;border-right:1px solid rgba(200,215,255,0.05);text-align:center;display:flex;align-items:center;justify-content:center;}
+.rrl-dot{width:10px;height:10px;border-radius:50%;border:1px solid var(--star-pale);opacity:0.4;}
+.rr-body{padding:14px 20px;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(168,168,184,0.5);line-height:1.65;}
+.rr-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Ward classes */
+.wards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:3px;}
+.ward-card{padding:22px 22px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s,background .3s;}
+.ward-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.ward-card:hover::before{transform:scaleX(1);}
+/* Passive wards */
+.wc-pass{border-color:rgba(200,215,255,0.07);background:rgba(200,215,255,0.01);}
+.wc-pass:hover{border-color:rgba(200,215,255,0.2);background:rgba(200,215,255,0.03);}
+.wc-pass::before{background:linear-gradient(to right,transparent,rgba(200,215,255,0.3),transparent);}
+/* Restraint wards */
+.wc-rest{border-color:rgba(240,160,40,0.07);background:rgba(240,160,40,0.01);}
+.wc-rest:hover{border-color:rgba(240,160,40,0.22);background:rgba(240,160,40,0.03);}
+.wc-rest::before{background:linear-gradient(to right,transparent,var(--heat-bright),transparent);}
+/* Lethal wards */
+.wc-let{border-color:rgba(180,20,20,0.09);background:rgba(180,20,20,0.02);}
+.wc-let:hover{border-color:rgba(180,20,20,0.28);background:rgba(180,20,20,0.04);}
+.wc-let::before{background:linear-gradient(to right,transparent,var(--ward-bright),transparent);}
+/* Secret wards */
+.wc-sec{border-color:rgba(60,40,100,0.1);background:rgba(60,40,100,0.02);}
+.wc-sec:hover{border-color:rgba(60,40,100,0.28);background:rgba(60,40,100,0.04);}
+.wc-sec::before{background:linear-gradient(to right,transparent,rgba(100,60,160,0.6),transparent);}
+
+.wc-inner{position:relative;z-index:1;}
+.wc-class{font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 10px;border:1px solid;display:inline-block;margin-bottom:10px;letter-spacing:0.05em;opacity:0.65;}
+.wc-pass .wc-class{color:var(--star-pale);border-color:rgba(200,215,255,0.2);}
+.wc-rest .wc-class{color:var(--heat-bright);border-color:rgba(240,160,40,0.25);}
+.wc-let .wc-class{color:var(--ward-bright);border-color:rgba(180,20,20,0.3);}
+.wc-sec .wc-class{color:rgba(140,80,200,0.9);border-color:rgba(100,60,160,0.3);}
+.wc-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.6vw,17px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:6px;}
+.wc-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(12px,1.4vw,15px);color:rgba(168,168,184,0.5);line-height:1.7;}
+.wc-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.wc-let .wc-desc em{color:var(--ward-bright);}
+.wc-sec .wc-desc em{color:rgba(140,80,200,0.8);}
+
+/* ═══ FLAME LATTICE ═══ */
+.lattice-sec{padding:110px 60px;background:var(--veil);position:relative;overflow:hidden;}
+.lattice-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(200,215,255,0.03) 0%,transparent 70%);}
+.lattice-inner{max-width:1100px;margin:0 auto;}
+.lattice-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:52px;}
+.latt-card{padding:28px 28px;border:1px solid rgba(200,215,255,0.07);background:rgba(4,4,8,0.6);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.latt-card:hover{border-color:rgba(200,215,255,0.2);background:rgba(200,215,255,0.02);}
+.latt-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(200,215,255,0.3),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.latt-card:hover::after{transform:scaleX(1);}
+.lc-icon{font-size:20px;opacity:0.35;margin-bottom:10px;display:block;}
+.lc-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.7vw,18px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:6px;}
+.lc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,184,0.5);line-height:1.75;}
+.lc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.lc-body em{color:var(--star-pale);}
+
+/* Evasion methods */
+.evasion-list{display:flex;flex-direction:column;gap:2px;margin-top:3px;}
+.ev-row{display:grid;grid-template-columns:180px 1fr;border:1px solid rgba(200,215,255,0.06);overflow:hidden;transition:border-color .3s;}
+.ev-row:hover{border-color:rgba(200,215,255,0.18);}
+.ev-label{padding:14px 16px;background:rgba(200,215,255,0.02);border-right:1px solid rgba(200,215,255,0.05);display:flex;flex-direction:column;justify-content:center;}
+.evl-name{font-family:'Cinzel',serif;font-size:clamp(10px,1.3vw,13px);letter-spacing:0.12em;color:var(--parch-pale);margin-bottom:3px;}
+.evl-status{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--ward-bright);opacity:0.7;}
+.ev-body{padding:12px 18px;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(12px,1.4vw,15px);color:rgba(168,168,184,0.5);line-height:1.6;}
+.ev-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ TOUCH + VULNERABILITIES ═══ */
+.touch-sec{padding:100px 60px;background:var(--sanctum);}
+.touch-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.touch-card{padding:40px 36px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.tc-touch{border-color:rgba(200,215,255,0.1);background:linear-gradient(160deg,#0A0A12 0%,#08080E 100%);}
+.tc-vuln{border-color:rgba(180,80,20,0.1);background:linear-gradient(160deg,#0E0804 0%,#0A0604 100%);}
+.tc-touch:hover{border-color:rgba(200,215,255,0.25);}
+.tc-vuln:hover{border-color:rgba(180,80,20,0.28);}
+.tc-touch::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(200,215,255,0.04) 0%,transparent 70%);}
+.tc-vuln::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(180,80,20,0.05) 0%,transparent 70%);}
+.touch-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.touch-card:hover::after{transform:scaleX(1);}
+.tc-touch::after{background:linear-gradient(to right,transparent,rgba(200,215,255,0.4),transparent);}
+.tc-vuln::after{background:linear-gradient(to right,transparent,rgba(220,100,30,0.5),transparent);}
+.tc-inner{position:relative;z-index:1;}
+.tc-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:4px 12px;border:1px solid;display:inline-block;margin-bottom:14px;opacity:0.7;letter-spacing:0.05em;}
+.tc-touch .tc-badge{color:var(--star-pale);border-color:rgba(200,215,255,0.2);}
+.tc-vuln .tc-badge{color:var(--heat-bright);border-color:rgba(240,160,40,0.2);}
+.tc-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);margin-bottom:10px;}
+.tc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,184,0.55);line-height:1.85;}
+.tc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.tc-touch .tc-body em{color:var(--star-pale);}
+.tc-vuln .tc-body em{color:var(--heat-bright);}
+.vuln-list{display:flex;flex-direction:column;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(200,215,255,0.06);}
+.vl-item{display:flex;gap:10px;align-items:flex-start;}
+.vl-dot{width:5px;height:5px;background:rgba(240,160,40,0.5);flex-shrink:0;margin-top:8px;}
+.vl-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,15px);color:rgba(168,168,184,0.5);line-height:1.6;}
+.vl-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ RED PYRE ORIGIN ═══ */
+.origin-sec{padding:110px 60px;background:var(--veil);position:relative;overflow:hidden;}
+.origin-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(60,40,100,0.06) 0%,transparent 70%);}
+.origin-inner{max-width:1100px;margin:0 auto;}
+.origin-block{margin-top:52px;padding:44px;border:1px solid rgba(200,215,255,0.1);background:rgba(4,4,8,0.8);position:relative;overflow:hidden;}
+.origin-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(200,215,255,0.04) 0%,transparent 70%);}
+.origin-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(200,215,255,0.35),transparent);}
+.ob-c{position:relative;z-index:1;}
+.ob-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--star-pale);border:1px solid rgba(200,215,255,0.18);padding:5px 16px;display:inline-block;margin-bottom:18px;opacity:0.7;letter-spacing:0.06em;}
+.ob-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,42px);font-weight:400;color:var(--parch-pale);margin-bottom:14px;}
+.ob-title em{font-style:italic;color:var(--star-pale);}
+.ob-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,18px);color:rgba(168,168,184,0.6);line-height:1.9;margin-bottom:16px;max-width:820px;}
+.ob-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ob-body em{color:var(--star-pale);}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(200,215,255,0.06);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--star-pale);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(168,168,184,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#F0F0F8;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(168,168,184,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(168,168,184,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(200,215,255,0.05);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(168,168,184,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .profile-sec,.rosary-sec,.order-sec,.lattice-sec,.touch-sec,.origin-sec,.page-cta{padding:80px 40px;}
+  .prof-inner{grid-template-columns:1fr;gap:40px;}
+  .cycle-inner{grid-template-columns:1fr;}
+  .cy-label{border-right:none;border-bottom:1px solid rgba(200,215,255,0.05);}
+  .wards-grid{grid-template-columns:1fr 1fr;}
+  .lattice-grid{grid-template-columns:1fr;}
+  .touch-inner{grid-template-columns:1fr;}
+  .cb-c{grid-template-columns:1fr;gap:32px;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .profile-sec,.rosary-sec,.order-sec,.lattice-sec,.touch-sec,.origin-sec,.page-cta{padding:60px 24px;}
+  .wards-grid{grid-template-columns:1fr;}
+  .rank-row{grid-template-columns:1fr;} .rr-title,.rr-level{border-right:none;border-bottom:1px solid rgba(200,215,255,0.05);}
+  .ev-row{grid-template-columns:1fr;} .ev-label{border-right:none;border-bottom:1px solid rgba(200,215,255,0.05);}
+  .h-vitals{flex-direction:column;} .h-vital{border-right:none;border-bottom:1px solid rgba(200,215,255,0.06);}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// ASHURA · ASHURAN_HIGH_TEMPLE · IMMORTAL_FLAME //</span>
+  </a>
+  <div class="nav-right">
+    <a href="ashura-nation.html" class="nav-link">Ashura</a>
+    <a href="solara.html" class="nav-link">Solara</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hymn-l"></div><div class="hymn-r"></div>
+  <div class="hero-content">
+    <div class="h-sys">THREAT_CLASSIFICATION · INFORMANT · CONTROLLED_VESSEL · STELLAR_CORE</div>
+    <span class="h-label">Ashuran High Temple · Order of the Immortal Flame</span>
+    <span class="h-pre">High Priestess · Last of the Red Pyre · Liaison between the Veil and the Court</span>
+    <h1 class="h-name">Selvarra Lyne</h1>
+    <span class="h-epithet">The Composed Catastrophe</span>
+    <div class="h-rule"></div>
+    <p class="h-doctrine">"If Selvarra Lyne were ever to abandon that composure, even briefly, the consequences would not be chaotic or uncontrolled — they would be intentional. And that possibility, more than anything she has ever done, is what makes her feared."</p>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">59</div><div class="h-vlabel">Rosary Beads</div></div>
+      <div class="h-vital"><div class="h-vval">V</div><div class="h-vlabel">Bead Cycles</div></div>
+      <div class="h-vital"><div class="h-vval">∞</div><div class="h-vlabel">Ward Network</div></div>
+      <div class="h-vital"><div class="h-vval">Red Pyre</div><div class="h-vlabel">Last Survivor</div></div>
+      <div class="h-vital"><div class="h-vval">☽</div><div class="h-vlabel">Moon Pact</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ENTER THE SANCTUM //</span><div class="s-line"></div></div>
+</section>
+
+<!-- PROFILE -->
+<section class="profile-sec">
+  <div class="prof-inner">
+    <div class="rv">
+      <div class="prof-aside">
+        <div class="big-s">S</div>
+        <span class="prof-aside-tag">// LAST_OF_THE_RED_PYRE · INTERNALIZED_STELLAR_CORE · CONTROLLED_VESSEL //</span>
+        <div class="spec-table" style="margin-top:20px;">
+          <div class="srow"><div class="srk">ROLE</div><div class="srv"><strong>High Priestess of the Ashuran High Temple</strong> — public face of divine restraint; secret informant for clandestine flame cults</div></div>
+          <div class="srow"><div class="srk">NATURE</div><div class="srv"><strong>Controlled vessel for an internalized stellar core</strong> — sustained by cybernetic augmentations disguised as sacred relics</div></div>
+          <div class="srow"><div class="srk">RESONANCE</div><div class="srv">Does not generate fire conventionally — <strong>rewrites the distribution of energy itself</strong>: temperature, pressure, and motion at will</div></div>
+          <div class="srow"><div class="srk">LINEAGE</div><div class="srv">Last living member of the <strong>Red Pyre</strong> — an extinct civilization who shaped their biology around devotion to flame. Their extinction was her survival.</div></div>
+          <div class="srow"><div class="srk">ALLEGIANCE</div><div class="srv">Publicly: the High Temple. Secretly: <strong>clandestine flame cults</strong> that reject the doctrine of containment and believe entropy should spread as purification</div></div>
+          <div class="srow"><div class="srk">RELIC</div><div class="srv">The <strong>Thren'kai Voryn</strong> — 59-bead obsidian rosary from the First Ones; each bead a compressed soul, sin, philosophy, and thermodynamic function of the Red Pyre</div></div>
+          <div class="srow"><div class="srk">PACT</div><div class="srv">A <strong>Moon demi-god</strong> exchanged her entire civilization's accumulated sin for her single survival. She did not escape their fate — she became its vessel.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">// PROFILE · THE COMPOSED CATASTROPHE //</span>
+      <h2 class="big-h">Serene spiritual voice.<br><em>Sanctity as surveillance. Devotion as control.</em></h2>
+      <p class="bp">To the public, she is the embodiment of grace and divine restraint — soft-spoken, measured, almost impossibly calm. She speaks in flowing hymns and carries herself with ritual precision. Her presence soothes unrest, as though the very air bends into stillness around her. Draped in ceremonial veils and obsidian prayer-fire rosaries, she appears as a living symbol of devotion to the Immortal Flame. <strong>This image is not a deception so much as it is a carefully maintained boundary.</strong></p>
+      <p class="bp">Within her exists a contained thermodynamic anomaly — an internalized stellar core sustained by incomprehensibly advanced cybernetic augmentations disguised as sacred relics. These systems translate her thoughts, emotions, and spoken rituals into direct manipulations of heat and pressure. She does not create fire in any conventional sense. She <em>rewrites the distribution of energy itself</em>, raising or lowering temperature, intensifying or nullifying motion, altering pressure gradients with terrifying precision. What appears to others as prayer is a form of control language — each hymn a structured command that stabilizes her internal system while extending her influence outward.</p>
+      <p class="bp">What makes Selvarra truly unsettling is not her power, but her composure. She does not rage, does not lash out, does not lose control in any visible sense. <strong>Every action she takes is deliberate, every word measured, every gesture precise.</strong> In a world where power often reveals itself through excess, she remains contained, almost impossibly so.</p>
+      <div class="pull rv d2"><p>"She does not rage. She does not lose control in any visible sense. To her, people are not merely individuals but dynamic systems of heat and motion — fragile configurations of energy that can be altered or undone with minimal effort."</p><cite>// THREAT_ASSESSMENT · EMBER_INQUISITOR_FIELD_REPORT · CLASSIFIED //</cite></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">⬡</div></div>
+
+<!-- THE THREN'KAI VORYN — ROSARY -->
+<section class="rosary-sec">
+  <div class="rosary-inner">
+    <div class="rv">
+      <span class="sl">// THE_THREN'KAI_VORYN · CHAIN_THAT_REMEMBERS_FIRE · 59_BEADS //</span>
+      <h2 class="big-h">Not a rosary.<br><em>A funerary chain of an extinct civilization.</em></h2>
+      <p class="bp" style="max-width:680px;">Each of its 59 obsidian beads is named after a figure from the Red Pyre — saints, tyrants, martyrs, and executioners alike. In their belief system, there was no moral separation between these roles; all were necessary expressions of flame. Each bead holds the thermodynamic imprint of that individual's philosophy and actions. <strong>Selvarra does not merely use it. She carries her entire people as modularized thermodynamic authority.</strong> At the end of the chain sits the Moon — not as her master in a visible sense, but as the quiet force that ensures the flame is never truly hers alone.</p>
+    </div>
+
+    <div class="cycles-grid rv d1">
+
+      <!-- CYCLE I -->
+      <div class="cycle c1">
+        <div class="cycle-inner">
+          <div class="cy-label">
+            <div class="cy-num">I</div>
+            <div class="cy-name">Embers of Origin</div>
+            <span class="cy-pyric">Pyric Cant: Vael'thryss Kharum I</span>
+            <div class="cy-function">10 Beads · Stabilization<br>Sensing · Suppression</div>
+          </div>
+          <div class="cy-body">
+            <p class="cy-desc">The quietest cycle — tied to those who first learned to <em>listen to flame</em> rather than dominate it. These beads are what allow Selvarra to appear composed. <strong>It is control before power.</strong> Through them she can nullify thermal activity entirely, silence combustion, detect hidden or altered flame signatures, and stabilize volatile regions before they become visible incidents. In this state, her power expresses itself as quiet corrections rather than overt force — the most dangerous kind, because no one knows an intervention has occurred.</p>
+            <div class="bead-names">
+              <span class="bead">Vaelor Ashenborn</span><span class="bead">Thyra Venn-Khal</span><span class="bead">Orun the Still Cinder</span><span class="bead">Kaelith Pyre-Seer</span><span class="bead">Rhaelis Dormant Flame</span><span class="bead">+5 beads</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CYCLE II -->
+      <div class="cycle c2">
+        <div class="cycle-inner">
+          <div class="cy-label">
+            <div class="cy-num">II</div>
+            <div class="cy-name">Flames of Ascent</div>
+            <span class="cy-pyric">Pyric Cant: Vael'thryss Kharum II</span>
+            <div class="cy-function">10 Beads · Amplification<br>Ignition · Redirection</div>
+          </div>
+          <div class="cy-body">
+            <p class="cy-desc">Named after those who sought to expand flame beyond natural limits — <em>visionaries and conquerors of energy</em>. Through these beads she can multiply existing heat sources exponentially, force ignition without spark, redirect thermal energy between targets, and overcharge systems until failure. <strong>This is where she begins to feel active and dangerous, rather than merely controlled.</strong> A spark becomes a city-block inferno. A person freezes solid while another combusts violently. One flame curves unnaturally into a crowd.</p>
+            <div class="bead-names">
+              <span class="bead">Rhaekor Vaal-Therin</span><span class="bead">Selythra the Unbound</span><span class="bead">Morvek Sun-Eater</span><span class="bead">Ilyr Voss-Kaen</span><span class="bead">Veyra Sol-Keth</span><span class="bead">+5 beads</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CYCLE III -->
+      <div class="cycle c3">
+        <div class="cycle-inner">
+          <div class="cy-label">
+            <div class="cy-num">III</div>
+            <div class="cy-name">Pyres of Judgment</div>
+            <span class="cy-pyric">Pyric Cant: Vael'thryss Kharum III</span>
+            <div class="cy-function">10 Beads · Internal Disruption<br>Pressure · Lethal Precision</div>
+          </div>
+          <div class="cy-body">
+            <p class="cy-desc">These beads belong to executioners, judges, and war-priests — those who <em>weaponized flame as doctrine</em>. At this level, the shift moves from environmental control to biological and structural domination. <strong>Blood begins to boil inside the body. Hearts overheat and stop mid-beat. Lungs rupture under internal pressure.</strong> Flesh blisters and splits instantly. Armor cracks, then bones follow. Selvarra can raise body temperature internally, create pressure spikes within confined volumes, and induce combustion inside living tissue — all without visible external fire.</p>
+            <div class="bead-names">
+              <span class="bead">Zerath Khol-Varyn</span><span class="bead">Velmora Ash-Queen</span><span class="bead">Draeven Pyrehand</span><span class="bead">Kyros Furnace Warden</span><span class="bead">Vael'Korr Thren</span><span class="bead">+5 beads</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CYCLE IV -->
+      <div class="cycle c4">
+        <div class="cycle-inner">
+          <div class="cy-label">
+            <div class="cy-num">IV</div>
+            <div class="cy-name">Infernal Symphonies</div>
+            <span class="cy-pyric">Pyric Cant: Vael'thryss Kharum IV</span>
+            <div class="cy-function">10 Beads · Multi-Chain<br>Environmental Orchestration</div>
+          </div>
+          <div class="cy-body">
+            <p class="cy-desc">These figures were architects of catastrophe — those who understood flame as a <em>system</em>. At this tier, Selvarra can chain multiple effects into staged events, trap areas in sealed thermodynamic loops, create zones where heat cannot escape, and prepare environments for delayed catastrophic release. <strong>This is where her actions begin to feel inevitable — as if outcomes were decided before they occur.</strong> She does not react to situations at this level. She has already composed them. The environment has already been rewritten by the time the effect manifests.</p>
+            <div class="bead-names">
+              <span class="bead">Threxial Vorn-Kael</span><span class="bead">Myrrha Choir of Ash</span><span class="bead">Vaen-Korr Confluence</span><span class="bead">Sathryl Worldkindler</span><span class="bead">Vel'Thren Kaelis</span><span class="bead">+5 beads</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CYCLE V -->
+      <div class="cycle c5">
+        <div class="cycle-inner">
+          <div class="cy-label">
+            <div class="cy-num">V</div>
+            <div class="cy-name">Cinders of Extinction</div>
+            <span class="cy-pyric">Pyric Cant: Vael'thryss Kharum V</span>
+            <div class="cy-function">10 Beads · Catastrophic Release<br>Reality-Level Override</div>
+          </div>
+          <div class="cy-body">
+            <p class="cy-desc">Named after the final generation — the Red Pyre at its most extreme. <strong>Those whose actions led to their annihilation.</strong> These beads allow instant area-wide combustion events, atmospheric ignition or collapse, flash-phase transitions where water-rich tissue becomes a weapon against the one containing it. Extreme hyperthermic fields that override biological limits entirely. Bodies disintegrate under extreme heat. Targets turn to steam. Air itself catches fire. <em>This tier is not meant for frequent use. It is the edge of extinction.</em> Each bead fractured in sacrifice cannot be replaced — its destruction is both tactical and cosmologically permanent.</p>
+            <div class="bead-names">
+              <span class="bead">Vorynth Last Sovereign</span><span class="bead">Kael'Zyra Blood-Pyre Matron</span><span class="bead">Orvax Ash Tyrant</span><span class="bead">Sel-Kareth Devourer of Breath</span><span class="bead">Draeth Korr-Voryn</span><span class="bead">+5 beads</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Crown Ember + Pyre Anchors -->
+    <div class="crown-block rv d2">
+      <div class="cb-c">
+        <div class="crown-aside">
+          <div class="ca-badge">// THE_CROWN_EMBER · FINAL_BEAD · NOT_RED_PYRE_IN_ORIGIN //</div>
+          <h3 class="ca-name">Lunareth Voryn'Kai</h3>
+          <span class="ca-pyric">// THE_MOON_THAT_CONSUMED_THE_FLAME //</span>
+          <p class="ca-body">This bead does not store heat. <strong>It judges it.</strong> When invoked, it overrides all other beads, forces total system synchronization, and either instantly stabilizes Selvarra at the brink of overload — or forces a full release event across every active bead simultaneously. This is not a weapon. <strong>It is a verdict.</strong> It belongs to the Moon demi-god who accepted her civilization's accumulated sin in exchange for her survival. At the very end of the Thren'kai Voryn sits the Moon — ensuring the flame is never truly hers alone.</p>
+        </div>
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--star-pale);opacity:0.4;margin-bottom:12px;letter-spacing:0.05em;">// PYRE_ANCHORS · FOUR · SYSTEM_MODULATORS //</div>
+          <div class="anchors-list">
+            <div class="anchor-row"><div class="ar-name">Kharum Veyl-Toras — Origin Anchor</div><p class="ar-fn">Grounds all energy flow; prevents runaway feedback. Anyone within a targeted radius finds their body heat forcibly anchored — unable to regulate, rising toward organ failure.</p></div>
+            <div class="anchor-row"><div class="ar-name">Vaal Sorynth-Kel — Ascension Anchor</div><p class="ar-fn">Enables exponential amplification without immediate system failure. A small candle flame becomes a roaring column that engulfs a street, as if the air itself turned to fuel.</p></div>
+            <div class="anchor-row"><div class="ar-name">Draeth Vol-Kyrr — Judgment Anchor</div><p class="ar-fn">Locks targets into fixed thermodynamic states. A fleeing target suddenly cannot cool or sweat — body temperature climbs uncontrollably until organs fail mid-stride.</p></div>
+            <div class="anchor-row"><div class="ar-name">Thren Voss-Kaelith — Extinction Anchor</div><p class="ar-fn">Removes all safety limits between bead interactions. Multiple chained effects trigger simultaneously — air ignites, pressure crushes inward, bodies collapse into unrecognizable ash and vapor.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">⬡</div></div>
+
+<!-- THE ORDER OF THE IMMORTAL FLAME -->
+<section class="order-sec">
+  <div class="order-inner">
+    <div class="rv">
+      <span class="sl">// THE_ORDER_OF_THE_IMMORTAL_FLAME · HIERARCHY · WARD_CLASSES //</span>
+      <h2 class="big-h">An institution that speaks<br><em>in devotion and functions in doctrine.</em></h2>
+      <p class="bp" style="max-width:660px;">The Order speaks in the language of devotion while functioning with the cold precision of a doctrinal machine. Every title sounds half liturgical, half bureaucratic — designed by priests who learned to think like engineers and engineers who learned to speak like judges.</p>
+    </div>
+
+    <!-- Hierarchy -->
+    <div class="hierarchy rv d1">
+      <div class="rank-row"><div class="rr-title"><div class="rrt-name">Grand Censers</div><div class="rrt-tier">// APEX //</div></div><div class="rr-level"><div class="rrl-dot" style="border-color:var(--star-bright);opacity:0.7;"></div></div><div class="rr-body"><strong>Senior overseers</strong> entrusted with maintaining doctrinal continuity across the ward lattice — interpreting large-scale anomalies as matters of spiritual law rather than technical faults.</div></div>
+      <div class="rank-row"><div class="rr-title"><div class="rrt-name">Vigil Rectors</div><div class="rrt-tier">// INTELLIGENCE //</div></div><div class="rr-level"><div class="rrl-dot" style="opacity:0.6;"></div></div><div class="rr-body">Monitor the citywide node streams, audit prayer-tax signatures, and <strong>authorize escalations</strong> when patterns in the flame registry deviate from sanctified norms.</div></div>
+      <div class="rank-row"><div class="rr-title"><div class="rrt-name">Pyre Auditors</div><div class="rrt-tier">// TECHNICAL //</div></div><div class="rr-level"><div class="rrl-dot" style="opacity:0.5;"></div></div><div class="rr-body">Ascetic clerks who measure tithed essence, reconcile citizen signatures against the temple census, and ensure <strong>no registered flame goes spiritually unaccounted for.</strong></div></div>
+      <div class="rank-row"><div class="rr-title"><div class="rrt-name">Ash Scribes</div><div class="rrt-tier">// SHRINE NODES //</div></div><div class="rr-level"><div class="rrl-dot" style="opacity:0.45;"></div></div><div class="rr-body">Robed monk-functionaries in chapels and shrine-nodes who log variances, transcribe thermal omens, and feed sealed reports upward into the Order's hidden channels.</div></div>
+      <div class="rank-row"><div class="rr-title"><div class="rrt-name">Cautery Deacons</div><div class="rrt-tier">// FIELD ANALYSTS //</div></div><div class="rr-level"><div class="rrl-dot" style="opacity:0.4;"></div></div><div class="rr-body">Specialists empowered to isolate compromised wards and determine whether an anomaly represents <strong>criminal trespass, doctrinal heresy, foreign infiltration, or metaphysical corruption</strong>.</div></div>
+      <div class="rank-row"><div class="rr-title"><div class="rrt-name">Ember Inquisitors</div><div class="rrt-tier">// PURSUIT //</div></div><div class="rr-level"><div class="rrl-dot" style="border-color:var(--heat-bright);opacity:0.5;"></div></div><div class="rr-body">Disciplined search operatives tracing faint signatures through the ward net, interrogating compromised node-keepers, and <strong>hunting those who attempt to conceal themselves from the city's sacred registry.</strong></div></div>
+      <div class="rank-row"><div class="rr-title"><div class="rrt-name">Lamp-Bearers of the Ninth Veil</div><div class="rrt-tier">// MAINTENANCE //</div></div><div class="rr-level"><div class="rrl-dot" style="border-color:rgba(180,20,20,0.6);opacity:0.4;"></div></div><div class="rr-body">Silent monks who tend flame crystals, polish sensor braziers, replace prayer-conductors, and <strong>move through the city like custodians of a holy machine no ordinary citizen is meant to understand.</strong></div></div>
+    </div>
+
+    <!-- Field operatives note -->
+    <div class="warn-pull rv" style="margin-top:3px;"><p>Field operatives deploy in pairs or threes: a <strong>Flame Reader</strong> who interprets disturbed essence, burnt residue, and concealed thermal signatures — and a <strong>Cinder Marshal</strong> who acts once the anomaly is confirmed. A third is sometimes a <strong>Null Thurible</strong>, carrying a censor-apparatus designed to stabilize or disrupt hostile flame conditions in the field. They do not rush. They advance with dreadful slowness, placing gloved fingers near braziers and alley shrines to "read" what the flame remembers.</p></div>
+
+    <!-- Ward classes -->
+    <div style="margin-top:36px;" class="rv d1">
+      <span class="sl">// WARD_CLASSES · SEVEN_KNOWN · THREE_CLASSIFIED //</span>
+    </div>
+    <div class="wards-grid rv d2">
+
+      <div class="ward-card wc-pass"><div class="wc-inner"><div class="wc-class">// PASSIVE //</div><div class="wc-name">Census Wards</div><p class="wc-desc">Embedded in chapels, street shrines, gatehouses — verify sanctioned flame signatures and note irregular presences. The city's baseline registry nodes.</p></div></div>
+      <div class="ward-card wc-pass"><div class="wc-inner"><div class="wc-class">// PASSIVE //</div><div class="wc-name">Tithe Wards</div><p class="wc-desc">Measure devotional essence contributions, reconcile them with identity records, and quietly <strong>flag false registrations, duplicate signatures, or flame suppression.</strong></p></div></div>
+      <div class="ward-card wc-pass"><div class="wc-inner"><div class="wc-class">// ANOMALY //</div><div class="wc-name">Veil Wards</div><p class="wc-desc">Tuned to detect distortions in metaphysical rhythm — unregistered souls, concealed heat profiles, ghost flame residue, heatshadow bleed, and the subtle <strong>absence-patterns created by disciplined infiltrators dimming themselves below ordinary thresholds.</strong></p></div></div>
+      <div class="ward-card wc-pass"><div class="wc-inner"><div class="wc-class">// GUIDANCE //</div><div class="wc-name">Pilgrim Wards</div><p class="wc-desc">Corridor monitors along trafficked routes — regulate crowd flow and softly redirect suspicious individuals through changes in ambient warmth, light pressure, and instinctive discomfort.</p></div></div>
+
+      <div class="ward-card wc-rest"><div class="wc-inner"><div class="wc-class">// NON-LETHAL //</div><div class="wc-name">Mercy Wards</div><p class="wc-desc">Non-lethal restraint placed near sanctums and archives. When triggered, <strong>extract heat from muscles in precise patterns</strong> — inducing weakness, stiffness, disorientation, or temporary collapse.</p></div></div>
+      <div class="ward-card wc-rest"><div class="wc-inner"><div class="wc-class">// INTERROGATION //</div><div class="wc-name">Penitent Wards</div><p class="wc-desc">Cause escalating thermal stress, breath-shortening heat pressure, eye-watering atmospheric dryness, and <strong>agonizing but survivable internal fever states</strong> until the target yields or is secured.</p></div></div>
+
+      <div class="ward-card wc-let"><div class="wc-inner"><div class="wc-class">// LETHAL //</div><div class="wc-name">Cauter Wards</div><p class="wc-desc">Force an explosive acceleration of surface heat and oxygen consumption. Do not simply "set fire" — create a moment where cloth, oils, skin, and breath all become part of <em>a single thermodynamic event</em>, igniting from the lungs, eyes, mouth, and joints outward.</p></div></div>
+      <div class="ward-card wc-let"><div class="wc-inner"><div class="wc-class">// LETHAL //</div><div class="wc-name">Furnace Wards</div><p class="wc-desc">Trap a target in recirculating superheated air, repeatedly feeding heat back into the same volume. <em>Turn even a hallway into a sealed kiln</em> — driving body temperature upward faster than sweat, breath, or circulation can compensate.</p></div></div>
+      <div class="ward-card wc-let"><div class="wc-inner"><div class="wc-class">// LETHAL //</div><div class="wc-name">Suffocation Wards</div><p class="wc-desc">Do not rely on open fire. Shift sanctified braziers from clean combustion to controlled fouling states — producing <strong>toxic, oxygen-displacing gases while the ward net seals airflow</strong>. Victims feel only dizziness, then nothing.</p></div></div>
+      <div class="ward-card wc-let"><div class="wc-inner"><div class="wc-class">// LETHAL · EXTREME //</div><div class="wc-name">Vapor Wards</div><p class="wc-desc">Multiple linked crystals converge heat and pressure so that water-rich tissue experiences <em>flash-phase transition faster than the body can distribute the force</em>. Soft tissues rupture. Surfaces blister into steam-scored ruin. Almost certainly illegal outside the most secret temple precincts.</p></div></div>
+      <div class="ward-card wc-let"><div class="wc-inner"><div class="wc-class">// CHOIR · MULTI-NODE //</div><div class="wc-name">Choir Wards</div><p class="wc-desc">Require several nearby nodes to activate together like a hymn in chorus. Escalate in stages: anomaly identification → thermal discomfort → severed egress → combustion or containment-furnace. <strong>The city seems to decide that one has refused too many chances to submit.</strong></p></div></div>
+
+      <div class="ward-card wc-sec"><div class="wc-inner"><div class="wc-class">// CLASSIFIED //</div><div class="wc-name">Sepulcher Wards</div><p class="wc-desc">Cryptic annihilation beneath temple foundations. Existence unconfirmed by the High Council.</p></div></div>
+      <div class="ward-card wc-sec"><div class="wc-inner"><div class="wc-class">// CLASSIFIED //</div><div class="wc-name">Pall Wards</div><p class="wc-desc">Erase trace evidence by <em>reducing remains to sterile ash or fused mineral slag</em>. The scene is never a scene. It is architecture.</p></div></div>
+      <div class="ward-card wc-sec"><div class="wc-inner"><div class="wc-class">// CLASSIFIED //</div><div class="wc-name">Throne Wards</div><p class="wc-desc">Reserved for <strong>palace-adjacent sites</strong> where doctrinal enemies must disappear without spectacle. Known only to Selvarra and the Grand Censers.</p></div></div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">⬡</div></div>
+
+<!-- THE FLAME LATTICE -->
+<section class="lattice-sec">
+  <div class="lattice-inner">
+    <div class="rv">
+      <span class="sl">// THE_FLAME_LATTICE · CITYWIDE_SURVEILLANCE · DISGUISED_AS_RELIGIOUS_INFRASTRUCTURE //</span>
+      <h2 class="big-h">Devotion converted to data.<br><em>Sanctity into compliance. Prayer into registration.</em></h2>
+      <p class="bp" style="max-width:680px;">What Selvarra established across Ashura is not merely a network of wards, but a layered thermodynamic intelligence system disguised as religious infrastructure. The High Council approved it because it promised protection. They never fully understood its depth. Every temple, processional route, civic building, and residential hearth line is threaded with sanctified flame anchors that appear devotional but function as <strong>calibrated sensors feeding into a citywide lattice that Selvarra alone can fully interpret.</strong></p>
+    </div>
+    <div class="lattice-grid rv d1">
+      <div class="latt-card"><span class="lc-icon">🔥</span><div class="lc-name">Flame as Identifier</div><p class="lc-body">Every registered citizen contributes a measured portion of their flame essence through prayer, tithe, or ritual. This creates a <strong>metaphysical registry number unique to each individual</strong> — a spiritual equivalent to a state census record. Once entered into the temple lattice, their presence can be recognized by the ward network distributed throughout the city.</p></div>
+      <div class="latt-card"><span class="lc-icon">👁</span><div class="lc-name">Scrying Through Sanctified Flame</div><p class="lc-body">Any properly consecrated fire or crystal within the network can become an extension of her perception — allowing her to see not in images, but in <em>layered thermal and energetic data</em>. She can observe movement, detect concealed presences, and track individuals by their unique entropy signatures through a flickering torch or softly glowing crystal.</p></div>
+      <div class="latt-card"><span class="lc-icon">🏙</span><div class="lc-name">The City as Rosary</div><p class="lc-body">The Ashuran flame lattice is the macro-scale reflection of the Thren'kai Voryn's design. Just as each bead is a node in a controlled system of energy distribution, <strong>the city itself has become a larger rosary</strong> — each ward and crystal a point of input, storage, or execution. Selvarra stands at the center of both simultaneously.</p></div>
+      <div class="latt-card"><span class="lc-icon">⚠</span><div class="lc-name">What the System Cannot See</div><p class="lc-body">The ward network is excellent at watching those who <em>submit to being known</em>. It is far less certain when confronted with those who understand how to vanish without ever truly leaving — the unregistered, the suppressed, the infiltrators who move through the city's blind spots with calculated precision.</p></div>
+    </div>
+
+    <!-- Evasion methods -->
+    <div class="rv d2" style="margin-top:3px;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(200,215,255,0.35);padding:10px 0;letter-spacing:0.06em;">// KNOWN_EVASION_METHODS · ALL_OUTLAWED //</div>
+      <div class="evasion-list">
+        <div class="ev-row"><div class="ev-label"><div class="evl-name">Heatshadow Technology</div><span class="evl-status">// OUTLAWED //</span></div><div class="ev-body">Bends or disperses one's thermal and spiritual profile, allowing movement through monitored spaces without resolving cleanly against nearby wards. <strong>Most accessible — also most detectable</strong> by a Selvarra scrying with amplified precision.</div></div>
+        <div class="ev-row"><div class="ev-label"><div class="evl-name">Ghost Flame Techniques</div><span class="evl-status">// FORBIDDEN //</span></div><div class="ev-body">Esoteric and more disturbing — severs or masks the visible qualities of flame essence so the soul's heat no longer presents itself in a way the network can easily interpret. Requires rare skill and <strong>leaves a residue that the Veil Wards can sometimes detect as a notable absence</strong>.</div></div>
+        <div class="ev-row"><div class="ev-label"><div class="evl-name">Disciplined Suppression</div><span class="evl-status">// NEAR-IMPOSSIBLE //</span></div><div class="ev-body">Dimming internal flame to an almost impossible faintness — much like lowering one's heartbeat until the body slips beneath ordinary sensory thresholds. These individuals are not truly absent. <strong>They become so thermodynamically quiet that standard wards pass over them</strong> unless specifically calibrated to notice subtle deficits or pattern voids.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">⬡</div></div>
+
+<!-- TOUCH AND VULNERABILITIES -->
+<section class="touch-sec">
+  <div class="touch-inner">
+    <div class="touch-card tc-touch">
+      <div class="tc-inner">
+        <div class="tc-badge">// SELVARRA'S_TOUCH · CONDITIONAL · NEVER_PASSIVE //</div>
+        <h3 class="tc-title">Touch as Verdict</h3>
+        <p class="tc-body">Physical contact with her is not inherently lethal — it is <em>conditional</em>, governed by her constant near-perfect regulation of thermodynamic flow. Her skin does not passively radiate dangerous heat. It behaves like a controlled boundary — heat only transfers if she allows it. <strong>When someone touches her and remains unharmed, it isn't because she is safe by default. It is because she is actively permitting equilibrium.</strong></p>
+        <p class="tc-body" style="margin-top:12px;">Direct contact gives her access to a target's internal energy state with terrifying precision. She could raise someone's body temperature from within in an instant, disrupt circulation, or create pressure imbalances that cause organs to fail — all without visible effort. <em>If Selvarra allows someone to touch her safely, it signals trust, restraint, or intent. If she doesn't, even the lightest brush can become lethal.</em> Every moment of contact is something she is actively managing — deciding in real time whether that connection remains gentle, or becomes fatal.</p>
+      </div>
+    </div>
+    <div class="touch-card tc-vuln">
+      <div class="tc-inner">
+        <div class="tc-badge">// VULNERABILITIES · STRUCTURAL_LIMITS · HOW_TO_DEFEAT_HER //</div>
+        <h3 class="tc-title">The Limits of Precision</h3>
+        <p class="tc-body">Selvarra is not defeated by raw strength. She is defeated by <em>opponents or conditions that deny her usable systems, resist her influence, and compel her to overextend the very power that makes her formidable.</em></p>
+        <div class="vuln-list">
+          <div class="vl-item"><div class="vl-dot"></div><div class="vl-text"><strong>Thermal equilibrium:</strong> Most effective in environments rich with heat and motion. Against entities in perfect thermal equilibrium or completely inert systems, her abilities lose traction — targets feel like voids offering no gradients to manipulate.</div></div>
+          <div class="vl-item"><div class="vl-dot"></div><div class="vl-text"><strong>Closed thermodynamic systems:</strong> Opponents with advanced armor or intrinsic design that seals them as closed systems can prevent internal damage even if she affects their surroundings.</div></div>
+          <div class="vl-item"><div class="vl-dot"></div><div class="vl-text"><strong>Cognitive overload:</strong> Her precision depends on continuous high-level processing — balancing internal containment, external manipulation, and environmental awareness simultaneously. <strong>Rapid multi-directional threats reduce accuracy and efficiency.</strong></div></div>
+          <div class="vl-item"><div class="vl-dot"></div><div class="vl-text"><strong>Ritual disruption:</strong> Her hymns are control language. Disrupting their cadence — through silence, interference, or distortion — impairs her ability to execute precise manipulations, making her output less stable and more taxing.</div></div>
+          <div class="vl-item"><div class="vl-dot"></div><div class="vl-text"><strong>Energy debt accumulation:</strong> A sufficiently durable or relentless opponent can force escalation — driving her to expend increasing amounts of energy until her containment systems begin to strain. At that point she faces a critical choice: <strong>withdraw or risk catastrophic failure.</strong></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">⬡</div></div>
+
+<!-- THE RED PYRE ORIGIN -->
+<section class="origin-sec">
+  <div class="origin-inner">
+    <div class="rv">
+      <span class="sl">// THE_RED_PYRE · VAEL'THRYSS_KHARUM · DOCTRINE_OF_THE_UNDYING_FLAME //</span>
+      <h2 class="big-h">An entire people compressed<br><em>into one woman and 59 beads.</em></h2>
+    </div>
+    <div class="origin-block rv d1">
+      <div class="ob-c">
+        <div class="ob-badge">// RED_PYRE_ORIGIN · PYRIC_CANT · MOON_DEMI-GOD_PACT //</div>
+        <h3 class="ob-title">The Last of the <em>Vael'thryss Kharum</em></h3>
+        <p class="ob-body">The Red Pyre were not merely worshippers of flame — they were <strong>participants in it</strong>, able to sense, interpret, and manipulate thermodynamic signatures as instinctively as others breathe. Their language, Pyric Cant, is sharp, breath-heavy, and built around heat imagery — consonants that strike like sparks, vowels that stretch like rising heat. Names are not just identifiers but <em>thermal signatures encoded into sound</em>.</p>
+        <p class="ob-body">That same devotion led them into atrocity, and their extinction was not accidental but <strong>ordained</strong>. The pact with the Moon demi-god reframed their annihilation as a transaction: all their accumulated sin, their countless lives, exchanged for the survival of a single inheritor. Selvarra did not escape their fate. She became its vessel.</p>
+        <p class="ob-body">The rosary gifted by that lunar entity represents the binding of two opposing forces: flame and moon, entropy and stillness, expansion and control. Where her internal core pushes toward heat, motion, and release, the influence of the Moon imposes structure, rhythm, and inevitability. <strong>This is why her power never appears chaotic, even at its most destructive. She does not lash out. She executes.</strong> She understands that her survival, her rise through Ashuran society, and her creation of the city's ward lattice are all extensions of a will that began long before her. The demi-god did not simply save her — it positioned her.</p>
+        <div class="pull" style="margin-top:22px;"><p>"At the very end of the Thren'kai Voryn sits the Moon — not as her master in a visible sense, but as the quiet force that ensures the flame is never truly hers alone."</p><cite>// THE_DOCTRINE_OF_THE_UNDYING_FLAME · VAEL'THRYSS_KHARUM · PYRIC_CANT //</cite></div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('observe');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('observe');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=220;this.s=40;this.l=75;}
+      else if(t<.72){this.h=40;this.s=70;this.l=55;}
+      else if(t<.86){this.h=220+20;this.s=40-15;this.l=75+15;}
+      else{this.h=40+10;this.s=70-10;this.l=55+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

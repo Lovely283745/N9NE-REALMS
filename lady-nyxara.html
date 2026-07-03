@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lady Nyxara — Ruler of Tenebris | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:       #020204;
+  --deep:       #04020A;
+  --court:      #080612;
+  --vault:      #0C0816;
+  --veil:       #100C1C;
+
+  /* Purple Ash Clan — her bloodline */
+  --ash:        #1E0840;
+  --ash-mid:    #3C1480;
+  --ash-pale:   #6828C0;
+  --ash-bright: #9040E0;
+  --ash-glow:   rgba(144,64,224,0.7);
+
+  /* Amber — her eyes, soul energy */
+  --amber:      rgba(180,100,10,0.6);
+  --amber-mid:  rgba(220,130,20,0.75);
+  --amber-bright:#E8A020;
+  --amber-pale: #F4C050;
+
+  /* Lunar silver — Wepaos/Yasis */
+  --lunar:      rgba(180,190,220,0.6);
+  --lunar-mid:  rgba(200,210,240,0.7);
+  --lunar-bright:#C8D4F0;
+
+  /* Void-black — Aetherium, time */
+  --vd:         rgba(20,10,40,0.8);
+  --vd-bright:  #4820A0;
+
+  /* Dark amethyst — Tenebris power */
+  --dam:        rgba(52,10,96,0.6);
+
+  --parch:      #ACA8C0;
+  --parch-pale: #CAC8DC;
+  --parch-dim:  #484458;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:60vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 65% at 50% 0%,rgba(60,20,128,0.07) 0%,transparent 65%);animation:ashBreath 12s ease-in-out infinite;}
+@keyframes ashBreath{0%,100%{opacity:0.5;}50%{opacity:1;}}
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.02;background-image:radial-gradient(circle,rgba(180,190,220,0.8) 1px,transparent 1px);background-size:60px 60px;}
+
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--ash-bright);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(144,64,224,0.35);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.ensnare{width:46px;height:46px;border-color:var(--ash-bright);box-shadow:0 0 14px rgba(144,64,224,0.3);}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(2,2,4,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(144,64,224,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ash-bright);opacity:0.5;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ash-bright);border:1px solid rgba(144,64,224,0.25);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--ash-pale);}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse 80% 70% at 50% 40%,#18063A 0%,#0C0618 45%,var(--void) 75%);}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-clan{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ash-bright);opacity:0;animation:riseIn 1s .2s ease forwards;margin-bottom:16px;letter-spacing:0.08em;display:flex;align-items:center;justify-content:center;gap:12px;}
+.h-clan::before,.h-clan::after{content:'◆';color:rgba(144,64,224,0.25);font-size:8px;}
+.h-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;display:block;margin-bottom:8px;}
+.h-name{font-family:'Cinzel Decorative',serif;font-size:clamp(52px,9vw,130px);font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.88;text-shadow:0 0 120px rgba(144,64,224,0.4),0 0 60px rgba(60,20,128,0.3),0 4px 40px rgba(0,0,0,0.95);opacity:0;animation:riseIn 1.8s .5s ease forwards;}
+.h-titles{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;opacity:0;animation:riseIn 1s .78s ease forwards;}
+.h-tag{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ash-bright);border:1px solid rgba(144,64,224,0.22);padding:3px 12px;opacity:0.7;letter-spacing:0.05em;}
+.h-rule{width:260px;height:1px;background:linear-gradient(to right,transparent,rgba(144,64,224,0.35),rgba(232,160,32,0.2),transparent);margin:20px auto;opacity:0;animation:fadeIn 1s 1.05s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-quote{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.8vw,19px);color:rgba(172,168,192,0.45);max-width:700px;margin:0 auto 36px;line-height:1.8;opacity:0;animation:riseIn 1.2s 1.15s ease forwards;border-left:2px solid rgba(144,64,224,0.3);padding-left:20px;text-align:left;}
+.h-vitals{display:flex;justify-content:center;max-width:800px;margin:0 auto;border:1px solid rgba(144,64,224,0.12);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:15px 10px;text-align:center;border-right:1px solid rgba(144,64,224,0.08);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Share Tech Mono',monospace;font-size:clamp(10px,1.4vw,15px);color:var(--ash-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--ash-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--ash-bright);opacity:0.4;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(144,64,224,0.15),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ash-mid);opacity:0.35;letter-spacing:0.1em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--ash-bright);}
+.big-h em.amb{color:var(--amber-bright);}
+.big-h em.lun{color:var(--lunar-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(172,168,192,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--ash-pale);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid var(--ash-mid);background:rgba(60,20,128,0.05);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,20px);color:rgba(172,168,192,0.75);line-height:1.75;}
+.pull cite{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ash-bright);opacity:0.35;display:block;margin-top:10px;font-style:normal;letter-spacing:0.05em;}
+
+/* ═══ PROFILE ═══ */
+.profile-sec{padding:110px 60px;background:var(--court);position:relative;overflow:hidden;}
+.profile-sec::before{content:'NYXARA';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(100px,17vw,220px);font-weight:900;color:rgba(144,64,224,0.022);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.prof-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.prof-aside .big-n{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(144,64,224,0.07);line-height:1;margin-left:-6px;}
+.spec-table{margin-top:24px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(144,64,224,0.1);}
+.srow{display:grid;grid-template-columns:110px 1fr;overflow:hidden;}
+.srk{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ash-bright);opacity:0.45;background:rgba(144,64,224,0.03);padding:11px 12px;border-right:1px solid rgba(144,64,224,0.07);letter-spacing:0.04em;}
+.srv{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(172,168,192,0.55);padding:9px 14px;line-height:1.5;}
+.srv strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Origin trail */
+.origin-trail{margin-top:28px;display:flex;flex-direction:column;gap:2px;}
+.ot-step{display:flex;gap:10px;padding:10px 14px;border:1px solid rgba(144,64,224,0.08);background:rgba(144,64,224,0.02);align-items:flex-start;transition:border-color .3s;}
+.ot-step:hover{border-color:rgba(144,64,224,0.22);}
+.ots-dot{width:5px;height:5px;background:var(--ash-mid);flex-shrink:0;margin-top:7px;border-radius:50%;}
+.ots-text{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(172,168,192,0.5);line-height:1.55;}
+.ots-text strong{color:var(--parch-pale);font-style:normal;}
+
+/* ═══ THE SCHOLAR'S PATH ═══ */
+.scholar-sec{padding:110px 60px;background:var(--vault);position:relative;overflow:hidden;}
+.scholar-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(60,20,128,0.05) 0%,transparent 70%);}
+.scholar-inner{max-width:1100px;margin:0 auto;}
+.relic-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.relic-card{padding:36px 32px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.rc-core{border-color:rgba(144,64,224,0.12);background:linear-gradient(160deg,#0E0618 0%,#080412 100%);}
+.rc-mask{border-color:rgba(232,160,32,0.1);background:linear-gradient(160deg,#120A02 0%,#0C0602 100%);}
+.rc-core:hover{border-color:rgba(144,64,224,0.32);}
+.rc-mask:hover{border-color:rgba(232,160,32,0.28);}
+.relic-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(60,20,128,0.08) 0%,transparent 70%);}
+.rc-mask::before{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(180,100,10,0.07) 0%,transparent 70%);}
+.relic-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.relic-card:hover::after{transform:scaleX(1);}
+.rc-core::after{background:linear-gradient(to right,transparent,var(--ash-mid),transparent);}
+.rc-mask::after{background:linear-gradient(to right,transparent,var(--amber-bright),transparent);}
+.rel-inner{position:relative;z-index:1;}
+.rel-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 12px;border:1px solid;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.rc-core .rel-badge{color:var(--ash-bright);border-color:rgba(144,64,224,0.25);}
+.rc-mask .rel-badge{color:var(--amber-bright);border-color:rgba(232,160,32,0.25);}
+.rel-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);margin-bottom:6px;}
+.rel-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,168,192,0.55);line-height:1.85;}
+.rel-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.rc-core .rel-body em{color:var(--ash-pale);}
+.rc-mask .rel-body em{color:var(--amber-bright);}
+
+/* Forbidden libraries */
+.lib-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:3px;}
+.lib-card{padding:28px 26px;border:1px solid rgba(144,64,224,0.08);background:rgba(4,2,10,0.7);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.lib-card:hover{border-color:rgba(144,64,224,0.22);background:rgba(144,64,224,0.03);}
+.lib-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ash-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.lib-card:hover::after{transform:scaleX(1);}
+.lc-tome{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ash-bright);opacity:0.5;display:block;margin-bottom:8px;letter-spacing:0.05em;}
+.lc-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,19px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:7px;}
+.lc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(172,168,192,0.5);line-height:1.75;}
+.lc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ TENEBRIS HISTORY ═══ */
+.tenebris-sec{padding:110px 60px;background:var(--court);position:relative;overflow:hidden;}
+.tenebris-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 50% at 50% 50%,rgba(60,20,128,0.06) 0%,transparent 70%);}
+.ten-inner{max-width:1100px;margin:0 auto;}
+.era-grid{display:flex;flex-direction:column;gap:2px;margin-top:52px;}
+.era{display:grid;grid-template-columns:140px 1fr;border:1px solid;overflow:hidden;transition:border-color .3s,background .3s;}
+.era-ancient{border-color:rgba(200,210,240,0.08);}
+.era-conquest{border-color:rgba(180,100,10,0.08);}
+.era-nyxara{border-color:rgba(144,64,224,0.1);}
+.era-ancient:hover{border-color:rgba(200,210,240,0.22);background:rgba(200,210,240,0.02);}
+.era-conquest:hover{border-color:rgba(180,100,10,0.22);background:rgba(180,100,10,0.02);}
+.era-nyxara:hover{border-color:rgba(144,64,224,0.28);background:rgba(144,64,224,0.03);}
+.era-label{padding:28px 18px;border-right:1px solid rgba(144,64,224,0.06);background:rgba(0,0,0,0.2);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+.el-icon{font-size:22px;opacity:0.4;margin-bottom:8px;}
+.el-name{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;line-height:1.5;}
+.era-ancient .el-name{color:rgba(200,210,240,0.5);}
+.era-conquest .el-name{color:rgba(200,130,20,0.5);}
+.era-nyxara .el-name{color:var(--ash-bright);opacity:0.6;}
+.era-body{padding:26px 32px;}
+.eb-title{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:7px;}
+.eb-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,168,192,0.55);line-height:1.85;}
+.eb-body strong{color:var(--parch-pale);font-style:normal;}
+.era-ancient .eb-body em{color:var(--lunar-bright);}
+.era-conquest .eb-body em{color:var(--amber-bright);}
+.era-nyxara .eb-body em{color:var(--ash-bright);}
+
+/* ═══ THE ASCENSION ═══ */
+.ascension-sec{padding:110px 60px;background:var(--veil);position:relative;overflow:hidden;}
+.ascension-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 60%,rgba(144,64,224,0.07) 0%,transparent 70%);}
+.asc-inner{max-width:1100px;margin:0 auto;}
+.havroth-block{margin-top:52px;display:grid;grid-template-columns:1fr 1.4fr;gap:3px;}
+.hb-left{padding:36px 32px;border:1px solid rgba(144,64,224,0.1);background:rgba(4,2,10,0.8);position:relative;overflow:hidden;}
+.hb-left::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ash-mid),transparent);}
+.hb-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ash-bright);border:1px solid rgba(144,64,224,0.2);padding:3px 12px;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.hb-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);margin-bottom:10px;}
+.hb-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,168,192,0.55);line-height:1.85;}
+.hb-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.hb-body em{color:var(--ash-pale);}
+.move-list{display:flex;flex-direction:column;gap:2px;}
+.move-item{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:14px 18px;border:1px solid rgba(144,64,224,0.07);background:rgba(4,2,10,0.6);align-items:start;transition:border-color .3s;}
+.move-item:hover{border-color:rgba(144,64,224,0.22);}
+.mi-step{font-family:'Cinzel Decorative',serif;font-size:22px;color:var(--ash-mid);opacity:0.35;line-height:1;min-width:28px;}
+.mi-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(172,168,192,0.5);line-height:1.7;}
+.mi-body strong{color:var(--parch-pale);font-style:normal;}
+.mi-body em{color:var(--ash-bright);}
+
+/* ═══ ZYPHOR & KYPHOS ═══ */
+.brothers-sec{padding:110px 60px;background:var(--court);}
+.brothers-inner{max-width:1200px;margin:0 auto;}
+/* Seven years timeline */
+.seven-years{margin-top:52px;padding:32px;border:1px solid rgba(144,64,224,0.1);background:rgba(144,64,224,0.03);display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:center;}
+.sy-label{font-family:'Cinzel Decorative',serif;font-size:clamp(44px,7vw,88px);font-weight:400;color:rgba(144,64,224,0.12);line-height:1;}
+.sy-label span{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--ash-bright);opacity:0.45;display:block;margin-top:4px;}
+.sy-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,18px);color:rgba(172,168,192,0.6);line-height:1.9;}
+.sy-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+/* Corruption grid */
+.corrupt-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:3px;}
+.corrupt-item{padding:18px 20px;border:1px solid rgba(144,64,224,0.08);background:rgba(4,2,10,0.6);display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;transition:border-color .3s;}
+.corrupt-item:hover{border-color:rgba(144,64,224,0.22);}
+.ci-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.4vw,14px);letter-spacing:0.12em;color:var(--parch-pale);margin-bottom:3px;}
+.ci-who{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ash-bright);opacity:0.45;letter-spacing:0.04em;display:block;margin-bottom:5px;}
+.ci-from{font-family:'EB Garamond',serif;font-size:12px;color:rgba(172,168,192,0.35);margin-bottom:4px;}
+.ci-to{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(12px,1.4vw,14px);color:rgba(172,168,192,0.55);line-height:1.5;}
+.ci-to strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ci-to em{color:var(--ash-bright);}
+/* Gauntlets */
+.gauntlet-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:3px;}
+.gauntlet-card{padding:32px 28px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.gc-nexus{border-color:rgba(144,64,224,0.1);background:linear-gradient(160deg,#0A0618 0%,#060412 100%);}
+.gc-void{border-color:rgba(232,160,32,0.1);background:linear-gradient(160deg,#120A02 0%,#0E0602 100%);}
+.gc-nexus:hover{border-color:rgba(144,64,224,0.3);}
+.gc-void:hover{border-color:rgba(232,160,32,0.28);}
+.gauntlet-card::before{content:'';position:absolute;inset:0;}
+.gc-nexus::before{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(144,64,224,0.08) 0%,transparent 70%);}
+.gc-void::before{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(180,100,10,0.07) 0%,transparent 70%);}
+.gauntlet-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.gauntlet-card:hover::after{transform:scaleX(1);}
+.gc-nexus::after{background:linear-gradient(to right,transparent,var(--ash-mid),transparent);}
+.gc-void::after{background:linear-gradient(to right,transparent,var(--amber-bright),transparent);}
+.gc-inner{position:relative;z-index:1;}
+.gc-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 12px;border:1px solid;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.gc-nexus .gc-badge{color:var(--ash-bright);border-color:rgba(144,64,224,0.25);}
+.gc-void .gc-badge{color:var(--amber-bright);border-color:rgba(232,160,32,0.25);}
+.gc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);margin-bottom:4px;}
+.gc-sub{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:12px;display:block;}
+.gc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,168,192,0.55);line-height:1.85;}
+.gc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.gc-nexus .gc-body em{color:var(--ash-pale);}
+.gc-void .gc-body em{color:var(--amber-bright);}
+
+/* ═══ ROYAL COURT ═══ */
+.court-sec{padding:110px 60px;background:var(--vault);position:relative;overflow:hidden;}
+.court-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(60,20,128,0.06) 0%,transparent 70%);}
+.court-inner{max-width:1200px;margin:0 auto;}
+.court-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:52px;}
+.court-card{padding:22px 20px;border:1px solid rgba(144,64,224,0.08);background:rgba(4,2,10,0.6);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.court-card:hover{border-color:rgba(144,64,224,0.24);background:rgba(144,64,224,0.04);}
+.court-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ash-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.court-card:hover::after{transform:scaleX(1);}
+.cc-icon{font-size:18px;opacity:0.4;margin-bottom:8px;display:block;}
+.cc-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.4vw,14px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:5px;}
+.cc-role{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ash-bright);opacity:0.4;letter-spacing:0.04em;display:block;margin-bottom:7px;}
+.cc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(172,168,192,0.45);line-height:1.65;}
+.cc-body strong{color:rgba(172,168,192,0.7);font-style:normal;}
+
+/* ═══ AMETHYST ENGINE ═══ */
+.engine-sec{padding:110px 60px;background:var(--court);position:relative;overflow:hidden;}
+.engine-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(144,64,224,0.05) 0%,transparent 70%);}
+.engine-inner{max-width:1200px;margin:0 auto;}
+.engine-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-top:52px;}
+.eng-card{padding:26px 24px;border:1px solid rgba(144,64,224,0.08);background:rgba(4,2,10,0.7);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.eng-card:hover{border-color:rgba(144,64,224,0.22);background:rgba(144,64,224,0.03);}
+.eng-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ash-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.eng-card:hover::before{transform:scaleX(1);}
+.enc-icon{font-size:20px;opacity:0.35;margin-bottom:10px;display:block;}
+.enc-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.6vw,16px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:6px;}
+.enc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,15px);color:rgba(172,168,192,0.5);line-height:1.7;}
+.enc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.enc-body em{color:var(--ash-pale);}
+
+/* ═══ ABYSSAL AMBITION ═══ */
+.abyssal-sec{padding:110px 60px;background:var(--veil);position:relative;overflow:hidden;}
+.abyssal-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 60%,rgba(144,64,224,0.08) 0%,transparent 70%);}
+.ab-inner{max-width:1100px;margin:0 auto;}
+.ab-block{margin-top:52px;padding:44px;border:1px solid rgba(144,64,224,0.14);background:rgba(4,2,10,0.85);position:relative;overflow:hidden;}
+.ab-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(144,64,224,0.06) 0%,transparent 70%);}
+.ab-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ash-bright),transparent);}
+.ab-c{position:relative;z-index:1;}
+.ab-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ash-bright);border:1px solid rgba(144,64,224,0.22);padding:5px 16px;display:inline-block;margin-bottom:18px;opacity:0.7;letter-spacing:0.06em;}
+.ab-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,42px);font-weight:400;color:var(--parch-pale);margin-bottom:14px;}
+.ab-title em{font-style:italic;color:var(--ash-bright);}
+.ab-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,18px);color:rgba(172,168,192,0.6);line-height:1.9;margin-bottom:16px;max-width:820px;}
+.ab-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ab-body em{color:var(--ash-bright);}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(144,64,224,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--ash-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(172,168,192,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#E8E4F8;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(172,168,192,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(172,168,192,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(144,64,224,0.07);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(172,168,192,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .profile-sec,.scholar-sec,.tenebris-sec,.ascension-sec,.brothers-sec,.court-sec,.engine-sec,.abyssal-sec,.page-cta{padding:80px 40px;}
+  .prof-inner{grid-template-columns:1fr;gap:40px;}
+  .relic-split,.lib-split,.havroth-block,.gauntlet-split{grid-template-columns:1fr;}
+  .era{grid-template-columns:1fr;} .era-label{border-right:none;border-bottom:1px solid rgba(144,64,224,0.06);}
+  .court-grid{grid-template-columns:1fr 1fr;}
+  .engine-grid{grid-template-columns:1fr 1fr;}
+  .corrupt-grid{grid-template-columns:1fr;}
+  .seven-years{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .profile-sec,.scholar-sec,.tenebris-sec,.ascension-sec,.brothers-sec,.court-sec,.engine-sec,.abyssal-sec,.page-cta{padding:60px 24px;}
+  .court-grid,.engine-grid{grid-template-columns:1fr;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(144,64,224,0.08);}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// DARK_NATION · TENEBRIS · PURPLE_ASH_CLAN · AETHERIUM //</span>
+  </a>
+  <div class="nav-right">
+    <a href="duke-valtor.html" class="nav-link">Duke Valtor</a>
+    <a href="new-sablea.html" class="nav-link">New Sablea</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <div class="h-clan">PURPLE_ASH_CLAN · TENEBRIS · AETHERIUM_SUITE · POST_1355</div>
+    <span class="h-label">Ruler of Tenebris · Master Dark Mage · Architect of the Aetherium Enhancement Suite</span>
+    <h1 class="h-name">Lady Nyxara</h1>
+    <div class="h-titles">
+      <span class="h-tag">Scholar Turned Sovereign</span>
+      <span class="h-tag">The Widow Who Chose It</span>
+      <span class="h-tag">Architect of Aetherium</span>
+      <span class="h-tag">Oathkeeper of the Abyssal Ambition</span>
+    </div>
+    <div class="h-rule"></div>
+    <div class="h-quote">"She feared that she, too, might fall into the same trap — consumed by her own ambition. But instead of fearing the power, Nyxara felt emboldened."</div>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">32</div><div class="h-vlabel">Age · Active Arc</div></div>
+      <div class="h-vital"><div class="h-vval">Purple Ash</div><div class="h-vlabel">Clan Origin</div></div>
+      <div class="h-vital"><div class="h-vval">7 Yrs</div><div class="h-vlabel">Brothers in Court</div></div>
+      <div class="h-vital"><div class="h-vval">Abyssal</div><div class="h-vlabel">Keep — True Goal</div></div>
+      <div class="h-vital"><div class="h-vval">Post-1355</div><div class="h-vlabel">Timeline</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ENTER TENEBRIS //</span><div class="s-line"></div></div>
+</section>
+
+<!-- PROFILE & ORIGINS -->
+<section class="profile-sec">
+  <div class="prof-inner">
+    <div class="rv">
+      <div class="prof-aside">
+        <div class="big-n">N</div>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ash-bright);opacity:0.4;letter-spacing:0.06em;">// PURPLE_ASH_TRIBE · AMBER_EYES · PURPLE_SKIN · DARK_MAGE //</span>
+        <div class="spec-table" style="margin-top:20px;">
+          <div class="srow"><div class="srk">ORIGIN</div><div class="srv"><strong>Purple Ash Tribe orphan</strong> — adopted by King Kryvyn of Umbraeth and Lady Selvaris, who was the true power behind the throne. She absorbed both lessons.</div></div>
+          <div class="srow"><div class="srk">APPEARANCE</div><div class="srv"><strong>Purple skin</strong> (Purple Ash Clan lineage) and <strong>glowing amber eyes</strong> — marks that identify her bloodline to those who know what they mean</div></div>
+          <div class="srow"><div class="srk">RESONANCE</div><div class="srv"><strong>Arcane + Divine + Primal simultaneously</strong> — the rarest combination in the Nine Realms, all three amplified by the Umbral Essence</div></div>
+          <div class="srow"><div class="srk">ROLE</div><div class="srv"><strong>Ruler of Tenebris</strong> — sole sovereign following Duke Havroth's death. Assembler of the Aetherium Enhancement Suite. Coveter of the Abyssal Keep.</div></div>
+          <div class="srow"><div class="srk">LINEAGE</div><div class="srv">Believed descended from <strong>the ancient keepers of the Abyssal Void</strong> — sorcerers tasked with guarding its dark secrets. She considers the power of time control her birthright.</div></div>
+          <div class="srow"><div class="srk">TIMELINE</div><div class="srv">Active arc takes place <strong>~10 years after Calypso's Ascension (1355)</strong>. Age 32 when she manipulates Zyphor (24) and Kyphos (20).</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">// PROFILE · THE SCHOLAR WHO BECAME THE SOVEREIGN //</span>
+      <h2 class="big-h">Born an orphan from a forgotten tribe.<br><em>Rose to rule the most dangerous city in the Dark Nation.</em></h2>
+      <p class="bp">Born into the Purple Ash Tribe — an orphan distinguished by <strong>purple skin and glowing amber eyes</strong>, marks of a clan known for their innate connection to dark magic and devotion to the Moon Goddess Yasis. Adopted by King Kryvyn of Umbraeth and Lady Selvaris — who was not the queen, but the true power behind the throne. <em>Nyxara absorbed both lessons equally: what it looks like to rule, and what it looks like to actually control.</em></p>
+      <p class="bp">She left Umbraeth in adolescence to join the Secret Society of Scholars and Rebels — a clandestine group assembling the greatest minds across the Nine Realms to uncover ancient technologies, lost magics, and forgotten histories. <strong>Her natural intelligence and ambition earned her increasingly dangerous missions.</strong> What she found on one of them would alter everything.</p>
+      <div class="origin-trail rv d2">
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Born — Purple Ash Tribe orphan.</strong> Adopted by King Kryvyn and Lady Selvaris of Umbraeth. Raised in the shadow of a woman who ruled through a man who thought he ruled.</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Adolescence — joins the Scholars and Rebels.</strong> Exposed to forbidden knowledge, ancient technologies, and the darkest libraries of the Nine Realms.</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Discovery of the Aetherium Core and Mask of Echoes</strong> in the Enclave of Shadows beneath the Fire Nation's volcanic lands. The moment ancient power flows through her for the first time.</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>The Forgotten Libraries of Tenebris</strong> — uncovers The Facts of Vamis and The Laws of Aeon. The Abyssal Keep becomes her fixed obsession.</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Marries Duke Havroth of Tenebris.</strong> What follows is not a marriage but a masterclass in political demolition. She is the city's true ruler within three years.</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>~10 years after 1355</strong> — recruits Zyphor (24) and Kyphos (20), sons of Duke Valtor, from Vanthelon. They have never left the Iron Kingdom before. She already knows exactly what to do with that.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆</div></div>
+
+<!-- THE SCHOLAR'S PATH — RELICS + LIBRARIES -->
+<section class="scholar-sec">
+  <div class="scholar-inner">
+    <div class="rv">
+      <span class="sl">// THE_SCHOLAR'S_PATH · RELICS · FORBIDDEN_LIBRARIES · THE_OBSESSION_BEGINS //</span>
+      <h2 class="big-h">She didn't seek power first.<br><em>She sought knowledge. Power followed.</em></h2>
+      <p class="bp" style="max-width:680px;">In the Enclave of Shadows — a Dead Zone buried deep beneath the volcanic lands of the Fire Nation, a place where reality itself unravels — Nyxara unearthed two relics of the Aetherium Enhancement Suite. The moment she touched them, she experienced visions of the Old Gods, their wars, and the devastation wrought by their hubris. <strong>Instead of fearing the power, she felt emboldened.</strong></p>
+    </div>
+    <div class="relic-split rv d1">
+      <div class="relic-card rc-core">
+        <div class="rel-inner">
+          <div class="rel-badge">// RELIC_I · AETHERIUM_ENHANCEMENT_SUITE //</div>
+          <h3 class="rel-name">The Aetherium Core</h3>
+          <p class="rel-body">An ancient crystalline engine — <strong>the heart of the Aetherium Enhancement Suite</strong>. Pulsed with raw, untapped energy from the ether-realm. The ancient scripts etched into its surface hinted at its potential: a limitless source of energy capable of enhancing its wielder far beyond human capacity. <em>Its true power could only be unlocked through an intricate system of augmentations designed by the Old Gods, now lost to history.</em> Nyxara spent years reverse-engineering what they built, then rebuilt it for a mortal body.</p>
+        </div>
+      </div>
+      <div class="relic-card rc-mask">
+        <div class="rel-inner">
+          <div class="rel-badge">// RELIC_II · COGNITIVE_AUGMENTATION //</div>
+          <h3 class="rel-name">The Mask of Echoes</h3>
+          <p class="rel-body">An augmentation device said to <strong>enhance the wearer's cognitive and sensory abilities far beyond the limitations of a mortal mind</strong>. It shimmered with ethereal light, seemingly alive with the knowledge of countless civilizations — each of them absorbed, encoded, waiting. <em>The knowledge and power held within it was intoxicating, but also dangerous.</em> In that instant, Nyxara knew she had found something far beyond mere relics — fragments of god-like technology that had once shaped the very foundation of reality.</p>
+        </div>
+      </div>
+    </div>
+    <div class="lib-split rv d2">
+      <div class="lib-card">
+        <span class="lc-tome">// FORBIDDEN_TOME_I · FORGOTTEN_LIBRARIES_OF_TENEBRIS //</span>
+        <div class="lc-name">The Facts of Vamis</div>
+        <p class="lc-body">Written by Vamis, former High Sorcerer of the Order of the Silver Flame — who ventured deep into the Abyssal Keep at the cost of all his companions, returning alive but forever altered. His writings were a mixture of despair and brilliance: disjointed accounts of places where <strong>time did not flow normally, corridors that twisted back upon themselves, creatures immune to the passage of time.</strong> His failed attempts, detailed maps of traps, and cryptic notes on time anomalies became invaluable resources. Nyxara believed she could surpass Vamis by combining his ancient magic with modern technology.</p>
+      </div>
+      <div class="lib-card">
+        <span class="lc-tome">// FORBIDDEN_TOME_II · ORDER_OF_THE_SILVER_FLAME //</span>
+        <div class="lc-name">The Laws of Aeon</div>
+        <p class="lc-body">Sacred tome belonging to the Order of the Silver Flame — outlining the <strong>11 original laws governing time magic and the 7 amendments added over centuries</strong>. Her fascination lay in the sections describing temporal loops — dangerous constructs that allowed those who mastered them to relive or alter moments in time. From these studies, Nyxara began crafting her own devices: <strong>temporal anchors, chrono-breach bombs, and aetheric shields</strong> — tools Vamis had theorized but never mastered. She would master them all.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆</div></div>
+
+<!-- TENEBRIS: A CITY'S HISTORY -->
+<section class="tenebris-sec">
+  <div class="ten-inner">
+    <div class="rv">
+      <span class="sl">// TENEBRIS_HISTORY · THREE_ERAS · MAGIC_MEETS_INDUSTRY //</span>
+      <h2 class="big-h">A city torn between its<br><em>mystical past and technological future.</em></h2>
+      <p class="bp" style="max-width:680px;">Tenebris is not simply a city Nyxara conquered. It is a city with three distinct historical identities — each one still present in its streets, its architecture, and its people. Nyxara understood this when no one else did. She didn't choose between the old and the new. She made them serve each other.</p>
+    </div>
+    <div class="era-grid rv d1">
+      <div class="era era-ancient">
+        <div class="era-label"><div class="el-icon">🌕</div><div class="el-name">Ancient<br>Era<br>Wepaos</div></div>
+        <div class="era-body">
+          <div class="eb-title">The Moon God's City — Magic and Myth</div>
+          <p class="eb-body">Before the rise of any duke, Tenebris thrived under the influence of <em>Wepaos, Moon God of Mythical Creatures and Transformation</em>. Ruled by a council of High Priests, Priestesses, and Sorcerers who derived power from Wepaos and the mythical creatures he commanded. The dark amethyst found in their caverns was regarded as <strong>sacred — a gift from Wepaos himself</strong>, used for spells, rituals, and powerful magical artifacts. Moonlit Festivals were massive gatherings where citizens attempted to commune with mythical beings. Those chosen by the Moon God were blessed with heightened abilities and served as warriors or spiritual leaders.</p>
+        </div>
+      </div>
+      <div class="era era-conquest">
+        <div class="era-label"><div class="el-icon">⚙</div><div class="el-name">Conquest<br>Era<br>Vanthelon</div></div>
+        <div class="era-body">
+          <div class="eb-title">The Militaristic Conquest — Industry Over Magic</div>
+          <p class="eb-body">A militaristic faction from <strong>Vanthelon</strong> — Duke Valtor's kingdom — conquered Tenebris to exploit its vast mineral resources and dark amethyst. The High Priests were overthrown, their mystical practices driven underground or abolished outright. The caverns that were once the heart of the city's magical connection to Wepaos were reclassified as <em>economic assets</em>. The Dark Amethyst Engine was born — a revolutionary technology that harnessed amethyst as a sustainable energy source. What had once been sacred became industrial. Secret societies — the Silent Forest Tribe, the Coven of the Silver Moon, the Phantom Clan — maintained the ancient magic underground.</p>
+        </div>
+      </div>
+      <div class="era era-nyxara">
+        <div class="era-label"><div class="el-icon">◆</div><div class="el-name">Nyxara<br>Era<br>Synthesis</div></div>
+        <div class="era-body">
+          <div class="eb-title">Nyxara's Rule — Magic Meets Technology</div>
+          <p class="eb-body">When Nyxara arrived, Tenebris was a city divided. She understood both halves. <strong>She worked to blend them</strong> — creating machines powered not just by amethyst energy but also by dark magic. She resurrected the underground covens, incorporating their dark rituals into her growing empire, while ensuring the Dark Amethyst Engine remained the city's primary energy source. She ensured that mythical creatures once more walked the streets — though now they were often <em>mechanized hybrids created in her laboratories</em>, dark reflections of the city's ancient past. Wepaos's influence returned, twisted into a modern form Wepaos himself might not recognize.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆</div></div>
+
+<!-- THE ASCENSION — DUKE HAVROTH -->
+<section class="ascension-sec">
+  <div class="asc-inner">
+    <div class="rv">
+      <span class="sl">// THE_ASCENSION · DUKE_HAVROTH · THE_ARCHITECTURE_OF_HIS_DOWNFALL //</span>
+      <h2 class="big-h">Not a marriage.<br><em>A masterclass in political demolition.</em></h2>
+      <p class="bp" style="max-width:680px;">Nyxara's marriage to Duke Havroth was never about love or partnership. It was a move calculated to position her in a seat of influence. Her manipulation mirrored what she had witnessed Lady Selvaris perform on King Kryvyn — but Nyxara perfected it. The Duke's adoration for her only fed into her schemes, making it trivially easy to dismantle his authority piece by piece.</p>
+    </div>
+    <div class="havroth-block rv d1">
+      <div class="hb-left">
+        <div class="hb-badge">// DUKE_HAVROTH · THE_SUBJECT_OF_THE_MASTERPIECE //</div>
+        <h3 class="hb-title">The Man Who Loved Her</h3>
+        <p class="hb-body">Duke Havroth was <strong>entranced by Nyxara's intellect, dark beauty, and grand vision for Tenebris</strong>. He fell deeply in love with her. She felt nothing beyond the utility he provided. His adoration became the mechanism of his own undoing — the more he loved her, the more vulnerable he was to every calculated withdrawal of that love.</p>
+        <p class="hb-body" style="margin-top:12px;">He never had an heir. Through dark rituals, Nyxara had rendered him impotent while leading him to believe the fault was his own. His frustration was shaped into <em>self-loathing</em>, his self-loathing into reliance on her, his reliance into the full surrender of governing authority. By the time she was done, the court no longer looked to the Duke for anything at all.</p>
+        <div class="pull" style="margin-top:16px;"><p>"What began as a marriage of convenience had evolved into her complete control over one of the Dark Nation's most powerful cities."</p><cite>// TENEBRIS_COURT_RECORDS · SEALED //</cite></div>
+      </div>
+      <div class="move-list">
+        <div class="move-item"><div class="mi-step">I</div><div class="mi-body"><strong>Personal domination:</strong> Dark rituals render Havroth impotent. He is led to believe the failing is his own. Shame becomes leverage. <em>She rarely beds him — the distance is deliberate.</em></div></div>
+        <div class="move-item"><div class="mi-step">II</div><div class="mi-body"><strong>Political alignment:</strong> Nyxara begins managing trade agreements and influencing court decisions during Tenebris's economic war over Dark Amethyst. <strong>The court notices who is actually keeping the city afloat.</strong></div></div>
+        <div class="move-item"><div class="mi-step">III</div><div class="mi-body"><strong>Systematic elimination:</strong> The Duke's most loyal allies are removed through dark rituals, orchestrated accidents, and politically motivated arrangements. Each vacancy filled with individuals loyal only to her.</div></div>
+        <div class="move-item"><div class="mi-step">IV</div><div class="mi-body"><strong>The handmaiden:</strong> Havroth predictably seeks comfort elsewhere — in a handmaiden Nyxara had selected for him long before. She is away on a fabricated trade negotiation when it happens. <em>Upon her return, she plays the betrayed wife perfectly.</em></div></div>
+        <div class="move-item"><div class="mi-step">V</div><div class="mi-body"><strong>The final planting:</strong> Nyxara whispers to Havroth in his darkest moments that <strong>his death would be the only way to redeem himself</strong> in the eyes of the court and the people. He dies believing it was his own decision. It was hers.</div></div>
+        <div class="move-item"><div class="mi-step">VI</div><div class="mi-body"><strong>The consolidation:</strong> No heir, no loyal allies, no challenge. <em>Nyxara assumes control of Tenebris and begins the renaissance immediately.</em> The Voidspire construction commences within the month. The brothers of Vanthelon are already on her list.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆</div></div>
+
+<!-- ZYPHOR & KYPHOS -->
+<section class="brothers-sec">
+  <div class="brothers-inner">
+    <div class="rv">
+      <span class="sl">// ZYPHOR_AND_KYPHOS · SEVEN_YEARS · AETHERIUM_SUITE · THE_DESCENT //</span>
+      <h2 class="big-h">She gave them a city to build.<br><em>Then she built herself from what they created.</em></h2>
+      <p class="bp" style="max-width:680px;">She recruited Zyphor (24) and Kyphos (20) from Vanthelon — sons of Duke Valtor, the Iron Kingdom's last human ruler. Neither had ever left the kingdom before. She offered them positions as <strong>Chief Engineer and Master Scientist</strong> — freedom from their father's legacy, resources without limit, and the most interesting problems in the Nine Realms. What she didn't mention was that she was also collecting them.</p>
+    </div>
+    <div class="seven-years rv d1">
+      <div>
+        <div class="sy-label">7<span>YEARS · IN_HER_COURT</span></div>
+      </div>
+      <div class="sy-body"><strong>Zyphor</strong> — obsessed with Nyxara personally (her purple skin marks her as Purple Ash Clan, a fascination he cannot suppress) — created war machines, defense systems, and dark artifices that turned Tenebris into a fortress of technological innovation. <strong>Kyphos</strong> — more measured, aware of her manipulative nature but drawn to her vision — focused on infrastructure and quality of life: the Amethyst Purifiers, the Whispering Walls, the Arcane Pumps. Both brothers contributed to making Tenebris the dark technological marvel it became. And in their seventh year, she gave them the enhancement they hadn't asked for.</div>
+    </div>
+
+    <!-- Corrupted inventions -->
+    <div class="rv d1" style="margin-top:3px;"><span class="sl" style="padding:10px 0;display:block;">// TEN_INVENTIONS_PERVERTED //</span></div>
+    <div class="corrupt-grid rv d2">
+      <div class="corrupt-item"><div><div class="ci-who">// KYPHOS //</div><div class="ci-name">Aetherium Conductor</div><div class="ci-from">→ Clean limitless energy for Tenebris infrastructure</div><div class="ci-to">→ <strong>Energy-draining weapon:</strong> <em>siphons life force from entire cities</em>, converting it into dark magic</div></div></div>
+      <div class="corrupt-item"><div><div class="ci-who">// ZYPHOR //</div><div class="ci-name">Darkfire Armory</div><div class="ci-from">→ Advanced defensive weapons facility</div><div class="ci-to">→ <strong>Soul-harvesting weaponry:</strong> <em>extracts souls of those slain in battle</em>, sells them as power sources or economic leverage</div></div></div>
+      <div class="corrupt-item"><div><div class="ci-who">// KYPHOS //</div><div class="ci-name">Shadowborne Relay System</div><div class="ci-from">→ Revolutionary communication network</div><div class="ci-to">→ <strong>Mind-controlling surveillance:</strong> <em>dark sigils implanted into the relay</em> allow manipulation of thoughts and interception of secrets</div></div></div>
+      <div class="corrupt-item"><div><div class="ci-who">// KYPHOS //</div><div class="ci-name">Etheric Resonance Chambers</div><div class="ci-from">→ Healing pods restoring physical and magical health</div><div class="ci-to">→ <strong>Psychological torture devices:</strong> <em>resonance frequencies warp thoughts and memories</em> of captives, extracting secrets or destroying minds</div></div></div>
+      <div class="corrupt-item"><div><div class="ci-who">// ZYPHOR //</div><div class="ci-name">Amethyst Soulcore Sentries</div><div class="ci-from">→ Autonomous guardians of Tenebris borders</div><div class="ci-to">→ <strong>Magical hunters:</strong> reprogrammed to track, capture, and <em>drain magical beings of their essence</em> to enhance Nyxara's arsenal</div></div></div>
+      <div class="corrupt-item"><div><div class="ci-who">// ZYPHOR //</div><div class="ci-name">Temporal Flux Manipulator</div><div class="ci-from">→ Accelerating growth and production</div><div class="ci-to">→ <strong>Time torture device:</strong> traps targets in Time Wards where they experience <em>time at an excruciatingly slow rate</em>, suffering endlessly</div></div></div>
+      <div class="corrupt-item"><div><div class="ci-who">// KYPHOS //</div><div class="ci-name">Voidstone Extractors</div><div class="ci-from">→ Ethical energy extraction from Dead Zones</div><div class="ci-to">→ <strong>Dimensional rifts:</strong> <em>tears open breaches between the Ether-realm and the physical world</em>, flooding enemy territories with malevolent creatures</div></div></div>
+      <div class="corrupt-item"><div><div class="ci-who">// BOTH BROTHERS //</div><div class="ci-name">Soul-Fueled Aethercraft</div><div class="ci-from">→ Advanced flying transport powered by amethyst cores</div><div class="ci-to">→ <strong>Soul-consuming war fleet:</strong> soul-harvesting engines integrated into the design — <em>the more souls consumed, the more power generated</em></div></div></div>
+    </div>
+
+    <!-- The Gauntlets -->
+    <div class="rv d1" style="margin-top:3px;"><span class="sl" style="padding:10px 0;display:block;">// THE_AETHERIUM_GAUNTLETS · WHAT_SHE_DIDN'T_ANTICIPATE //</span></div>
+    <div class="gauntlet-split rv d2">
+      <div class="gauntlet-card gc-nexus">
+        <div class="gc-inner">
+          <div class="gc-badge">// KYPHOS · AETHERIUM_GAUNTLET_EVOLVED //</div>
+          <h3 class="gc-name">The Nexus Conduit</h3>
+          <span class="gc-sub">Kyphos · After Contact with a Rare Ethereal Talisman</span>
+          <p class="gc-body">When Kyphos's Gauntlet came into contact with a Rare Ethereal Talisman — <em>secretly stolen from Nyxara's private collection</em> — it transformed entirely. <strong>The Nexus Conduit gave him control over energy on a scale previously thought impossible</strong>: devastating beams capable of obliterating mountains, manipulation of matter at will, conversion of matter into stored energy for future use. A walking weapon of mass destruction, capable of reshaping the world with a flick of a wrist. Nyxara had not anticipated this evolution. She had built him a tool. He had built himself something else.</p>
+        </div>
+      </div>
+      <div class="gauntlet-card gc-void">
+        <div class="gc-inner">
+          <div class="gc-badge">// ZYPHOR · AETHERIUM_GAUNTLET_EVOLVED //</div>
+          <h3 class="gc-name">The Voidweaver's Hand</h3>
+          <span class="gc-sub">Zyphor · After Absorbing the Voidsphere's Collapse Energy</span>
+          <p class="gc-body">Zyphor's Gauntlet transformed when it absorbed the dark, unstable energy of the Voidsphere — the power source of the Voidspire he himself had built — as it neared collapse. <strong>The Voidweaver's Hand granted him control over gravity and reality itself</strong>: gravitational forces powerful enough to create super black holes, rifts in reality allowing dimensional traversal, manipulation of time and space that no mortal had ever achieved. <em>One of the most dangerous beings in the Nine Realms.</em> The very tool she had installed to control him had made him uncontrollable.</p>
+        </div>
+      </div>
+    </div>
+    <div class="pull rv d3" style="margin-top:3px;"><p>As the brothers' power grew, so did their understanding of what Nyxara had done. United by their shared enhancements and their growing mistrust, they turned against her — determined to use their newfound power to forge their own path. The rebellion had begun.</p><cite>// AETHERIUM_ENHANCEMENT_SUITE · CONSEQUENCE_REPORT · TENEBRIS_ARCHIVES //</cite></div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆</div></div>
+
+<!-- ROYAL COURT -->
+<section class="court-sec">
+  <div class="court-inner">
+    <div class="rv">
+      <span class="sl">// ROYAL_COURT_OF_TENEBRIS · EIGHT_FACTIONS · CABAL_NOT_COURT //</span>
+      <h2 class="big-h">Not a court of nobles.<br><em>A cabal of the most dangerous minds in the Dark Nation.</em></h2>
+      <p class="bp" style="max-width:680px;">Her court operates more like a cabal of power-hungry intellectuals and sorcerers than a traditional royal assembly. Each member is tied not by blood or fealty but by <strong>the pursuit of knowledge, influence, and magical prowess</strong>. This makes her court both unstable and highly ambitious — members constantly vie for favor using their dark arts and intellect to outmaneuver one another. Precisely how Nyxara prefers it.</p>
+    </div>
+    <div class="court-grid rv d1">
+      <div class="court-card">
+        <span class="cc-icon">🌙</span>
+        <div class="cc-name">Moonrise Witches</div>
+        <span class="cc-role">// CIRCLE_OF_SILVER_FLAME · DIVINATION //</span>
+        <p class="cc-body">Masters of lunar magic and divination — tap into Moon Goddess <strong>Yasis</strong> to offer Nyxara glimpses of the future. Used to orchestrate manipulations of time and fate, ensuring enemies are always one step behind.</p>
+      </div>
+      <div class="court-card">
+        <span class="cc-icon">🔮</span>
+        <div class="cc-name">Coven of Twilight</div>
+        <span class="cc-role">// MASTER_ILLUSIONISTS · ENCHANTERS //</span>
+        <p class="cc-body">Destabilize rival cities by making them question their own realities. High Enchantress <strong>Varyntha</strong> is feared for her ability to make entire armies believe they are lost in endless fog or that their weapons have turned against them.</p>
+      </div>
+      <div class="court-card">
+        <span class="cc-icon">🗡</span>
+        <div class="cc-name">The Phantom Clan</div>
+        <span class="cc-role">// SHADOW_WALKERS · ELITE_ASSASSINS //</span>
+        <p class="cc-body">Shadow-walking assassins from the Wraithlands who strike without a trace. <strong>Eliminate political threats, silence dissidents.</strong> Loyalty secured through mutual interest — they share her disdain for the light.</p>
+      </div>
+      <div class="court-card">
+        <span class="cc-icon">💧</span>
+        <div class="cc-name">Mirror Lake Coven</div>
+        <span class="cc-role">// NECROMANCY · SOUL_BINDING //</span>
+        <p class="cc-body">Specialize in water magic and spiritual manipulation — bind spirits and souls to Nyxara's will. High Priestess <strong>Syralis</strong> can summon the drowned souls of ancient battles, forcing them to serve as an undead army.</p>
+      </div>
+      <div class="court-card">
+        <span class="cc-icon">☽</span>
+        <div class="cc-name">Circle of the Silver Moon</div>
+        <span class="cc-role">// LUNAR_ENERGY · ARMY_ENHANCEMENT //</span>
+        <p class="cc-body">Bind lunar energies to amplify physical and magical abilities. <strong>Enchant Nyxara's soldiers</strong> with increased strength, stamina, and power during battle. Nyxara studied their magic in her youth with the Scholars and Rebels.</p>
+      </div>
+      <div class="court-card">
+        <span class="cc-icon">🌿</span>
+        <div class="cc-name">Silent Forest Tribe</div>
+        <span class="cc-role">// MORVANNA_SECT · GUERRILLA_WARFARE //</span>
+        <p class="cc-body">The most savage followers — expert trackers and dark magic wielders used for guerrilla warfare and infiltration. Chief <strong>Varok</strong>, whose connection to the Ether-realm gives him an edge in both battle and espionage.</p>
+      </div>
+      <div class="court-card">
+        <span class="cc-icon">🔥</span>
+        <div class="cc-name">White Witch Kin</div>
+        <span class="cc-role">// EXILED_FIRE_MAGES · WEAPONSMITHS //</span>
+        <p class="cc-body">Descendants of powerful fire mages from the Fire Nation, now exiled. <strong>Craft destructive fire-based weaponry and spells</strong>, creating war machines powered by the volatile combination of fire and dark magic.</p>
+      </div>
+      <div class="court-card">
+        <span class="cc-icon">⛰</span>
+        <div class="cc-name">Vicious Tower Tribe</div>
+        <span class="cc-role">// MOUNTAIN_WARRIORS · ENFORCERS //</span>
+        <p class="cc-body">Mountain warriors specializing in brutal combat. <strong>War Chief Krahgor</strong> leads the enforcers of Nyxara's dark rule — crushing rebellions, intimidating enemies, destroying rivals through fear and physical domination.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆</div></div>
+
+<!-- THE AMETHYST ENGINE -->
+<section class="engine-sec">
+  <div class="engine-inner">
+    <div class="rv">
+      <span class="sl">// THE_AMETHYST_ENGINE · TENEBRIS_POWER_INFRASTRUCTURE · VOIDSPIRE //</span>
+      <h2 class="big-h">A city powered by souls,<br><em>infrastructure, and controlled darkness.</em></h2>
+      <p class="bp" style="max-width:680px;">At the heart of Tenebris, the Amethyst Engine serves as the city's dark power plant — a fusion of magic, advanced technology, and ethereal energy siphoned from the ether-realm. <strong>Lady Nyxara knows the dangers of this power and continues anyway.</strong> Zyphor, who engineered much of it, views the system as his masterpiece, unaware of the potential to cause a cataclysmic rift between realms.</p>
+    </div>
+    <div class="engine-grid rv d1">
+      <div class="eng-card"><span class="enc-icon">💎</span><div class="enc-name">Dark Amethyst Reactor Core</div><p class="enc-body">Dark amethyst crystals <em>infused with magical energy from the ether-realm</em> — drawing power directly from the souls and essence of the ether-realm. The immense energy fuels the core, producing a constant stream of dark electricity that powers the entire city.</p></div>
+      <div class="eng-card"><span class="enc-icon">⚡</span><div class="enc-name">Ethereal Conduits</div><p class="enc-body"><strong>High-voltage transmission lines made from refined dark amethyst</strong>, carrying concentrated streams of dark electricity across Tenebris without significant energy loss. The city's equivalent of a power grid — except what flows through it is partially made of stolen souls.</p></div>
+      <div class="eng-card"><span class="enc-icon">🗼</span><div class="enc-name">The Voidspire</div><p class="enc-body">Acts as both power regulator and amplifier — akin to a substation. The <strong>Voidsphere</strong> at its heart condenses and amplifies dark energy. Zyphor manipulated dimensional rifts here to pull ethereal power directly into Tenebris, vastly increasing its output.</p></div>
+      <div class="eng-card"><span class="enc-icon">🔥</span><div class="enc-name">The Soul Furnace</div><p class="enc-body">Storage facility and last-resort weapon simultaneously. Consumes souls from the ether-realm and stores their energy. In emergencies, switches to <strong>weaponized mode</strong> — releasing bursts of destructive energy capable of obliterating entire armies. The ultimate failsafe.</p></div>
+      <div class="eng-card"><span class="enc-icon">🌀</span><div class="enc-name">Dead Zone Reservoirs</div><p class="enc-body">Areas where the boundary between the ether-realm and the physical realm is weakened. Zyphor and Kyphos discovered how to repurpose these anomalies as energy wells — <em>each Dead Zone syphoning the life essence of lost souls trapped between dimensions</em>, channeling it back into the system.</p></div>
+      <div class="eng-card"><span class="enc-icon">☠</span><div class="enc-name">The Risk She Accepts</div><p class="enc-body">As the Amethyst Engine draws more energy from the ether-realm, <strong>it destabilizes the boundaries between dimensions</strong>. The risk of implosion is always present — which could tear the fabric of reality and allow ethereal creatures to flood the physical world. Nyxara knows this. She continues.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆</div></div>
+
+<!-- THE ABYSSAL AMBITION -->
+<section class="abyssal-sec">
+  <div class="ab-inner">
+    <div class="rv">
+      <span class="sl">// THE_ABYSSAL_AMBITION · OBSIDIAN_HOURGLASS · TIME_ITSELF //</span>
+      <h2 class="big-h">Not power. Not rule.<br><em>Time itself.</em></h2>
+    </div>
+    <div class="ab-block rv d1">
+      <div class="ab-c">
+        <div class="ab-badge">// ABYSSAL_KEEP · OBSIDIAN_HOURGLASS · LORDS_OF_THE_ETERNAL_VOID //</div>
+        <h3 class="ab-title">The <em>True</em> Goal Behind Everything Else</h3>
+        <p class="ab-body">Tenebris is not her endgame. The Voidspire is not her endgame. The brothers were not her endgame. <strong>Every resource she has gathered, every alliance she has formed, every person she has used, has been a step toward a single fixed point: the Abyssal Keep and the Obsidian Hourglass within the Abyssal Void — the power of time manipulation.</strong></p>
+        <p class="ab-body">Her obsession is not merely academic. It is personal — rooted in betrayal and loss that she believes she could undo if she mastered time itself. She is convinced that the Abyssal Keep and the Abyssal Void hold the answers she seeks. <em>And through her ancestry, she believes the power rightfully belongs to her</em> — descended, she suspects, from the ancient keepers of the Void itself.</p>
+        <p class="ab-body">The Lords of the Eternal Void — ancient beings imprisoned within the Keep — would not allow such power to fall into mortal hands without a fight. The Abyssal Void, with its time-warping properties, is a realm of chaos, and any attempt to harness its power risks unraveling the very fabric of the Nine Realms. <strong>Nyxara is undeterred. She believes that only she has the strength and intelligence to master the Obsidian Hourglass</strong> and bring about a new era — one in which time bends to her will, and the Nine Realms fall under her rule. Whether she is right is still to be determined. Whether the attempt will destroy everything regardless of the answer is a different question.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="page-cta">
+  <div class="page-cta-inner rv">
+    <span class="sl" style="display:block;text-align:center;margin-bottom:20px;">// LADY_NYXARA · RULER_OF_TENEBRIS · AETHERIUM_ARCHITECT //</span>
+    <h2>Scholar. Sovereign. Architect.<br><em>The woman who turned a city into a weapon.</em></h2>
+    <p>She built Tenebris into the dark technological marvel of the Nine Realms, corrupted two brothers into something neither anticipated, and is still working toward an endgame that predates all of it. The Abyssal Keep is waiting.</p>
+    <div class="cta-row">
+      <a href="duke-valtor.html" class="btn-p">Duke Valtor — Her Rivals' Father →</a>
+      <a href="new-sablea.html" class="btn-g">New Sablea →</a>
+      <a href="four-secrets.html" class="btn-g">The Four Secrets →</a>
+      <a href="essence-resonance.html" class="btn-g">Essence & Resonance →</a>
+    </div>
+  </div>
+</div>
+<footer><span class="fc">Nine Realms Universe — Lady Nyxara · Ruler of Tenebris · Aetherium Enhancement Suite · Original IP</span><span class="fc">Created by Ron</span></footer>
+
+<script>
+try{
+
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('.relic-card,.lib-card,.era,.move-item,.court-card,.eng-card,.gauntlet-card,.corrupt-item,.ot-step').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('ensnare'));el.addEventListener('mouseleave',()=>ring.classList.remove('ensnare'));});
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lord Vyktor — The Vice Lord of Sablea | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #040304;
+  --deep:      #080606;
+  --obsidian:  #0C0A08;
+  --slate:     #100E0C;
+  --casino:    #140E08;
+
+  /* Vice gold — his domain */
+  --gold:      #604800;
+  --gold-mid:  #906800;
+  --gold-pale: #C89018;
+  --gold-bright:#E8B030;
+  --gold-dim:  rgba(200,144,24,0.15);
+
+  /* Veil violet — temporal threads */
+  --veil:      #2A0848;
+  --veil-mid:  #4A1080;
+  --veil-pale: #7828C0;
+  --veil-bright:#A840E8;
+
+  /* Chrome — New Sablea tech */
+  --chrome:    #283040;
+  --chrome-mid:#404858;
+  --chrome-pale:#6878A0;
+  --chrome-bright:#90A8C8;
+
+  /* Crimson — blood/sacrifice undercurrent */
+  --blood:     #600810;
+  --blood-pale:#A01828;
+
+  --parch:     #B0A898;
+  --parch-pale:#D8CCBC;
+  --parch-dim: #504840;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Casino ambient — gold warmth */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 0%,rgba(144,104,0,0.05) 0%,transparent 55%),
+    radial-gradient(ellipse 30% 30% at 80% 60%,rgba(74,16,128,0.04) 0%,transparent 60%);
+  animation:casinoAmbient 12s ease-in-out infinite;}
+@keyframes casinoAmbient{0%,100%{opacity:0.7;}50%{opacity:1;}}
+
+/* Fine luxury grain */
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px;}
+
+/* Cursor — diamond shape */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--gold-pale);transform:translate(-50%,-50%) rotate(45deg);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(144,104,0,0.45);border-radius:0;transform:translate(-50%,-50%) rotate(45deg);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.gold-active{width:46px;height:46px;border-color:var(--gold-bright);box-shadow:0 0 14px rgba(144,104,0,0.3);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(4,3,4,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(144,104,0,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gold-pale);opacity:0.55;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-pale);border:1px solid rgba(144,104,0,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--gold-mid);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,#1C1004 0%,#100C04 40%,var(--void) 70%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Card suits — floating decorative elements */
+.card-suit{
+  position:absolute;font-size:80px;opacity:0;
+  color:var(--gold-pale);pointer-events:none;z-index:1;
+  animation:suitFloat 20s ease-in-out infinite;
+}
+.cs-1{top:15%;left:8%;animation-delay:0s;font-size:50px;}
+.cs-2{top:25%;right:10%;animation-delay:5s;font-size:40px;color:var(--veil-pale);}
+.cs-3{bottom:30%;left:12%;animation-delay:10s;font-size:35px;}
+.cs-4{bottom:20%;right:8%;animation-delay:15s;font-size:45px;color:var(--veil-pale);}
+@keyframes suitFloat{0%,100%{opacity:0;transform:translateY(0);}20%,80%{opacity:0.06;}50%{opacity:0.1;transform:translateY(-20px);}}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-pre{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:var(--gold-pale);text-transform:uppercase;opacity:0;animation:riseIn 1.2s .2s ease forwards;margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.h-pre::before,.h-pre::after{content:'◆';color:rgba(144,104,0,0.4);}
+.h-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(48px,10vw,128px);font-weight:900;
+  color:var(--parch-pale);letter-spacing:0.04em;line-height:0.88;
+  text-shadow:0 0 120px rgba(200,144,24,0.5),0 0 60px rgba(74,16,128,0.15),0 4px 40px rgba(0,0,0,0.9);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-sub{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,1.7vw,19px);font-weight:400;color:var(--gold-pale);letter-spacing:0.22em;display:block;margin-top:8px;opacity:0;animation:riseIn 1s .8s ease forwards;}
+.h-rule{width:240px;height:1px;background:linear-gradient(to right,transparent,var(--gold-mid),transparent);margin:20px auto;opacity:0;animation:fadeIn 1s 1.1s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,21px);color:rgba(176,168,152,0.4);max-width:720px;margin:0 auto 40px;line-height:1.8;opacity:0;animation:riseIn 1.2s 1.2s ease forwards;}
+
+/* Win streak badge */
+.win-badge{
+  display:inline-flex;align-items:center;gap:12px;
+  border:1px solid rgba(232,176,48,0.3);
+  padding:12px 28px;margin-bottom:28px;
+  background:rgba(200,144,24,0.06);
+  opacity:0;animation:riseIn 1s 1.3s ease forwards;
+}
+.wb-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-pale);opacity:0.7;}
+.wb-val{font-family:'Cinzel Decorative',serif;font-size:20px;color:var(--gold-bright);}
+.wb-sep{color:rgba(200,144,24,0.3);}
+
+.h-vitals{display:flex;justify-content:center;max-width:700px;margin:0 auto;border:1px solid rgba(144,104,0,0.14);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:16px 14px;text-align:center;border-right:1px solid rgba(144,104,0,0.1);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Share Tech Mono',monospace;font-size:clamp(12px,1.8vw,20px);color:var(--gold-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--gold-pale);opacity:0.5;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(144,104,0,0.18),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-family:'Cinzel',serif;font-size:12px;color:var(--gold-mid);opacity:0.4;letter-spacing:0.3em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--gold-bright);}
+.big-h em.veil{color:var(--veil-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(176,168,152,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--gold-pale);}
+.pull-gold{margin:22px 0;padding:0;border-left:none;}
+.quote-card{
+  margin:24px 0;padding:22px 28px;
+  border:1px solid rgba(144,104,0,0.12);
+  background:rgba(144,104,0,0.04);
+  position:relative;
+}
+.quote-card::before{content:'◆';position:absolute;top:14px;left:14px;font-size:10px;color:var(--gold-pale);opacity:0.3;}
+.qc-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(176,168,152,0.75);line-height:1.75;padding-left:20px;}
+.qc-source{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gold-pale);opacity:0.4;display:block;margin-top:10px;padding-left:20px;letter-spacing:0.05em;}
+
+/* ═══ PROFILE ═══ */
+.profile-sec{padding:110px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.profile-sec::before{content:'VYKTOR';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(120px,20vw,280px);font-weight:900;color:rgba(144,104,0,0.022);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.prof-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.prof-aside .big-v{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,13vw,170px);font-weight:400;color:rgba(144,104,0,0.09);line-height:1;margin-left:-6px;}
+.prof-aside-tag{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gold-pale);opacity:0.5;letter-spacing:0.06em;}
+.prof-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,152,0.3);margin-top:6px;line-height:1.6;}
+
+.spec-table{margin-top:28px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(144,104,0,0.1);}
+.srow{display:grid;grid-template-columns:110px 1fr;overflow:hidden;}
+.srk{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gold-pale);opacity:0.5;background:rgba(144,104,0,0.04);padding:12px 12px;border-right:1px solid rgba(144,104,0,0.08);letter-spacing:0.04em;}
+.srv{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,152,0.55);padding:10px 14px;line-height:1.5;}
+.srv strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:36px;}
+.pg-cell{padding:16px 18px;border:1px solid rgba(144,104,0,0.08);background:rgba(144,104,0,0.02);transition:border-color .3s,background .3s;}
+.pg-cell:hover{border-color:rgba(144,104,0,0.22);background:rgba(144,104,0,0.05);}
+.pg-label{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--gold-pale);opacity:0.4;display:block;margin-bottom:5px;letter-spacing:0.05em;}
+.pg-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,152,0.6);line-height:1.5;}
+
+/* ═══ DRIFTPOST ═══ */
+.driftpost-sec{padding:110px 60px;background:var(--slate);}
+.drift-inner{max-width:1100px;margin:0 auto;}
+.drift-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+.drift-card{
+  padding:30px 26px;border:1px solid rgba(144,104,0,0.1);
+  background:rgba(4,3,4,0.5);transition:border-color .3s,background .3s;
+  position:relative;overflow:hidden;
+}
+.drift-card:hover{border-color:rgba(144,104,0,0.25);background:rgba(144,104,0,0.05);}
+.drift-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.drift-card:hover::before{transform:scaleX(1);}
+.dc-glyph{font-size:22px;opacity:0.4;margin-bottom:12px;display:block;}
+.dc-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.7vw,17px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:7px;}
+.dc-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,168,152,0.5);line-height:1.75;}
+.dc-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Pheromone block */
+.pheromone{
+  margin-top:3px;padding:28px 36px;
+  border:1px solid rgba(144,104,0,0.1);background:rgba(144,104,0,0.03);
+  position:relative;overflow:hidden;
+}
+.pheromone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 50%,rgba(144,104,0,0.05) 0%,transparent 70%);}
+.ph-c{position:relative;z-index:1;}
+.ph-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--gold-pale);border:1px solid rgba(144,104,0,0.25);padding:4px 14px;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.06em;}
+.ph-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,2.8vw,32px);font-weight:400;color:var(--parch-pale);margin-bottom:8px;}
+.ph-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(176,168,152,0.55);line-height:1.85;max-width:800px;}
+.ph-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ph-effects{display:flex;gap:3px;margin-top:16px;flex-wrap:wrap;}
+.ph-ef{padding:8px 16px;border:1px solid rgba(144,104,0,0.1);font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(176,168,152,0.45);background:rgba(4,3,4,0.5);}
+
+/* ═══ TRANSCENDENTAL TRIAD ═══ */
+.triad-sec{padding:110px 60px;background:var(--casino);position:relative;overflow:hidden;}
+.triad-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(74,16,128,0.06) 0%,transparent 70%);}
+.triad-inner{max-width:1200px;margin:0 auto;}
+.triad-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;text-align:center;}
+.triad-title em{font-style:italic;color:var(--gold-bright);}
+.triad-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(176,168,152,0.4);max-width:580px;margin:0 auto 60px;line-height:1.75;text-align:center;}
+
+/* Three ability columns */
+.triad-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+.triad-card{
+  padding:40px 32px;border:1px solid;
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.tc-1{border-color:rgba(200,144,24,0.12);background:linear-gradient(180deg,#100E04 0%,#0C0A04 100%);}
+.tc-2{border-color:rgba(74,16,128,0.14);background:linear-gradient(180deg,#0C0812 0%,#08060E 100%);}
+.tc-3{border-color:rgba(64,72,88,0.14);background:linear-gradient(180deg,#0A0C14 0%,#08080E 100%);}
+.tc-1:hover{border-color:rgba(200,144,24,0.32);}
+.tc-2:hover{border-color:rgba(74,16,128,0.35);}
+.tc-3:hover{border-color:rgba(64,72,88,0.35);}
+.tc-1::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(200,144,24,0.08) 0%,transparent 70%);}
+.tc-2::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(74,16,128,0.1) 0%,transparent 70%);}
+.tc-3::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(64,72,88,0.08) 0%,transparent 70%);}
+.triad-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.triad-card:hover::after{transform:scaleX(1);}
+.tc-1::after{background:linear-gradient(to right,transparent,var(--gold-mid),transparent);}
+.tc-2::after{background:linear-gradient(to right,transparent,var(--veil-pale),transparent);}
+.tc-3::after{background:linear-gradient(to right,transparent,var(--chrome-pale),transparent);}
+
+.tc-inner{position:relative;z-index:1;}
+.tc-sys{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.06em;display:block;margin-bottom:12px;padding:4px 12px;border:1px solid;display:inline-block;opacity:0.7;}
+.tc-1 .tc-sys{color:var(--gold-bright);border-color:rgba(200,144,24,0.3);}
+.tc-2 .tc-sys{color:var(--veil-bright);border-color:rgba(74,16,128,0.35);}
+.tc-3 .tc-sys{color:var(--chrome-bright);border-color:rgba(64,72,88,0.35);}
+.tc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:5px;}
+.tc-sub{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;}
+.tc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.5vw,16px);color:rgba(176,168,152,0.55);line-height:1.8;margin-bottom:14px;}
+.tc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.tc-1 .tc-body em{color:var(--gold-pale);}
+.tc-2 .tc-body em{color:var(--veil-bright);}
+.tc-3 .tc-body em{color:var(--chrome-bright);}
+
+/* ═══ SHROUD OF 13 FATES ═══ */
+.shroud-sec{padding:110px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.shroud-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(74,16,128,0.07) 0%,transparent 70%);}
+.shroud-inner{max-width:1100px;margin:0 auto;}
+
+/* 13 fates grid */
+.fates-block{
+  margin-top:52px;padding:44px;
+  border:1px solid rgba(74,16,128,0.15);
+  background:rgba(4,3,8,0.8);position:relative;overflow:hidden;
+}
+.fates-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(74,16,128,0.08) 0%,transparent 70%);}
+.fates-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--veil-mid),transparent);}
+.fb-c{position:relative;z-index:1;}
+.fb-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--veil-bright);border:1px solid rgba(74,16,128,0.25);padding:5px 16px;display:inline-block;margin-bottom:18px;opacity:0.7;letter-spacing:0.06em;}
+.fb-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,40px);font-weight:400;color:var(--parch-pale);margin-bottom:12px;}
+.fb-title em{font-style:italic;color:var(--veil-bright);}
+.fb-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.7vw,18px);color:rgba(176,168,152,0.55);line-height:1.85;margin-bottom:20px;max-width:720px;}
+.fb-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* 13 fate tokens */
+.fate-tokens{display:flex;gap:6px;flex-wrap:wrap;margin-top:20px;}
+.fate-token{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(74,16,128,0.3);
+  background:rgba(74,16,128,0.08);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Share Tech Mono',monospace;font-size:9px;
+  color:var(--veil-pale);opacity:0.55;
+  position:relative;overflow:hidden;transition:opacity .3s,border-color .3s;
+}
+.fate-token:hover{opacity:0.9;border-color:rgba(74,16,128,0.6);}
+.fate-token::before{content:'✕';color:rgba(200,80,80,0.5);font-size:14px;}
+.fate-token span{position:absolute;bottom:2px;right:4px;font-size:7px;opacity:0.4;}
+
+/* Orb of Truth */
+.orb-block{
+  margin-top:3px;padding:28px 36px;
+  border:1px solid rgba(200,144,24,0.12);background:rgba(200,144,24,0.03);
+  display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;
+}
+.ob-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--gold-pale);border:1px solid rgba(144,104,0,0.2);padding:4px 14px;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.06em;}
+.ob-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,28px);font-weight:400;color:var(--parch-pale);margin-bottom:8px;}
+.ob-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.5vw,16px);color:rgba(176,168,152,0.55);line-height:1.8;}
+.ob-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ob-body em{color:var(--gold-pale);}
+.ob-warning{margin-top:14px;padding:12px 16px;border-left:2px solid rgba(200,144,24,0.3);background:rgba(200,144,24,0.03);font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,152,0.5);line-height:1.6;}
+.ob-warning strong{color:var(--parch-pale);font-style:normal;}
+
+/* ═══ RELATIONSHIPS ═══ */
+.rel-sec{padding:110px 60px;background:var(--slate);}
+.rel-inner{max-width:1100px;margin:0 auto;}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.rel-card{padding:30px 28px;border:1px solid rgba(144,104,0,0.08);background:rgba(4,3,4,0.5);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.rel-card:hover{border-color:rgba(144,104,0,0.22);background:rgba(144,104,0,0.04);}
+.rel-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.rel-card:hover::before{transform:scaleX(1);}
+.rc-who{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--gold-pale);opacity:0.45;display:block;margin-bottom:8px;letter-spacing:0.05em;}
+.rc-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,20px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:6px;}
+.rc-dynamic{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:10px;display:block;}
+.rc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,168,152,0.5);line-height:1.75;}
+.rc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ SELENA ALLIANCE ═══ */
+.selena-alliance{padding:100px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.selena-alliance::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 50%,rgba(74,16,128,0.05) 0%,transparent 70%);}
+.sal-inner{max-width:1100px;margin:0 auto;}
+.sal-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.sal-card{padding:32px 28px;border:1px solid rgba(74,16,128,0.1);background:rgba(4,2,8,0.6);transition:border-color .3s,background .3s;position:relative;}
+.sal-card:hover{border-color:rgba(74,16,128,0.24);background:rgba(74,16,128,0.04);}
+.sal-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--veil-bright);opacity:0.45;display:block;margin-bottom:8px;letter-spacing:0.05em;}
+.sal-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.7vw,18px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:7px;}
+.sal-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,168,152,0.5);line-height:1.75;}
+.sal-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.sal-body em{color:var(--veil-bright);}
+
+/* Joint operation block */
+.joint-op{
+  margin-top:3px;padding:28px 36px;
+  border:1px solid rgba(144,104,0,0.1);background:rgba(4,3,4,0.5);
+  grid-column:span 2;
+}
+.jo-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--gold-pale);border:1px solid rgba(144,104,0,0.2);padding:4px 14px;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.06em;}
+.jo-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(176,168,152,0.55);line-height:1.85;}
+.jo-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.jo-body em{color:var(--gold-pale);}
+
+/* ═══ CLOSING ═══ */
+.closing{
+  padding:110px 60px;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,#1A1004 0%,var(--void) 70%);
+  text-align:center;position:relative;overflow:hidden;
+}
+.cl-inner{max-width:800px;margin:0 auto;position:relative;z-index:1;}
+.cl-glyph{font-size:44px;margin-bottom:20px;opacity:0.35;display:block;}
+.cl-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,4vw,52px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:16px;}
+.cl-title em{font-style:italic;color:var(--gold-bright);}
+.cl-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,2vw,22px);color:rgba(176,168,152,0.45);line-height:1.9;margin-bottom:44px;max-width:640px;margin-left:auto;margin-right:auto;}
+.cl-body strong{color:var(--parch-pale);font-style:normal;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(144,104,0,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--gold-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(176,168,152,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#F5EED8;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(176,168,152,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(176,168,152,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(144,104,0,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(176,168,152,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .profile-sec,.driftpost-sec,.triad-sec,.shroud-sec,.rel-sec,.selena-alliance,.closing,.page-cta{padding:80px 40px;}
+  .prof-inner{grid-template-columns:1fr;gap:40px;}
+  .triad-grid{grid-template-columns:1fr;}
+  .drift-grid{grid-template-columns:1fr 1fr;}
+  .sal-split{grid-template-columns:1fr;} .joint-op{grid-column:span 1;}
+  .orb-block{grid-template-columns:1fr;}
+  .profile-grid{grid-template-columns:1fr;}
+  .rel-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(144,104,0,0.1);}.h-vital:last-child{border-bottom:none;}
+  .profile-sec,.driftpost-sec,.triad-sec,.shroud-sec,.rel-sec,.selena-alliance,.closing,.page-cta{padding:60px 24px;}
+  .drift-grid{grid-template-columns:1fr;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// DRIFTPOST · VICE_LORD · SABLEA //</span>
+  </a>
+  <div class="nav-right">
+    <a href="selena.html" class="nav-link">Selena</a>
+    <a href="vesper.html" class="nav-link">Queen Vesper</a>
+    <a href="sablea-city.html" class="nav-link">Sablea</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="card-suit cs-1">♠</div>
+  <div class="card-suit cs-2">◆</div>
+  <div class="card-suit cs-3">♣</div>
+  <div class="card-suit cs-4">♠</div>
+  <div class="hero-content">
+    <p class="h-pre">Sablea · Driftpost · Vice Lord · Baron of Driftpost</p>
+    <span class="h-label">Master Strategist · Temporal Gamekeeper · Undefeated</span>
+    <h1 class="h-name">Lord Vyktor</h1>
+    <span class="h-sub">He never gambles. Every bet is pre-won the moment he walks in.</span>
+    <div class="h-rule"></div>
+    <p class="h-tagline">He does not believe in luck, fate, or gods. He believes in preparation, probability, and leverage. He never forces an outcome — he makes sure every outcome that matters was already programmed to favor him. Through time, tech, and temptation.</p>
+    <div class="win-badge">
+      <div class="wb-label">Win Record</div>
+      <div class="wb-val">∞</div>
+      <div class="wb-sep">◆</div>
+      <div class="wb-label">Losses</div>
+      <div class="wb-val">0</div>
+    </div>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">III</div><div class="h-vlabel">The Triad</div></div>
+      <div class="h-vital"><div class="h-vval">XIII</div><div class="h-vlabel">Sealed Fates</div></div>
+      <div class="h-vital"><div class="h-vval">8m</div><div class="h-vlabel">Future Sight</div></div>
+      <div class="h-vital"><div class="h-vval">◆</div><div class="h-vlabel">Driftpost</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ENTER THE GAME //</span><div class="s-line"></div></div>
+</section>
+
+<!-- PROFILE -->
+<section class="profile-sec">
+  <div class="prof-inner">
+    <div class="rv">
+      <div class="prof-aside">
+        <div class="big-v">V</div>
+        <span class="prof-aside-tag">// VICE_LORD · BARON · UNDEFEATED_RECORD //</span>
+        <p class="prof-aside-note">Rules Driftpost with an iron grip cloaked in velvet. Controls the casinos, illicit trades, and underground networks. Views every interaction, transaction, and betrayal as a move in an ever-evolving game that only he truly understands.</p>
+        <div class="spec-table">
+          <div class="srow"><div class="srk">TITLE</div><div class="srv"><strong>Vice Lord of Sablea</strong> · Baron of Driftpost · Self-styled</div></div>
+          <div class="srow"><div class="srk">DOMAIN</div><div class="srv">Driftpost — Sablea's entertainment district · casinos · the Desert Dash · the Exchange</div></div>
+          <div class="srow"><div class="srk">RECORD</div><div class="srv"><strong>Undefeated</strong> — in political maneuvering, personal conflict, and every game he has ever entered</div></div>
+          <div class="srow"><div class="srk">MORTALITY</div><div class="srv">Mortal — protected by <strong>Shroud of 13 Fates</strong>; no prophet can read his death; no fate can reach him</div></div>
+          <div class="srow"><div class="srk">PARTNER</div><div class="srv">Selena — joint operation running Sablea's largest forbidden-tech and arcane-trafficking ring</div></div>
+          <div class="srow"><div class="srk">GOAL</div><div class="srv">The <strong>Orb of Truth</strong> — embedded into his Oracle Kernel to achieve omniscient insight across all lies and futures</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">// OPERATIVE PROFILE · THE VICE LORD //</span>
+      <h2 class="big-h">The game belongs to him.<br><em>Everyone else is just playing in it.</em></h2>
+      <p class="bp">Vyktor is the epitome of a <strong>chaotic strategist</strong>, thriving on unpredictability while maintaining an almost frightening level of control over his surroundings. His demeanor is magnetic — commanding respect, fear, and admiration in equal measure. Despite his ruthless reputation, his charm makes him impossible to ignore: a master of conversation, able to disarm the most suspicious rivals with a well-placed compliment or cutting remark.</p>
+      <p class="bp">His philosophy is uncompromising: <em>vice is the truest reflection of human nature</em>, and he uses this belief to control the people of Driftpost. Every indulgence — gambling, power, forbidden magic — represents a truth people cannot deny. He thrives on this paradox, creating systems of control through people's weaknesses while projecting an air of liberation and opportunity. <strong>To him, every opponent is merely another piece on the board, another player in a game that only he truly understands.</strong></p>
+      <div class="quote-card rv d2">
+        <p class="qc-text">"Victory is a matter of preparation and patience. Nothing more."</p>
+        <cite class="qc-source">— Vyktor, when asked about his supposed immortality or supernatural abilities</cite>
+      </div>
+      <div class="profile-grid rv d3">
+        <div class="pg-cell"><span class="pg-label">PHILOSOPHY</span><span class="pg-val">Vice is the truest reflection of human nature — and understanding it means controlling everyone who acts on it</span></div>
+        <div class="pg-cell"><span class="pg-label">VIEW OF CHALLENGES</span><span class="pg-val">Not obstacles. Opportunities to test his intellect and willpower. Every challenge has been pre-analyzed.</span></div>
+        <div class="pg-cell"><span class="pg-label">TRANSCENDENCE</span><span class="pg-val">Rumored mastery of the Veil — some claim he has unraveled its secrets and uses this knowledge to manipulate fate itself. He neither confirms nor denies.</span></div>
+        <div class="pg-cell"><span class="pg-label">COUNCIL OF SHADOWS</span><span class="pg-val">Operates as an independent agent within the Council — his ability to outmaneuver even the most dangerous members has earned their begrudging respect</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆ DRIFTPOST ◆</div></div>
+
+<!-- DRIFTPOST -->
+<section class="driftpost-sec">
+  <div class="drift-inner">
+    <div class="rv">
+      <span class="sl">// DRIFTPOST · ENTERTAINMENT DISTRICT · HIS PLAYGROUND //</span>
+      <h2 class="big-h">He does not merely rule Driftpost.<br><em>He is Driftpost.</em></h2>
+      <p class="bp" style="max-width:660px;">Driftpost is a sprawling urban hub of indulgence — its dazzling facades hiding a darker underbelly of crime, forbidden trades, and blood-soaked deals. Under Vyktor's watchful eye, every driftsled sale, every bet placed in the Desert Dash, and every illicit exchange of dark amethyst is taxed, monitored, and manipulated. He does not run the district. He is its operating system.</p>
+    </div>
+    <div class="drift-grid rv d1">
+      <div class="drift-card">
+        <span class="dc-glyph">🎰</span>
+        <div class="dc-name">The Casino Network</div>
+        <p class="dc-desc">Every casino in Driftpost operates under Vyktor's license and taxation. <strong>He knows the outcome of every game before the cards are dealt</strong> — not because they are rigged, but because his Oracle Kernel has already evaluated the probability fields of every player in the room. The house always wins because the house's owner has already seen what the house will win.</p>
+      </div>
+      <div class="drift-card">
+        <span class="dc-glyph">🐎</span>
+        <div class="dc-name">The Desert Dash</div>
+        <p class="dc-desc">Driftpost's infamous racing event — the public face of Vyktor's operation and the cover beneath which his deepest schemes run. He already knows which racer will die, who will betray the team, and when the cache will be "stolen." <strong>The Desert Dash is his most elaborate calculated performance</strong>, and the Orb of Truth's retrieval is scheduled to occur within it at a moment already pre-won.</p>
+      </div>
+      <div class="drift-card">
+        <span class="dc-glyph">🏪</span>
+        <div class="dc-name">Driftpost Exchange</div>
+        <p class="dc-desc">The central market for driftsleds and desert creatures gives him <strong>unparalleled economic power</strong>. Merchants fear and respect him equally. Failure to meet his demands results in financial ruin or worse — a calculation they have already made. His Driftpost agents unknowingly carry pieces of future tech disguised as driftsled parts or casino chips, gradually leaking advanced knowledge into Sablea under his control.</p>
+      </div>
+    </div>
+
+    <!-- The Pheromone -->
+    <div class="pheromone rv d2">
+      <div class="ph-c">
+        <div class="ph-badge">// CHRONOSYNTHETIC_PHEROMONE · SUSPECTED · UNCONFIRMED //</div>
+        <h3 class="ph-name">The Pheromone of Control</h3>
+        <p class="ph-body">Some suspect Vyktor's influence isn't purely intellectual. <strong>His skin is believed to secrete a chronosynthetic pheromone</strong> that interferes with short-term memory and emotional stability — a side effect of his Oracle Kernel's quantum-fusion with his biology, or perhaps an entirely deliberate enhancement. Those who spend too long in his presence report consistent, documented effects.</p>
+        <div class="ph-effects">
+          <div class="ph-ef">Forget what they were arguing about</div>
+          <div class="ph-ef">Feel aroused by chaos</div>
+          <div class="ph-ef">Begin to agree with him, even if they shouldn't</div>
+          <div class="ph-ef">"People don't follow Vyktor. They wake up next to a deal they already signed."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆ THE TRIAD ◆</div></div>
+
+<!-- TRANSCENDENTAL TRIAD -->
+<section class="triad-sec">
+  <div class="triad-inner">
+    <div class="rv" style="text-align:center;">
+      <span class="sl">// ABILITY_CLASSIFICATION · FORBIDDEN_TECH · ARCANE_FUSION //</span>
+      <h2 class="triad-title">The Transcendental<br><em>Triad</em></h2>
+      <p class="triad-intro">Three impossible forces, fused together — each tied to his access to the Abyssal Gate and the technomantic protocols of New Sablea. He is not immortal. He is not divine. He is something the Nine Realms has no proper category for: the man who has made the future into his preparation time.</p>
+    </div>
+    <div class="triad-grid rv d1">
+      <!-- COGNITIVE PREEMINENCE -->
+      <div class="triad-card tc-1">
+        <div class="tc-inner">
+          <div class="tc-sys">// ABILITY_01 · ORACLE_KERNEL //</div>
+          <h3 class="tc-name">Cognitive Preeminence</h3>
+          <p class="tc-sub">The Mind That Maps Causality · 8-Minute Future Sight</p>
+          <p class="tc-body">Vyktor's mind has been <em>quantum-fused</em> with a forbidden algorithmic construct known as the <strong>Oracle Kernel</strong>, stolen from the techno-seers of New Sablea. This allows him to predict and perceive probability fields up to 8 minutes into the future with staggering accuracy, and to simulate every social, political, or tactical interaction like an evolving chessboard — evaluating trillions of possible outcomes simultaneously.</p>
+          <p class="tc-body">He encodes cause-effect logic into <strong>"action-rings"</strong> — meaning even a smile, a lie, or a whisper becomes part of a larger calculated chain reaction. He never gambles. Every bet is pre-won the moment he walks into the room.</p>
+          <div class="quote-card" style="margin:0;margin-top:14px;">
+            <p class="qc-text" style="font-size:14px;">"He never gambles. Every bet is pre-won the moment he walks into the room."</p>
+          </div>
+        </div>
+      </div>
+      <!-- TEMPORAL THREADING -->
+      <div class="triad-card tc-2">
+        <div class="tc-inner">
+          <div class="tc-sys">// ABILITY_02 · THREADING //</div>
+          <h3 class="tc-name">Temporal Threading</h3>
+          <p class="tc-sub">Pulling Threads of Outcome From Alternate Realities</p>
+          <p class="tc-body">Through the Abyssal Gate, Vyktor discovered a function beyond timeline travel: <em>Threading</em> — pulling thin temporal strings from alternate versions of events into his current reality. These "threads" are metaphysical cords representing possible decisions or fates that <strong>could have happened in the past or future</strong>.</p>
+          <p class="tc-body">He cannot rewind time — but he can "tie" alternate outcomes to specific objects, people, or events to <strong>create inevitable success conditions</strong>. A rival's assassination in a parallel timeline bound to that rival's next choice of drink. A pre-ordained collapse triggered by their own hand.</p>
+          <div class="quote-card" style="margin:0;margin-top:14px;">
+            <p class="qc-text" style="font-size:14px;">"You will die by your own hand — because <em>elsewhere</em>, you already did."</p>
+          </div>
+        </div>
+      </div>
+      <!-- DIMENSIONAL REFRACTING -->
+      <div class="triad-card tc-3">
+        <div class="tc-inner">
+          <div class="tc-sys">// ABILITY_03 · REFRACTING //</div>
+          <h3 class="tc-name">Dimensional Refracting</h3>
+          <p class="tc-sub">Fractal Pockets · Smuggling Across Realms</p>
+          <p class="tc-body">Vyktor's mastery of <em>Dimensional Refracting</em> allows him to open "fractal pockets" using technology encoded with interdimensional rune-glyphs. These pockets are folded spaces within shadows, mirrors, or even sound. He hides <strong>New Sablean tech, artifacts, and forbidden lore inside mundane objects</strong> — cards, jewelry, breath itself.</p>
+          <p class="tc-body">These dimensional tears can also access other civilizations' relics thought to be extinct or mythical. His agents unknowingly carry pieces of future tech disguised as driftsled parts or casino chips, gradually leaking advanced knowledge into Sablea under his control.</p>
+          <div class="quote-card" style="margin:0;margin-top:14px;">
+            <p class="qc-text" style="font-size:14px;">"The present is my market, the past my supplier, the future my vault."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆ IMMORTALITY ◆</div></div>
+
+<!-- SHROUD OF 13 FATES + ORB OF TRUTH -->
+<section class="shroud-sec">
+  <div class="shroud-inner">
+    <div class="rv">
+      <span class="sl">// MORTALITY_PROTECTION · CLASSIFIED · THE SHROUD OF 13 FATES //</span>
+      <h2 class="big-h">Mortal body.<br><em class="veil">Thirteen sealed deaths. Zero accessible.</em></h2>
+      <p class="bp" style="max-width:660px;">Although Vyktor is mortal, he is kept effectively invincible by two mechanisms. The first makes him unreachable by prophecy or fate. The second, if achieved, will make him unreachable by deception or secrecy. Together they make the case for treating him as the most dangerous mortal in the Nine Realms.</p>
+    </div>
+    <div class="fates-block rv d1">
+      <div class="fb-c">
+        <div class="fb-badge">// THE_SHROUD_OF_13_FATES · RELIC: RETRIEVED · ORIGIN: DISMANTLED_DIMENSION //</div>
+        <h3 class="fb-title">The Shroud of <em>13 Fates</em></h3>
+        <p class="fb-body">A relic of immense arcane power retrieved from a dismantled dimension. This "cloak" is not physical — it exists as <strong>13 locked possibilities of Vyktor's death, sealed in alternate timelines</strong>. So long as those timelines remain unobserved, they cannot collapse into reality. He calls it his <strong>"undeath insurance."</strong> Selena cannot read his end. Vashti cannot read his end. Any prophet who tries sees nothing. Not darkness — nothing. There is simply no visible death to perceive.</p>
+        <div class="fate-tokens">
+          <div class="fate-token"><span>I</span></div>
+          <div class="fate-token"><span>II</span></div>
+          <div class="fate-token"><span>III</span></div>
+          <div class="fate-token"><span>IV</span></div>
+          <div class="fate-token"><span>V</span></div>
+          <div class="fate-token"><span>VI</span></div>
+          <div class="fate-token"><span>VII</span></div>
+          <div class="fate-token"><span>VIII</span></div>
+          <div class="fate-token"><span>IX</span></div>
+          <div class="fate-token"><span>X</span></div>
+          <div class="fate-token"><span>XI</span></div>
+          <div class="fate-token"><span>XII</span></div>
+          <div class="fate-token"><span>XIII</span></div>
+        </div>
+        <div class="quote-card" style="margin-top:20px;margin-bottom:0;">
+          <p class="qc-text">"No fate can touch me, because fate has forgotten which way I die."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orb of Truth -->
+    <div class="orb-block rv d2">
+      <div>
+        <div class="ob-label">// OBJECTIVE · THE ORB OF TRUTH · ACQUISITION_TARGET //</div>
+        <h3 class="ob-name">The Orb of Truth</h3>
+        <p class="ob-body">Vyktor doesn't just want the Orb of Truth — he wants to <strong>embed it into the Oracle Kernel in his brain</strong>. This would allow omniscient insight into all lies, secrets, and unrevealed futures — collapsing the concept of uncertainty around him and making his enemies' intentions audible the moment they are conceived.</p>
+        <div class="ob-warning"><strong>Critical constraint:</strong> He must not touch the Orb directly until it is bound to a specific arcane circuit — lest it reveal <em>his own truth</em>, which he has avoided at all costs. The Desert Dash is orchestrated with such precision that Vyktor already knows which racer will die, who will betray the team, and when the cache will be "stolen." Everything is in motion. One constraint remains.</div>
+      </div>
+      <div>
+        <div class="quote-card" style="margin:0;margin-bottom:16px;">
+          <p class="qc-text">"He is not immortal, but he is unguessable."</p>
+          <cite class="qc-source">— Nine Realms Intelligence File · Classification: Unknown</cite>
+        </div>
+        <div class="quote-card" style="margin:0;">
+          <p class="qc-text">"He is not divine, but he is the closest thing Sablea has to an omniscient player in a game no one else realizes they're in."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆ RELATIONSHIPS ◆</div></div>
+
+<!-- RELATIONSHIPS -->
+<section class="rel-sec">
+  <div class="rel-inner">
+    <div class="rv">
+      <span class="sl">// ALLIANCES · RIVALRIES · CAREFULLY_MAINTAINED_TENSIONS //</span>
+      <h2 class="big-h">He does not have allies.<br><em>He has pieces.</em></h2>
+      <p class="bp" style="max-width:640px;">Vyktor's relationships with Sablea's power players are carefully maintained, though always tinged with rivalry and mutual distrust. He sees alliances as tools, betrayals as opportunities, and every person in his orbit as a variable he has already calculated.</p>
+    </div>
+    <div class="rel-grid rv d1">
+      <div class="rel-card">
+        <span class="rc-who">// QUEEN_VESPER · UNEASY_ALLIANCE //</span>
+        <div class="rc-name">Queen Vesper</div>
+        <span class="rc-dynamic">The Queen of Shadows · Respected · Distrusted · Never Underestimated</span>
+        <p class="rc-body">Vyktor respects Vesper's cunning and foresight but distrusts her motivations. He refers to her as <strong>"the Queen of Shadows"</strong> in private — acknowledging her ability to manipulate others while subtly warning his allies of her treachery. Their alliance is uneasy. Both parties know it could end on any given day. Neither has yet found the day worth choosing.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// COUNCIL_OF_SHADOWS · INDEPENDENT_AGENT //</span>
+        <div class="rc-name">The Council of Shadows</div>
+        <span class="rc-dynamic">Significant Influence · Operates Outside Their Structure · Begrudging Respect</span>
+        <p class="rc-body">Vyktor's influence in the Council of Shadows is significant — but he operates as an <strong>independent agent</strong>, not a member. His ability to outmaneuver even the most dangerous Council members has earned their begrudging respect. They are aware they cannot fully integrate him. They are also aware they cannot fully exclude him. This uncertainty is exactly where he prefers them.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// LADY_CRYSEN · INTRIGUED · OBSERVING //</span>
+        <div class="rc-name">Lady Crysen</div>
+        <span class="rc-dynamic">Threat and Opportunity · The Oracle as Variable · Watching How It Plays Out</span>
+        <p class="rc-body">Vyktor is intrigued by Crysen's role as the Oracle. He views her as both a <strong>threat and an opportunity</strong>, testing her resolve while attempting to manipulate her visions for his own gain. He is one of the few who recognizes the true stakes of Crysen's wager with Vesper — though he refrains from intervening. He prefers to see how the game plays out. This is either wisdom or the one mistake he hasn't yet identified.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// SELENA · JOINT_OPERATION · MUTUAL_USE //</span>
+        <div class="rc-name">Selena</div>
+        <span class="rc-dynamic">Mutual Understanding of Chaos · The Most Dangerous Partnership in Sablea</span>
+        <p class="rc-body">Their dealings are characterized by a mutual understanding of chaos. Selena sees Vyktor as a potential ally in her pursuit of destabilization. Vyktor views her as a <strong>dangerous wildcard who is also his most useful instrument</strong>. Together they run the most sophisticated forbidden-tech and arcane-trafficking operation in the Nine Realms. Neither fully trusts the other. Both know this. Both consider it adequate insurance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆ SELENA ALLIANCE ◆</div></div>
+
+<!-- SELENA ALLIANCE — JOINT OPERATION -->
+<section class="selena-alliance">
+  <div class="sal-inner">
+    <div class="rv">
+      <span class="sl">// JOINT_OPERATION · TEMPORAL_TRAFFICKING · ARCANE_SMUGGLING //</span>
+      <h2 class="big-h">The largest forbidden-tech ring<br><em class="veil">in the Nine Realms — run by two people who plan to betray each other.</em></h2>
+      <p class="bp" style="max-width:660px;">Vyktor and Selena operate a temporal-trafficking syndicate that spans Sablea, New Sablea's future timeline, and the dimensional fractures between them. Their methods are complementary and incompatible. Their goals diverge. Their operation continues because neither has found the optimal moment to act on the divergence — yet.</p>
+    </div>
+    <div class="sal-split rv d1">
+      <div class="sal-card">
+        <span class="sal-label">// VYKTOR'S_METHOD · HIGH_EFFICIENCY //</span>
+        <div class="sal-name">Vyktor's Suicide Couriers</div>
+        <p class="sal-body">Vyktor operates through <strong>high-efficiency suicide couriers</strong> — agents who don't know they're carrying anything, because the cargo is encoded into dimensional fractal pockets embedded in mundane objects they already own. By the time an agent realizes they were used, the delivery has already cleared three timelines. <em>Most couriers never realize they were couriers.</em></p>
+      </div>
+      <div class="sal-card">
+        <span class="sal-label">// SELENA'S_METHOD · LIVING_AGENTS //</span>
+        <div class="sal-name">Selena's Living Tethered Agents</div>
+        <p class="sal-body">Selena uses <strong>living agents bound to ritual contracts</strong> that suspend their decay temporarily across dimensions — the Obsidian Mirrors (soul-split across three timelines), Soulwalkers (priest-husks serving as temporal containers), and Clockbearers (witches implanted with corrupted timepieces from New Sablea: <em>when the timepiece stops, they cease to exist</em>).</p>
+      </div>
+      <div class="joint-op">
+        <div class="jo-label">// JOINT_OPERATION · SHARED_INFRASTRUCTURE · SHARED_EXPOSURE //</div>
+        <p class="jo-body">Together they coordinate drops by embedding objects into <strong>folded shadow sigils</strong> — multidimensional containers burned into the blood of victims, smuggled across dimensions, and extracted through torture, resurrection, or moon-ritual dissection. Their crimes include: smuggling void-tech capable of rupturing reality into unaligned dimensions, selling celestial disguises to beings not granted divine right of passage, and harvesting temporal essence from dying future timelines to use as magical currency. <strong>The only thing preventing their collapse is precision, secrecy, and speed.</strong> One wrong frequency. One false move. One delay — and an entire mission will implode, disintegrating the agent, the package, and sometimes the receiving dimension. Selena is already planning to betray Vyktor after obtaining the Orb of Truth. <em>Vyktor has already calculated the date she will attempt this.</em> Neither has moved yet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <div class="cl-inner rv">
+    <span class="cl-glyph">◆</span>
+    <h2 class="cl-title">The gamekeeper<br><em>of reality.</em></h2>
+    <p class="cl-body">Vyktor doesn't believe in luck, nor fate, nor gods. He believes in preparation, probability, and leverage. He never forces an outcome — he just makes sure every outcome that matters was already <strong>programmed to favor him</strong>. Through time, tech, and temptation. He is not immortal, but he is unguessable. He is not divine, but he is the closest thing Sablea has to an omniscient player in a game no one else realizes they're in. And in this ever-turning game of shadows, Vyktor ensures he is always holding the winning hand.</p>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('lit');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('lit');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=260;this.s=55;this.l=45;}
+      else if(t<.72){this.h=200;this.s=35;this.l=50;}
+      else if(t<.86){this.h=260+20;this.s=55-15;this.l=45+15;}
+      else{this.h=200+10;this.s=35-10;this.l=50+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Sablea — The Underworld Perdition | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #020306;
+  --forge:     #060408;
+  --iron:      #0A070C;
+  --steel:     #0E0B12;
+  --coal:      #141016;
+
+  /* Forge fire — molten amber */
+  --ember:     #7A3000;
+  --ember-mid: #B84800;
+  --ember-pale:#E07020;
+  --ember-bright:#F09040;
+
+  /* Soul crimson */
+  --soul:      #780814;
+  --soul-mid:  #A01020;
+  --soul-pale: #CC2840;
+  --soul-bright:#EE4860;
+
+  /* Umbral — deep shadow violet */
+  --umbral:    #1A0630;
+  --umbral-mid:#2E1050;
+  --umbral-pale:#5018A0;
+  --umbral-bright:#7830D0;
+
+  /* Iron cold */
+  --ironpale:  #304050;
+  --irondim:   #202830;
+
+  --parch:     #A8A0B0;
+  --parch-pale:#D0C8D8;
+  --parch-dim: #3E3848;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Forge glow — heat from below */
+body::before{
+  content:'';position:fixed;bottom:0;left:0;right:0;height:35vh;z-index:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(122,48,0,0.05) 0%,transparent 100%);
+  animation:forgeBreath 6s ease-in-out infinite;
+}
+@keyframes forgeBreath{0%,100%{opacity:0.5;}50%{opacity:1;}}
+
+/* Scanlines — fine industrial texture */
+body::after{
+  content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.025) 3px,rgba(0,0,0,0.025) 4px);
+}
+
+/* Noise grain */
+.grain-overlay{position:fixed;inset:0;z-index:1000;pointer-events:none;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px;}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--ember-pale);border-radius:0;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(184,72,0,0.5);border-radius:0;transform:translate(-50%,-50%);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.forge-active{width:46px;height:46px;border-color:var(--ember-pale);box-shadow:0 0 12px rgba(184,72,0,0.3);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(2,3,6,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(184,72,0,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ember-pale);opacity:0.6;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ember-pale);border:1px solid rgba(184,72,0,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--ember-mid);}
+
+/* ═══════════════════════════
+   HERO
+═══════════════════════════ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 90% 70% at 50% 70%,#1A0800 0%,#0C0408 40%,var(--void) 75%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Ironforge city skyline — SVG silhouette */
+.city-skyline{
+  position:absolute;bottom:0;left:0;right:0;
+  height:45vh;pointer-events:none;z-index:1;
+}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+
+.h-sys{
+  font-family:'Share Tech Mono',monospace;font-size:10px;
+  color:var(--ember-pale);opacity:0;
+  animation:riseIn 1s .2s ease forwards;
+  margin-bottom:16px;letter-spacing:0.06em;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+}
+.h-sys::before,.h-sys::after{content:'//';color:rgba(184,72,0,0.4);}
+
+.h-era{
+  font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;
+  text-transform:uppercase;color:var(--parch-pale);opacity:0;
+  animation:riseIn 1s .4s ease forwards;margin-bottom:10px;display:block;
+}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(40px,9vw,120px);font-weight:900;
+  color:var(--parch-pale);letter-spacing:0.04em;line-height:0.88;
+  text-shadow:0 0 120px rgba(184,72,0,0.5),0 0 60px rgba(120,8,20,0.3),0 4px 40px rgba(0,0,0,0.9);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-sub{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(12px,1.8vw,20px);font-weight:400;
+  color:var(--ember-pale);letter-spacing:0.2em;
+  display:block;margin-top:8px;
+  opacity:0;animation:riseIn 1s .8s ease forwards;
+}
+.h-rule{width:240px;height:1px;background:linear-gradient(to right,transparent,var(--ember-mid),transparent);margin:24px auto;opacity:0;animation:fadeIn 1s 1s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+
+.h-tagline{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(15px,2vw,20px);color:rgba(168,160,176,0.4);
+  max-width:720px;margin:0 auto 40px;line-height:1.8;
+  opacity:0;animation:riseIn 1.2s 1.2s ease forwards;
+}
+
+.h-stats{
+  display:flex;justify-content:center;
+  max-width:700px;margin:0 auto;
+  border:1px solid rgba(184,72,0,0.15);
+  opacity:0;animation:riseIn 1s 1.5s ease forwards;
+}
+.h-stat{flex:1;padding:16px 14px;text-align:center;border-right:1px solid rgba(184,72,0,0.1);}
+.h-stat:last-child{border-right:none;}
+.h-sval{font-family:'Share Tech Mono',monospace;font-size:clamp(13px,1.8vw,22px);color:var(--ember-bright);line-height:1;margin-bottom:5px;}
+.h-slabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+
+.h-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--ember-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* ═══════════════════════════
+   UTILITIES
+═══════════════════════════ */
+.mono{font-family:'Share Tech Mono',monospace;}
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--ember-pale);opacity:0.5;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(184,72,0,0.2),transparent);}
+.orn-inner{position:relative;background:var(--void);padding:0 24px;z-index:1;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ember-mid);opacity:0.4;letter-spacing:0.1em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--ember-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(168,160,176,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--ember-pale);}
+.pull-forge{margin:22px 0;padding:16px 22px;border-left:2px solid var(--ember-mid);background:rgba(184,72,0,0.04);}
+.pull-forge p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,20px);color:rgba(168,160,176,0.7);line-height:1.75;}
+.pull-forge cite{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ember-pale);opacity:0.4;display:block;margin-top:8px;}
+
+/* ═══════════════════════════
+   TIMELINE BAR
+═══════════════════════════ */
+.timeline{padding:80px 60px 60px;background:var(--iron);}
+.tl-inner{max-width:1100px;margin:0 auto;}
+.tl-bar{
+  display:flex;align-items:center;
+  margin-top:44px;
+  position:relative;
+}
+.tl-bar::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:linear-gradient(to right,rgba(184,72,0,0.15),rgba(184,72,0,0.3),rgba(184,72,0,0.15));transform:translateY(-50%);}
+.tl-node{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  position:relative;z-index:1;
+}
+.tl-dot{
+  width:10px;height:10px;border-radius:50%;
+  border:2px solid;margin-bottom:14px;
+  position:relative;
+}
+.tl-dot::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid;opacity:0.2;}
+.tln-past .tl-dot{background:rgba(120,8,20,0.4);border-color:rgba(120,8,20,0.6);}
+.tln-past .tl-dot::before{border-color:var(--soul-mid);}
+.tln-gate .tl-dot{background:rgba(80,24,160,0.4);border-color:rgba(80,24,160,0.6);animation:gatePulse 3s ease-in-out infinite;}
+.tln-gate .tl-dot::before{border-color:var(--umbral-pale);}
+@keyframes gatePulse{0%,100%{box-shadow:none;}50%{box-shadow:0 0 14px rgba(80,24,160,0.6);}}
+.tln-future .tl-dot{background:rgba(184,72,0,0.4);border-color:rgba(184,72,0,0.6);}
+.tln-future .tl-dot::before{border-color:var(--ember-mid);}
+.tln-forge .tl-dot{background:rgba(184,72,0,0.6);border-color:var(--ember-mid);animation:forgePulse 2s ease-in-out infinite;}
+.tln-forge .tl-dot::before{border-color:var(--ember-bright);}
+@keyframes forgePulse{0%,100%{box-shadow:none;}50%{box-shadow:0 0 16px rgba(184,72,0,0.7);}}
+
+.tl-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.5;letter-spacing:0.06em;text-align:center;margin-bottom:4px;}
+.tl-name{font-family:'Cinzel',serif;font-size:clamp(10px,1.4vw,14px);letter-spacing:0.15em;color:var(--parch-pale);text-align:center;}
+.tln-gate .tl-name{color:var(--umbral-bright);}
+.tln-future .tl-name{color:var(--ember-bright);}
+.tln-forge .tl-name{color:var(--ember-bright);}
+.tl-note{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(168,160,176,0.3);text-align:center;max-width:140px;margin-top:4px;line-height:1.5;}
+
+/* ═══════════════════════════
+   THE GATE SECTION
+═══════════════════════════ */
+.gate-sec{padding:110px 60px;background:var(--coal);}
+.gate-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.6fr;gap:90px;align-items:start;}
+.gate-aside .gate-rune{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(80,24,160,0.08);line-height:1;margin-left:-6px;}
+.gate-aside-tag{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--umbral-bright);opacity:0.5;letter-spacing:0.05em;}
+.gate-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,160,176,0.3);margin-top:6px;line-height:1.6;}
+
+/* Terminal stats table */
+.term-table{margin-top:28px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(80,24,160,0.12);}
+.term-row{display:grid;grid-template-columns:130px 1fr;overflow:hidden;}
+.tr-key{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--umbral-bright);opacity:0.55;background:rgba(80,24,160,0.04);padding:12px 14px;border-right:1px solid rgba(80,24,160,0.08);letter-spacing:0.04em;}
+.tr-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,160,176,0.55);padding:10px 14px;line-height:1.5;}
+.tr-val strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══════════════════════════
+   THE CITY LAYERS
+═══════════════════════════ */
+.city-layers{padding:110px 60px;background:var(--iron);}
+.layers-inner{max-width:1100px;margin:0 auto;}
+.layer-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+
+/* Upper city */
+.layer-up{
+  background:linear-gradient(180deg,#10080E 0%,#0C0810 100%);
+  padding:48px 40px;border:1px solid rgba(80,24,160,0.14);
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.layer-up:hover{border-color:rgba(80,24,160,0.35);}
+.layer-up::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(80,24,160,0.08) 0%,transparent 70%);pointer-events:none;}
+.layer-up::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(80,24,160,0.4),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.layer-up:hover::after{transform:scaleX(1);}
+
+/* Lower depths */
+.layer-dn{
+  background:linear-gradient(180deg,#0E0406 0%,#090306 100%);
+  padding:48px 40px;border:1px solid rgba(184,72,0,0.12);
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.layer-dn:hover{border-color:rgba(184,72,0,0.32);}
+.layer-dn::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 100%,rgba(120,8,20,0.08) 0%,transparent 70%);pointer-events:none;}
+.layer-dn::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(184,72,0,0.4),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.layer-dn:hover::after{transform:scaleX(1);}
+
+.ly-c{position:relative;z-index:1;}
+.ly-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:4px 12px;border:1px solid;display:inline-block;margin-bottom:14px;opacity:0.65;letter-spacing:0.06em;}
+.layer-up .ly-badge{color:var(--umbral-bright);border-color:rgba(80,24,160,0.35);}
+.layer-dn .ly-badge{color:var(--ember-pale);border-color:rgba(184,72,0,0.35);}
+.ly-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,2.8vw,36px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;}
+.ly-role{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:16px;}
+.ly-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,160,176,0.55);line-height:1.85;margin-bottom:14px;}
+.ly-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.layer-up .ly-body em{color:var(--umbral-bright);}
+.layer-dn .ly-body em{color:var(--ember-pale);}
+
+/* Feature list */
+.ly-features{display:flex;flex-direction:column;gap:6px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(168,160,176,0.06);}
+.ly-feat{display:flex;gap:10px;align-items:flex-start;}
+.lf-dot{width:4px;height:4px;border-radius:0;flex-shrink:0;margin-top:9px;opacity:0.6;}
+.layer-up .lf-dot{background:var(--umbral-pale);}
+.layer-dn .lf-dot{background:var(--ember-mid);}
+.lf-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,15px);color:rgba(168,160,176,0.45);line-height:1.6;}
+
+/* ═══════════════════════════
+   THE FOUR DESCENDANTS
+═══════════════════════════ */
+.desc-sec{padding:110px 60px;background:var(--steel);}
+.desc-inner{max-width:1200px;margin:0 auto;}
+.desc-header{text-align:center;margin-bottom:60px;}
+.desc-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.desc-title em{font-style:italic;color:var(--ember-bright);}
+.desc-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(168,160,176,0.4);max-width:580px;margin:0 auto;line-height:1.75;}
+
+.desc-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+
+/* Per-descendant card */
+.d-card{padding:40px 36px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.dc-a{border-color:rgba(144,8,20,0.15);background:linear-gradient(160deg,#0E0406 0%,#080406 100%);}
+.dc-b{border-color:rgba(36,36,36,0.3);background:linear-gradient(160deg,#0A0A0A 0%,#060606 100%);}
+.dc-c{border-color:rgba(16,48,96,0.14);background:linear-gradient(160deg,#04080E 0%,#020608 100%);}
+.dc-d{border-color:rgba(80,24,160,0.14);background:linear-gradient(160deg,#0A0612 0%,#060410 100%);}
+.dc-a:hover{border-color:rgba(144,8,20,0.4);}
+.dc-b:hover{border-color:rgba(80,80,80,0.4);}
+.dc-c:hover{border-color:rgba(16,48,96,0.4);}
+.dc-d:hover{border-color:rgba(80,24,160,0.4);}
+
+/* Ambient */
+.dc-a::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 40% at 15% 50%,rgba(144,8,20,0.08) 0%,transparent 70%);pointer-events:none;}
+.dc-b::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 40% at 15% 50%,rgba(36,36,36,0.06) 0%,transparent 70%);pointer-events:none;}
+.dc-c::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 40% at 15% 50%,rgba(16,48,96,0.07) 0%,transparent 70%);pointer-events:none;}
+.dc-d::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 40% at 15% 50%,rgba(80,24,160,0.07) 0%,transparent 70%);pointer-events:none;}
+
+/* Left accent bar on hover */
+.d-card::after{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;transform:scaleY(0);transform-origin:bottom;transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.d-card:hover::after{transform:scaleY(1);}
+.dc-a::after{background:rgba(144,8,20,0.6);}
+.dc-b::after{background:rgba(80,80,80,0.5);}
+.dc-c::after{background:rgba(16,48,96,0.6);}
+.dc-d::after{background:rgba(80,24,160,0.6);}
+
+.d-inner{position:relative;z-index:1;}
+.d-sys{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.05em;opacity:0.4;display:block;margin-bottom:12px;}
+.dc-a .d-sys{color:var(--soul-bright);}
+.dc-b .d-sys{color:rgba(140,140,140,0.8);}
+.dc-c .d-sys{color:rgba(64,136,200,0.8);}
+.dc-d .d-sys{color:var(--umbral-bright);}
+.d-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,32px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:5px;}
+.d-line{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;}
+.d-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.5vw,16px);color:rgba(168,160,176,0.55);line-height:1.8;margin-bottom:12px;}
+.d-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.dc-a .d-body em{color:var(--soul-pale);}
+.dc-b .d-body em{color:rgba(140,140,140,0.8);}
+.dc-c .d-body em{color:rgba(64,136,200,0.8);}
+.dc-d .d-body em{color:var(--umbral-bright);}
+.d-domain{font-family:'Share Tech Mono',monospace;font-size:8px;padding:7px 13px;border:1px solid;display:inline-block;opacity:0.5;letter-spacing:0.05em;}
+.dc-a .d-domain{color:var(--soul-bright);border-color:rgba(144,8,20,0.3);}
+.dc-b .d-domain{color:rgba(140,140,140,0.8);border-color:rgba(60,60,60,0.3);}
+.dc-c .d-domain{color:rgba(64,136,200,0.8);border-color:rgba(16,48,96,0.3);}
+.dc-d .d-domain{color:var(--umbral-bright);border-color:rgba(80,24,160,0.3);}
+
+/* ═══════════════════════════
+   TIME PARADOX
+═══════════════════════════ */
+.paradox{padding:110px 60px;background:var(--coal);}
+.para-inner{max-width:1100px;margin:0 auto;}
+.para-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.para-card{
+  padding:30px 28px;border:1px solid rgba(184,72,0,0.08);
+  background:rgba(2,3,6,0.6);transition:border-color .3s,background .3s;
+  position:relative;overflow:hidden;
+}
+.para-card:hover{border-color:rgba(184,72,0,0.24);background:rgba(184,72,0,0.03);}
+.para-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ember-mid);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.para-card:hover::before{transform:scaleX(1);}
+.p-who{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,28px);font-weight:400;color:var(--parch-pale);margin-bottom:5px;}
+.p-state{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.05em;opacity:0.45;margin-bottom:12px;}
+.para-card:nth-child(1) .p-state{color:var(--soul-pale);}
+.para-card:nth-child(2) .p-state{color:rgba(120,120,120,0.8);}
+.para-card:nth-child(3) .p-state{color:rgba(64,136,200,0.8);}
+.para-card:nth-child(4) .p-state{color:rgba(192,112,200,0.8);}
+.p-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.5vw,16px);color:rgba(168,160,176,0.55);line-height:1.8;}
+.p-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.p-body em{color:var(--ember-pale);}
+
+/* ═══════════════════════════
+   THE FOUR ELEMENTS
+═══════════════════════════ */
+.elements{padding:100px 60px;background:var(--iron);position:relative;overflow:hidden;}
+.elements::before{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to top,rgba(122,48,0,0.06),transparent);pointer-events:none;}
+.el-inner{max-width:1100px;margin:0 auto;}
+.el-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:52px;}
+.el-card{
+  padding:32px 24px;text-align:center;
+  border:1px solid rgba(184,72,0,0.08);
+  background:rgba(2,3,6,0.5);
+  position:relative;overflow:hidden;transition:border-color .3s,background .3s;
+}
+.el-card:hover{border-color:rgba(184,72,0,0.24);background:rgba(184,72,0,0.04);}
+.el-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ember-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.el-card:hover::before{transform:scaleX(1);}
+.el-glyph{font-size:28px;margin-bottom:14px;opacity:0.5;display:block;}
+.el-name{font-family:'Cinzel',serif;font-size:clamp(14px,2vw,20px);letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:6px;}
+.el-src{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ember-pale);opacity:0.4;margin-bottom:10px;letter-spacing:0.05em;}
+.el-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,15px);color:rgba(168,160,176,0.5);line-height:1.7;}
+
+/* ═══════════════════════════
+   THE NARRATIVE STAKES
+═══════════════════════════ */
+.stakes{padding:100px 60px;background:var(--steel);}
+.stakes-inner{max-width:1100px;margin:0 auto;}
+.stake-list{display:flex;flex-direction:column;gap:3px;margin-top:52px;}
+.stake{display:grid;grid-template-columns:180px 1fr;border:1px solid rgba(184,72,0,0.07);overflow:hidden;transition:border-color .3s;}
+.stake:hover{border-color:rgba(184,72,0,0.22);}
+.stake-id{background:rgba(184,72,0,0.04);display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(184,72,0,0.06);padding:0 20px;}
+.sid-val{font-family:'Cinzel Decorative',serif;font-size:40px;color:var(--ember-mid);opacity:0.12;transition:opacity .3s;}
+.stake:hover .sid-val{opacity:0.28;}
+.stake-c{padding:22px 28px;}
+.stake-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.22em;color:var(--parch-pale);margin-bottom:6px;}
+.stake-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.5vw,16px);color:rgba(168,160,176,0.5);line-height:1.75;}
+
+/* ═══════════════════════════
+   IRONFORGE REALM — TEASER
+═══════════════════════════ */
+.ironforge-teaser{
+  padding:100px 60px;
+  background:linear-gradient(160deg,#0C0604 0%,#080408 50%,#06040C 100%);
+  position:relative;overflow:hidden;
+  border-top:1px solid rgba(184,72,0,0.08);
+}
+.ironforge-teaser::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(184,72,0,0.05) 0%,transparent 70%);}
+.if-inner{max-width:1100px;margin:0 auto;}
+.if-classified{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Share Tech Mono',monospace;font-size:8px;
+  color:var(--ember-pale);border:1px solid rgba(184,72,0,0.2);
+  padding:6px 16px;margin-bottom:28px;opacity:0.7;letter-spacing:0.06em;
+}
+.if-classified::before{content:'▲';opacity:0.5;}
+.if-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.if-text{}
+.if-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:18px;}
+.if-title em{font-style:italic;color:var(--ember-bright);}
+.if-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.7vw,18px);color:rgba(168,160,176,0.55);line-height:1.9;margin-bottom:16px;}
+.if-body strong{color:var(--parch-pale);font-style:normal;}
+.if-body em{color:var(--ember-pale);}
+.if-facts{display:flex;flex-direction:column;gap:2px;margin-top:28px;}
+.if-fact{padding:14px 18px;border:1px solid rgba(184,72,0,0.08);background:rgba(184,72,0,0.02);display:flex;gap:12px;align-items:flex-start;}
+.iff-key{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ember-pale);opacity:0.5;white-space:nowrap;padding-top:2px;letter-spacing:0.04em;min-width:100px;}
+.iff-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,160,176,0.5);line-height:1.5;}
+.iff-val strong{color:var(--parch-pale);font-style:normal;}
+
+/* Classified redaction visual */
+.if-redacted{position:relative;z-index:1;}
+.if-redacted-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:var(--ember-pale);opacity:0.4;margin-bottom:16px;}
+.redact-block{padding:20px;border:1px solid rgba(184,72,0,0.1);background:rgba(184,72,0,0.02);}
+.r-line{height:10px;background:rgba(12,8,6,0.9);border-radius:1px;margin-bottom:8px;opacity:0.8;}
+.r-line:last-child{margin-bottom:0;width:60%;}
+.r-badge{margin-top:16px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ember-pale);opacity:0.35;letter-spacing:0.06em;text-align:center;}
+
+/* ═══════════════════════════
+   CLOSING TRANSMISSION
+═══════════════════════════ */
+.transmission{
+  padding:110px 60px;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,#140A04 0%,var(--void) 70%);
+  text-align:center;position:relative;overflow:hidden;
+}
+.tx-inner{max-width:800px;margin:0 auto;position:relative;z-index:1;}
+.tx-sys{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ember-pale);opacity:0.28;margin-bottom:20px;letter-spacing:0.06em;}
+.tx-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,4vw,52px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:16px;}
+.tx-title em{font-style:italic;color:var(--ember-bright);}
+.tx-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,2vw,21px);color:rgba(168,160,176,0.45);line-height:1.9;margin-bottom:44px;max-width:640px;margin-left:auto;margin-right:auto;}
+.tx-body strong{color:var(--parch-pale);font-style:normal;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(184,72,0,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--ember-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(168,160,176,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.05em;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#F0D8C0;}
+.btn-g{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.05em;color:var(--parch-dim);border:1px solid rgba(192,168,184,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(192,168,184,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(184,72,0,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(168,160,176,0.15);letter-spacing:0.04em;}
+
+/* Responsive */
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .timeline,.gate-sec,.city-layers,.desc-sec,.paradox,.elements,.stakes,.ironforge-teaser,.transmission,.page-cta{padding:80px 40px;}
+  .gate-inner{grid-template-columns:1fr;gap:40px;}
+  .layer-grid{grid-template-columns:1fr;}
+  .desc-grid{grid-template-columns:1fr;}
+  .para-grid{grid-template-columns:1fr;}
+  .el-grid{grid-template-columns:1fr 1fr;}
+  .stake{grid-template-columns:1fr;} .stake-id{padding:14px 20px;border-right:none;border-bottom:1px solid rgba(184,72,0,0.06);}
+  .if-grid{grid-template-columns:1fr;}
+  .tl-bar{flex-wrap:wrap;gap:24px;} .tl-bar::before{display:none;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-stats{flex-direction:column;}.h-stat{border-right:none;border-bottom:1px solid rgba(184,72,0,0.1);}.h-stat:last-child{border-bottom:none;}
+  .timeline,.gate-sec,.city-layers,.desc-sec,.paradox,.elements,.stakes,.ironforge-teaser,.transmission,.page-cta{padding:60px 24px;}
+  .el-grid{grid-template-columns:1fr;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="grain-overlay"></div>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// TIMELINE: FUTURE · THE UNDERWORLD PERDITION //</span>
+  </a>
+  <div class="nav-right">
+    <a href="four-secrets.html" class="nav-link">The Four Secrets</a>
+    <a href="vesper.html" class="nav-link">Queen Vesper</a>
+    <a href="sablea-city.html" class="nav-link">Sablea</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+
+  <!-- SVG city skyline -->
+  <div class="city-skyline">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0E0606" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#020306" stop-opacity="1"/>
+        </linearGradient>
+        <linearGradient id="glowGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#B84800" stop-opacity="0.06"/>
+          <stop offset="100%" stop-color="#B84800" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- Forge glow from base -->
+      <rect x="0" y="200" width="1440" height="120" fill="url(#glowGrad)"/>
+      <!-- City silhouette shapes -->
+      <g fill="url(#skyGrad)" opacity="0.95">
+        <rect x="0" y="180" width="1440" height="140"/>
+        <!-- Left cluster -->
+        <rect x="40" y="140" width="18" height="80"/>
+        <rect x="70" y="100" width="28" height="120"/>
+        <rect x="80" y="80" width="6" height="40"/>
+        <rect x="110" y="130" width="14" height="90"/>
+        <rect x="140" y="90" width="40" height="130"/>
+        <rect x="148" y="72" width="8" height="25"/>
+        <rect x="192" y="120" width="22" height="100"/>
+        <rect x="225" y="105" width="12" height="115"/>
+        <!-- Mid-left -->
+        <rect x="260" y="70" width="50" height="150"/>
+        <rect x="276" y="50" width="10" height="30"/>
+        <rect x="322" y="95" width="30" height="125"/>
+        <rect x="362" y="115" width="16" height="105"/>
+        <rect x="390" y="85" width="60" height="135"/>
+        <rect x="412" y="65" width="12" height="28"/>
+        <rect x="460" y="110" width="24" height="110"/>
+        <!-- Centre dominant towers -->
+        <rect x="500" y="50" width="70" height="170"/>
+        <rect x="524" y="28" width="14" height="30"/>
+        <rect x="580" y="75" width="45" height="145"/>
+        <rect x="635" y="40" width="80" height="180"/>
+        <rect x="660" y="16" width="16" height="30"/>
+        <rect x="724" y="60" width="55" height="160"/>
+        <rect x="742" y="38" width="10" height="28"/>
+        <!-- Mid-right -->
+        <rect x="790" y="80" width="60" height="140"/>
+        <rect x="808" y="58" width="12" height="28"/>
+        <rect x="860" y="105" width="35" height="115"/>
+        <rect x="905" y="90" width="50" height="130"/>
+        <rect x="962" y="115" width="20" height="105"/>
+        <rect x="992" y="95" width="40" height="125"/>
+        <!-- Right cluster -->
+        <rect x="1042" y="120" width="16" height="100"/>
+        <rect x="1068" y="80" width="55" height="140"/>
+        <rect x="1082" y="60" width="12" height="26"/>
+        <rect x="1132" y="100" width="30" height="120"/>
+        <rect x="1172" y="115" width="22" height="105"/>
+        <rect x="1204" y="90" width="45" height="130"/>
+        <rect x="1258" y="125" width="15" height="95"/>
+        <rect x="1282" y="105" width="35" height="115"/>
+        <rect x="1326" y="120" width="20" height="100"/>
+        <rect x="1356" y="140" width="28" height="80"/>
+        <rect x="1394" y="150" width="46" height="70"/>
+      </g>
+      <!-- Crimson forge windows — scattered dots of light -->
+      <g fill="#E07020" opacity="0.25">
+        <circle cx="80" cy="110" r="1.5"/>
+        <circle cx="156" cy="90" r="1.5"/>
+        <circle cx="275" cy="82" r="1.5"/>
+        <circle cx="295" cy="98" r="1.5"/>
+        <circle cx="415" cy="78" r="1.5"/>
+        <circle cx="428" cy="95" r="1.5"/>
+        <circle cx="515" cy="60" r="2"/>
+        <circle cx="536" cy="75" r="1.5"/>
+        <circle cx="596" cy="90" r="1.5"/>
+        <circle cx="648" cy="52" r="2"/>
+        <circle cx="672" cy="68" r="1.5"/>
+        <circle cx="745" cy="50" r="1.5"/>
+        <circle cx="758" cy="70" r="1.5"/>
+        <circle cx="812" cy="68" r="1.5"/>
+        <circle cx="830" cy="85" r="1.5"/>
+        <circle cx="912" cy="100" r="1.5"/>
+        <circle cx="1000" cy="108" r="1.5"/>
+        <circle cx="1078" cy="70" r="1.5"/>
+        <circle cx="1094" cy="88" r="1.5"/>
+        <circle cx="1210" cy="100" r="1.5"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="h-sys">TIMELINE: FUTURE · ACCESSED VIA ABYSSAL GATE · TEMPORAL COORDINATES: UNKNOWN</div>
+    <span class="h-era">The Underworld Perdition · The Dark Nation's Inevitable Future</span>
+    <h1 class="h-name">New Sablea</h1>
+    <span class="h-sub">Where the blood moons never set and the forges never cool</span>
+    <div class="h-rule"></div>
+    <p class="h-tagline">This is what Vesper's ambitions built when no one stopped them. A metropolis of harvested souls, jagged iron spires, and the permanent dark — illuminated only by crimson lights fueled by the living. Also known, in darker chronicles, as <strong style="color:rgba(224,112,32,0.6);">the Ironforge Realm.</strong></p>
+    <div class="h-stats">
+      <div class="h-stat"><div class="h-sval">∞</div><div class="h-slabel">Perpetual Dark</div></div>
+      <div class="h-stat"><div class="h-sval">IV</div><div class="h-slabel">Ruling Factions</div></div>
+      <div class="h-stat"><div class="h-sval">II</div><div class="h-slabel">City Layers</div></div>
+      <div class="h-stat"><div class="h-sval">⚠</div><div class="h-slabel">Time Paradox Active</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// DESCEND //</span><div class="s-line"></div></div>
+</section>
+
+<!-- TIMELINE BAR -->
+<section class="timeline">
+  <div class="tl-inner">
+    <div class="rv">
+      <span class="sl">// THE SEQUENCE · FROM OLD SABLEA TO THE UNDERWORLD PERDITION //</span>
+      <h2 class="big-h">Not a warning.<br><em>A consequence already in motion.</em></h2>
+      <p class="bp" style="max-width:640px;">The Underworld Perdition is not a possible future — it is the confirmed result of Vesper's ambitions, the Four Secrets' power, and the Umbral Essence's patient work. The Four Secrets have walked through the Gate and seen it. The sequence is as follows.</p>
+    </div>
+    <div class="tl-bar rv d1">
+      <div class="tl-node tln-past">
+        <div class="tl-dot"></div>
+        <div class="tl-label">// ORIGIN //</div>
+        <div class="tl-name">Old Sablea</div>
+        <div class="tl-note">The city beneath the twin moons. Vesper and Vashti. The blood magic begins.</div>
+      </div>
+      <div class="tl-node tln-past">
+        <div class="tl-dot"></div>
+        <div class="tl-label">// BLOOD MOONS //</div>
+        <div class="tl-name">Four Secrets Born</div>
+        <div class="tl-note">Loryxan, Thalrik, Calivor, Sanguinor — risen from forbidden ritual.</div>
+      </div>
+      <div class="tl-node tln-gate">
+        <div class="tl-dot"></div>
+        <div class="tl-label">// THE CROSSING //</div>
+        <div class="tl-name">Abyssal Gate</div>
+        <div class="tl-note">Thalrik opens the passage. The brothers cross time itself.</div>
+      </div>
+      <div class="tl-node tln-future">
+        <div class="tl-dot"></div>
+        <div class="tl-label">// THE FUTURE //</div>
+        <div class="tl-name">New Sablea</div>
+        <div class="tl-note">The Underworld Perdition. Descendants rule. Soul mines burn.</div>
+      </div>
+      <div class="tl-node tln-forge">
+        <div class="tl-dot"></div>
+        <div class="tl-label">// FULL EVOLUTION //</div>
+        <div class="tl-name">The Ironforge Realm</div>
+        <div class="tl-note">The final form. A dedicated chronicle is coming.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// ABYSSAL_GATE //</div></div>
+
+<!-- THE ABYSSAL GATE -->
+<section class="gate-sec">
+  <div class="gate-inner">
+    <div class="rv">
+      <div class="gate-aside">
+        <div class="gate-rune">⊘</div>
+        <span class="gate-aside-tag">// LOCATION: CLASSIFIED · WINDING VEINS DEPTH: MAXIMUM //</span>
+        <p class="gate-aside-note">An ancient construct of dark, otherworldly design. Not a door. Not a passageway. A mechanism — the Umbral Essence's tether across all of time. Growing stronger with every soul it consumes.</p>
+      </div>
+      <div class="term-table">
+        <div class="term-row"><div class="tr-key">LOCATION</div><div class="tr-val">Deepest reach of the Winding Veins · Exact coordinates held by Vashti alone</div></div>
+        <div class="term-row"><div class="tr-key">EFFECT</div><div class="tr-val">Rapid aging · temporal disorientation · <strong>inevitable death</strong> for all unauthorized crossings</div></div>
+        <div class="term-row"><div class="tr-key">EXCEPTION</div><div class="tr-val">Thalrik's Ether-realm mastery — the only known method of safe passage. The brothers cross as rightful rulers, not intruders.</div></div>
+        <div class="term-row"><div class="tr-key">TRUE PURPOSE</div><div class="tr-val">A tether between past, present, and future — allowing the Umbral Essence to extend its influence across time</div></div>
+        <div class="term-row"><div class="tr-key">FUEL</div><div class="tr-val">Grows stronger with each soul consumed. Every unauthorized crossing is a sacrifice that feeds it.</div></div>
+        <div class="term-row"><div class="tr-key">THE PARADOX</div><div class="tr-val">The Four Secrets' traversal ability positions them to challenge the Umbral Essence — but doing so means severing the source of their bloodborne power. They have not decided yet.</div></div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">// THE MECHANISM · WHY IT EXISTS · WHAT IT WANTS //</span>
+      <h2 class="big-h">Not a doorway.<br><em>The Umbral Essence's reach across time.</em></h2>
+      <p class="bp">The Abyssal Gate lies buried within the labyrinthine depths of the Winding Veins — a sprawling network of caverns beneath Sablea. The Gate itself is an <strong>ancient construct of dark, otherworldly design</strong>, pulsating with energy that seems to bend time and space. No mortal has passed through without rapid aging, temporal disorientation, and inevitable death.</p>
+      <p class="bp">The Four Secrets hold the key — through <em>Thalrik's mastery of the Ether-realm</em>, the brothers traverse dimensions, crossing the Gate not as intruders but as rightful rulers. What waits on the other side is not a reward. It is a mirror. <strong>It shows them precisely what their bloodline builds when left unchecked.</strong></p>
+      <div class="pull-forge rv d2"><p>"The Gate feeds on the souls of those who attempt to cross it, growing stronger with each sacrifice. The Four Secrets realize their ability to traverse it makes them uniquely positioned to challenge the Umbral Essence — but doing so would mean confronting the very source of their power."</p><cite>// WINDING VEINS ARCHIVE · ACCESS LOG: EYES OF VESPER ONLY //</cite></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// CITY_STRUCTURE //</div></div>
+
+<!-- THE CITY LAYERS -->
+<section class="city-layers">
+  <div class="layers-inner">
+    <div class="rv">
+      <span class="sl">// METROPOLITAN STRUCTURE · NEW SABLEA CITY LAYOUT //</span>
+      <h2 class="big-h">Two cities stacked atop each other.<br><em>One built to rule. One built to be consumed.</em></h2>
+      <p class="bp" style="max-width:660px;">New Sablea has grown into a vast futuristic metropolis where the skies are perpetually dark and towering spires pierce the heavens like jagged teeth. The city is illuminated by flickering crimson lights fueled by harvested souls, and the air hums with the ceaseless machinery of war and industry.</p>
+    </div>
+    <div class="layer-grid rv d1">
+      <div class="layer-up">
+        <div class="ly-c">
+          <div class="ly-badge">// SECTOR: UPPER · CLASSIFICATION: ELITE //</div>
+          <h3 class="ly-name">The Upper City</h3>
+          <p class="ly-role">Gothic Architecture · Futuristic Technology · Ruling Descendants</p>
+          <p class="ly-body">A haven for the elite — dominated by <strong>gothic architecture fused with futuristic technology</strong>. This is where the ruling descendants of the Four Secrets reign supreme, each controlling a sector with their unique brand of terror and authority. The spires pierce the permanent dark above, their windows burning with <em>soul-fueled crimson light</em> visible from every point in the Lower Depths below.</p>
+          <p class="ly-body" style="margin-top:12px;">Power in the Upper City is visible. <strong>The towers of the descendants are built to be seen from everywhere</strong> — a constant reminder that the shadow above you is deliberate, and that it has a name. There are no accidents in the Upper City's architecture. Every sight line was designed.</p>
+          <div class="ly-features">
+            <div class="ly-feat"><span class="lf-dot"></span><span class="lf-text">Four ruling sectors — one per descendant lineage, each a distinct aesthetic of terror</span></div>
+            <div class="ly-feat"><span class="lf-dot"></span><span class="lf-text">Gothic construction merged with technological machinery — cathedrals housing war engines</span></div>
+            <div class="ly-feat"><span class="lf-dot"></span><span class="lf-text">The upper skyline is visible from the soul mines — intentionally, always, without relief</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="layer-dn">
+        <div class="ly-c">
+          <div class="ly-badge">// SECTOR: LOWER DEPTHS · CLASSIFICATION: CONTROLLED //</div>
+          <h3 class="ly-name">The Lower Depths</h3>
+          <p class="ly-role">Soul Mines · Factories · Umbral Essence's Strongest Ground</p>
+          <p class="ly-body">A sprawling undercity of suffering and depravity — where the common people toil endlessly in <strong>mines, factories, and soul-harvesting facilities</strong>. Here, the influence of the Umbral Essence is most potent, twisting the inhabitants into grotesque parodies of their former selves. The soul mines of the Lower Depths power the war machines, the rituals, and the crimson lights of the city above.</p>
+          <p class="ly-body" style="margin-top:12px;">The spirits of the dead are harvested to fuel everything above. <em>A resistance faction called the Ember Coalition</em> exists in the deepest, darkest corners of the depths — fragments of Old Sablean blood who refuse to surrender their souls without a fight. They have not yet won. They have not stopped. The Ebon Warden hunts them personally.</p>
+          <div class="ly-features">
+            <div class="ly-feat"><span class="lf-dot"></span><span class="lf-text">Soul-harvesting facilities operate continuously — the city's primary fuel source</span></div>
+            <div class="ly-feat"><span class="lf-dot"></span><span class="lf-text">Umbral Essence most concentrated here — physical and psychological transformation of inhabitants</span></div>
+            <div class="ly-feat"><span class="lf-dot"></span><span class="lf-text">The Ember Coalition — a resistance that has survived every purge the Ebon Warden has ordered</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// DESCENDANTS //</div></div>
+
+<!-- THE FOUR DESCENDANTS -->
+<section class="desc-sec">
+  <div class="desc-inner">
+    <div class="desc-header rv">
+      <span class="sl">// RULING FACTIONS · GENERATIONS REMOVED · EVOLVED BEYOND RECOGNITION //</span>
+      <h2 class="desc-title">The Rulers of<br><em>Perdition</em></h2>
+      <p class="desc-intro">The descendants of the Four Secrets — generations removed — have evolved into monstrous beings who embody the darkest aspects of their bloodlines. They wage constant war, feeding the insatiable hunger of the Umbral Essence with every campaign they wage.</p>
+    </div>
+    <div class="desc-grid rv d1">
+      <div class="d-card dc-a">
+        <div class="d-inner">
+          <div class="d-sys">// DESCENDANT_01 · LINE: SANGUINOR · DESIGNATION: BLOOD_EMPEROR //</div>
+          <h3 class="d-name">The Blood Emperor</h3>
+          <p class="d-line">Scion of Sanguinor · Commander of Blood-Bound Legions</p>
+          <p class="d-body">Commands legions of blood-bound warriors — drawing power from his ancestor's mastery of blood magic, wielding it to <strong>control his people and devastate his enemies</strong>. The most publicly visible of the four rulers. His armies are the face New Sablea shows to the nations it intends to consume. <em>Every campaign is personal.</em> Every victory is an offering to the memory of what his ancestor was denied — recognition, love, acknowledgment of existence.</p>
+          <div class="d-domain">// DOMAIN: BLOOD · CONTROL · MILITARY SUPREMACY //</div>
+        </div>
+      </div>
+      <div class="d-card dc-b">
+        <div class="d-inner">
+          <div class="d-sys">// DESCENDANT_02 · LINE: CALIVOR · DESIGNATION: EBON_WARDEN //</div>
+          <h3 class="d-name">The Ebon Warden</h3>
+          <p class="d-line">Shade of Calivor · Iron Ruler of the Undercity</p>
+          <p class="d-body">Rules the undercity with an iron grip — <strong>his spies and assassins ensure no rebellion takes root</strong>. His ability to manipulate shadows allows him to snuff out dissent before it can spark. The Ember Coalition fears the Ebon Warden above all others: <em>he never strikes where expected.</em> He strikes where hope was just beginning to form. He is the reason the Depths stay quiet. Mostly.</p>
+          <div class="d-domain">// DOMAIN: SHADOW · FEAR · SUPPRESSION //</div>
+        </div>
+      </div>
+      <div class="d-card dc-c">
+        <div class="d-inner">
+          <div class="d-sys">// DESCENDANT_03 · LINE: THALRIK · DESIGNATION: ETHEREAL_BLADE //</div>
+          <h3 class="d-name">The Ethereal Blade</h3>
+          <p class="d-line">Vanguard of Thalrik · Supreme Commander of New Sablea's Armies</p>
+          <p class="d-body">Serves as supreme military commander — using the power of the Ether-realm to lead devastating raids against enemies. <strong>The one descendant who still carries a trace of Thalrik's honor</strong>: structured campaigns, tactical restraint, the preference for precision over destruction. Whether this will be his undoing or New Sablea's salvation <em>depends entirely on who returns through the Gate</em> — and what they decide to do with what they've seen.</p>
+          <div class="d-domain">// DOMAIN: ETHER · TIME · DIMENSIONAL WARFARE //</div>
+        </div>
+      </div>
+      <div class="d-card dc-d">
+        <div class="d-inner">
+          <div class="d-sys">// DESCENDANT_04 · LINE: LORYXAN · DESIGNATION: CRIMSON_ORACLE //</div>
+          <h3 class="d-name">The Crimson Oracle</h3>
+          <p class="d-line">Keeper of Loryxan · Overseer of Soul-Harvesting Operations</p>
+          <p class="d-body">Oversees the soul-harvesting operations that power the city. Her prophetic visions ensure New Sablea's continued dominance — but <em>her mind is fractured by the endless whispers of the souls she consumes</em>. The most tragic of the four descendants. Loryxan bound his family with oaths to hold them together. His lineage kept those oaths — but to the Umbral Essence instead of to each other. <strong>The cost was a mind that can no longer tell vision from memory.</strong></p>
+          <div class="d-domain">// DOMAIN: PROPHECY · SOUL CONSUMPTION · FRACTURED SIGHT //</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// TIME_PARADOX //</div></div>
+
+<!-- THE TIME PARADOX -->
+<section class="paradox">
+  <div class="para-inner">
+    <div class="rv">
+      <span class="sl">// TEMPORAL EVENT · THE FOUR SECRETS WITNESS THEIR DESCENDANTS //</span>
+      <h2 class="big-h">Transported through the Gate.<br><em>Both horrified and fascinated by what they found.</em></h2>
+      <p class="bp" style="max-width:660px;">The Four Secrets are confronted with the full consequence of their bloodline, their mother's ambitions, and the Umbral Essence's patient work. Each brother's reaction is its own story — and together, those four reactions will determine the choice that alters the cosmology.</p>
+    </div>
+    <div class="para-grid rv d1">
+      <div class="para-card">
+        <h3 class="p-who" style="color:var(--soul-pale);">Sanguinor</h3>
+        <div class="p-state">// EMOTIONAL STATE: FRACTURED BETWEEN PRIDE AND DESPAIR //</div>
+        <p class="p-body">Sees the strength of his lineage — the Blood Emperor's legions, the harvested armies, the crimson power that has outlasted centuries. But he is haunted by the suffering it required. <strong>He sees in the Blood Emperor what he himself might have become</strong> if Vesper had let him be seen. The recognition he craved, realized in full — at a cost he never calculated into his desire.</p>
+      </div>
+      <div class="para-card">
+        <h3 class="p-who" style="color:rgba(120,120,120,0.8);">Calivor</h3>
+        <div class="p-state">// EMOTIONAL STATE: EXHILARATED · ALMOST REVERENT //</div>
+        <p class="p-body">Revels in the chaos. <strong>Finds purpose in the darkness of their rule</strong> — the Ebon Warden's grip on the undercity, the snuffed rebellions, the shadows that answer without being commanded. This is the empire he always wanted. <em>The only thing that troubles him is that his descendant shows restraint.</em> Calivor has never understood why anyone would ever stop.</p>
+      </div>
+      <div class="para-card">
+        <h3 class="p-who" style="color:rgba(64,136,200,0.8);">Thalrik</h3>
+        <div class="p-state">// EMOTIONAL STATE: PRAGMATIC · ALREADY CALCULATING //</div>
+        <p class="p-body">Focused on the Ether-realm's role in shaping this future. <strong>The Ethereal Blade's tactical precision tells him his line has not fully surrendered honor</strong> — which means there is an opening. <em>He is already mapping the points in the timeline where a different choice would have produced a different outcome.</em> He has not shared his conclusion. He is not yet certain his brothers would accept it.</p>
+      </div>
+      <div class="para-card">
+        <h3 class="p-who" style="color:rgba(192,112,200,0.8);">Loryxan</h3>
+        <div class="p-state">// EMOTIONAL STATE: DEEPLY TROUBLED · THE COST IS CLEAR //</div>
+        <p class="p-body">The one who suffers most completely. He sees the Crimson Oracle's fractured mind and recognizes the cost of oaths kept past the point of self-preservation. <strong>He already questioned whether their collective secrecy would be their undoing.</strong> In the Underworld Perdition, he finds the evidence he feared. <em>He has not yet decided what to do with it</em> — because he knows what acting on it will require.</p>
+      </div>
+    </div>
+    <div class="pull-forge rv d2" style="margin-top:36px;"><p>"Through their communion with their descendants, the Four Secrets learn of a prophecy: that their return to the past could alter the timeline — either preventing this dystopia or ensuring its dominance. The choice is theirs. The cost is absolute either way."</p><cite>// ABYSSAL GATE ARCHIVE · TEMPORAL LOG · CLASSIFICATION: PARADOX-LEVEL //</cite></div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// ELEMENTS //</div></div>
+
+<!-- THE FOUR ELEMENTS -->
+<section class="elements">
+  <div class="el-inner">
+    <div class="rv">
+      <span class="sl">// THE ETERNAL CONFLICT · FOUR PILLARS OF THE WAR MACHINE //</span>
+      <h2 class="big-h">The descendants became<br><em>avatars of their ancestors' deepest nature.</em></h2>
+      <p class="bp" style="max-width:620px;">New Sablea is locked in eternal conflict with the surrounding realms. The four ruling lineages do not merely wield power — they embody it. Each carries a primal force that sustains the city's dominion and fuels the soul mines below.</p>
+    </div>
+    <div class="el-grid rv d1">
+      <div class="el-card">
+        <span class="el-glyph">🩸</span>
+        <div class="el-name">Blood</div>
+        <div class="el-src">// ORIGIN: SANGUINOR //</div>
+        <p class="el-desc">The unrelenting drive for dominance and control. Blood is the city's fuel, its currency, its weapon. Every crimson light in New Sablea is a debt owed in living essence. The Blood Emperor collects continuously.</p>
+      </div>
+      <div class="el-card">
+        <span class="el-glyph">🌑</span>
+        <div class="el-name">Shadow</div>
+        <div class="el-src">// ORIGIN: CALIVOR //</div>
+        <p class="el-desc">The manipulation of fear and secrecy. Shadow is the infrastructure of control — the silence after the rebellion, the absence of the dissident, the darkness between the crimson lights. The Ebon Warden maintains it personally.</p>
+      </div>
+      <div class="el-card">
+        <span class="el-glyph">⚡</span>
+        <div class="el-name">Ether</div>
+        <div class="el-src">// ORIGIN: THALRIK //</div>
+        <p class="el-desc">The mastery of space and time. The Ethereal Blade's armies appear where no army should be able to go. New Sablea has never lost a war because its enemies can never plan against it — time itself is a weapon in the Vanguard's hands.</p>
+      </div>
+      <div class="el-card">
+        <span class="el-glyph">🔗</span>
+        <div class="el-name">Oath</div>
+        <div class="el-src">// ORIGIN: LORYXAN //</div>
+        <p class="el-desc">The binding power of loyalty and sacrifice. The Crimson Oracle's oaths hold the empire together even as her mind fractures. Every blood oath Loryxan enforced echoes through the binding architecture of New Sablea. The city is, structurally, a promise that cannot be unmade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// STAKES //</div></div>
+
+<!-- NARRATIVE STAKES -->
+<section class="stakes">
+  <div class="stakes-inner">
+    <div class="rv">
+      <span class="sl">// WHAT HAPPENS NEXT · THE FOUR QUESTIONS THE ARC MUST ANSWER //</span>
+      <h2 class="big-h">A choice that alters<br><em>the entire cosmology of the Nine Realms.</em></h2>
+      <p class="bp" style="max-width:620px;">The Underworld Perdition raises questions that the Four Secrets — and the Nine Realms — cannot avoid answering. The brothers have seen the mirror. What they do with their reflection is the arc.</p>
+    </div>
+    <div class="stake-list rv d1">
+      <div class="stake">
+        <div class="stake-id"><div class="sid-val">I</div></div>
+        <div class="stake-c">
+          <div class="stake-title">Generational Legacy</div>
+          <p class="stake-body">The Four Secrets must grapple with the consequences of their actions and their mother's ambitions — deciding whether to embrace or defy their destiny. The dystopia is not a warning. It is a mirror. Do they recognize themselves in what they see? And if they do — does recognition change the next decision, or confirm it?</p>
+        </div>
+      </div>
+      <div class="stake">
+        <div class="stake-id"><div class="sid-val">II</div></div>
+        <div class="stake-c">
+          <div class="stake-title">The Ethics of Absolute Power</div>
+          <p class="stake-body">The descendants' rule raises questions the original brothers cannot dismiss: What is the cost of the power they were born into? If the Umbral Essence is simultaneously the source of their abilities and the engine of the soul mines, can one be separated from the other? Is any version of their power worth the world it inevitably produces?</p>
+        </div>
+      </div>
+      <div class="stake">
+        <div class="stake-id"><div class="sid-val">III</div></div>
+        <div class="stake-c">
+          <div class="stake-title">The Paradox of Altering Time</div>
+          <p class="stake-body">The Four Secrets' ability to traverse the Gate creates an opportunity to alter the timeline — but every change risks unintended consequences. Preventing the dystopia may produce something worse. Ensuring its dominance may be the only way to stop something worse still. Thalrik is the only one who fully understands the calculation. He has not yet shared his conclusion with his brothers.</p>
+        </div>
+      </div>
+      <div class="stake">
+        <div class="stake-id"><div class="sid-val">IV</div></div>
+        <div class="stake-c">
+          <div class="stake-title">The Struggle for Redemption</div>
+          <p class="stake-body">Despite their dark origins, the Four Secrets may seek to undo the dystopian future — confronting the Umbral Essence and their own inner demons. Severing their connection to bloodborne abilities. Becoming ordinary in exchange for a world that does not consume its own people. Loryxan already suspects this is the only real exit. He is waiting to see if his brothers will walk through it with him.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// IRONFORGE_REALM //</div></div>
+
+<!-- THE IRONFORGE REALM — TEASER -->
+<section class="ironforge-teaser">
+  <div class="if-inner">
+    <div class="if-classified rv">// DESIGNATION: THE IRONFORGE REALM · ENTRY PENDING · FULL CHRONICLE IN DEVELOPMENT //</div>
+    <div class="if-grid rv d1">
+      <div class="if-text">
+        <h2 class="if-title">
+          The Ironforge Realm —<br>
+          <em>New Sablea's Final Form</em>
+        </h2>
+        <p class="if-body">In the darkest chronicles of the Nine Realms' future, New Sablea is not the end of the story. It is the middle chapter. What it eventually becomes — after centuries more under the Umbral Essence's influence, after the forges merge fully with the dark magic, after the distinction between machine and ritual collapses entirely — is known as <strong>the Ironforge Realm.</strong></p>
+        <p class="if-body">Where New Sablea still carries echoes of the original city's architecture, <em>the Ironforge Realm has shed them entirely.</em> It is not gothic. It is not merely dystopian. It is something the Nine Realms have no language for yet — a civilization built entirely around consumption, forging, and the permanent weaponization of the Umbral Essence across all dimensions simultaneously.</p>
+        <p class="if-body">A full dedicated chronicle is in preparation. What is known — and classified — is recorded here.</p>
+        <div class="if-facts">
+          <div class="if-fact"><div class="iff-key">DESIGNATION</div><div class="iff-val">The Ironforge Realm · New Sablea in its final evolved state</div></div>
+          <div class="if-fact"><div class="iff-key">RELATIONSHIP</div><div class="iff-val">New Sablea is the transitional state · The Ironforge Realm is what it becomes when the transition is complete</div></div>
+          <div class="if-fact"><div class="iff-key">DEFINING TRAIT</div><div class="iff-val">Architecture, ritual, and war machinery are no longer distinct categories. <strong>Everything is the forge.</strong></div></div>
+          <div class="if-fact"><div class="iff-key">STATUS</div><div class="iff-val">Full dedicated page in development · This is the teaser · The Ironforge Realm will be chronicled in full</div></div>
+        </div>
+      </div>
+      <div class="if-redacted rv d2">
+        <div class="if-redacted-title">// CLASSIFIED · IRONFORGE REALM DATA · ACCESS PENDING //</div>
+        <div class="redact-block">
+          <div class="r-line" style="width:95%"></div>
+          <div class="r-line" style="width:80%"></div>
+          <div class="r-line" style="width:88%"></div>
+          <div class="r-line" style="width:72%"></div>
+          <div class="r-line" style="width:91%"></div>
+          <div class="r-line" style="width:76%"></div>
+          <div class="r-line" style="width:84%"></div>
+          <div class="r-line" style="width:68%"></div>
+          <div class="r-line" style="width:93%"></div>
+          <div class="r-line" style="width:78%"></div>
+          <div class="r-line" style="width:88%"></div>
+          <div class="r-line" style="width:65%"></div>
+          <div class="r-badge">// FULL CHRONICLE PENDING · IRONFORGE_REALM.html //</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSMISSION -->
+<section class="transmission">
+  <div class="tx-inner rv">
+    <div class="tx-sys">// SIGNAL: ACTIVE · SOURCE: ABYSSAL GATE · TEMPORAL ORIGIN: [REDACTED] //</div>
+    <h2 class="tx-title">A future that is<br><em>not yet fixed.</em></h2>
+    <p class="tx-body">The dystopia is real. The soul mines burn. The descendants rule. But the Gate runs in both directions — and the Four Secrets are standing at the threshold, looking back at the present they came from and forward at the future they built. <strong>Their next choice is not a plot point. It is a cosmological event.</strong> Whatever they decide, the Nine Realms will carry the consequence across every timeline the Umbral Essence touches.</p>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('lit');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('lit');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=204;this.s=70;this.l=55;}
+      else if(t<.72){this.h=350;this.s=60;this.l=45;}
+      else if(t<.86){this.h=204+20;this.s=70-15;this.l=55+15;}
+      else{this.h=350+10;this.s=60-10;this.l=45+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

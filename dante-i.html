@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>King Dante I — The Unstoppable Warlord | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+/* ═══════════════════════════
+   TOKENS
+═══════════════════════════ */
+:root {
+  --void:      #04020A;
+  --deep:      #080410;
+  --iron:      #120A08;
+  --forge:     #1C0C0A;
+  --blood:     #8A1808;
+  --blood-mid: #B02010;
+  --blood-pale:#D04020;
+  --ember:     #C06020;
+  --ember-pale:#E09040;
+  --parch:     #C8A880;
+  --parch-pale:#E0C8A0;
+  --parch-dim: #786050;
+  --ash:       #3A2820;
+  --redact:    #0C0608;
+}
+
+/* ═══════════════════════════
+   BASE
+═══════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);
+  color:var(--parch);
+  font-family:'EB Garamond',serif;
+  font-weight:400;
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:1000;
+  pointer-events:none;opacity:0.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:128px;
+}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--parch);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cur-ring{width:32px;height:32px;border:1px solid rgba(138,24,8,0.5);border-radius:50%;transform:translate(-50%,-50%);transition:.5s cubic-bezier(.16,1,.3,1);}
+.cur-ring.live{width:48px;height:48px;border-color:var(--blood-mid);}
+
+/* ═══════════════════════════
+   NAV
+═══════════════════════════ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  padding:22px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s,padding .3s;
+}
+.nav.scrolled{
+  background:rgba(4,2,10,0.97);
+  backdrop-filter:blur(12px);
+  padding:14px 60px;
+  border-bottom:1px solid rgba(138,24,8,0.12);
+}
+.nav-home{text-decoration:none;}
+.nav-home-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch);letter-spacing:0.2em;display:block;}
+.nav-home-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:var(--blood-pale);opacity:0.7;letter-spacing:0.1em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:28px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--blood-pale);border:1px solid rgba(138,24,8,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s,background .3s;}
+.nav-back:hover{border-color:var(--blood-mid);background:rgba(138,24,8,0.08);}
+
+/* ═══════════════════════════
+   HERO — THE KING'S ARRIVAL
+═══════════════════════════ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 70% 60% at 50% 55%, #160608 0%, var(--void) 65%);
+}
+
+/* Blood-iron vein lines */
+.hero-veins{position:absolute;inset:0;pointer-events:none;z-index:0;}
+.vein{position:absolute;background:linear-gradient(to bottom,transparent,rgba(138,24,8,0.08),transparent);width:1px;}
+.vein:nth-child(1){left:20%;height:100%;animation:veinPulse 5s 0s ease-in-out infinite;}
+.vein:nth-child(2){left:35%;height:100%;animation:veinPulse 5s .8s ease-in-out infinite;}
+.vein:nth-child(3){left:50%;height:100%;animation:veinPulse 5s 1.6s ease-in-out infinite;}
+.vein:nth-child(4){left:65%;height:100%;animation:veinPulse 5s 2.4s ease-in-out infinite;}
+.vein:nth-child(5){left:80%;height:100%;animation:veinPulse 5s 3.2s ease-in-out infinite;}
+@keyframes veinPulse{0%,100%{opacity:0.3;}50%{opacity:1;background:linear-gradient(to bottom,transparent,rgba(138,24,8,0.2),transparent);}}
+
+/* Radiant rings */
+.king-ring{
+  position:absolute;left:50%;top:55%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  border:1px solid rgba(138,24,8,0.05);
+  pointer-events:none;z-index:0;
+  animation:ringExpand 6s ease-in-out infinite;
+}
+.king-ring:nth-child(1){width:200px;height:200px;animation-delay:0s;}
+.king-ring:nth-child(2){width:450px;height:450px;animation-delay:1.5s;}
+.king-ring:nth-child(3){width:750px;height:750px;animation-delay:3s;}
+.king-ring:nth-child(4){width:1100px;height:1100px;animation-delay:4.5s;}
+@keyframes ringExpand{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.7);}
+  40%{opacity:1;}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.3);}
+}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+
+.hero-pre{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;
+  color:var(--blood-pale);text-transform:uppercase;
+  opacity:0;animation:riseIn 1.2s .2s ease forwards;
+  margin-bottom:20px;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+}
+.hero-pre::before,.hero-pre::after{content:'';display:block;width:40px;height:1px;background:linear-gradient(to right,transparent,var(--blood-mid));}
+.hero-pre::after{transform:scaleX(-1);}
+
+.hero-title-wrap{
+  opacity:0;animation:riseIn 1.8s .4s ease forwards;
+  margin-bottom:10px;
+}
+.hero-title-king{
+  font-family:'Cinzel',serif;
+  font-size:clamp(11px,1.8vw,16px);
+  letter-spacing:0.5em;color:var(--blood-pale);
+  text-transform:uppercase;opacity:0.6;
+  display:block;margin-bottom:6px;
+}
+.hero-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(52px,12vw,150px);
+  font-weight:900;color:var(--parch-pale);
+  letter-spacing:0.04em;line-height:0.9;
+  text-shadow:0 0 120px rgba(138,24,8,0.35),0 4px 40px rgba(0,0,0,0.9);
+}
+.hero-title-suffix{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(14px,2vw,22px);
+  font-weight:400;color:var(--blood-pale);
+  letter-spacing:0.3em;display:block;margin-top:6px;
+  opacity:0.8;
+}
+
+.hero-epithet-wrap{
+  opacity:0;animation:riseIn 1.2s .8s ease forwards;
+  margin-top:16px;
+}
+.hero-epithet{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(14px,2vw,20px);
+  color:rgba(200,168,128,0.5);
+  letter-spacing:0.08em;
+}
+
+.hero-rule{width:1px;height:0;background:linear-gradient(to bottom,var(--blood-mid),transparent);margin:28px auto;animation:lineGrow 1s 1.1s ease forwards;}
+@keyframes lineGrow{to{height:50px;}}
+
+.hero-desc{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(15px,2.2vw,22px);
+  color:rgba(200,168,128,0.5);max-width:620px;
+  margin:0 auto 48px;line-height:1.75;
+  opacity:0;animation:riseIn 1.2s 1.3s ease forwards;
+}
+
+/* Vital stats row */
+.hero-vitals{
+  display:flex;justify-content:center;gap:0;flex-wrap:wrap;
+  opacity:0;animation:riseIn 1s 1.6s ease forwards;
+  border:1px solid rgba(138,24,8,0.15);
+  max-width:680px;margin:0 auto;
+}
+.vital{
+  padding:20px 36px;border-right:1px solid rgba(138,24,8,0.12);
+  text-align:center;
+}
+.vital:last-child{border-right:none;}
+.vital-val{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(18px,2.5vw,30px);
+  font-weight:400;color:var(--blood-pale);line-height:1;margin-bottom:6px;
+}
+.vital-label{
+  font-family:'Cinzel',serif;font-size:7px;
+  letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--parch-dim);opacity:0.5;
+}
+
+.hero-scroll{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;animation:riseIn 1s 2s ease forwards;
+}
+.hero-scroll span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;color:var(--parch-dim);opacity:0.35;text-transform:uppercase;}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--blood-mid),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scrollPulse{
+  0%{opacity:1;transform:scaleY(0);transform-origin:top;}
+  50%{opacity:1;transform:scaleY(1);transform-origin:top;}
+  51%{transform-origin:bottom;}
+  100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}
+}
+
+/* ═══════════════════════════
+   SHARED UTILITIES
+═══════════════════════════ */
+.section-label{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;
+  text-transform:uppercase;color:var(--blood-pale);opacity:0.6;
+  display:block;margin-bottom:20px;
+}
+.chapter-rule{
+  width:100%;height:1px;
+  background:linear-gradient(to right,transparent,rgba(138,24,8,0.15),transparent);
+}
+.chapter-mark{
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.chapter-mark::before{
+  content:'';position:absolute;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,rgba(138,24,8,0.12),transparent);
+}
+.chapter-mark-glyph{
+  position:relative;background:var(--void);padding:0 18px;
+  font-size:14px;color:var(--blood-mid);opacity:0.4;z-index:1;
+}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.delay-1{transition-delay:.15s;}
+.delay-2{transition-delay:.3s;}
+.delay-3{transition-delay:.45s;}
+
+/* ═══════════════════════════
+   CHRONICLE INTRO
+═══════════════════════════ */
+.chronicle-intro{
+  background:var(--iron);
+  padding:110px 60px;
+  position:relative;overflow:hidden;
+}
+.chronicle-intro::before{
+  content:'DANTE';
+  position:absolute;font-family:'Cinzel Decorative',serif;
+  font-size:clamp(120px,22vw,280px);font-weight:900;
+  color:rgba(138,24,8,0.025);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  white-space:nowrap;pointer-events:none;letter-spacing:0.08em;
+}
+.chronicle-intro-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1.6fr;
+  gap:90px;align-items:start;
+}
+.ci-aside{}
+.ci-roman{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(80px,13vw,180px);font-weight:400;
+  color:rgba(138,24,8,0.1);line-height:1;margin-left:-6px;
+}
+.ci-aside-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:var(--blood-pale);opacity:0.5;text-transform:uppercase;}
+.ci-aside-date{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(200,168,128,0.35);margin-top:6px;}
+.ci-body{}
+.ci-headline{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(26px,3.5vw,48px);font-weight:400;
+  color:var(--parch-pale);line-height:1.15;margin-bottom:26px;
+}
+.ci-headline em{font-style:italic;color:var(--ember-pale);}
+.ci-text{
+  font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);
+  color:rgba(200,168,128,0.6);line-height:1.9;margin-bottom:18px;
+}
+.ci-text strong{color:var(--parch);font-weight:500;}
+
+/* ═══════════════════════════
+   TIMELINE SPINE
+═══════════════════════════ */
+.timeline{
+  padding:80px 60px 100px;
+  max-width:1100px;margin:0 auto;
+  position:relative;
+}
+
+/* Vertical spine line */
+.timeline::before{
+  content:'';position:absolute;
+  left:calc(60px + 40px);top:80px;bottom:100px;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(138,24,8,0.2) 10%,rgba(138,24,8,0.2) 90%,transparent);
+}
+
+.tl-era{
+  display:grid;
+  grid-template-columns:80px 1fr;
+  gap:0 60px;
+  margin-bottom:80px;
+  position:relative;
+}
+
+/* Era node on spine */
+.tl-node{
+  display:flex;flex-direction:column;align-items:center;
+  padding-top:4px;position:relative;
+}
+.tl-node-dot{
+  width:12px;height:12px;border-radius:50%;
+  border:2px solid var(--blood-mid);
+  background:var(--void);
+  flex-shrink:0;margin-top:6px;
+  position:relative;z-index:1;
+  transition:background .3s,box-shadow .3s;
+}
+.tl-era:hover .tl-node-dot{
+  background:var(--blood-mid);
+  box-shadow:0 0 16px var(--blood-mid);
+}
+.tl-node-line{
+  width:1px;flex:1;min-height:30px;
+  background:rgba(138,24,8,0.15);
+  margin-top:8px;
+}
+.tl-era-num{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;
+  color:var(--blood-mid);opacity:0.5;text-transform:uppercase;
+  margin-top:6px;writing-mode:horizontal-tb;
+  text-align:center;
+}
+
+/* Era content */
+.tl-content{}
+.tl-era-tag{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;
+  text-transform:uppercase;margin-bottom:12px;
+  display:inline-block;padding:4px 14px;border:1px solid;opacity:0.7;
+}
+.tl-era-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(22px,3vw,40px);font-weight:400;
+  color:var(--parch-pale);line-height:1.1;margin-bottom:16px;
+}
+.tl-era-subtitle{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--parch-dim);opacity:0.45;
+  margin-bottom:20px;
+}
+.tl-era-body{
+  font-family:'EB Garamond',serif;font-size:clamp(15px,1.7vw,18px);
+  color:rgba(200,168,128,0.6);line-height:1.9;margin-bottom:22px;max-width:680px;
+}
+.tl-era-body strong{color:var(--parch);font-weight:500;}
+.tl-era-body em{color:var(--ember-pale);font-style:italic;}
+
+/* Pull-quote within timeline */
+.tl-pull{
+  margin:24px 0;padding:20px 28px;
+  border-left:2px solid var(--blood-mid);
+  background:rgba(138,24,8,0.04);
+}
+.tl-pull p{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(16px,1.8vw,20px);
+  color:rgba(200,168,128,0.7);line-height:1.7;
+}
+.tl-pull cite{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--blood-pale);opacity:0.4;
+  display:block;margin-top:10px;font-style:normal;
+}
+
+/* Era accent colors */
+.era-rise .tl-node-dot{border-color:#804020;}
+.era-rise .tl-era-tag{color:#A05028;border-color:#A05028;}
+.era-wars .tl-node-dot{border-color:var(--blood-mid);}
+.era-wars .tl-era-tag{color:var(--blood-pale);border-color:var(--blood-pale);}
+.era-legacy .tl-node-dot{border-color:#704060;}
+.era-legacy .tl-era-tag{color:#904878;border-color:#904878;}
+.era-empire .tl-node-dot{border-color:var(--ember);}
+.era-empire .tl-era-tag{color:var(--ember-pale);border-color:var(--ember-pale);}
+.era-death .tl-node-dot{border-color:#503030;}
+.era-death .tl-era-tag{color:#705040;border-color:#705040;}
+.era-bloodlines .tl-node-dot{border-color:#804830;}
+.era-bloodlines .tl-era-tag{color:#A06040;border-color:#A06040;}
+
+/* ═══════════════════════════
+   REDACTED TESTAMENT
+═══════════════════════════ */
+.testament{
+  background:var(--deep);
+  padding:110px 60px;
+  position:relative;overflow:hidden;
+}
+.testament::before{
+  content:'BANNED';
+  position:absolute;
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(80px,15vw,200px);font-weight:900;
+  color:rgba(138,24,8,0.03);
+  top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg);
+  white-space:nowrap;pointer-events:none;
+}
+.testament-inner{max-width:900px;margin:0 auto;}
+.testament-header{text-align:center;margin-bottom:70px;}
+.testament-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,3.5vw,46px);font-weight:400;
+  color:var(--parch-pale);line-height:1.15;margin-bottom:12px;
+}
+.testament-title em{font-style:italic;color:var(--blood-pale);}
+.testament-subtitle{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:16px;color:rgba(200,168,128,0.4);max-width:500px;
+  margin:0 auto;line-height:1.75;
+}
+
+/* Redacted quote — black bar dissolves on hover */
+.redacted-entry{
+  margin-bottom:40px;
+  border:1px solid rgba(138,24,8,0.08);
+  position:relative;overflow:hidden;
+  transition:border-color .4s;
+}
+.redacted-entry:hover{border-color:rgba(138,24,8,0.25);}
+
+.redacted-bar{
+  background:var(--redact);
+  padding:22px 32px;
+  cursor:pointer;
+  position:relative;
+  transition:background .5s ease;
+}
+.redacted-entry:hover .redacted-bar{background:rgba(4,2,10,0);}
+
+/* The fake redaction lines */
+.redact-line{
+  height:14px;background:rgba(12,6,8,0.9);
+  margin-bottom:8px;border-radius:1px;
+  transition:opacity .5s ease,background .5s ease;
+}
+.redacted-entry:hover .redact-line{opacity:0;background:transparent;}
+
+/* The actual quote beneath */
+.revealed-quote{
+  position:absolute;inset:0;
+  padding:22px 32px;
+  display:flex;flex-direction:column;justify-content:center;
+  opacity:0;transition:opacity .5s ease;
+  pointer-events:none;
+}
+.redacted-entry:hover .revealed-quote{opacity:1;}
+.revealed-quote p{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(16px,1.9vw,21px);
+  color:var(--parch-pale);line-height:1.7;
+}
+.revealed-quote cite{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;
+  text-transform:uppercase;color:var(--blood-pale);opacity:0.45;
+  display:block;margin-top:12px;font-style:normal;
+}
+
+.redacted-hint{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;
+  text-transform:uppercase;color:rgba(138,24,8,0.3);
+  text-align:center;margin-top:-20px;margin-bottom:50px;
+  animation:hintBlink 3s ease-in-out infinite;
+}
+@keyframes hintBlink{0%,100%{opacity:0.3;}50%{opacity:0.7;};}
+
+/* ═══════════════════════════
+   BLOODLINES SECTION
+═══════════════════════════ */
+.bloodlines{
+  padding:110px 60px;
+  max-width:1100px;margin:0 auto;
+}
+.bloodlines-tree{
+  margin-top:52px;
+  position:relative;
+}
+.bloodlines-tree::before{
+  content:'';position:absolute;
+  left:50%;top:50px;bottom:0;
+  width:1px;background:rgba(138,24,8,0.15);
+  transform:translateX(-50%);
+}
+
+/* Generation rows */
+.gen-row{
+  display:flex;justify-content:center;gap:20px;flex-wrap:wrap;
+  margin-bottom:50px;position:relative;
+}
+.gen-label{
+  position:absolute;left:0;top:50%;transform:translateY(-50%);
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;
+  text-transform:uppercase;color:var(--parch-dim);opacity:0.3;
+}
+
+.gen-card{
+  background:rgba(138,24,8,0.04);
+  border:1px solid rgba(138,24,8,0.12);
+  padding:18px 24px;min-width:180px;max-width:220px;
+  text-align:center;position:relative;
+  transition:border-color .3s,background .3s;
+}
+.gen-card:hover{border-color:rgba(138,24,8,0.3);background:rgba(138,24,8,0.08);}
+.gen-card.primary{border-color:rgba(138,24,8,0.3);background:rgba(138,24,8,0.07);}
+.gen-card.danger{border-color:rgba(112,40,96,0.3);background:rgba(112,40,96,0.05);}
+
+.gen-card-name{
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.15em;
+  color:var(--parch-pale);margin-bottom:4px;
+}
+.gen-card-title{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:12px;color:rgba(200,168,128,0.4);line-height:1.4;
+}
+.gen-card-note{
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--blood-pale);opacity:0.5;
+  margin-top:8px;
+}
+
+/* Connector lines -->  */
+.gen-connector{
+  display:flex;justify-content:center;
+  margin-bottom:12px;
+}
+.gen-conn-line{
+  width:1px;height:24px;
+  background:rgba(138,24,8,0.2);
+}
+
+/* ═══════════════════════════
+   ASSASSINATION THEORIES
+═══════════════════════════ */
+.theories{
+  background:var(--iron);
+  padding:110px 60px;
+}
+.theories-inner{max-width:1100px;margin:0 auto;}
+.theories-header{margin-bottom:60px;}
+.theories-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,3.5vw,46px);font-weight:400;
+  color:var(--parch-pale);line-height:1.1;margin-bottom:12px;
+}
+.theories-title em{font-style:italic;color:var(--blood-pale);}
+.theories-intro{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:17px;color:rgba(200,168,128,0.45);
+  max-width:600px;line-height:1.75;
+}
+
+.theory-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:3px;
+}
+.theory-card{
+  background:rgba(4,2,10,0.5);
+  border:1px solid rgba(138,24,8,0.06);
+  padding:36px 32px;
+  position:relative;overflow:hidden;
+  transition:background .3s,border-color .3s;
+  cursor:default;
+}
+.theory-card:hover{
+  background:rgba(138,24,8,0.06);
+  border-color:rgba(138,24,8,0.2);
+}
+.theory-card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:3px;height:0;
+  transition:height .5s cubic-bezier(.16,1,.3,1);
+}
+.theory-card:hover::before{height:100%;}
+
+.theory-1::before{background:var(--blood-mid);}
+.theory-2::before{background:#704060;}
+.theory-3::before{background:#205080;}
+.theory-4::before{background:#504030;}
+
+.theory-num{
+  font-family:'Cinzel Decorative',serif;
+  font-size:48px;font-weight:400;
+  color:rgba(138,24,8,0.08);
+  line-height:1;margin-bottom:16px;
+  transition:color .3s;
+}
+.theory-card:hover .theory-num{color:rgba(138,24,8,0.18);}
+.theory-suspect{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--parch-pale);margin-bottom:8px;
+}
+.theory-role{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;
+  text-transform:uppercase;margin-bottom:16px;opacity:0.5;
+}
+.theory-body{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(14px,1.6vw,17px);
+  color:rgba(200,168,128,0.55);line-height:1.8;
+}
+.theory-verdict{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;
+  text-transform:uppercase;margin-top:16px;
+  padding-top:14px;border-top:1px solid rgba(138,24,8,0.08);
+  opacity:0.4;
+}
+
+/* ═══════════════════════════
+   CONSEQUENCES — HOW HE RULES TODAY
+═══════════════════════════ */
+.consequences{
+  padding:110px 60px;
+  max-width:1100px;margin:0 auto;
+}
+.cons-header{margin-bottom:60px;}
+.cons-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,3.5vw,46px);font-weight:400;
+  color:var(--parch-pale);line-height:1.1;margin-bottom:12px;
+}
+.cons-title em{font-style:italic;color:var(--ember-pale);}
+.cons-intro{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:17px;color:rgba(200,168,128,0.4);
+  max-width:580px;line-height:1.75;
+}
+
+.cons-list{display:flex;flex-direction:column;gap:2px;}
+.cons-entry{
+  display:grid;grid-template-columns:200px 1fr;
+  gap:0;
+  border:1px solid rgba(138,24,8,0.06);
+  overflow:hidden;
+  transition:border-color .3s;
+}
+.cons-entry:hover{border-color:rgba(138,24,8,0.2);}
+
+.cons-who{
+  background:rgba(138,24,8,0.04);
+  padding:24px 28px;
+  border-right:1px solid rgba(138,24,8,0.06);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.cons-name{
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:0.15em;
+  color:var(--parch-pale);margin-bottom:4px;
+}
+.cons-role{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:12px;color:rgba(200,168,128,0.35);
+}
+.cons-what{
+  padding:24px 32px;
+}
+.cons-action{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--blood-pale);opacity:0.6;
+  margin-bottom:8px;display:block;
+}
+.cons-text{
+  font-family:'EB Garamond',serif;font-size:clamp(14px,1.6vw,17px);
+  color:rgba(200,168,128,0.55);line-height:1.75;
+}
+
+/* ═══════════════════════════
+   PAGE FOOTER CTA
+═══════════════════════════ */
+.page-cta{
+  background:var(--void);
+  padding:100px 60px;text-align:center;
+  border-top:1px solid rgba(138,24,8,0.1);
+}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,3.5vw,46px);font-weight:400;
+  color:var(--parch-pale);margin-bottom:18px;line-height:1.2;
+}
+.page-cta h2 em{font-style:italic;color:var(--blood-pale);}
+.page-cta p{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:17px;color:rgba(200,168,128,0.4);
+  max-width:480px;margin:0 auto 44px;line-height:1.75;
+}
+.cta-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.btn-prim{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--void);background:var(--parch);padding:15px 34px;
+  text-decoration:none;transition:background .3s;
+}
+.btn-prim:hover{background:var(--parch-pale);}
+.btn-sec{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--parch-dim);border:1px solid rgba(200,168,128,0.15);padding:15px 34px;
+  text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;
+}
+.btn-sec:hover{border-color:rgba(200,168,128,0.4);color:var(--parch);}
+
+footer{
+  background:var(--void);
+  border-top:1px solid rgba(138,24,8,0.06);
+  padding:36px 60px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+}
+.footer-copy{font-family:'EB Garamond',serif;font-size:13px;color:rgba(200,168,128,0.18);}
+
+/* Responsive */
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .chronicle-intro{padding:80px 40px;}
+  .chronicle-intro-inner{grid-template-columns:1fr;gap:40px;}
+  .timeline{padding:60px 40px 80px;}
+  .timeline::before{left:calc(40px + 40px);}
+  .tl-era{grid-template-columns:60px 1fr;gap:0 36px;}
+  .testament{padding:80px 40px;}
+  .bloodlines{padding:80px 40px;}
+  .theories{padding:80px 40px;}
+  .theory-grid{grid-template-columns:1fr;}
+  .consequences{padding:80px 40px;}
+  .cons-entry{grid-template-columns:1fr;}
+  .cons-who{border-right:none;border-bottom:1px solid rgba(138,24,8,0.06);}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}
+  .nav.scrolled{padding:12px 24px;}
+  .nav-link{display:none;}
+  .hero-vitals{flex-direction:column;}
+  .vital{border-right:none;border-bottom:1px solid rgba(138,24,8,0.1);}
+  .vital:last-child{border-bottom:none;}
+  .timeline{padding:50px 24px 60px;}
+  .timeline::before{display:none;}
+  .tl-era{grid-template-columns:1fr;}
+  .tl-node{flex-direction:row;gap:12px;margin-bottom:16px;}
+  .tl-node-line{display:none;}
+  .bloodlines{padding:60px 24px;}
+  .theories{padding:60px 24px;}
+  .consequences{padding:60px 24px;}
+  .page-cta{padding:70px 24px;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <a href="ashura-nation.html" class="nav-home">
+    <span class="nav-home-name">Nine Realms</span>
+    <span class="nav-home-sub">Ashura · Fire Nation Characters</span>
+  </a>
+  <div class="nav-right">
+    <a href="ashura-nation.html" class="nav-link">Ashura</a>
+    <a href="dante-ii.html" class="nav-link">Dante II →</a>
+    <a href="nine-realms-story-arcs.html" class="nav-link">Chronicles</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-veins">
+    <div class="vein"></div><div class="vein"></div><div class="vein"></div>
+    <div class="vein"></div><div class="vein"></div>
+  </div>
+  <div class="king-ring"></div><div class="king-ring"></div>
+  <div class="king-ring"></div><div class="king-ring"></div>
+
+  <div class="hero-content">
+    <p class="hero-pre">Ashura · Fire Nation · Founder</p>
+    <div class="hero-title-wrap">
+      <span class="hero-title-king">His Eternal Majesty</span>
+      <h1 class="hero-title">Dante I</h1>
+      <span class="hero-title-suffix">The Unstoppable Warlord</span>
+    </div>
+    <div class="hero-epithet-wrap">
+      <p class="hero-epithet">"The Scourge of the Nine Nations · The Man Who Welded Ashura Into One Blade"</p>
+    </div>
+    <div class="hero-rule"></div>
+    <p class="hero-desc">
+      Born into chaos. Forged in battle. He did not build a kingdom —
+      he aimed every faction in the realm at a single enemy and called it unity.
+      The flame has been burning ever since.
+    </p>
+    <div class="hero-vitals">
+      <div class="vital">
+        <div class="vital-val">I</div>
+        <div class="vital-label">The First King</div>
+      </div>
+      <div class="vital">
+        <div class="vital-val">100+</div>
+        <div class="vital-label">Known Heirs</div>
+      </div>
+      <div class="vital">
+        <div class="vital-val">???</div>
+        <div class="vital-label">His Assassin</div>
+      </div>
+      <div class="vital">
+        <div class="vital-val">∞</div>
+        <div class="vital-label">Consequences</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Read the Chronicle</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- CHRONICLE INTRO -->
+<section class="chronicle-intro">
+  <div class="chronicle-intro-inner">
+    <div class="ci-aside reveal">
+      <div class="ci-roman">I</div>
+      <span class="ci-aside-tag">The First & Only</span>
+      <p class="ci-aside-date">Founder of the Emberous Dominion · Son of Cinderon IV</p>
+    </div>
+    <div class="ci-body">
+      <span class="section-label reveal">The Man Before the Legend</span>
+      <h2 class="ci-headline reveal">
+        He began as a<br>
+        <em>bookish prince with a<br>soldier's childhood.</em>
+      </h2>
+      <p class="ci-text reveal delay-1">
+        King Cinderon IV raised him the Spartan way — hazing, deprivation, rivalries engineered at court —
+        then left him <strong>libraries by night</strong>. Dante devoured histories of Emberion, the Cinder Wars,
+        the failures of half-kings who mistook fear for unity. His conclusion was simple and heretical:
+        <em>Ashura's weakness wasn't strength — it was fragmentation.</em>
+      </p>
+      <p class="ci-text reveal delay-2">
+        Religious orders, dark sects, guilds, militias, noble houses — all fighting their private wars.
+        Cinderon IV, exhausted, signed a secret truce with the cults. Dante watched his father rent power
+        instead of holding it. He filed that lesson under <strong>"never again."</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="chapter-mark"><span class="chapter-mark-glyph">✦</span></div>
+
+<!-- TIMELINE -->
+<div class="timeline">
+
+  <!-- ERA 1: THE FIVE LOST YEARS -->
+  <div class="tl-era era-rise reveal">
+    <div class="tl-node">
+      <div class="tl-node-dot"></div>
+      <div class="tl-node-line"></div>
+      <span class="tl-era-num">Era I</span>
+    </div>
+    <div class="tl-content">
+      <span class="tl-era-tag">The First Attempt</span>
+      <h3 class="tl-era-title">The Five Lost Years</h3>
+      <p class="tl-era-subtitle">The Democratic Experiment That Broke</p>
+      <p class="tl-era-body">
+        When Dante took the crown, he tried the philosopher's route: <strong>councils, concessions, decentralization.</strong>
+        He had married <em>Persephone</em> — a brilliant Ashuran noble rumored to be a Dark Flame adept — and sent
+        their many children into his early campaigns. Most died soldiers' deaths.
+      </p>
+      <p class="tl-era-body">
+        For five brutal years he discovered publicly that he had no leverage. The Low Council was bought.
+        The high orders played kingmaker. Black markets outspent the treasury.
+        <strong>Those years burned the reformer out of him.</strong>
+      </p>
+      <div class="tl-pull">
+        <p>"I did not fail because I was weak. I failed because I still believed weakness in others
+        was a temporary condition rather than a political fact."</p>
+        <cite>— Attributed to Dante I · The Ember Testament (banned)</cite>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERA 2: THE IMPERIAL PIVOT -->
+  <div class="tl-era era-wars reveal">
+    <div class="tl-node">
+      <div class="tl-node-dot"></div>
+      <div class="tl-node-line"></div>
+      <span class="tl-era-num">Era II</span>
+    </div>
+    <div class="tl-content">
+      <span class="tl-era-tag">The Revelation · Unity by Aim</span>
+      <h3 class="tl-era-title">The Imperial Pivot</h3>
+      <p class="tl-era-subtitle">The Great Civil Inquisition Wars</p>
+      <p class="tl-era-body">
+        Dante's revelation: <em>don't crush factions — aim them.</em> He offered cults, priesthoods, engineers,
+        and mercenary houses a single bargain: <strong>your arts become Ashura's arsenal, or your sanctuaries become ash.</strong>
+        He did this not as a mage but as a logistics genius. In one decade he:
+      </p>
+      <p class="tl-era-body">
+        <strong>Unionized enemies</strong> — folded rival flame schools into a doctrine of combined arms.
+        <strong>Weaponized doctrine</strong> — made creeds serve campaigns; Order of Pure Flame for morale,
+        Flashbrand for shock, Ember Vein for siege grids, Cindervault for supply heatlines.
+        <strong>Standardized magitek</strong> — formalized gem refineries and wardfoundries. The ancestor of Emberhold.
+        <strong>Exported the fight</strong> — turned inward vendettas into outward pride. <em>Ashura above. The Nine beneath.</em>
+      </p>
+      <div class="tl-pull">
+        <p>"I did not end the cults; I taught them an enemy they could agree upon."</p>
+        <cite>— The Ember Testament · Fragment VII</cite>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERA 3: SCANDALOUS LEGACY -->
+  <div class="tl-era era-legacy reveal">
+    <div class="tl-node">
+      <div class="tl-node-dot"></div>
+      <div class="tl-node-line"></div>
+      <span class="tl-era-num">Era III</span>
+    </div>
+    <div class="tl-content">
+      <span class="tl-era-tag">The Scandal · Power & Desire</span>
+      <h3 class="tl-era-title">The Tarnished Conquests</h3>
+      <p class="tl-era-subtitle">100+ Heirs · The Affairs That Started Wars</p>
+      <p class="tl-era-body">
+        Dante I was not only a conqueror but a man of insatiable desires. Throughout his reign he fathered
+        <strong>over 100 bastard children</strong> with numerous women across the realms — including the queens
+        of rival nations. His extramarital exploits were legendary and became a source of both scandal and
+        constant conflict.
+      </p>
+      <p class="tl-era-body">
+        Despite being married to <em>Queen Persephone of Amun-Re</em>, his lustful nature could not be contained.
+        The queens he bedded were often wives of rival kings — his relationships with them as much about
+        <strong>power as pleasure</strong>. Dante I used these liaisons to assert dominance, viewing them as
+        extensions of his conquests. Outraged kings sought to avenge their honor. The court of Ashura became
+        a place of intrigue and danger where plots and betrayals were the currency of survival.
+      </p>
+      <div class="tl-pull">
+        <p>"The throne is not a hearth. A king warms none — he keeps the frost from the door."</p>
+        <cite>— The Ember Testament · Fragment III</cite>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERA 4: SABLEAN ACCORD -->
+  <div class="tl-era era-empire reveal">
+    <div class="tl-node">
+      <div class="tl-node-dot"></div>
+      <div class="tl-node-line"></div>
+      <span class="tl-era-num">Era IV</span>
+    </div>
+    <div class="tl-content">
+      <span class="tl-era-tag">The Grand Strategy · The Cursed Accord</span>
+      <h3 class="tl-era-title">The Sablean Compact</h3>
+      <p class="tl-era-subtitle">"Sablea Is Not to Be Conquered — It Is to Be Scheduled."</p>
+      <p class="tl-era-body">
+        He never conquered the Dark Nation — and he knew it. Instead he drafted the
+        <strong>Old Dantean Laws & Edicts</strong> with Sablea's shadow brokers:
+        trade corridors for rare catalysts, mutual noninterference pacts for assassins,
+        and the first oath-bearing clauses that would later let <em>Loryxan</em> wrap
+        half the realm in blood contracts.
+      </p>
+      <p class="tl-era-body">
+        Dante called it <strong>grand strategy</strong>. His heirs would call it a <em>curse.</em>
+        The very legal skeleton he used to unify factions now lets a foreign hand pull tendons in secret —
+        and the Crimson Covenant playbook was written in the margins of his original accords.
+      </p>
+      <div class="tl-pull">
+        <p>"Sablea is not to be conquered. Sablea is to be scheduled."</p>
+        <cite>— The Ember Testament · Fragment IX</cite>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERA 5: THE ASSASSINATION -->
+  <div class="tl-era era-death reveal">
+    <div class="tl-node">
+      <div class="tl-node-dot"></div>
+      <div class="tl-node-line"></div>
+      <span class="tl-era-num">Era V</span>
+    </div>
+    <div class="tl-content">
+      <span class="tl-era-tag">The End · The Mystery That Remains</span>
+      <h3 class="tl-era-title">The Blade That Found Him</h3>
+      <p class="tl-era-subtitle">The Assassination of the Invincible King</p>
+      <p class="tl-era-body">
+        In his old age, Dante I remained a figure of immense power — but his enemies had not forgotten.
+        The assassin struck with precision, ensuring that the once-invincible warlord would not survive.
+        <strong>No court proof survived. A blood oath did.</strong>
+      </p>
+      <p class="tl-era-body">
+        His death sent shockwaves through the Nine Nations. The power vacuum it created left the realm
+        on the brink of chaos once again. Queen Persephone was <em>executed in the riot-days that followed</em> —
+        whether as a suspect or a victim of the power struggle that erupted, history does not say cleanly.
+        His son <strong>Dante II</strong> inherited the throne and, with it, the weight of everything his father
+        had built, buried, and broken.
+      </p>
+      <div class="tl-pull">
+        <p>"If my son governs with peace, burn these pages.
+        If he governs with fear, read them to him at dawn."</p>
+        <cite>— The Ember Testament · Final Entry · The pages were never burned.</cite>
+      </div>
+    </div>
+  </div>
+
+</div><!-- timeline -->
+
+<div class="chapter-mark"><span class="chapter-mark-glyph">✦</span></div>
+
+<!-- REDACTED TESTAMENT -->
+<section class="testament">
+  <div class="testament-inner">
+    <div class="testament-header reveal">
+      <span class="section-label">The Ember Testament · Classified · Sealed by Dante II</span>
+      <h2 class="testament-title">
+        The Banned Memoirs of<br><em>King Dante I</em>
+      </h2>
+      <p class="testament-subtitle">
+        Surviving fragments from the sealed Royal Ember Archives.
+        Dante II banned all copies and purged all references.
+        These pages are today's fault lines.
+      </p>
+    </div>
+
+    <p class="redacted-hint reveal">Hover to reveal the redacted text</p>
+
+    <!-- Fragment 1 -->
+    <div class="redacted-entry reveal">
+      <div class="redacted-bar">
+        <div class="redact-line" style="width:90%"></div>
+        <div class="redact-line" style="width:70%"></div>
+        <div class="redact-line" style="width:85%"></div>
+      </div>
+      <div class="revealed-quote">
+        <p>"Unity comes when every tribe believes the others need them alive."</p>
+        <cite>The Ember Testament · Fragment I · On the nature of empire</cite>
+      </div>
+    </div>
+
+    <!-- Fragment 2 -->
+    <div class="redacted-entry reveal delay-1">
+      <div class="redacted-bar">
+        <div class="redact-line" style="width:95%"></div>
+        <div class="redact-line" style="width:80%"></div>
+        <div class="redact-line" style="width:60%"></div>
+        <div class="redact-line" style="width:75%"></div>
+      </div>
+      <div class="revealed-quote">
+        <p>"I did not end the cults; I taught them an enemy they could agree upon."</p>
+        <cite>The Ember Testament · Fragment IV · On religious consolidation</cite>
+      </div>
+    </div>
+
+    <!-- Fragment 3 -->
+    <div class="redacted-entry reveal delay-2">
+      <div class="redacted-bar">
+        <div class="redact-line" style="width:88%"></div>
+        <div class="redact-line" style="width:65%"></div>
+        <div class="redact-line" style="width:80%"></div>
+      </div>
+      <div class="revealed-quote">
+        <p>"The throne is not a hearth. A king warms none — he keeps the frost from the door."</p>
+        <cite>The Ember Testament · Fragment VI · On rulership</cite>
+      </div>
+    </div>
+
+    <!-- Fragment 4 -->
+    <div class="redacted-entry reveal">
+      <div class="redacted-bar">
+        <div class="redact-line" style="width:92%"></div>
+        <div class="redact-line" style="width:73%"></div>
+        <div class="redact-line" style="width:58%"></div>
+      </div>
+      <div class="revealed-quote">
+        <p>"Sablea is not to be conquered. Sablea is to be scheduled."</p>
+        <cite>The Ember Testament · Fragment IX · On the Dark Nation Accord</cite>
+      </div>
+    </div>
+
+    <!-- Fragment 5 -->
+    <div class="redacted-entry reveal delay-1">
+      <div class="redacted-bar">
+        <div class="redact-line" style="width:85%"></div>
+        <div class="redact-line" style="width:95%"></div>
+        <div class="redact-line" style="width:70%"></div>
+        <div class="redact-line" style="width:80%"></div>
+      </div>
+      <div class="revealed-quote">
+        <p>"Mercy builds what victory merely empties."</p>
+        <cite>The Ember Testament · Fragment XII · On war crimes committed in the Civil Inquisition</cite>
+      </div>
+    </div>
+
+    <!-- Fragment 6 — The Final Entry -->
+    <div class="redacted-entry reveal delay-2">
+      <div class="redacted-bar">
+        <div class="redact-line" style="width:88%"></div>
+        <div class="redact-line" style="width:76%"></div>
+        <div class="redact-line" style="width:92%"></div>
+        <div class="redact-line" style="width:65%"></div>
+        <div class="redact-line" style="width:50%"></div>
+      </div>
+      <div class="revealed-quote">
+        <p>"If my son governs with peace, burn these pages.
+        If he governs with fear, read them to him at dawn."</p>
+        <cite>The Ember Testament · Final Entry · The pages were never burned.</cite>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="chapter-mark"><span class="chapter-mark-glyph">✦</span></div>
+
+<!-- BLOODLINES -->
+<section class="bloodlines">
+  <div class="cons-header reveal">
+    <span class="section-label">The Dynasty · Every Conversation Is Loaded</span>
+    <h2 class="cons-title">
+      The Bloodlines<br><em>That Still Rule the Room</em>
+    </h2>
+    <p class="cons-intro">
+      Two surviving lines of the same tree — one buried the Testament,
+      one is about to open it by living it.
+    </p>
+  </div>
+
+  <div class="bloodlines-tree">
+    <!-- Gen 0 -->
+    <div class="gen-row reveal">
+      <span class="gen-label">Gen 0</span>
+      <div class="gen-card">
+        <div class="gen-card-name">Cinderon IV</div>
+        <div class="gen-card-title">King of Ashura · Father of Dante I</div>
+        <div class="gen-card-note">Rented power. Never held it.</div>
+      </div>
+    </div>
+    <div class="gen-connector reveal"><div class="gen-conn-line"></div></div>
+
+    <!-- Gen 1 -->
+    <div class="gen-row reveal">
+      <span class="gen-label">Gen 1</span>
+      <div class="gen-card primary">
+        <div class="gen-card-name">Dante I</div>
+        <div class="gen-card-title">The Unstoppable Warlord · Unifier of Ashura</div>
+        <div class="gen-card-note">+ Persephone of Amun-Re</div>
+      </div>
+    </div>
+    <div class="gen-connector reveal"><div class="gen-conn-line"></div></div>
+
+    <!-- Gen 2 -->
+    <div class="gen-row reveal">
+      <span class="gen-label">Gen 2</span>
+      <div class="gen-card">
+        <div class="gen-card-name">Dante II</div>
+        <div class="gen-card-title">Heir · Sealed the Testament · Tried to build peace</div>
+        <div class="gen-card-note">+ Seraphina of Verdantia</div>
+      </div>
+      <div class="gen-card danger">
+        <div class="gen-card-name">Roxanna</div>
+        <div class="gen-card-title">High Sorceress · Brilliant & Dangerous</div>
+        <div class="gen-card-note">Mother of Solara</div>
+      </div>
+    </div>
+    <div class="gen-connector reveal"><div class="gen-conn-line"></div></div>
+
+    <!-- Gen 3 -->
+    <div class="gen-row reveal">
+      <span class="gen-label">Gen 3</span>
+      <div class="gen-card primary">
+        <div class="gen-card-name">Queen Calypso</div>
+        <div class="gen-card-title">Daughter of Dante II · Fire Nation Queen · Governs in his shadow</div>
+      </div>
+      <div class="gen-card">
+        <div class="gen-card-name">Queen Thorne</div>
+        <div class="gen-card-title">Daughter of Dante II · Verdantia · Sustains what Dante taxed</div>
+      </div>
+      <div class="gen-card">
+        <div class="gen-card-name">Queen Nxia</div>
+        <div class="gen-card-title">Daughter of Dante II · Thalassara · Sees the oaths</div>
+      </div>
+      <div class="gen-card danger">
+        <div class="gen-card-name">Solara</div>
+        <div class="gen-card-title">Daughter of Roxanna · The Infernal Order · Kin to the Crown</div>
+        <div class="gen-card-note">The only one with a forge hot enough to recast the metal itself.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="chapter-mark"><span class="chapter-mark-glyph">✦</span></div>
+
+<!-- ASSASSINATION THEORIES -->
+<section class="theories">
+  <div class="theories-inner">
+    <div class="theories-header reveal">
+      <span class="section-label">The Unanswered Question · Four Suspects</span>
+      <h2 class="theories-title">
+        The Blade That Found<br><em>the Invincible King</em>
+      </h2>
+      <p class="theories-intro">
+        The assassin struck with precision. No court proof survived. A blood oath did.
+        The question of who gave the order has shaped every political move in Ashura since.
+      </p>
+    </div>
+
+    <div class="theory-grid">
+      <div class="theory-card theory-1 reveal">
+        <div class="theory-num">I</div>
+        <div class="theory-suspect">Queen Persephone</div>
+        <div class="theory-role">His Queen · Dark Flame Adept</div>
+        <p class="theory-body">
+          Rumored Dark Flame sympathizer who may have seen his union-state as spiritual blasphemy.
+          She was <strong>executed in the riot-days following his death</strong> — before any trial,
+          before any testimony. Someone wanted her silenced, not convicted.
+        </p>
+        <div class="theory-verdict">Status: Executed. Verdict: Unknown.</div>
+      </div>
+
+      <div class="theory-card theory-2 reveal delay-1">
+        <div class="theory-num">II</div>
+        <div class="theory-suspect">The Black Treaty Lodge</div>
+        <div class="theory-role">Old Oathkeepers · The Original Pact Holders</div>
+        <p class="theory-body">
+          Ancient keepers of Dante's earliest oaths who wanted the truce with the cults
+          <strong>honored, not hardened</strong>. When Dante began converting agreements
+          into enforcement mechanisms, he may have crossed a line no blood oath permits.
+        </p>
+        <div class="theory-verdict">Status: Suspected. Evidence: Sealed.</div>
+      </div>
+
+      <div class="theory-card theory-3 reveal">
+        <div class="theory-num">III</div>
+        <div class="theory-suspect">Sablean Operatives</div>
+        <div class="theory-role">Dark Nation · Shadow Brokers</div>
+        <p class="theory-body">
+          Offended by Dante's quiet depth-charges along their borders — small provocations
+          designed to test the limits of the noninterference pact. Sablea does not tolerate
+          <em>tests</em>. They tolerate schedules. <strong>He may have broken the schedule.</strong>
+        </p>
+        <div class="theory-verdict">Status: Unconfirmed. Motive: Plausible.</div>
+      </div>
+
+      <div class="theory-card theory-4 reveal delay-1">
+        <div class="theory-num">IV</div>
+        <div class="theory-suspect">The Bastard Cadre</div>
+        <div class="theory-role">Sons of His Campaigns · The Forgotten Heirs</div>
+        <p class="theory-body">
+          A coalition of officer-sons from his campaigns — bastard children who had carved
+          their own fiefdoms and feared that succession under Dante II would unravel
+          everything. <strong>They had motive, access, and an unspoken covenant of silence.</strong>
+          No names. No proof. Only the pattern.
+        </p>
+        <div class="theory-verdict">Status: Theoretical. Pattern: Consistent.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="chapter-mark"><span class="chapter-mark-glyph">✦</span></div>
+
+<!-- CONSEQUENCES -->
+<section class="consequences">
+  <div class="cons-header reveal">
+    <span class="section-label">The Ghost in the Architecture · Present Day</span>
+    <h2 class="cons-title">
+      How Dante I<br><em>Still Rules the Room</em>
+    </h2>
+    <p class="cons-intro">
+      He has been dead for a generation. His oaths, his loopholes,
+      his architecture — these are still the walls every living character
+      is either defending, escaping, or about to detonate.
+    </p>
+  </div>
+
+  <div class="cons-list">
+    <div class="cons-entry reveal">
+      <div class="cons-who">
+        <div class="cons-name">Aurelian</div>
+        <div class="cons-role">The Doctrine</div>
+      </div>
+      <div class="cons-what">
+        <span class="cons-action">Has Precedent</span>
+        <p class="cons-text">The Irreversibility Doctrine, the Eye, the Sentinels, Absolution — each has an ancestor in Dante's centralization drives. She is finishing his architecture while believing she is rescuing the realm from his excesses. She hears the ringing and calls it destiny.</p>
+      </div>
+    </div>
+    <div class="cons-entry reveal delay-1">
+      <div class="cons-who">
+        <div class="cons-name">Loryxan</div>
+        <div class="cons-role">Shadow Broker</div>
+      </div>
+      <div class="cons-what">
+        <span class="cons-action">Owns the Loopholes</span>
+        <p class="cons-text">Dante's Sablean accords and early oath clauses became the Crimson Covenant playbook. The very legal skeleton Dante used to unify factions now lets a foreign hand pull tendons in secret. He hears the ringing and tunes his strings to it.</p>
+      </div>
+    </div>
+    <div class="cons-entry reveal">
+      <div class="cons-who">
+        <div class="cons-name">Calypso</div>
+        <div class="cons-role">Queen of Ashura</div>
+      </div>
+      <div class="cons-what">
+        <span class="cons-action">Governs in His Shadow</span>
+        <p class="cons-text">She carries his discipline but lacks his private web of threats-and-gifts. Her solution is speed and will; her risk is becoming an iron echo. She marches. The question is whether she is building or only repeating.</p>
+      </div>
+    </div>
+    <div class="cons-entry reveal delay-1">
+      <div class="cons-who">
+        <div class="cons-name">Thorne</div>
+        <div class="cons-role">Queen of Verdantia</div>
+      </div>
+      <div class="cons-what">
+        <span class="cons-action">Preserves What He Taxed</span>
+        <p class="cons-text">Sanctuaries, seed libraries, corridors of care — she sustains what Dante considered acceptable collateral. She softens his ringing into something livable. She is the only reason some of his damage hasn't become permanent.</p>
+      </div>
+    </div>
+    <div class="cons-entry reveal">
+      <div class="cons-who">
+        <div class="cons-name">Nxia</div>
+        <div class="cons-role">Queen of Thalassara</div>
+      </div>
+      <div class="cons-what">
+        <span class="cons-action">Sees the Oaths</span>
+        <p class="cons-text">Psychic Fire reads the scorch-marks Dante's edicts left in people. She can smell Loryxan's ink under today's decrees. She records it all — the only living witness to how deep the original damage ran.</p>
+      </div>
+    </div>
+    <div class="cons-entry reveal delay-1">
+      <div class="cons-who">
+        <div class="cons-name">Solara</div>
+        <div class="cons-role">The Infernal Order · Kin to the Crown</div>
+      </div>
+      <div class="cons-what">
+        <span class="cons-action">Breaks the Cycle or Completes It</span>
+        <p class="cons-text">Sacred Gemcraft offers a third way Dante never had: cleanse corrupt power or fuse it into something survivable. She is the only one with a forge hot enough to recast the metal itself. Her choice — cleanser or conqueror — decides whether his memoir becomes scripture or warning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="page-cta">
+  <div class="page-cta-inner reveal">
+    <span class="section-label" style="display:block;text-align:center;margin-bottom:20px;">The Legacy Continues</span>
+    <h2>One king's choices.<br><em>Every character's inheritance.</em></h2>
+    <p>
+      The flame has been burning since Dante lit it.
+      Whether it warms or destroys depends entirely on
+      what his grandchildren choose to do with his Testament.
+    </p>
+    <div class="cta-row">
+      <a href="ashura-nation.html" class="btn-prim">Return to Ashura</a>
+      <a href="nine-realms-story-arcs.html" class="btn-sec">Read the Story Arcs →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-copy">Nine Realms Universe — King Dante I · Ashura · Original IP</span>
+  <span class="footer-copy">Created by Ron</span>
+</footer>
+
+<script>
+try{
+
+/* Cursor */
+const dot=document.getElementById('curDot');
+const ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

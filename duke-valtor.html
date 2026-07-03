@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duke Valtor — The Oathkeeper of Vanthelon | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:       #020304;
+  --iron:       #060608;
+  --forge:      #0A0A0C;
+  --vault:      #0D0C10;
+  --obsid:      #0F0E14;
+
+  /* Dark amethyst — Vanthelon's power source */
+  --ame:        #1A0A30;
+  --ame-mid:    #340A60;
+  --ame-pale:   #6020A8;
+  --ame-bright: #8840D0;
+  --ame-glow:   rgba(136,64,208,0.6);
+
+  /* Iron & steel — the machinery */
+  --steel:      rgba(140,148,160,0.6);
+  --steel-mid:  rgba(160,168,180,0.75);
+  --steel-pale: #B8C0CC;
+  --steel-bright:#D8DDE8;
+
+  /* Void amber — soul energy / the curse */
+  --soul:       rgba(160,100,20,0.6);
+  --soul-mid:   rgba(200,130,30,0.7);
+  --soul-bright:#E0A830;
+
+  /* Curse black-red — the tragedy */
+  --curse:      rgba(100,10,10,0.7);
+  --curse-bright:#B02020;
+
+  --parch:      #A8A8B4;
+  --parch-pale: #C8C8D4;
+  --parch-dim:  #484850;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Amethyst pulse from below — the mines beneath Vanthelon */
+body::before{content:'';position:fixed;bottom:0;left:0;right:0;height:50vh;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 70% at 50% 100%,rgba(52,10,96,0.07) 0%,transparent 70%);
+  animation:amePulse 10s ease-in-out infinite;}
+@keyframes amePulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
+
+/* Iron grid — industrial texture */
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.018;
+  background-image:linear-gradient(rgba(140,148,160,0.5) 1px,transparent 1px),linear-gradient(90deg,rgba(140,148,160,0.5) 1px,transparent 1px);
+  background-size:80px 80px;}
+
+/* Cursor — cross-hair mechanical */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--ame-bright);transform:translate(-50%,-50%);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(136,64,208,0.35);border-radius:0;transform:translate(-50%,-50%);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.forged{width:48px;height:48px;border-color:var(--ame-bright);box-shadow:0 0 14px rgba(136,64,208,0.3);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(2,3,4,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(136,64,208,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ame-bright);opacity:0.5;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ame-bright);border:1px solid rgba(136,64,208,0.25);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--ame-pale);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 55%,#100C1A 0%,#080810 45%,var(--void) 75%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+/* Iron strut lines */
+.strut-l,.strut-r{position:absolute;top:0;bottom:0;pointer-events:none;z-index:1;}
+.strut-l{left:12%;width:1px;background:linear-gradient(to bottom,transparent 5%,rgba(140,148,160,0.04) 30%,rgba(140,148,160,0.06) 50%,rgba(140,148,160,0.04) 70%,transparent 95%);}
+.strut-r{right:12%;width:1px;background:linear-gradient(to bottom,transparent 5%,rgba(136,64,208,0.05) 30%,rgba(136,64,208,0.08) 50%,rgba(136,64,208,0.05) 70%,transparent 95%);}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-sys{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ame-bright);opacity:0;animation:riseIn 1s .2s ease forwards;margin-bottom:16px;letter-spacing:0.06em;display:flex;align-items:center;justify-content:center;gap:10px;}
+.h-sys::before,.h-sys::after{content:'//';color:rgba(136,64,208,0.3);}
+.h-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;display:block;margin-bottom:8px;}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(52px,9vw,120px);font-weight:900;
+  color:var(--steel-bright);letter-spacing:0.04em;line-height:0.88;
+  text-shadow:0 0 120px rgba(136,64,208,0.3),0 0 60px rgba(52,10,96,0.3),0 4px 40px rgba(0,0,0,0.95);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-sub{font-family:'Cinzel',serif;font-size:clamp(10px,1.5vw,16px);letter-spacing:0.35em;text-transform:uppercase;color:var(--ame-bright);opacity:0;animation:riseIn 1s .75s ease forwards;display:block;margin-top:6px;}
+.h-rule{width:260px;height:1px;background:linear-gradient(to right,transparent,rgba(136,64,208,0.35),rgba(140,148,160,0.2),transparent);margin:20px auto;opacity:0;animation:fadeIn 1s 1s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-quote{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(14px,1.8vw,19px);color:rgba(168,168,180,0.45);
+  max-width:700px;margin:0 auto 36px;line-height:1.8;
+  opacity:0;animation:riseIn 1.2s 1.1s ease forwards;
+  border-left:2px solid rgba(136,64,208,0.3);padding-left:20px;text-align:left;
+}
+.h-vitals{display:flex;justify-content:center;max-width:800px;margin:0 auto;border:1px solid rgba(136,64,208,0.12);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:16px 10px;text-align:center;border-right:1px solid rgba(136,64,208,0.08);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Share Tech Mono',monospace;font-size:clamp(10px,1.5vw,16px);color:var(--ame-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--ame-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--ame-bright);opacity:0.45;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(136,64,208,0.15),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ame-mid);opacity:0.4;letter-spacing:0.1em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--ame-bright);}
+.big-h em.steel{color:var(--steel-pale);}
+.big-h em.soul{color:var(--soul-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(168,168,180,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--ame-pale);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid var(--ame-mid);background:rgba(52,10,96,0.06);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,20px);color:rgba(168,168,180,0.75);line-height:1.75;}
+.pull cite{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ame-bright);opacity:0.35;display:block;margin-top:10px;font-style:normal;letter-spacing:0.05em;}
+
+/* ═══ PROFILE ═══ */
+.profile-sec{padding:110px 60px;background:var(--forge);position:relative;overflow:hidden;}
+.profile-sec::before{content:'VALTOR';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(100px,17vw,220px);font-weight:900;color:rgba(136,64,208,0.025);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.prof-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.prof-aside .big-v{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(136,64,208,0.08);line-height:1;margin-left:-6px;}
+
+/* Spec table */
+.spec-table{margin-top:24px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(136,64,208,0.1);}
+.srow{display:grid;grid-template-columns:110px 1fr;overflow:hidden;}
+.srk{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ame-bright);opacity:0.45;background:rgba(136,64,208,0.03);padding:11px 12px;border-right:1px solid rgba(136,64,208,0.07);letter-spacing:0.04em;}
+.srv{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,168,180,0.55);padding:9px 14px;line-height:1.5;}
+.srv strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Physical description */
+.phys-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:24px;}
+.phys-item{padding:12px 14px;border:1px solid rgba(136,64,208,0.08);background:rgba(136,64,208,0.02);}
+.pi-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ame-bright);opacity:0.4;letter-spacing:0.05em;display:block;margin-bottom:4px;}
+.pi-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,168,180,0.6);line-height:1.4;}
+.pi-val strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ VANTHELON ═══ */
+.vanthelon-sec{padding:110px 60px;background:var(--vault);position:relative;overflow:hidden;}
+.vanthelon-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 60%,rgba(52,10,96,0.06) 0%,transparent 70%);}
+.vth-inner{max-width:1100px;margin:0 auto;}
+.vth-split{display:grid;grid-template-columns:1.2fr 1fr;gap:3px;margin-top:52px;}
+.vth-card{padding:36px 32px;border:1px solid rgba(136,64,208,0.1);background:rgba(4,4,8,0.7);position:relative;overflow:hidden;transition:border-color .3s;}
+.vth-card:hover{border-color:rgba(136,64,208,0.28);}
+.vth-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ame-mid),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.vth-card:hover::after{transform:scaleX(1);}
+.vc-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ame-bright);border:1px solid rgba(136,64,208,0.2);padding:3px 12px;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.vc-name{font-family:'Cinzel',serif;font-size:clamp(14px,2vw,22px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;}
+.vc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,180,0.55);line-height:1.85;}
+.vc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.vc-body em{color:var(--ame-pale);}
+
+/* ═══ THE BLACK CURSE — THREE ACTS ═══ */
+.curse-sec{padding:110px 60px;background:var(--iron);position:relative;overflow:hidden;}
+.curse-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(100,10,10,0.06) 0%,transparent 70%);}
+.curse-inner{max-width:1100px;margin:0 auto;}
+
+/* Three acts */
+.acts-grid{display:flex;flex-direction:column;gap:2px;margin-top:52px;}
+.act{display:grid;grid-template-columns:160px 1fr;border:1px solid;overflow:hidden;transition:border-color .3s,background .3s;}
+.act-I{border-color:rgba(136,64,208,0.1);}
+.act-II{border-color:rgba(180,100,20,0.1);}
+.act-III{border-color:rgba(160,20,20,0.12);}
+.act:hover{} .act-I:hover{border-color:rgba(136,64,208,0.28);background:rgba(136,64,208,0.03);}
+.act-II:hover{border-color:rgba(180,100,20,0.3);background:rgba(180,100,20,0.03);}
+.act-III:hover{border-color:rgba(160,20,20,0.32);background:rgba(160,20,20,0.04);}
+.act::before{display:none;}
+.act-num{padding:32px 20px;border-right:1px solid rgba(136,64,208,0.06);display:flex;flex-direction:column;justify-content:center;align-items:center;background:rgba(0,0,0,0.2);}
+.an-roman{font-family:'Cinzel Decorative',serif;font-size:clamp(28px,4vw,52px);font-weight:400;line-height:1;margin-bottom:8px;}
+.act-I .an-roman{color:rgba(136,64,208,0.4);}
+.act-II .an-roman{color:rgba(200,130,30,0.4);}
+.act-III .an-roman{color:rgba(160,20,20,0.5);}
+.an-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;line-height:1.6;text-align:center;}
+.act-body{padding:28px 32px;}
+.ab-period{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.05em;padding:3px 12px;border:1px solid;display:inline-block;margin-bottom:10px;opacity:0.6;}
+.act-I .ab-period{color:var(--ame-bright);border-color:rgba(136,64,208,0.25);}
+.act-II .ab-period{color:var(--soul-bright);border-color:rgba(200,130,30,0.25);}
+.act-III .ab-period{color:var(--curse-bright);border-color:rgba(160,20,20,0.3);}
+.ab-title{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,19px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:8px;}
+.ab-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,180,0.55);line-height:1.85;}
+.ab-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.act-I .ab-body em{color:var(--ame-pale);}
+.act-II .ab-body em{color:var(--soul-bright);}
+.act-III .ab-body em{color:var(--curse-bright);}
+
+/* Monologues */
+.monologue{margin-top:10px;padding:14px 18px;border-left:2px solid;background:rgba(0,0,0,0.3);}
+.act-I .monologue{border-left-color:rgba(136,64,208,0.3);}
+.act-II .monologue{border-left-color:rgba(200,130,30,0.3);}
+.act-III .monologue{border-left-color:rgba(160,20,20,0.4);}
+.monologue p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,180,0.6);line-height:1.7;}
+
+/* ═══ THE VOID ERADICATOR — CLIMAX ═══ */
+.void-sec{padding:110px 60px;background:var(--obsid);position:relative;overflow:hidden;}
+.void-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(100,10,10,0.08) 0%,transparent 70%);}
+.void-inner{max-width:1100px;margin:0 auto;}
+.void-block{
+  margin-top:52px;padding:44px;
+  border:1px solid rgba(160,20,20,0.2);
+  background:rgba(6,2,2,0.9);
+  position:relative;overflow:hidden;
+}
+.void-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(100,10,10,0.07) 0%,transparent 70%);}
+.void-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--curse-bright),transparent);}
+.vb-c{position:relative;z-index:1;}
+.vb-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--curse-bright);border:1px solid rgba(160,20,20,0.3);padding:5px 16px;display:inline-block;margin-bottom:18px;opacity:0.8;letter-spacing:0.06em;}
+.vb-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:14px;}
+.vb-title em{font-style:italic;color:var(--curse-bright);}
+.vb-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,18px);color:rgba(168,168,180,0.6);line-height:1.9;margin-bottom:16px;max-width:820px;}
+.vb-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.vb-body em{color:var(--curse-bright);}
+.cost-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-top:3px;}
+.cost-item{padding:18px 20px;border:1px solid rgba(160,20,20,0.12);background:rgba(160,20,20,0.03);transition:border-color .3s;}
+.cost-item:hover{border-color:rgba(160,20,20,0.3);}
+.ci-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--curse-bright);opacity:0.6;display:block;margin-bottom:6px;letter-spacing:0.05em;}
+.ci-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(168,168,180,0.5);line-height:1.6;}
+.ci-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ THE SONS — ZYPHOR & KYPHOS ═══ */
+.sons-sec{padding:110px 60px;background:var(--forge);}
+.sons-inner{max-width:1100px;margin:0 auto;}
+.sons-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.son-card{padding:44px 40px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.sc-zyphor{border-color:rgba(160,20,20,0.12);background:linear-gradient(160deg,#120402 0%,#0C0304 100%);}
+.sc-kyphos{border-color:rgba(136,64,208,0.1);background:linear-gradient(160deg,#0A0814 0%,#080810 100%);}
+.sc-zyphor:hover{border-color:rgba(160,20,20,0.3);}
+.sc-kyphos:hover{border-color:rgba(136,64,208,0.28);}
+.sc-zyphor::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(160,20,20,0.07) 0%,transparent 70%);}
+.sc-kyphos::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(136,64,208,0.07) 0%,transparent 70%);}
+.son-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.son-card:hover::after{transform:scaleX(1);}
+.sc-zyphor::after{background:linear-gradient(to right,transparent,var(--curse-bright),transparent);}
+.sc-kyphos::after{background:linear-gradient(to right,transparent,var(--ame-bright),transparent);}
+.son-inner{position:relative;z-index:1;}
+.son-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:4px 12px;border:1px solid;display:inline-block;margin-bottom:14px;opacity:0.7;letter-spacing:0.05em;}
+.sc-zyphor .son-badge{color:var(--curse-bright);border-color:rgba(160,20,20,0.3);}
+.sc-kyphos .son-badge{color:var(--ame-bright);border-color:rgba(136,64,208,0.28);}
+.son-name{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3vw,38px);font-weight:400;color:var(--parch-pale);margin-bottom:4px;}
+.son-role{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;display:block;}
+.son-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,180,0.55);line-height:1.85;margin-bottom:12px;}
+.son-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.sc-zyphor .son-body em{color:var(--curse-bright);}
+.sc-kyphos .son-body em{color:var(--ame-pale);}
+.son-conflict{margin-top:10px;padding:12px 16px;border:1px solid;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);line-height:1.65;}
+.sc-zyphor .son-conflict{border-color:rgba(160,20,20,0.15);color:rgba(192,130,130,0.65);}
+.sc-kyphos .son-conflict{border-color:rgba(136,64,208,0.15);color:rgba(160,140,200,0.65);}
+
+/* ═══ RELATIONSHIPS ═══ */
+.rel-sec{padding:100px 60px;background:var(--vault);}
+.rel-inner{max-width:1100px;margin:0 auto;}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+.rel-card{padding:28px 24px;border:1px solid rgba(136,64,208,0.08);background:rgba(4,4,8,0.5);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.rel-card:hover{border-color:rgba(136,64,208,0.22);background:rgba(136,64,208,0.03);}
+.rel-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ame-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.rel-card:hover::after{transform:scaleX(1);}
+.rc-who{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ame-bright);opacity:0.45;display:block;margin-bottom:6px;letter-spacing:0.05em;}
+.rc-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,19px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:5px;}
+.rc-dynamic{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:10px;display:block;}
+.rc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,180,0.5);line-height:1.75;}
+.rc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.rc-body em{color:var(--ame-pale);}
+
+/* ═══ THE IRON KINGDOM — AFTERMATH ═══ */
+.aftermath-sec{padding:110px 60px;background:var(--iron);position:relative;overflow:hidden;}
+.aftermath-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(52,10,96,0.07) 0%,transparent 70%);}
+.after-inner{max-width:1100px;margin:0 auto;}
+.after-block{
+  margin-top:52px;padding:44px;
+  border:1px solid rgba(136,64,208,0.12);
+  background:rgba(4,2,8,0.8);
+  position:relative;overflow:hidden;
+}
+.after-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(52,10,96,0.06) 0%,transparent 70%);}
+.after-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ame-mid),transparent);}
+.ab2-c{position:relative;z-index:1;}
+.ab2-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ame-bright);border:1px solid rgba(136,64,208,0.2);padding:5px 16px;display:inline-block;margin-bottom:18px;opacity:0.7;letter-spacing:0.06em;}
+.ab2-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,42px);font-weight:400;color:var(--parch-pale);margin-bottom:14px;}
+.ab2-title em{font-style:italic;color:var(--ame-bright);}
+.ab2-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,18px);color:rgba(168,168,180,0.6);line-height:1.9;margin-bottom:16px;max-width:820px;}
+.ab2-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ab2-body em{color:var(--ame-bright);}
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:3px;}
+.theme-item{padding:20px 22px;border:1px solid rgba(136,64,208,0.1);background:rgba(52,10,96,0.04);transition:border-color .3s;}
+.theme-item:hover{border-color:rgba(136,64,208,0.25);}
+.ti-title{font-family:'Cinzel',serif;font-size:clamp(12px,1.6vw,16px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:6px;}
+.ti-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(168,168,180,0.5);line-height:1.7;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(136,64,208,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--ame-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(168,168,180,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#E8E8F4;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(168,168,180,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(168,168,180,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(136,64,208,0.07);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(168,168,180,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .profile-sec,.vanthelon-sec,.curse-sec,.void-sec,.sons-sec,.rel-sec,.aftermath-sec,.page-cta{padding:80px 40px;}
+  .prof-inner{grid-template-columns:1fr;gap:40px;}
+  .vth-split{grid-template-columns:1fr;}
+  .act{grid-template-columns:1fr;} .act-num{border-right:none;border-bottom:1px solid rgba(136,64,208,0.06);}
+  .cost-grid{grid-template-columns:1fr 1fr;}
+  .sons-split{grid-template-columns:1fr;}
+  .rel-grid{grid-template-columns:1fr 1fr;}
+  .theme-grid{grid-template-columns:1fr;}
+  .phys-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .profile-sec,.vanthelon-sec,.curse-sec,.void-sec,.sons-sec,.rel-sec,.aftermath-sec,.page-cta{padding:60px 24px;}
+  .cost-grid{grid-template-columns:1fr;}
+  .rel-grid{grid-template-columns:1fr;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(136,64,208,0.08);}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// DARK_NATION · VANTHELON · OATHKEEPER_BLOODLINE //</span>
+  </a>
+  <div class="nav-right">
+    <a href="four-secrets.html" class="nav-link">Four Secrets</a>
+    <a href="new-sablea.html" class="nav-link">New Sablea</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="strut-l"></div><div class="strut-r"></div>
+  <div class="hero-content">
+    <div class="h-sys">DARK_NATION · VANTHELON · 300_YEAR_RULE · PRE-1355 · OATHKEEPER_BLOODLINE</div>
+    <span class="h-label">Duke of Vanthelon · Master of Dark Artifice and Machinery · Last of the Oathkeeper Line</span>
+    <h1 class="h-name">Valtor</h1>
+    <span class="h-sub">The Oathkeeper · The Iron King · The Man Who Saved His People by Destroying Them</span>
+    <div class="h-rule"></div>
+    <div class="h-quote">"Every night, they hunt me. Every day, I rebuild what they destroyed. I am Duke Valtor, the last Oathkeeper. And I will save them, even if it means destroying everything they remember — including me."</div>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">300+</div><div class="h-vlabel">Years of Rule</div></div>
+      <div class="h-vital"><div class="h-vval">Abyssal</div><div class="h-vlabel">Keep — Sworn Guardian</div></div>
+      <div class="h-vital"><div class="h-vval">2 Yrs</div><div class="h-vlabel">Duration of the Curse</div></div>
+      <div class="h-vital"><div class="h-vval">∅</div><div class="h-vlabel">People Remaining Whole</div></div>
+      <div class="h-vital"><div class="h-vval">Pre-1355</div><div class="h-vlabel">Timeline</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ENTER VANTHELON //</span><div class="s-line"></div></div>
+</section>
+
+<!-- PROFILE -->
+<section class="profile-sec">
+  <div class="prof-inner">
+    <div class="rv">
+      <div class="prof-aside">
+        <div class="big-v">V</div>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ame-bright);opacity:0.4;letter-spacing:0.06em;">// DARK_NATION · VANTHELON · OATHKEEPER //</span>
+        <div class="spec-table" style="margin-top:20px;">
+          <div class="srow"><div class="srk">AGE</div><div class="srv"><strong>Over 300 years old</strong> — appears in his mid-50s due to the effects of dark artifice and ancient rituals</div></div>
+          <div class="srow"><div class="srk">ROLE</div><div class="srv"><strong>Duke of Vanthelon</strong> — the eldest and most respected ruler in the Dark Nation; Master of Dark Artifice and Machinery</div></div>
+          <div class="srow"><div class="srk">POWER</div><div class="srv">Mastery of <strong>dark artifice, arcane engineering, and dark crystal alchemy</strong> — creator of the Iron Automaton Army and the Void Eradicator</div></div>
+          <div class="srow"><div class="srk">OATH</div><div class="srv">Unbreakable lineage oath to protect the <strong>Abyssal Keep</strong> — three generations of Oathkeepers before him; Valtor is the last</div></div>
+          <div class="srow"><div class="srk">SONS</div><div class="srv"><strong>Zyphor</strong> (elder — Master Engineer) and <strong>Kyphos</strong> (younger — theoretical scientist); both traumatized by the curse's aftermath</div></div>
+          <div class="srow"><div class="srk">LEGACY</div><div class="srv">Activated the Void Eradicator — saved his sons, <strong>erased the minds of nearly his entire people</strong>. Vanthelon is now the Iron Kingdom of Cursed Souls</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">// PROFILE · THE OATHKEEPER · STOIC ARCHITECT OF IRON LEGACY //</span>
+      <h2 class="big-h">300 years of rule.<br><em>Two years to lose everything he built.</em></h2>
+      <p class="bp">Duke Valtor is one of the eldest and most respected rulers within the Dark Nation, overseeing the ancient and resource-rich land of Vanthelon for over three centuries. His rule has endured primarily through his mastery of dark artifice and his ability to balance technological innovation with ancient magic. <strong>Vanthelon is renowned for its vast wealth of dark amethyst</strong> — a crystal that amplifies both magic and machinery — making Valtor's domain an economic powerhouse within the Dark Nation.</p>
+      <p class="bp">Stoic, unyielding, and deeply pragmatic, he rarely displays emotion. His will is iron, forged by centuries of duty to people and land. He believes in using technology for stability, innovation, and progress — not merely for war. He is bound by <em>a deep sense of responsibility to protect Vanthelon and its ancient oaths</em>, even as the rest of the Dark Nation descends into chaos around him.</p>
+      <div class="phys-grid rv d2">
+        <div class="phys-item"><span class="pi-label">// HEIGHT //</span><div class="pi-val"><strong>6'3"</strong> — tall and broad-shouldered, frame hardened by centuries of battle</div></div>
+        <div class="phys-item"><span class="pi-label">// HAIR //</span><div class="pi-val"><strong>Silver-gray</strong> — often slicked back in disciplined manner</div></div>
+        <div class="phys-item"><span class="pi-label">// EYES //</span><div class="pi-val"><strong>Piercing steel gray</strong> with a faint glow of dark amethyst — a reflection of his connection to Vanthelon's mineral</div></div>
+        <div class="phys-item"><span class="pi-label">// ARM //</span><div class="pi-val"><strong>Metal prosthetic</strong> — his own design, crafted from dark amethyst-infused iron. A visible artifact of who built this kingdom.</div></div>
+        <div class="phys-item"><span class="pi-label">// SCAR //</span><div class="pi-val">A prominent scar across his face from <strong>a long-forgotten war</strong> — one of many he no longer names</div></div>
+        <div class="phys-item"><span class="pi-label">// AURA //</span><div class="pi-val"><strong>Commands an imposing presence</strong> — the authority and wisdom that only centuries of rule can bring. Others feel the weight of him before he speaks.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// VANTHELON //</div></div>
+
+<!-- VANTHELON — THE LAND -->
+<section class="vanthelon-sec">
+  <div class="vth-inner">
+    <div class="rv">
+      <span class="sl">// VANTHELON · THE_IRON_KINGDOM · DARK_AMETHYST_NATION //</span>
+      <h2 class="big-h">A kingdom built on dark crystal<br><em>and the oath of a bloodline.</em></h2>
+      <p class="bp" style="max-width:660px;">Vanthelon is unique within the Dark Nation — where others have sorcery and war, its people have something older and stranger: a medieval life elevated by steam-powered machinery and dark amethyst technology generations ahead of everything surrounding it. Loyal, resourceful, and deeply connected to the land's ancient traditions.</p>
+    </div>
+    <div class="vth-split rv d1">
+      <div class="vth-card">
+        <div class="vc-badge">// THE_ABYSSAL_KEEP · OATHKEEPER_CHARGE //</div>
+        <div class="vc-name">The Abyssal Keep</div>
+        <p class="vc-body">A dark and foreboding fortress built into the towering cliffs — <strong>legend holds it harbors the secrets of time manipulation</strong>, though its true power remains hidden behind formidable magical and mechanical defenses. Valtor's ancestors swore an unbreakable oath to guard it. He upholds this responsibility with a ferocity that borders on obsession. <em>Three generations before him. Valtor is the last.</em></p>
+        <p class="vc-body" style="margin-top:10px;">The Iron Automatons — forged from dark amethyst-infused steel, powered by Valtor's intricate machines — serve as eternal guardians. No one who enters uninvited leaves alive. Even Valtor himself has only uncovered fragments of what the Keep truly holds. His belief that its power should never be unleashed is one of the core principles of his rule.</p>
+      </div>
+      <div class="vth-card">
+        <div class="vc-badge">// DARK_AMETHYST · VANTHELON'S_WEALTH //</div>
+        <div class="vc-name">The Dark Amethyst Mines</div>
+        <p class="vc-body">The vast wealth of dark amethyst beneath Vanthelon's surface is the source of everything: <strong>the Iron Automaton Army, the steam-powered machinery, Valtor's prosthetic arm, the Abyssal Keep's defenses, and the economic power that has kept him sovereign</strong> for three centuries. No rival can easily challenge the strength of his army or the wealth generated from these mines.</p>
+        <p class="vc-body" style="margin-top:10px;">The people of Vanthelon — miners, farmers, engineers — benefit from technology unheard of elsewhere in the Nine Realms. They do not know how the machines work. They simply know that their duke built them, and that under his rule, the land has been safe.</p>
+        <p class="vc-body" style="margin-top:10px;"><em>Until the Black Curse came.</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// THE_BLACK_CURSE //</div></div>
+
+<!-- THE BLACK CURSE — THREE ACTS -->
+<section class="curse-sec">
+  <div class="curse-inner">
+    <div class="rv">
+      <span class="sl">// THE_BLACK_CURSE · TWO_YEAR_HORROR · LEGACY_OF_THE_VOID //</span>
+      <h2 class="big-h">Betrayed. Hunted.<br><em class="soul">Every night. For two years.</em></h2>
+      <p class="bp" style="max-width:680px;">Duke Valtor is betrayed by his most trusted general, Captain Aldrich, who secretly conspires with a dark alliance of rival nations. This betrayal unleashes the Black Curse — a night-bound madness that warps the minds of Vanthelon's citizens, turning them into soulless hunters obsessed with tracking and killing Valtor himself. What begins as isolated disappearances escalates over two harrowing years into a full-scale psychological and spiritual war on his people and his legacy.</p>
+    </div>
+    <div class="acts-grid rv d1">
+
+      <!-- ACT I -->
+      <div class="act act-I">
+        <div class="act-num">
+          <div class="an-roman">I</div>
+          <div class="an-label">Year One<br>The<br>Unraveling</div>
+        </div>
+        <div class="act-body">
+          <div class="ab-period">// YEAR_ONE · FIRST_WAVE //</div>
+          <div class="ab-title">The Curse Begins Subtly. Paranoia Spreads.</div>
+          <p class="ab-body">The curse begins with isolated disappearances and savage night attacks. Public trust erodes. Citizens who should recognize Valtor begin hunting him instead — blank-eyed, driven, relentless. <strong>Valtor begins building the Void Eradicator in secret</strong>, believing it will purge the curse, restore sanity, and free whatever is being done to the children. Clues lead to the Wells of Despair and the Soul Furnace — <em>where the missing children's soul-energy is being harvested to power an etheric underworld.</em></p>
+          <div class="monologue"><p>"I built this kingdom piece by piece, over three hundred years. And now I watch it pull itself apart one mind at a time. I wonder if legacy is a gift you give your people, or a weight you place on them — and call it love."</p></div>
+        </div>
+      </div>
+
+      <!-- ACT II -->
+      <div class="act act-II">
+        <div class="act-num">
+          <div class="an-roman">II</div>
+          <div class="an-label">Year Two<br>The<br>Discovery</div>
+        </div>
+        <div class="act-body">
+          <div class="ab-period">// YEAR_TWO · DEEPER_HORROR //</div>
+          <div class="ab-title">The Cursed Are Rebuilding His Own War Machines.</div>
+          <p class="ab-body">Valtor rescues small groups of children but realizes most are already being drained of soul-energy. Then the worst discovery: <strong>the cursed citizens — unknowingly — are rebuilding Valtor's ancient decommissioned war machines</strong>, orchestrated by Aldrich to destroy Vanthelon from within. His own greatest creations, turned against everything he built them to protect. <em>Multiple betrayals. Internal strife. The people he sacrificed everything for are becoming the weapon used to destroy him.</em></p>
+          <div class="monologue"><p>"I have defended this land from a thousand enemies. But I never once prepared for the enemy that wears the faces of everyone I loved. I wonder now if I have already become the very tyrant my ancestors swore to never be — just a slower, quieter version, one who calls it duty."</p></div>
+        </div>
+      </div>
+
+      <!-- ACT III — FINAL -->
+      <div class="act act-III">
+        <div class="act-num">
+          <div class="an-roman">III</div>
+          <div class="an-label">Final 3<br>Months<br>The Cost</div>
+        </div>
+        <div class="act-body">
+          <div class="ab-period">// FINAL_ARC · IRON_BONEYARD · THE_CHOICE //</div>
+          <div class="ab-title">The Confrontation. The Activation. The Irreversible Cost.</div>
+          <p class="ab-body">Valtor and his allies infiltrate the Iron Boneyard — where <strong>his war titans have been hideously reborn</strong>. He confronts Captain Aldrich, revealed as a sleeper agent of the Dark Nations Committee, now fused into the Iron Colossus. Aldrich reveals his ultimate plan: to break the Oathkeeper line forever and resurrect ancient dark powers. Valtor defeats him. He reaches his sons. <em>And then activates the Void Eradicator — believing it will end the nightmare.</em> It does. And in doing so, it wipes the minds of nearly every person in Vanthelon who had been touched by the curse. He saved them. He destroyed them. Both things are equally true.</p>
+          <div class="monologue"><p>"I built a device to save my people. I knew there was a cost. I told myself it was worth it. What I didn't know — what I should have known — is that the thing worth saving and the cost of saving it were the same thing. Look at them now. Look at what I made of their minds. Tell me: what exactly did I preserve?"</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// THE_VOID_ERADICATOR //</div></div>
+
+<!-- THE VOID ERADICATOR AND ITS COST -->
+<section class="void-sec">
+  <div class="void-inner">
+    <div class="rv">
+      <span class="sl">// VOID_ERADICATOR · THE_WEAPON_THAT_SAVED_AND_DESTROYED_VANTHELON //</span>
+      <h2 class="big-h">The cure was worse<br><em style="color:var(--curse-bright)">than the curse.</em></h2>
+    </div>
+    <div class="void-block rv d1">
+      <div class="vb-c">
+        <div class="vb-badge">// VOID_ERADICATOR · ACTIVATION · IRREVERSIBLE //</div>
+        <h3 class="vb-title">The Weapon He Built to <em>Save His People</em></h3>
+        <p class="vb-body">The Void Eradicator was built to purge the Black Curse, restore sanity to his people, and free the children held in the Wells of Despair. <strong>It did all of these things.</strong> It also wiped the minds of everyone who had been touched by the curse — which was the majority of Vanthelon's population. They survived. Their consciousness did not. The kingdom remained. The people did not.</p>
+        <p class="vb-body">Crushed but not broken, Valtor committed to preserving what remained of his people by <strong>binding their souls into automatons</strong> — creating a new race of sentient machines who carry the memory of what was lost. <em>Vanthelon became the Iron Kingdom of Cursed Souls: a place where machines whisper with human memories, ruled by the last Oathkeeper who traded everything for peace.</em></p>
+      </div>
+    </div>
+    <div class="cost-grid rv d2">
+      <div class="cost-item">
+        <span class="ci-label">// WHAT_IT_SAVED //</span>
+        <p class="ci-body">The Black Curse was purged entirely. <strong>His sons, Zyphor and Kyphos, were freed from Aldrich's binding ritual.</strong> The Wells of Despair were destroyed. The Iron Colossus was stopped. Vanthelon still stands as a kingdom. No further children were lost to the Soul Furnace.</p>
+      </div>
+      <div class="cost-item">
+        <span class="ci-label">// WHAT_IT_COST //</span>
+        <p class="ci-body"><strong>The minds of the majority of Vanthelon's population</strong> — rendered into blank, mindless husks. Every person cursed was saved in body only. Their consciousness, memory, and identity were erased by the same pulse that freed them from the curse. The irony is total.</p>
+      </div>
+      <div class="cost-item">
+        <span class="ci-label">// WHAT_WAS_BUILT_FROM_THE_ASHES //</span>
+        <p class="ci-body">A new race of <strong>sentient automatons carrying the soul-imprints of Vanthelon's lost people</strong>. Machines that whisper with human memories, that dream in mechanisms, that grieve in ways no one taught them to grieve. The Iron Kingdom of Cursed Souls. The last thing Valtor ever built — and the one he built for no reason anyone asked him to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// ZYPHOR_AND_KYPHOS //</div></div>
+
+<!-- THE SONS -->
+<section class="sons-sec">
+  <div class="sons-inner">
+    <div class="rv">
+      <span class="sl">// THE_SONS_OF_VALTOR · FRACTURED_LEGACY · FUTURE_ENGINEERS_OF_LADY_NYXARA //</span>
+      <h2 class="big-h">Two faces of one father's<br><em>terrible inheritance.</em></h2>
+      <p class="bp" style="max-width:680px;">Both sons were captured by Aldrich, used as bait and as future conduits for the curse. Valtor rescued them using the Void Eradicator's prototype pulse. They were freed — but not fully. Zyphor retained fragmented memories of their captivity. Kyphos, younger, retained emotional impressions. Both entered adulthood knowing only their father, sentient automatons, and the echoes of a world the Void Eradicator erased. When they eventually leave Vanthelon for the first time as young adults — hired into Lady Nyxara's court — it will be the first time either has ever left the Iron Kingdom.</p>
+    </div>
+    <div class="sons-split rv d1">
+
+      <!-- ZYPHOR -->
+      <div class="son-card sc-zyphor">
+        <div class="son-inner">
+          <div class="son-badge">// ZYPHOR · AGE_11_AT_CAPTURE · ELDER_SON //</div>
+          <h3 class="son-name">Zyphor</h3>
+          <span class="son-role">Master Engineer · The Blade of Valtor's Legacy</span>
+          <p class="son-body">Inherited Valtor's engineering genius but not his restraint. His thirst for independence and his desire to surpass his father already existed before the curse — after captivity, that rift deepened into something colder. <strong>He remembers flashes: cold floors, the Wells of Despair, machines watching, voices whispering about his father.</strong> He harbors resentment toward Valtor for not finding him sooner.</p>
+          <p class="son-body">Became highly analytical, detached. Sees machines not as companions but as <em>tools of war, enforcement, and efficiency</em>. Wants control. Wants to weaponize the legacy, not honor it. His entanglement with Lady Nyxara will only deepen these tendencies — she recognized something in him that Valtor feared: that the brilliance, untethered from its father's ethics, becomes something far more dangerous.</p>
+          <div class="son-conflict">"My father saved me — but what did he let die to do it? He preserved my life and destroyed my world. I am not sure those are the same thing as the same act."</div>
+        </div>
+      </div>
+
+      <!-- KYPHOS -->
+      <div class="son-card sc-kyphos">
+        <div class="son-inner">
+          <div class="son-badge">// KYPHOS · AGE_7_AT_CAPTURE · YOUNGER_SON //</div>
+          <h3 class="son-name">Kyphos</h3>
+          <span class="son-role">Theoretical Scientist · The Heart of Valtor's Legacy</span>
+          <p class="son-body">Younger and more emotionally intuitive, Kyphos has few coherent memories of captivity — mostly emotional impressions. Some of the automatons that watched over him during the curse may have mimicked caring behaviors. <strong>He formed attachments to sentient machines as if they were real people</strong> — and in his experience of the Iron Kingdom of Cursed Souls, they were the most present companions he ever had.</p>
+          <p class="son-body">Struggles to distinguish between <em>souled machines and soulless constructs</em>. Feels isolation from real humans. His theoretical and philosophical focus, which Valtor always privately believed made him the more capable leader, manifested differently than expected: not as leadership, but as a profound empathy for mechanical beings that his brother finds incomprehensible and his father finds achingly familiar.</p>
+          <div class="son-conflict">"What if this is the only kind of people I ever truly know? I do not think they are less than human. I think they might be what happens when human stops being a requirement."</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="pull rv d2" style="margin-top:3px;"><p>Their eventual hire into Lady Nyxara's court — when they leave Vanthelon for the first time as young adults — is the first time either has ever existed outside the Iron Kingdom. Zyphor at 24. Kyphos at 20. The first time they meet anyone who is not their father, a sentient automaton, or a fragmented memory of someone the Void Eradicator erased.</p><cite>// ORIGIN_STORY · PRECURSOR_TO_THEIR_ROLES_IN_TENEBRIS //</cite></div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// RELATIONSHIPS //</div></div>
+
+<!-- RELATIONSHIPS -->
+<section class="rel-sec">
+  <div class="rel-inner">
+    <div class="rv">
+      <span class="sl">// RELATIONSHIP_WEB · RIVALS · ALLIES · THREATS //</span>
+      <h2 class="big-h">Every alliance in the Dark Nation<br><em>is a negotiated threat.</em></h2>
+    </div>
+    <div class="rel-grid rv d1">
+      <div class="rel-card">
+        <span class="rc-who">// LADY_NYXARA · PRIMARY_THREAT //</span>
+        <div class="rc-name">Lady Nyxara</div>
+        <span class="rc-dynamic">The Manipulator · Seductor of Zyphor · Coveter of the Keep</span>
+        <p class="rc-body">Valtor has long been suspicious of her manipulation and ambition. He watched with increasing alarm as she drew Zyphor away from Vanthelon's purpose and into her web of control. <strong>Her ultimate goal is to seize control of the Abyssal Keep's power</strong> — a power Valtor has sworn to protect. She does not want the Keep for stability. She wants it for the same reason everyone eventually wants it: because it can rewrite reality. And she has already begun by rewriting his son.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// KING_VARKOS_OF_NYXALETH · CAUTIOUS_ALLY //</span>
+        <div class="rc-name">King Varkos of Nyxaleth</div>
+        <span class="rc-dynamic">Strategic Thinker · Cautious Alliance · Mutual Wariness</span>
+        <p class="rc-body">Valtor respects Varkos as a strategic thinker and appreciates his understanding of the balance of power in the Dark Nation. <strong>A cautious alliance, united by their mutual recognition that figures like Nyxara threaten the fragile equilibrium.</strong> However, Valtor views Varkos with wariness — knowing their alliance could dissolve if Varkos saw an advantage in seizing Vanthelon's resources.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// QUEEN_MORGHANNA_OF_MORVANNA · FIERCE_RIVAL //</span>
+        <div class="rc-name">Queen Morghanna</div>
+        <span class="rc-dynamic">Blood Magic Obsessive · Abyssal Keep Coveter · Immortality Seeker</span>
+        <p class="rc-body">More contentious than his relationship with Varkos. Valtor <strong>deeply mistrusts Morghanna's ruthless methods and her obsession with blood magic</strong>. She seeks immortality and views the Abyssal Keep as the means to achieve it. This has led to a quiet but fierce rivalry — a cold war of resource, influence, and proximity to a Keep that both of them are circling from opposite directions.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// CAPTAIN_ALDRICH · THE_BETRAYER //</span>
+        <div class="rc-name">Captain Aldrich</div>
+        <span class="rc-dynamic">Most Trusted General · Sleeper Agent · The Black Curse's Architect</span>
+        <p class="rc-body">The betrayal that destroyed Vanthelon. Aldrich was Valtor's most trusted general — secretly a sleeper agent of the Dark Nations Committee, <strong>manipulating the Black Curse to break the Oathkeeper line forever</strong> and resurrect ancient dark powers. Eventually fused into the Iron Colossus. Confronted and defeated by Valtor in the Iron Boneyard. The most devastating proof that three centuries of judgment can still be wrong about one person.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// ZYPHOR · ELDER_SON //</span>
+        <div class="rc-name">Zyphor</div>
+        <span class="rc-dynamic">Engineering Genius · Estranged · Future Threat to His Father's Ethics</span>
+        <p class="rc-body">Valtor raised him to embrace innovation and responsibility. Zyphor grew to resent living in his shadow. Valtor saw Nyxara's influence twisting his son's genius into something darker. <em>He recognizes the danger but cannot reach him.</em> <strong>Valtor always believed Kyphos was the more capable leader</strong> — this unspoken belief is something Zyphor has always sensed and never forgiven.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// KYPHOS · YOUNGER_SON //</span>
+        <div class="rc-name">Kyphos</div>
+        <span class="rc-dynamic">Theoretical Scientist · Quietly Estranged · Valtor's Unspoken Hope</span>
+        <p class="rc-body">Kyphos always felt overshadowed by Zyphor's accomplishments and his father's expectations. He resented what he perceived as Valtor's cold, distant treatment. <strong>Valtor always privately believed Kyphos was the more level-headed of the two</strong> — the potential greater leader. He simply never said it. The silence between them is not indifference. It is a failure of expression in a man who built machines that can speak, and never learned to say the simpler things himself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// THE_IRON_KINGDOM //</div></div>
+
+<!-- THE IRON KINGDOM — AFTERMATH AND THEMES -->
+<section class="aftermath-sec">
+  <div class="after-inner">
+    <div class="rv">
+      <span class="sl">// IRON_KINGDOM_OF_CURSED_SOULS · AFTERMATH · LEGACY_REIMAGINED //</span>
+      <h2 class="big-h">He saved the souls.<br><em>He lost their bodies, their memories, their minds.</em></h2>
+    </div>
+    <div class="after-block rv d1">
+      <div class="ab2-c">
+        <div class="ab2-badge">// VANTHELON_AFTERMATH · IRON_KINGDOM_OF_CURSED_SOULS //</div>
+        <h3 class="ab2-title">The Kingdom He <em>Preserved</em></h3>
+        <p class="ab2-body">Valtor thought his legacy would be a preserved kingdom passed down to his sons. Instead, he delivered them a <strong>mechanized mausoleum</strong> — filled with echoes of the people they once loved, bound into automatons that whisper with human memories. The Abyssal Keep still stands. The dark amethyst mines still operate. The Iron Sentinels still patrol. And Vanthelon's streets are filled with machines that were once people, moving through the motions of lives they can no longer remember having.</p>
+        <p class="ab2-body">Valtor rules over the Iron Kingdom of Cursed Souls as the last true human ruler — the last Oathkeeper, <em>stewarding a realm of metal bodies and fractured souls</em> alongside two sons who are only partially what they were before the curse. He saved the kingdom. He preserved the oath. <strong>He kept his word to his ancestors. And the cost of keeping it is something his ancestors never warned him about — because none of them had ever had to pay it.</strong></p>
+      </div>
+    </div>
+    <div class="theme-grid rv d2">
+      <div class="theme-item">
+        <div class="ti-title">Legacy vs. Oblivion</div>
+        <p class="ti-body">What does it mean to be remembered? Is memory more important than presence? Valtor's arc interrogates the illusion of eternal legacy — three hundred years of building, destroyed in two, replaced with something that remembers building but no longer understands why.</p>
+      </div>
+      <div class="theme-item">
+        <div class="ti-title">Burden of Rule</div>
+        <p class="ti-body">Valtor is the man everyone worships — and the man everyone hunts. His rule is simultaneously a prison and a responsibility. He becomes both savior and scapegoat, the only one who could end the curse and the only one responsible for what the cure destroyed.</p>
+      </div>
+      <div class="theme-item">
+        <div class="ti-title">Duty vs. Humanity</div>
+        <p class="ti-body">He sacrificed everything — love, rest, even truth — for the sake of his people. In doing so, he lost his humanity. The central question his story never stops asking: Is duty worth it if it turns you into a monster to survive monsters?</p>
+      </div>
+      <div class="theme-item">
+        <div class="ti-title">Is Preservation Worth It?</div>
+        <p class="ti-body">Does saving a soul in a machine make it less than human? Was the cost of salvation — even with victory — too great? The Iron Kingdom of Cursed Souls is the universe's answer to the question of what happens when a ruler wins completely and loses everything in the same moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="page-cta">
+  <div class="page-cta-inner rv">
+    <span class="sl" style="display:block;text-align:center;margin-bottom:20px;">// DUKE_VALTOR · THE_OATHKEEPER · IRON_KINGDOM_OF_CURSED_SOULS //</span>
+    <h2>The last Oathkeeper.<br><em>The king who won by losing everything.</em></h2>
+    <p>He kept his oath. He saved his sons. He preserved his kingdom. And in doing so, he delivered them a mausoleum — filled with machines that remember being people, and two boys who grew up inside it.</p>
+    <div class="cta-row">
+      <a href="new-sablea.html" class="btn-p">New Sablea — The Future Timeline →</a>
+      <a href="four-secrets.html" class="btn-g">The Four Secrets →</a>
+      <a href="nine-realms-hub.html" class="btn-g">Hub →</a>
+    </div>
+  </div>
+</div>
+<footer><span class="fc">Nine Realms Universe — Duke Valtor · The Oathkeeper · Vanthelon · Iron Kingdom of Cursed Souls · Original IP</span><span class="fc">Created by Ron</span></footer>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="act-"],[class*="son-card"],[class*="vth-card"],[class*="rel-card"],[class*="phys-item"],[class*="cost-item"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('forged');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('forged');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.08});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class ShardMote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.5;this.vy=-(Math.random()*.7+.08);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=280;this.s=65;this.l=40;}
+      else if(t<.65){this.h=210;this.s=20;this.l=55;}
+      else if(t<.80){this.h=285;this.s=50;this.l=60;}
+      else if(t<.90){this.h=40;this.s=60;this.l=35;}
+      else{this.h=5;this.s=40;this.l=30;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){
+      ctx.save();ctx.globalAlpha=this.life*.6;
+      if(this.r>1.4){ctx.beginPath();ctx.moveTo(this.x,this.y-this.r);ctx.lineTo(this.x+this.r*.6,this.y+this.r*.8);ctx.lineTo(this.x-this.r*.6,this.y+this.r*.8);ctx.closePath();}
+      else{ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);}
+      ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;
+      if(this.r>1.2){ctx.shadowBlur=6;ctx.shadowColor=`hsl(${this.h},90%,${this.l+15}%)`;}
+      ctx.fill();ctx.restore();
+    }
+  }
+  for(let i=0;i<70;i++)pts.push(new ShardMote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

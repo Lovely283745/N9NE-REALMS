@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sybil Sisters — Calypso, Thorne & Nxia | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+/* ═══════════════════════
+   TOKENS
+═══════════════════════ */
+:root{
+  --void:    #06040A;
+  --deep:    #090608;
+  --parch:   #C8A870;
+  --parch-pale:#E8C890;
+  --parch-dim: #7A6040;
+
+  /* Calypso */
+  --cal:     #C03018;
+  --cal-mid: #E04020;
+  --cal-pale:#F07050;
+  --cal-bg:  #100604;
+
+  /* Thorne */
+  --tho:     #407030;
+  --tho-mid: #589048;
+  --tho-pale:#80C060;
+  --tho-bg:  #060A04;
+
+  /* Nxia */
+  --nxi:     #203880;
+  --nxi-mid: #3050A8;
+  --nxi-pale:#6090D0;
+  --nxi-bg:  #020610;
+
+  /* Shared accent */
+  --gold:    #B88020;
+  --gold-pale:#D8A040;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px;}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--parch);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cur-ring{width:32px;height:32px;border:1px solid rgba(184,128,32,0.35);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.cal-mode{border-color:var(--cal);width:48px;height:48px;}
+.cur-ring.tho-mode{border-color:var(--tho);width:48px;height:48px;}
+.cur-ring.nxi-mode{border-color:var(--nxi);width:48px;height:48px;}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(6,4,10,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(184,128,32,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:var(--gold-pale);opacity:0.7;letter-spacing:0.1em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-pale);border:1px solid rgba(184,128,32,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--gold);}
+
+/* ═══════════════════════
+   HERO — THREE SISTERS
+═══════════════════════ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+}
+
+/* Tricolor gradient background */
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 40% 60% at 20% 60%, rgba(192,48,24,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 50% 55%, rgba(184,128,32,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 60% at 80% 60%, rgba(32,56,128,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 30%, rgba(64,112,48,0.08) 0%, transparent 60%),
+    var(--void);
+  animation:heroBgShift 12s ease-in-out infinite;
+}
+@keyframes heroBgShift{
+  0%,100%{opacity:0.8;}
+  50%{opacity:1;}
+}
+
+#triCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:var(--gold-pale);text-transform:uppercase;opacity:0;animation:riseIn 1.2s .2s ease forwards;margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:18px;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:44px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+.hero-eyebrow::after{transform:scaleX(-1);}
+
+.hero-sisters-title{
+  display:flex;align-items:baseline;justify-content:center;gap:0;
+  flex-wrap:wrap;
+  opacity:0;animation:riseIn 1.8s .4s ease forwards;
+  margin-bottom:12px;
+}
+.sister-name-hero{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(28px,6vw,78px);
+  font-weight:900;line-height:0.95;
+  letter-spacing:0.03em;
+  padding:0 8px;
+}
+.sn-cal{color:var(--cal-pale);text-shadow:0 0 60px rgba(192,48,24,0.4);}
+.sn-sep{font-family:'Cinzel',serif;font-size:clamp(14px,2vw,28px);color:rgba(200,168,112,0.25);padding:0 4px;align-self:center;}
+.sn-tho{color:var(--tho-pale);text-shadow:0 0 60px rgba(64,112,48,0.4);}
+.sn-nxi{color:var(--nxi-pale);text-shadow:0 0 60px rgba(32,56,128,0.4);}
+
+.hero-sub{font-family:'Cinzel',serif;font-size:clamp(9px,1.2vw,13px);letter-spacing:0.45em;text-transform:uppercase;color:var(--gold-pale);opacity:0;animation:riseIn 1s .7s ease forwards;margin-bottom:10px;}
+.hero-dynasty{font-family:'Cinzel Decorative',serif;font-size:clamp(12px,2vw,22px);font-weight:400;color:rgba(200,168,112,0.35);opacity:0;animation:riseIn 1s .9s ease forwards;margin-bottom:28px;letter-spacing:0.15em;}
+
+.hero-rule{width:1px;height:0;background:linear-gradient(to bottom,var(--gold),transparent);margin:0 auto 28px;animation:lineGrow 1s 1.1s ease forwards;}
+@keyframes lineGrow{to{height:50px;}}
+
+.hero-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,21px);color:rgba(200,168,112,0.45);max-width:680px;margin:0 auto 50px;line-height:1.75;opacity:0;animation:riseIn 1.2s 1.3s ease forwards;}
+
+/* Three-vital row */
+.hero-trio{display:flex;justify-content:center;gap:0;max-width:640px;margin:0 auto;opacity:0;animation:riseIn 1s 1.6s ease forwards;}
+.trio-stat{flex:1;padding:18px 20px;text-align:center;border-right:1px solid rgba(200,168,112,0.08);}
+.trio-stat:last-child{border-right:none;}
+.trio-val{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);line-height:1;margin-bottom:6px;}
+.ts-cal .trio-val{color:var(--cal-pale);}
+.ts-tho .trio-val{color:var(--tho-pale);}
+.ts-nxi .trio-val{color:var(--nxi-pale);}
+.trio-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.hero-scroll span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scrollPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* ═══════════════════════
+   UTILITIES
+═══════════════════════ */
+.section-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;text-transform:uppercase;opacity:0.6;display:block;margin-bottom:18px;}
+.ornate{position:relative;display:flex;align-items:center;justify-content:center;}
+.ornate::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(200,168,112,0.1),transparent);}
+.ornate span{position:relative;background:var(--void);padding:0 18px;font-size:14px;color:var(--gold);opacity:0.35;z-index:1;}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+
+/* ═══════════════════════
+   ORIGIN — THE SHARED YOUTH
+═══════════════════════ */
+.origin{
+  padding:110px 60px;
+  position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 80% 50% at 50% 50%, #0A0806 0%, var(--void) 80%);
+}
+.origin::before{content:'SIBYL';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(100px,20vw,260px);font-weight:900;color:rgba(184,128,32,0.02);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.origin-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.origin-aside{}
+.origin-roman{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(184,128,32,0.08);line-height:1;margin-left:-6px;}
+.origin-aside-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;color:var(--gold-pale);opacity:0.5;text-transform:uppercase;}
+.origin-body{}
+.big-head{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,46px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:24px;}
+.big-head em{font-style:italic;color:var(--gold-pale);}
+.body-p{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(200,168,112,0.6);line-height:1.9;margin-bottom:16px;}
+.body-p strong{color:var(--parch-pale);font-weight:500;}
+.body-p em{color:var(--gold-pale);font-style:italic;}
+
+/* Pull quote */
+.pull{margin:24px 0;padding:18px 24px;border-left:2px solid var(--gold);background:rgba(184,128,32,0.04);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.8vw,20px);color:rgba(200,168,112,0.7);line-height:1.7;}
+.pull cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+
+/* ═══════════════════════
+   SISTER COMPARISON GRID
+═══════════════════════ */
+.comparison{
+  position:relative;
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  min-height:85vh;
+  overflow:hidden;
+}
+
+.sister-panel{
+  position:relative;overflow:hidden;
+  padding:80px 48px;
+  display:flex;flex-direction:column;
+  justify-content:flex-end;
+  cursor:pointer;
+  transition:flex .6s cubic-bezier(.16,1,.3,1);
+  border-right:1px solid rgba(200,168,112,0.05);
+}
+.sister-panel:last-child{border-right:none;}
+
+/* Default state */
+.comparison:not(:hover) .sister-panel{flex:1;}
+.comparison:hover .sister-panel{flex:.3;opacity:0.35;}
+.comparison:hover .sister-panel:hover{flex:2.5;opacity:1;}
+
+/* Panel backgrounds */
+.sp-cal{background:linear-gradient(160deg, #180604 0%, #0E0402 60%, #060204 100%);}
+.sp-tho{background:linear-gradient(160deg, #080C04 0%, #060A04 60%, #040604 100%);}
+.sp-nxi{background:linear-gradient(160deg, #040610 0%, #030408 60%, #020306 100%);}
+
+/* Ambient glow per panel */
+.sp-cal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 70%, rgba(192,48,24,0.18) 0%, transparent 70%);transition:opacity .5s;}
+.sp-tho::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 70%, rgba(64,112,48,0.16) 0%, transparent 70%);transition:opacity .5s;}
+.sp-nxi::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 70%, rgba(32,56,128,0.18) 0%, transparent 70%);transition:opacity .5s;}
+
+.sister-panel:hover .sp-cal::before,
+.sp-cal:hover::before{opacity:1.5;}
+.sister-panel:hover .sp-tho::before,
+.sp-tho:hover::before{opacity:1.5;}
+.sister-panel:hover .sp-nxi::before,
+.sp-nxi:hover::before{opacity:1.5;}
+
+/* Panel content */
+.sp-content{position:relative;z-index:2;}
+
+.sp-num{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(60px,8vw,100px);font-weight:400;
+  line-height:1;opacity:0.06;
+  margin-bottom:16px;
+  transition:opacity .4s;
+}
+.sister-panel:hover .sp-num{opacity:0.15;}
+.sp-cal .sp-num{color:var(--cal);}
+.sp-tho .sp-num{color:var(--tho);}
+.sp-nxi .sp-num{color:var(--nxi);}
+
+.sp-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;padding:4px 14px;border:1px solid;margin-bottom:14px;display:inline-block;opacity:0.6;transition:opacity .3s;}
+.sister-panel:hover .sp-tag{opacity:1;}
+.sp-cal .sp-tag{color:var(--cal-pale);border-color:var(--cal);}
+.sp-tho .sp-tag{color:var(--tho-pale);border-color:var(--tho);}
+.sp-nxi .sp-tag{color:var(--nxi-pale);border-color:var(--nxi);}
+
+.sp-name{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.5vw,52px);font-weight:400;line-height:1.05;margin-bottom:8px;color:var(--parch-pale);}
+.sp-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:20px;}
+
+.sp-weapon{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;
+  margin-bottom:24px;opacity:0.5;
+  transition:opacity .3s;
+}
+.sister-panel:hover .sp-weapon{opacity:0.8;}
+.sp-weapon-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.sp-cal .sp-weapon-dot{background:var(--cal);}
+.sp-tho .sp-weapon-dot{background:var(--tho);}
+.sp-nxi .sp-weapon-dot{background:var(--nxi);}
+
+.sp-desc{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(14px,1.6vw,17px);
+  color:rgba(200,168,112,0.55);line-height:1.8;
+  max-height:0;overflow:hidden;
+  transition:max-height .6s cubic-bezier(.16,1,.3,1),opacity .4s;
+  opacity:0;
+}
+.sister-panel:hover .sp-desc{max-height:300px;opacity:1;}
+
+.sp-traits{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.16,1,.3,1),opacity .4s;opacity:0;}
+.sister-panel:hover .sp-traits{max-height:100px;opacity:1;}
+.sp-trait{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;padding:5px 12px;border:1px solid;opacity:0.6;}
+.sp-cal .sp-trait{color:var(--cal-pale);border-color:rgba(192,48,24,0.3);}
+.sp-tho .sp-trait{color:var(--tho-pale);border-color:rgba(64,112,48,0.3);}
+.sp-nxi .sp-trait{color:var(--nxi-pale);border-color:rgba(32,56,128,0.3);}
+
+/* Hover hint -->  */
+.comparison-hint{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(200,168,112,0.25);text-align:center;padding:18px;animation:hintPulse 3s ease-in-out infinite;display:block;}
+@keyframes hintPulse{0%,100%{opacity:0.3;}50%{opacity:0.7;};}
+
+/* ═══════════════════════
+   INDIVIDUAL SECTIONS
+═══════════════════════ */
+
+/* Section header shared style */
+.sister-section{padding:100px 60px;position:relative;overflow:hidden;}
+.ss-inner{max-width:1100px;margin:0 auto;}
+.ss-header{display:grid;grid-template-columns:1fr 1.6fr;gap:80px;align-items:start;margin-bottom:60px;}
+.ss-aside{}
+.ss-aside-name{font-family:'Cinzel Decorative',serif;font-size:clamp(36px,6vw,80px);font-weight:900;line-height:0.9;margin-bottom:12px;}
+.ss-aside-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;opacity:0.4;margin-bottom:8px;display:block;}
+.ss-aside-kingdom{font-family:'EB Garamond',serif;font-style:italic;font-size:15px;opacity:0.35;line-height:1.5;}
+.ss-body{}
+.ss-headline{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3vw,40px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.ss-headline em{font-style:italic;}
+.ss-text{font-family:'EB Garamond',serif;font-size:clamp(15px,1.7vw,18px);color:rgba(200,168,112,0.6);line-height:1.9;margin-bottom:16px;}
+.ss-text strong{color:var(--parch-pale);font-weight:500;}
+.ss-text em{font-style:italic;}
+
+/* Two-col detail grid */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:40px;}
+.detail-cell{padding:22px 24px;border:1px solid;}
+.detail-cell-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;opacity:0.4;margin-bottom:8px;display:block;}
+.detail-cell-val{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.5vw,17px);color:rgba(200,168,112,0.6);line-height:1.7;}
+
+/* ─── CALYPSO ─── */
+.ss-calypso{background:var(--cal-bg);}
+.ss-calypso::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 30% 50%, rgba(192,48,24,0.08) 0%, transparent 70%);}
+.ss-calypso .section-label{color:var(--cal-pale);}
+.ss-calypso .ss-aside-name{color:var(--cal-pale);text-shadow:0 0 60px rgba(192,48,24,0.3);}
+.ss-calypso .ss-aside-title{color:var(--cal-pale);}
+.ss-calypso .ss-headline em{color:var(--cal-pale);}
+.ss-calypso .pull{border-color:var(--cal);background:rgba(192,48,24,0.04);}
+.ss-calypso .detail-cell{border-color:rgba(192,48,24,0.08);background:rgba(192,48,24,0.03);}
+.ss-calypso .detail-cell:hover{border-color:rgba(192,48,24,0.2);background:rgba(192,48,24,0.06);}
+
+/* ─── THORNE ─── */
+.ss-thorne{background:var(--tho-bg);}
+.ss-thorne::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 50%, rgba(64,112,48,0.07) 0%, transparent 70%);}
+.ss-thorne .section-label{color:var(--tho-pale);}
+.ss-thorne .ss-aside-name{color:var(--tho-pale);text-shadow:0 0 60px rgba(64,112,48,0.3);}
+.ss-thorne .ss-aside-title{color:var(--tho-pale);}
+.ss-thorne .ss-headline em{color:var(--tho-pale);}
+.ss-thorne .pull{border-color:var(--tho-mid);background:rgba(64,112,48,0.04);}
+.ss-thorne .detail-cell{border-color:rgba(64,112,48,0.08);background:rgba(64,112,48,0.03);}
+.ss-thorne .detail-cell:hover{border-color:rgba(64,112,48,0.2);background:rgba(64,112,48,0.06);}
+
+/* ─── NXIA ─── */
+.ss-nxia{background:var(--nxi-bg);}
+.ss-nxia::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 60%, rgba(32,56,128,0.1) 0%, transparent 70%);}
+.ss-nxia .section-label{color:var(--nxi-pale);}
+.ss-nxia .ss-aside-name{color:var(--nxi-pale);text-shadow:0 0 60px rgba(32,56,128,0.3);}
+.ss-nxia .ss-aside-title{color:var(--nxi-pale);}
+.ss-nxia .ss-headline em{color:var(--nxi-pale);}
+.ss-nxia .pull{border-color:var(--nxi-mid);background:rgba(32,56,128,0.05);}
+.ss-nxia .detail-cell{border-color:rgba(32,56,128,0.08);background:rgba(32,56,128,0.04);}
+.ss-nxia .detail-cell:hover{border-color:rgba(32,56,128,0.22);background:rgba(32,56,128,0.07);}
+
+/* ═══════════════════════
+   RIVALRY MATRIX
+═══════════════════════ */
+.rivalry{padding:100px 60px;background:var(--deep);}
+.rivalry-inner{max-width:1100px;margin:0 auto;}
+.rivalry-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,46px);font-weight:400;color:var(--parch-pale);margin-bottom:12px;line-height:1.1;}
+.rivalry-title em{font-style:italic;color:var(--gold-pale);}
+.rivalry-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(200,168,112,0.4);max-width:560px;line-height:1.75;margin-bottom:52px;}
+
+.rivalry-table{width:100%;border-collapse:collapse;}
+.rt-head th{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;text-transform:uppercase;padding:14px 20px;text-align:left;border-bottom:1px solid rgba(200,168,112,0.1);}
+.rt-head .th-cal{color:var(--cal-pale);}
+.rt-head .th-tho{color:var(--tho-pale);}
+.rt-head .th-nxi{color:var(--nxi-pale);}
+.rt-head .th-axis{color:rgba(200,168,112,0.3);}
+.rivalry-table td{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(200,168,112,0.55);padding:18px 20px;border-bottom:1px solid rgba(200,168,112,0.05);vertical-align:top;line-height:1.6;}
+.rivalry-table tr:hover td{background:rgba(200,168,112,0.02);}
+.td-axis{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(200,168,112,0.3);font-style:normal;}
+.td-cal{color:rgba(240,112,80,0.65);}
+.td-tho{color:rgba(128,192,96,0.6);}
+.td-nxi{color:rgba(96,144,208,0.65);}
+
+/* ═══════════════════════
+   PAGE CTA
+═══════════════════════ */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(200,168,112,0.08);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,46px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--gold-pale);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(200,168,112,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:var(--parch-pale);}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(200,168,112,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(200,168,112,0.4);color:var(--parch);}
+
+footer{background:var(--void);border-top:1px solid rgba(200,168,112,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.footer-copy{font-family:'EB Garamond',serif;font-size:13px;color:rgba(200,168,112,0.18);}
+
+/* Responsive */
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .origin{padding:80px 40px;}
+  .origin-inner{grid-template-columns:1fr;gap:40px;}
+  .comparison{grid-template-columns:1fr;}
+  .sister-panel{min-height:220px;}
+  .comparison:hover .sister-panel{flex:1;opacity:1;}
+  .sp-desc,.sp-traits{max-height:none;opacity:1;}
+  .sister-section{padding:80px 40px;}
+  .ss-header{grid-template-columns:1fr;gap:32px;}
+  .rivalry{padding:80px 40px;}
+  .page-cta{padding:70px 40px;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}
+  .nav.scrolled{padding:12px 24px;}
+  .nav-link{display:none;}
+  .hero-sisters-title{flex-direction:column;gap:4px;}
+  .sn-sep{display:none;}
+  .origin{padding:60px 24px;}
+  .sister-section{padding:60px 24px;}
+  .detail-grid{grid-template-columns:1fr;}
+  .rivalry{padding:60px 24px;}
+  .rivalry-table{display:none;}
+  .page-cta{padding:60px 24px;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <a href="dante-ii.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">Ashura · Daughters of Dante II</span>
+  </a>
+  <div class="nav-right">
+    <a href="dante-ii.html" class="nav-link">Dante II</a>
+    <a href="ashura-nation.html" class="nav-link">Ashura</a>
+    <a href="calypso-arc.html" class="nav-link">Calypso Arc →</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <canvas id="triCanvas"></canvas>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Daughters of King Dante II · The Three Kingdoms</p>
+    <div class="hero-sisters-title">
+      <span class="sister-name-hero sn-cal">Calypso</span>
+      <span class="sn-sep">&</span>
+      <span class="sister-name-hero sn-tho">Thorne</span>
+      <span class="sn-sep">&</span>
+      <span class="sister-name-hero sn-nxi">Nxia</span>
+    </div>
+    <p class="hero-sub">The Sybil Sisters</p>
+    <p class="hero-dynasty">Daughters of the Golden Reign · Heirs to Three Kingdoms</p>
+    <div class="hero-rule"></div>
+    <p class="hero-tagline">
+      Their father built peace. Their mother was executed for betraying it.
+      Now three sisters — three kingdoms, three philosophies of power —
+      decide whether his legacy survives or burns.
+    </p>
+    <div class="hero-trio">
+      <div class="trio-stat ts-cal"><div class="trio-val">Fire</div><div class="trio-label">Calypso · Ashura</div></div>
+      <div class="trio-stat ts-tho"><div class="trio-val">Forest</div><div class="trio-label">Thorne · Verdantia</div></div>
+      <div class="trio-stat ts-nxi"><div class="trio-val">Ocean</div><div class="trio-label">Nxia · Thalassara</div></div>
+    </div>
+  </div>
+
+  <div class="hero-scroll"><span>Descend</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- ORIGIN — THE SHARED YOUTH -->
+<section class="origin">
+  <div class="origin-inner">
+    <div class="origin-aside reveal">
+      <div class="origin-roman">III</div>
+      <span class="origin-aside-tag">The Three Daughters</span>
+    </div>
+    <div class="origin-body">
+      <span class="section-label" style="color:var(--gold-pale);">reveal">The Early Years · Growing Up in Ashura</span>
+      <h2 class="big-head reveal">
+        One palace.<br>
+        <em>Three different lessons</em><br>
+        about what power means.
+      </h2>
+      <p class="body-p reveal d1">
+        The Sybil sisters grew up in the grand halls of Ashura, under the watchful eyes of
+        <strong>King Dante II</strong> and <strong>Queen Seraphina</strong>. From an early age they were immersed
+        in the complexities of court life — surrounded by power struggles, alliances, and the intrigues
+        that defined the Nine Nations. Their father loved them equally yet saw in each a reflection
+        of his own strengths and weaknesses. In preparing them for rulership, he unknowingly
+        <em>planted the seeds of rivalry</em> that would define the age.
+      </p>
+      <p class="body-p reveal d2">
+        They loved each other. But their differing personalities meant each understood exactly
+        how to counter the others' strengths — a knowledge that served them as children
+        and <strong>threatened everything as queens.</strong>
+      </p>
+      <div class="pull reveal d3">
+        <p>"Three parts of one father's legacy — and each convinced she inherited the most important part."</p>
+        <cite>— The Chronicle of Ashura</cite>
+      </div>
+    </div>
+  </div>
+</section>
+
+<span class="comparison-hint reveal">Hover a sister to reveal her full portrait</span>
+
+<!-- SISTER COMPARISON PANELS -->
+<div class="comparison">
+
+  <!-- CALYPSO -->
+  <div class="sister-panel sp-cal" id="sp-calypso"
+       onmouseenter="setCursor('cal')" onmouseleave="resetCursor()">
+    <div class="sp-content">
+      <div class="sp-num">I</div>
+      <span class="sp-tag">Eldest · Ashura · Fire</span>
+      <h2 class="sp-name">Calypso</h2>
+      <p class="sp-title">Queen of Ashura · The Iron Flame</p>
+      <div class="sp-weapon"><div class="sp-weapon-dot"></div>Weapon: Authority & Force</div>
+      <p class="sp-desc">
+        Most like her father in temperament — aggressive, disciplined, and naturally commanding.
+        She spent her youth training with soldiers, mastering combat, and studying military strategy.
+        Her ambition was never hidden: to rule Ashura and command the most powerful kingdom
+        in the Nine Nations. Her mother's execution hardened her resolve into something that does not bend.
+        <br><br>
+        <em>"She rules with iron — not because she lacks wisdom, but because she decided long ago
+        that wisdom without force is just a very articulate surrender."</em>
+      </p>
+      <div class="sp-traits">
+        <span class="sp-trait">Eldest</span>
+        <span class="sp-trait">Military</span>
+        <span class="sp-trait">Iron Will</span>
+        <span class="sp-trait">Isolation</span>
+        <span class="sp-trait">Fire Magic</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THORNE -->
+  <div class="sister-panel sp-tho" id="sp-thorne"
+       onmouseenter="setCursor('tho')" onmouseleave="resetCursor()">
+    <div class="sp-content">
+      <div class="sp-num">II</div>
+      <span class="sp-tag">Middle · Verdantia · Forest</span>
+      <h2 class="sp-name">Thorne</h2>
+      <p class="sp-title">Queen of Verdantia · The Patient Ambition</p>
+      <div class="sp-weapon"><div class="sp-weapon-dot"></div>Weapon: Wisdom & Ancient Magic</div>
+      <p class="sp-desc">
+        Her mother's daughter in every visible way — attuned to subtlety, court dynamics,
+        and the slow power of alliances. She wandered palace gardens conversing with druids
+        while Calypso trained with soldiers. But beneath the grace is an ambition her father never fully saw:
+        Thorne believes she was meant to rule Ashura, not Verdantia. And she has been patient.
+        <br><br>
+        <em>"She is the most dangerous person in the Nine Nations — not because she is willing to strike,
+        but because she is willing to wait."</em>
+      </p>
+      <div class="sp-traits">
+        <span class="sp-trait">Diplomatic</span>
+        <span class="sp-trait">Nature Magic</span>
+        <span class="sp-trait">Patient</span>
+        <span class="sp-trait">Ambitious</span>
+        <span class="sp-trait">Covert</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NXIA -->
+  <div class="sister-panel sp-nxi" id="sp-nxia"
+       onmouseenter="setCursor('nxi')" onmouseleave="resetCursor()">
+    <div class="sp-content">
+      <div class="sp-num">III</div>
+      <span class="sp-tag">Youngest · Thalassara · Ocean</span>
+      <h2 class="sp-name">Nxia</h2>
+      <p class="sp-title">Queen of the Seas & Clouds · The Keeper of Secrets</p>
+      <div class="sp-weapon"><div class="sp-weapon-dot"></div>Weapon: Knowledge & Information</div>
+      <p class="sp-desc">
+        Nine years younger than Calypso. A prodigy at eleven. Married to Darrius of Aetheria at fifteen —
+        the first of the sisters to merge kingdoms. Her power is not in armies or forests
+        but in <em>what she knows</em>. She controls information the way Calypso controls armies.
+        She does not want Ashura. She wants the truth behind her mother's death.
+        <br><br>
+        <em>"She knows things about her sisters that neither of them has said aloud.
+        She has never used that knowledge. That restraint is the most frightening thing about her."</em>
+      </p>
+      <div class="sp-traits">
+        <span class="sp-trait">Prodigy</span>
+        <span class="sp-trait">Scholar</span>
+        <span class="sp-trait">Dual Kingdom</span>
+        <span class="sp-trait">Sea & Sky</span>
+        <span class="sp-trait">Truth-Seeker</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="ornate" style="background:var(--void);"><span>✦</span></div>
+
+<!-- ═══ CALYPSO SECTION ═══ -->
+<section class="sister-section ss-calypso reveal">
+  <div class="ss-inner">
+    <div class="ss-header">
+      <div class="ss-aside">
+        <span class="section-label">I · The Eldest</span>
+        <h2 class="ss-aside-name">Calypso</h2>
+        <span class="ss-aside-title">Queen of Ashura · The Emberous Dominion</span>
+        <p class="ss-aside-kingdom">Ruling from Valyra, atop the volcano Emberous — the most powerful seat in the Nine Nations. The throne she always knew was hers.</p>
+      </div>
+      <div class="ss-body">
+        <h3 class="ss-headline">
+          She inherited the throne.<br>
+          <em>But not the peace that came with it.</em>
+        </h3>
+        <p class="ss-text">
+          When King Dante II's will was read, Calypso received Ashura — the most powerful kingdom,
+          the capital city, the military. <strong>Everything she had prepared for.</strong> But within weeks,
+          her mother Queen Seraphina was accused of poisoning Dante II, convicted of treason,
+          and cast into the volcano. The throne Calypso inherited was built on ash before she'd had time to mourn.
+        </p>
+        <p class="ss-text">
+          Her reign hardened quickly — <em>iron-fisted, militarily dominant, politically isolated.</em>
+          She strengthened Ashura's armies, forged alliances through intimidation, and eliminated threats
+          before they could form. She became what her father never had to be: a ruler who governs through
+          fear rather than respect. Not because she wanted to. Because the lesson her mother's execution
+          taught her was that <strong>trust is a vulnerability, not a virtue.</strong>
+        </p>
+        <div class="pull">
+          <p>"Her kingdom had been built on the ashes of betrayal — and her sisters would stop at nothing
+          to claim what they believed was rightfully theirs."</p>
+          <cite>— The Chronicle of Ashura · On the Reign of Calypso</cite>
+        </div>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-cell"><span class="detail-cell-label">Kingdom</span><span class="detail-cell-val">Ashura · Capital Valyra · The Fire Nation's most powerful city-state throne</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Weapon</span><span class="detail-cell-val">Military force. Speed of decision. The will to act before rivals can form coalitions against her.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Wound</span><span class="detail-cell-val">Her mother's execution. The accusation of treason that no one has ever fully disproven — or fully believed.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Greatest Threat</span><span class="detail-cell-val">Thorne's patience. Nxia's knowledge. And the Ember Testament, which proves she is finishing her grandfather's worst chapters.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Story Arc</span><span class="detail-cell-val">The Ascension. The Emberfall Accord. The Shadow Wars. The Ashen Phoenix. Every arc passes through her throne room.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Motto</span><span class="detail-cell-val"><em>"To burn is to serve. To rule is to endure."</em></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="ornate" style="background:var(--tho-bg);"><span>✦</span></div>
+
+<!-- ═══ THORNE SECTION ═══ -->
+<section class="sister-section ss-thorne reveal">
+  <div class="ss-inner">
+    <div class="ss-header">
+      <div class="ss-aside">
+        <span class="section-label">II · The Middle Daughter</span>
+        <h2 class="ss-aside-name">Thorne</h2>
+        <span class="ss-aside-title">Queen of Verdantia · Guardian of the Sacred Forest</span>
+        <p class="ss-aside-kingdom">Ruling from Arbores, the living city — capital of the most spiritually significant kingdom in the Nine Nations. The throne she rules while waiting for the one she wants.</p>
+      </div>
+      <div class="ss-body">
+        <h3 class="ss-headline">
+          She was given a sacred kingdom.<br>
+          <em>She wanted a different one entirely.</em>
+        </h3>
+        <p class="ss-text">
+          Thorne received Verdantia — the spiritual heart of the Nine Nations, her mother's ancestral homeland,
+          a kingdom of ancient magic and living forests. <strong>It should have been everything.</strong>
+          Instead, the will shattered her. She had always believed she would inherit Ashura, that her father
+          had spoken of her destiny as Empress of the Nine Nations. To receive Verdantia instead
+          felt like exile dressed in beauty.
+        </p>
+        <p class="ss-text">
+          She has ruled Verdantia with undeniable skill — strengthening its defenses, deepening
+          its connection to ancient magics, building fierce loyalty among her people. But beneath
+          every act of wisdom lies a strategic calculation: <em>Verdantia as base, not destination.</em>
+          She has secretly trained elite warriors and druids loyal only to her. She communes with
+          spirits who have agreed, under ancient bloodline pacts, to help her take <strong>what she believes
+          was stolen from her.</strong>
+        </p>
+        <div class="pull">
+          <p>"The sacred forests and ancient magics she commands are both her shield and her sword
+          as she prepares for the day she will challenge Calypso."</p>
+          <cite>— The Verdantia Chronicle · Private Archives</cite>
+        </div>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-cell"><span class="detail-cell-label">Kingdom</span><span class="detail-cell-val">Verdantia · Capital Arbores · The most spiritually significant kingdom in the Nine Nations</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Weapon</span><span class="detail-cell-val">Patience. Ancient magic. A network of alliances built over years while appearing to simply tend her forest.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Wound</span><span class="detail-cell-val">Her father's will. The belief — never confirmed, never abandoned — that Calypso manipulated events to secure Ashura.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Greatest Threat</span><span class="detail-cell-val">Her own impatience when the moment nears. And Nxia — who knows exactly what Thorne is planning and has never said so.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Story Arc</span><span class="detail-cell-val">The background force in nearly every arc. She sustains what Dante I taxed. She will eventually make her move. The question is when.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Motto</span><span class="detail-cell-val"><em>"The forest remembers everything. So do I."</em></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="ornate" style="background:var(--nxi-bg);"><span>✦</span></div>
+
+<!-- ═══ NXIA SECTION ═══ -->
+<section class="sister-section ss-nxia reveal">
+  <div class="ss-inner">
+    <div class="ss-header">
+      <div class="ss-aside">
+        <span class="section-label">III · The Youngest</span>
+        <h2 class="ss-aside-name">Nxia</h2>
+        <span class="ss-aside-title">Queen of the Seas & Clouds · Thalassara & Aetheria</span>
+        <p class="ss-aside-kingdom">Ruling over sea and sky from the Coral Palace of Marisport — the only sister whose kingdom spans two nations, and the only one whose goal is not a throne.</p>
+      </div>
+      <div class="ss-body">
+        <h3 class="ss-headline">
+          She was the first to secure a kingdom.<br>
+          <em>It was never the point.</em>
+        </h3>
+        <p class="ss-text">
+          Born nine years after Calypso, Nxia was a prodigy of language and knowledge by eleven.
+          At fifteen, she was married to <strong>Darrius</strong>, heir to Aetheria — the first of the sisters
+          to merge kingdoms through marriage, becoming Queen of both sea and sky. The combined
+          naval and aerial power she commands is unmatched in the Nine Nations. But she does not
+          use it for conquest.
+        </p>
+        <p class="ss-text">
+          Nxia's quest is not for a throne — it is for <em>the truth.</em> She never believed the official
+          story of her mother's treason. She has spent her reign building a network of spies,
+          scholars, and informants that feeds her information no other ruler possesses.
+          She knows things about her sisters that neither of them has ever said aloud.
+          She has uncovered ancient prophecies, hidden alliances, and the shadows of a conspiracy
+          that stretches back generations — all pointing toward a <strong>truth that could tear
+          the Nine Nations apart.</strong>
+        </p>
+        <div class="pull">
+          <p>"Her control over secrets made her the queen of information — a role she wielded with precision.
+          No one could thwart her plans without facing the consequences of their own hidden truths being revealed."</p>
+          <cite>— The Thalassaran Codex · On Queen Nxia</cite>
+        </div>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-cell"><span class="detail-cell-label">Kingdoms</span><span class="detail-cell-val">Thalassara (Sea) + Aetheria (Sky) · The only sister ruling two nations · Queen of Seas and Clouds</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Weapon</span><span class="detail-cell-val">Knowledge. Secrets. A network of informants that predates her coronation. The truth as leverage.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Quest</span><span class="detail-cell-val">The truth behind Seraphina's execution. The true cause of Dante II's death. The conspiracy no one else has fully mapped.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Greatest Threat</span><span class="detail-cell-val">The moment she reveals what she knows. That choice — when to speak, and to whom — is the most dangerous decision in the Nine Realms.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Story Arc</span><span class="detail-cell-val">The Obsidian Hourglass. The knowledge she holds connects every arc and every conspiracy. She is the undetonated truth.</span></div>
+      <div class="detail-cell"><span class="detail-cell-label">Motto</span><span class="detail-cell-val"><em>"The ocean keeps every secret. So do I. Until the tide turns."</em></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="ornate" style="background:var(--void);"><span>✦</span></div>
+
+<!-- RIVALRY MATRIX -->
+<section class="rivalry">
+  <div class="rivalry-inner">
+    <div class="reveal">
+      <span class="section-label" style="color:var(--gold-pale);">The Balance of Power</span>
+      <h2 class="rivalry-title">Three Sisters.<br><em>Three Weapons. One War.</em></h2>
+      <p class="rivalry-intro">Each sister knows exactly how to counter the others. Their father prepared them too well — and not well enough.</p>
+    </div>
+    <table class="rivalry-table reveal d1">
+      <thead class="rt-head">
+        <tr>
+          <th class="th-axis">Axis</th>
+          <th class="th-cal">🔥 Calypso</th>
+          <th class="th-tho">🌿 Thorne</th>
+          <th class="th-nxi">🌊 Nxia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-axis">Power Archetype</td>
+          <td class="td-cal">Military Dominance</td>
+          <td class="td-tho">Patient Strategy</td>
+          <td class="td-nxi">Information Control</td>
+        </tr>
+        <tr>
+          <td class="td-axis">Weapon</td>
+          <td class="td-cal">Force & Speed</td>
+          <td class="td-tho">Ancient Magic & Time</td>
+          <td class="td-nxi">Secrets & Truth</td>
+        </tr>
+        <tr>
+          <td class="td-axis">Kingdom</td>
+          <td class="td-cal">Ashura — Fire Nation</td>
+          <td class="td-tho">Verdantia — Forest Nation</td>
+          <td class="td-nxi">Thalassara + Aetheria</td>
+        </tr>
+        <tr>
+          <td class="td-axis">Goal</td>
+          <td class="td-cal">Hold the throne. Prove her right to it.</td>
+          <td class="td-tho">Take Calypso's throne.</td>
+          <td class="td-nxi">Find the truth. Then decide what to do with it.</td>
+        </tr>
+        <tr>
+          <td class="td-axis">Wound</td>
+          <td class="td-cal">Mother's execution. Trust destroyed.</td>
+          <td class="td-tho">Father's will. Destiny denied.</td>
+          <td class="td-nxi">The unanswered murder. The conspiracy no one will name.</td>
+        </tr>
+        <tr>
+          <td class="td-axis">Fatal Flaw</td>
+          <td class="td-cal">Isolation. No one left to warn her.</td>
+          <td class="td-tho">Ambition disguised as righteousness.</td>
+          <td class="td-nxi">Restraint. Holding truth too long becomes its own betrayal.</td>
+        </tr>
+        <tr>
+          <td class="td-axis">Fears</td>
+          <td class="td-cal">Being proven illegitimate.</td>
+          <td class="td-tho">That she waited too long.</td>
+          <td class="td-nxi">That the truth will only make things worse.</td>
+        </tr>
+        <tr>
+          <td class="td-axis">Inheritance from Dante II</td>
+          <td class="td-cal">His discipline — without his web.</td>
+          <td class="td-tho">Her mother's wisdom — weaponized.</td>
+          <td class="td-nxi">The questions he never thought to ask.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PAGE CTA -->
+<div class="page-cta">
+  <div class="page-cta-inner reveal">
+    <span class="section-label" style="color:var(--gold-pale);display:block;text-align:center;margin-bottom:20px;">The Age of the Sybil Sisters</span>
+    <h2>Their father's peace ends<br><em>where their ambition begins.</em></h2>
+    <p>
+      Fire, forest, and ocean. Three kingdoms held in tension by three women
+      who each understand a different piece of what their father built —
+      and each willing to break the others to protect her vision of it.
+    </p>
+    <div class="cta-row">
+      <a href="dante-ii.html" class="btn-p">← Read Dante II</a>
+      <a href="nine-realms-story-arcs.html" class="btn-g">The Story Arcs →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-copy">Nine Realms Universe — The Sybil Sisters · Calypso, Thorne & Nxia · Original IP</span>
+  <span class="footer-copy">Created by Ron</span>
+</footer>
+
+<script>
+try{
+
+/* Cursor */
+const dot=document.getElementById('curDot');
+const ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+function setCursor(s){ring.className='cur-ring '+s+'-mode';}
+function resetCursor(){ring.className='cur-ring';}
+
+/* Nav */
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+
+/* Scroll reveal */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

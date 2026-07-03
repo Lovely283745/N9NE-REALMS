@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nine Realms — The Universe</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --ink:        #08060A;
+  --ink-deep:   #050408;
+  --ink-mid:    #110D16;
+  --ink-lift:   #1C1622;
+  --parchment:  #D4B896;
+  --parch-dim:  #9A8570;
+  --parch-pale: #EDE0CE;
+  --ember:      #B8732A;
+  --ember-bright: #D4893A;
+  --ember-pale: #E8C090;
+  --ash:        #4A3F52;
+  --veil:       rgba(212,184,150,0.06);
+
+  /* Realm accent colors */
+  --neo-med:    #8B4A2A;
+  --dystopian:  #2A4A3A;
+  --cyberpunk:  #1A3A5A;
+  --space:      #2A1A4A;
+  --void-realm: #3A1A2A;
+  --verdantia:  #3A4A1A;
+  --celestial:  #4A3A1A;
+  --shadow:     #1A1A3A;
+  --ember-realm:#4A2A1A;
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--ink);
+  color: var(--parchment);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+/* ═══════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════ */
+.cur { position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
+.cur-dot {
+  width: 6px; height: 6px;
+  background: var(--parchment);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width .2s, height .2s;
+}
+.cur-ring {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(212,184,150,0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform .5s cubic-bezier(.16,1,.3,1), width .3s, height .3s, opacity .3s;
+}
+body:hover .cur-dot { width: 6px; height: 6px; }
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 900;
+  padding: 28px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.5s, padding 0.4s;
+}
+.nav.scrolled {
+  background: rgba(8,6,10,0.92);
+  backdrop-filter: blur(12px);
+  padding: 18px 60px;
+  border-bottom: 1px solid rgba(212,184,150,0.06);
+}
+
+.nav-sigil {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-decoration: none;
+}
+.nav-sigil-mark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--parch-pale);
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+.nav-sigil-sub {
+  font-family: 'Jost', sans-serif;
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.45em;
+  color: var(--ember);
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  list-style: none;
+}
+.nav-links a {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: var(--parch-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+  transition: color 0.3s;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--ember);
+  transition: width 0.4s cubic-bezier(.16,1,.3,1);
+}
+.nav-links a:hover { color: var(--parchment); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-cta {
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: var(--ember);
+  text-transform: uppercase;
+  border: 1px solid rgba(184,115,42,0.4);
+  padding: 10px 22px;
+  text-decoration: none;
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
+}
+.nav-cta:hover {
+  border-color: var(--ember);
+  background: rgba(184,115,42,0.08);
+  color: var(--ember-bright);
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav-toggle span {
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--parchment);
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--ink-deep);
+}
+
+/* Ambient orb */
+.hero-orb {
+  position: absolute;
+  width: 700px; height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(184,115,42,0.07) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbBreath 9s ease-in-out infinite;
+}
+@keyframes orbBreath {
+  0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+  50%      { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+}
+
+/* Ruling lines — manuscript feel */
+.hero-rules {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero-rules::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 1px; height: 100%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(212,184,150,0.08) 30%, rgba(212,184,150,0.08) 70%, transparent 100%);
+}
+.hero-rules::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0;
+  width: 100%; height: 1px;
+  background: linear-gradient(to right, transparent 0%, rgba(212,184,150,0.06) 30%, rgba(212,184,150,0.06) 70%, transparent 100%);
+}
+
+/* Corner ornaments */
+.hero-corner {
+  position: absolute;
+  width: 60px; height: 60px;
+  border-color: rgba(212,184,150,0.15);
+  border-style: solid;
+}
+.hero-corner.tl { top: 40px; left: 60px; border-width: 1px 0 0 1px; }
+.hero-corner.tr { top: 40px; right: 60px; border-width: 1px 1px 0 0; }
+.hero-corner.bl { bottom: 40px; left: 60px; border-width: 0 0 1px 1px; }
+.hero-corner.br { bottom: 40px; right: 60px; border-width: 0 1px 1px 0; }
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.hero-pre {
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.55em;
+  color: var(--ember);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: riseIn 1.2s 0.3s ease forwards;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.hero-pre::before, .hero-pre::after {
+  content: '';
+  display: block;
+  width: 40px; height: 1px;
+  background: rgba(184,115,42,0.5);
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(72px, 13vw, 160px);
+  font-weight: 300;
+  color: var(--parch-pale);
+  letter-spacing: 0.08em;
+  line-height: 0.9;
+  opacity: 0;
+  animation: riseIn 1.6s 0.6s ease forwards;
+  position: relative;
+}
+
+.hero-title-em {
+  display: block;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ember-pale);
+  font-size: 0.52em;
+  letter-spacing: 0.2em;
+  margin-top: 8px;
+}
+
+.hero-divider {
+  width: 1px;
+  height: 0;
+  background: linear-gradient(to bottom, var(--ember), transparent);
+  margin: 36px auto;
+  animation: lineGrow 1.2s 1.4s ease forwards;
+}
+@keyframes lineGrow { to { height: 60px; } }
+
+.hero-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(16px, 2.2vw, 22px);
+  font-weight: 300;
+  color: rgba(212,184,150,0.65);
+  max-width: 540px;
+  margin: 0 auto 48px;
+  line-height: 1.7;
+  opacity: 0;
+  animation: riseIn 1.2s 1.6s ease forwards;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: riseIn 1.2s 1.9s ease forwards;
+}
+
+.btn-primary {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--parchment);
+  padding: 16px 36px;
+  text-decoration: none;
+  transition: background 0.3s, color 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--ember-pale);
+  transform: translateX(-101%);
+  transition: transform 0.4s cubic-bezier(.16,1,.3,1);
+}
+.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary span { position: relative; z-index: 1; }
+
+.btn-ghost {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--parch-dim);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.3s;
+}
+.btn-ghost:hover { color: var(--parchment); }
+.btn-ghost::after {
+  content: '→';
+  transition: transform 0.3s;
+}
+.btn-ghost:hover::after { transform: translateX(6px); }
+
+/* Scroll indicator */
+.hero-scroll {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  animation: riseIn 1s 2.4s ease forwards;
+}
+.hero-scroll span {
+  font-family: 'Jost', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.4em;
+  color: var(--parch-dim);
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.hero-scroll-line {
+  width: 1px; height: 48px;
+  background: linear-gradient(to bottom, var(--ember), transparent);
+  animation: scrollDrop 2s ease-in-out infinite;
+}
+@keyframes scrollDrop {
+  0%   { opacity: 1; transform: scaleY(0); transform-origin: top; }
+  50%  { opacity: 1; transform: scaleY(1); transform-origin: top; }
+  51%  { transform-origin: bottom; }
+  100% { opacity: 0; transform: scaleY(0); transform-origin: bottom; }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════
+   SECTION UTILITIES
+═══════════════════════════════════════ */
+.section-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.5em;
+  color: var(--ember);
+  text-transform: uppercase;
+  opacity: 0.7;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* Rule line divider */
+.rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212,184,150,0.12), rgba(212,184,150,0.12), transparent);
+  margin: 0;
+}
+.rule-ornate {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+.rule-ornate::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212,184,150,0.1), transparent);
+}
+.rule-ornate-mark {
+  position: relative;
+  font-size: 14px;
+  color: var(--ember);
+  opacity: 0.4;
+  background: var(--ink);
+  padding: 0 20px;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════
+   INTRO / MANIFESTO
+═══════════════════════════════════════ */
+.manifesto {
+  padding: 130px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.manifesto-aside {
+  padding-top: 8px;
+}
+
+.manifesto-aside-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 120px;
+  font-weight: 300;
+  color: rgba(184,115,42,0.08);
+  line-height: 1;
+  margin-bottom: -20px;
+  margin-left: -10px;
+}
+
+.manifesto-aside-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.45em;
+  color: var(--parch-dim);
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.manifesto-body {}
+
+.manifesto-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 4.5vw, 58px);
+  font-weight: 400;
+  color: var(--parch-pale);
+  line-height: 1.2;
+  margin-bottom: 32px;
+}
+.manifesto-headline em {
+  font-style: italic;
+  color: var(--ember-pale);
+}
+
+.manifesto-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 1.8vw, 20px);
+  font-weight: 300;
+  color: rgba(212,184,150,0.6);
+  line-height: 1.85;
+  margin-bottom: 20px;
+}
+
+.manifesto-stat-row {
+  display: flex;
+  gap: 48px;
+  margin-top: 52px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(212,184,150,0.08);
+  flex-wrap: wrap;
+}
+
+.manifesto-stat {}
+.manifesto-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--ember-pale);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.manifesto-stat-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  color: var(--parch-dim);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════
+   REALMS GRID
+═══════════════════════════════════════ */
+.realms-section {
+  padding: 0 60px 130px;
+}
+
+.realms-header {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.realms-header-left {}
+.realms-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 400;
+  color: var(--parch-pale);
+  line-height: 1.1;
+}
+.realms-title em { font-style: italic; color: var(--ember-pale); }
+
+.realms-header-right {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: rgba(212,184,150,0.4);
+  max-width: 300px;
+  text-align: right;
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+
+/* Grid layout — all cards full width, stacked vertically */
+.realms-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.realm-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink-mid);
+  cursor: pointer;
+  width: 100%;
+  min-height: 200px;
+  transition: transform 0.4s cubic-bezier(.16,1,.3,1);
+}
+.realm-card:hover { transform: translateY(-4px); z-index: 2; }
+
+.realm-card-bg {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.6s cubic-bezier(.16,1,.3,1), opacity 0.4s;
+}
+.realm-card:hover .realm-card-bg { transform: scale(1.04); }
+
+/* ── Nation backgrounds ── */
+.realm-fire .realm-card-bg             { background: linear-gradient(135deg, #180806 0%, #2A0E08 55%, #3A140A 100%); }
+.realm-sky .realm-card-bg              { background: linear-gradient(135deg, #080C18 0%, #0C1028 55%, #10183A 100%); }
+.realm-ocean .realm-card-bg            { background: linear-gradient(135deg, #060C14 0%, #0A1420 55%, #0C1C30 100%); }
+.realm-flora .realm-card-bg            { background: linear-gradient(135deg, #060E06 0%, #0A1408 55%, #0C1C0A 100%); }
+.realm-mountain .realm-card-bg         { background: linear-gradient(135deg, #0C0C0C 0%, #141214 55%, #1C181C 100%); }
+.realm-desert .realm-card-bg           { background: linear-gradient(135deg, #160E04 0%, #241604 55%, #301E08 100%); }
+.realm-ice .realm-card-bg              { background: linear-gradient(135deg, #080C14 0%, #0C1020 55%, #101830 100%); }
+.realm-dark .realm-card-bg             { background: linear-gradient(135deg, #080608 0%, #0C080E 55%, #120A14 100%); }
+.realm-celestial-nation .realm-card-bg { background: linear-gradient(135deg, #0C0A14 0%, #140E20 55%, #1C1430 100%); }
+
+/* ── Nation patterns ── */
+.realm-card-pattern { position: absolute; inset: 0; opacity: 0.04; transition: opacity 0.4s; }
+.realm-card:hover .realm-card-pattern { opacity: 0.1; }
+
+.realm-fire .realm-card-pattern             { background: repeating-linear-gradient(45deg, #8B3A1A 0, #8B3A1A 1px, transparent 0, transparent 18px) 0/18px 18px; }
+.realm-sky .realm-card-pattern              { background: repeating-linear-gradient(90deg, #1A4A8A 0, #1A4A8A 1px, transparent 0, transparent 28px) 0/28px 28px; }
+.realm-ocean .realm-card-pattern            { background: radial-gradient(ellipse, #0A3A6A 1px, transparent 1px) 0/22px 22px; }
+.realm-flora .realm-card-pattern            { background: repeating-linear-gradient(60deg, #2A5A1A 0, #2A5A1A 1px, transparent 0, transparent 24px); }
+.realm-mountain .realm-card-pattern         { background: repeating-linear-gradient(45deg, #3A3A3A 0, #3A3A3A 1px, transparent 0, transparent 20px) 0/20px 20px; }
+.realm-desert .realm-card-pattern           { background: radial-gradient(circle, #8A6A1A 1px, transparent 1px) 0/20px 20px; }
+.realm-ice .realm-card-pattern              { background: repeating-conic-gradient(#2A4A8A 0deg 8deg, transparent 8deg 30deg) 0/36px 36px; }
+.realm-dark .realm-card-pattern             { background: repeating-linear-gradient(-45deg, #3A1A5A 0, #3A1A5A 1px, transparent 0, transparent 14px) 0/14px 14px; }
+.realm-celestial-nation .realm-card-pattern { background: radial-gradient(circle, #4A3A8A 1px, transparent 1px) 0/26px 26px; }
+
+/* ── Nation glows ── */
+.realm-card-glow { position: absolute; bottom: 0; left: 0; right: 0; height: 50%; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+.realm-card:hover .realm-card-glow { opacity: 1; }
+
+.realm-fire .realm-card-glow             { background: linear-gradient(to top, rgba(180,60,20,0.25), transparent); }
+.realm-sky .realm-card-glow              { background: linear-gradient(to top, rgba(40,100,200,0.18), transparent); }
+.realm-ocean .realm-card-glow            { background: linear-gradient(to top, rgba(20,80,160,0.2), transparent); }
+.realm-flora .realm-card-glow            { background: linear-gradient(to top, rgba(40,120,30,0.2), transparent); }
+.realm-mountain .realm-card-glow         { background: linear-gradient(to top, rgba(80,70,70,0.2), transparent); }
+.realm-desert .realm-card-glow           { background: linear-gradient(to top, rgba(180,140,30,0.2), transparent); }
+.realm-ice .realm-card-glow              { background: linear-gradient(to top, rgba(60,120,200,0.18), transparent); }
+.realm-dark .realm-card-glow             { background: linear-gradient(to top, rgba(80,20,120,0.22), transparent); }
+.realm-celestial-nation .realm-card-glow { background: linear-gradient(to top, rgba(100,80,200,0.2), transparent); }
+
+/* ── Nation tag colors ── */
+.realm-fire .realm-tag             { color: #E07050; }
+.realm-sky .realm-tag              { color: #60A0E0; }
+.realm-ocean .realm-tag            { color: #40A0C0; }
+.realm-flora .realm-tag            { color: #70C050; }
+.realm-mountain .realm-tag         { color: #A09080; }
+.realm-desert .realm-tag           { color: #D0A040; }
+.realm-ice .realm-tag              { color: #80C0E0; }
+.realm-dark .realm-tag             { color: #A060C0; }
+.realm-celestial-nation .realm-tag { color: #A090E0; }
+
+/* ── States drawer ── */
+.states-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(.16,1,.3,1), opacity 0.4s;
+  opacity: 0;
+}
+.realm-card.expanded .states-drawer { max-height: 120px; opacity: 1; }
+
+.state-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  background: rgba(212,184,150,0.04);
+  border-left: 2px solid rgba(212,184,150,0.12);
+  transition: background 0.2s, border-color 0.2s;
+}
+.state-item:hover { background: rgba(212,184,150,0.08); border-left-color: rgba(212,184,150,0.3); }
+
+.state-name {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--parchment);
+  letter-spacing: 0.08em;
+}
+.state-capital {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 12px;
+  color: rgba(212,184,150,0.45);
+}
+
+.realm-card-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.realm-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: rgba(212,184,150,0.25);
+  margin-bottom: auto;
+  padding-bottom: 20px;
+}
+
+.realm-tag {
+  font-family: 'Jost', sans-serif;
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  transition: opacity 0.3s;
+}
+.realm-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px, 2.5vw, 28px);
+  font-weight: 400;
+  color: var(--parch-pale);
+  line-height: 1.1;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+.realm-card:nth-child(1) .realm-name { font-size: clamp(28px, 3.5vw, 44px); }
+
+.realm-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(212,184,150,0.4);
+  line-height: 1.6;
+  max-width: 280px;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(.16,1,.3,1), opacity 0.4s;
+}
+.realm-card:hover .realm-desc { transform: translateY(0); opacity: 1; }
+
+.realm-arrow {
+  position: absolute;
+  top: 28px; right: 28px;
+  font-size: 18px;
+  color: rgba(212,184,150,0.2);
+  transition: color 0.3s, transform 0.3s;
+}
+.realm-card:hover .realm-arrow {
+  color: var(--ember);
+  transform: translate(4px, -4px);
+}
+
+/* ═══════════════════════════════════════
+   FEATURED CHARACTER
+═══════════════════════════════════════ */
+.featured {
+  background: var(--ink-mid);
+  padding: 130px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.featured::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 80% at 80% 50%, rgba(184,115,42,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 50%, rgba(61,10,18,0.3) 0%, transparent 70%);
+}
+
+.featured-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 100px;
+  align-items: center;
+}
+
+.featured-image {
+  position: relative;
+}
+
+.featured-image img {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 80px rgba(184,115,42,0.12));
+  animation: featuredFloat 10s ease-in-out infinite;
+}
+@keyframes featuredFloat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.featured-image-frame {
+  position: absolute;
+  top: -20px; right: -20px; bottom: 20px; left: 20px;
+  border: 1px solid rgba(212,184,150,0.06);
+  pointer-events: none;
+}
+
+.featured-badge {
+  position: absolute;
+  top: 32px; left: -24px;
+  background: var(--ember);
+  color: var(--ink);
+  font-family: 'Jost', sans-serif;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  writing-mode: horizontal-tb;
+}
+
+.featured-lore {}
+.featured-lore h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px, 4.5vw, 60px);
+  font-weight: 400;
+  color: var(--parch-pale);
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+.featured-lore h2 em {
+  display: block;
+  font-style: italic;
+  font-size: 0.65em;
+  color: var(--ember-pale);
+  letter-spacing: 0.05em;
+}
+
+.featured-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: rgba(212,184,150,0.5);
+  margin: 24px 0 32px;
+  line-height: 1.7;
+  padding-left: 20px;
+  border-left: 2px solid rgba(184,115,42,0.4);
+}
+
+.featured-body {
+  font-family: 'Jost', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(212,184,150,0.55);
+  line-height: 1.9;
+  margin-bottom: 40px;
+}
+
+.featured-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+.featured-trait {
+  font-family: 'Jost', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ember);
+  border: 1px solid rgba(184,115,42,0.25);
+  padding: 7px 16px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.featured-trait:hover {
+  border-color: rgba(184,115,42,0.6);
+  background: rgba(184,115,42,0.06);
+}
+
+.featured-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--parch-pale);
+  text-decoration: none;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(212,184,150,0.2);
+  transition: color 0.3s, border-color 0.3s;
+}
+.featured-link:hover { color: var(--ember-bright); border-color: var(--ember); }
+.featured-link-arrow { transition: transform 0.3s; }
+.featured-link:hover .featured-link-arrow { transform: translateX(8px); }
+
+/* ═══════════════════════════════════════
+   LORE CHRONICLE
+═══════════════════════════════════════ */
+.chronicle {
+  padding: 130px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.chronicle-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 80px;
+}
+
+.chronicle-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 400;
+  color: var(--parch-pale);
+  line-height: 1.1;
+}
+.chronicle-title em { font-style: italic; color: var(--ember-pale); }
+
+.chronicle-intro {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: rgba(212,184,150,0.45);
+  line-height: 1.75;
+  padding-top: 12px;
+}
+
+.chronicle-entries {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+}
+
+.chronicle-entry {
+  background: var(--ink-mid);
+  padding: 44px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+.chronicle-entry:hover { background: var(--ink-lift); }
+
+.chronicle-entry::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 2px; height: 0;
+  background: var(--ember);
+  transition: height 0.4s cubic-bezier(.16,1,.3,1);
+}
+.chronicle-entry:hover::before { height: 100%; }
+
+.chronicle-entry-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 64px;
+  font-weight: 300;
+  color: rgba(184,115,42,0.06);
+  line-height: 1;
+  position: absolute;
+  top: 20px; right: 24px;
+}
+
+.chronicle-entry-tag {
+  font-family: 'Jost', sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.45em;
+  color: var(--ember);
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 18px;
+  display: block;
+}
+
+.chronicle-entry-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 400;
+  color: var(--parch-pale);
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.chronicle-entry-text {
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(212,184,150,0.45);
+  line-height: 1.8;
+}
+
+/* ═══════════════════════════════════════
+   CALL TO ACTION BAND
+═══════════════════════════════════════ */
+.cta-band {
+  position: relative;
+  padding: 100px 60px;
+  background: var(--ink-deep);
+  overflow: hidden;
+  text-align: center;
+}
+.cta-band::before {
+  content: 'IX';
+  position: absolute;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(180px, 30vw, 360px);
+  font-weight: 300;
+  color: rgba(184,115,42,0.03);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  pointer-events: none;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+.cta-band-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.cta-band h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 300;
+  color: var(--parch-pale);
+  line-height: 1.15;
+  margin-bottom: 24px;
+}
+.cta-band h2 em { font-style: italic; color: var(--ember-pale); }
+.cta-band p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: rgba(212,184,150,0.5);
+  margin-bottom: 48px;
+  line-height: 1.7;
+}
+.cta-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  background: var(--ink-deep);
+  border-top: 1px solid rgba(212,184,150,0.06);
+  padding: 70px 60px 40px;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+.footer-brand {}
+.footer-brand-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--parch-pale);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.footer-brand-tagline {
+  font-family: 'Jost', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  color: var(--ember);
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 24px;
+}
+.footer-brand-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: rgba(212,184,150,0.35);
+  line-height: 1.75;
+  max-width: 280px;
+}
+
+.footer-col-title {
+  font-family: 'Jost', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.4em;
+  color: var(--ember);
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.footer-links a {
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(212,184,150,0.4);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--parchment); }
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 32px;
+  border-top: 1px solid rgba(212,184,150,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-bottom-copy {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(212,184,150,0.2);
+  letter-spacing: 0.1em;
+}
+
+.footer-bottom-ip {
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(212,184,150,0.2);
+  letter-spacing: 0.1em;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .nav { padding: 24px 40px; }
+  .nav.scrolled { padding: 16px 40px; }
+  .nav-links { gap: 32px; }
+  .manifesto { grid-template-columns: 1fr; gap: 40px; padding: 90px 40px; }
+  .manifesto-aside-num { font-size: 80px; }
+  .realms-section { padding: 0 40px 90px; }
+  .featured-inner { grid-template-columns: 1fr; gap: 60px; }
+  .featured { padding: 90px 40px; }
+  .featured-image img { max-width: 380px; }
+  .chronicle { padding: 90px 40px; }
+  .chronicle-header { grid-template-columns: 1fr; gap: 24px; }
+  .chronicle-entries { grid-template-columns: 1fr 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .nav { padding: 20px 24px; }
+  .nav.scrolled { padding: 14px 24px; }
+  .nav-links, .nav-cta { display: none; }
+  .nav-toggle { display: flex; }
+  .hero-corner { display: none; }
+  .manifesto { padding: 70px 24px; }
+  .realms-section { padding: 0 24px 70px; }
+  .realms-header { flex-direction: column; align-items: flex-start; }
+  .realms-header-right { text-align: left; }
+  .featured { padding: 70px 24px; }
+  .chronicle { padding: 70px 24px; }
+  .chronicle-entries { grid-template-columns: 1fr; }
+  .cta-band { padding: 80px 24px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 36px; }
+  footer { padding: 50px 24px 30px; }
+  .manifesto-stat-row { gap: 32px; }
+  .realm-desc { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div class="cur" id="curDot" style="position:fixed;z-index:9999;pointer-events:none;">
+  <div class="cur-dot"></div>
+</div>
+<div class="cur" id="curRing" style="position:fixed;z-index:9998;pointer-events:none;">
+  <div class="cur-ring"></div>
+</div>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav class="nav" id="mainNav">
+  <a href="#" class="nav-sigil">
+    <span class="nav-sigil-mark">Nine Realms</span>
+    <span class="nav-sigil-sub">A Universe</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#realms">The Realms</a></li>
+    <li><a href="#characters">Characters</a></li>
+    <li><a href="#lore">Lore</a></li>
+    <li><a href="#chronicle">Chronicle</a></li>
+  </ul>
+
+  <a href="#" class="nav-cta">Enter the Universe</a>
+  <div class="nav-toggle" id="navToggle">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-rules"></div>
+  <div class="hero-corner tl"></div>
+  <div class="hero-corner tr"></div>
+  <div class="hero-corner bl"></div>
+  <div class="hero-corner br"></div>
+
+  <div class="hero-content">
+    <p class="hero-pre">A fictional universe</p>
+    <h1 class="hero-title">
+      Nine Realms
+      <em class="hero-title-em">Where Legends Are Forged</em>
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      Nine distinct worlds. Centuries of conflict, prophecy, and myth.
+      An infinite cast of characters fighting to define what it means
+      to be free within the boundaries of destiny.
+    </p>
+    <div class="hero-actions">
+      <a href="#realms" class="btn-primary"><span>Explore the Realms</span></a>
+      <a href="#characters" class="btn-ghost">Meet the Characters</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Descend</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<div class="rule-ornate"><span class="rule-ornate-mark">✦</span></div>
+
+<!-- ═══ MANIFESTO ═══ -->
+<section style="background: var(--ink);">
+  <div class="manifesto">
+    <div class="manifesto-aside reveal">
+      <div class="manifesto-aside-num">IX</div>
+      <span class="manifesto-aside-label">Nations. 27 States. One Destiny.</span>
+    </div>
+    <div class="manifesto-body">
+      <span class="section-label reveal">The Universe</span>
+      <h2 class="manifesto-headline reveal">
+        Ancient kingdoms.<br>
+        Unbreakable rivalries.<br>
+        <em>One age that will define them all.</em>
+      </h2>
+      <p class="manifesto-text reveal reveal-delay-1">
+        The Nine Realms is a vast and intricately woven fantasy universe where ancient kingdoms
+        vie for power, influence, and survival. Each realm — distinct in culture, magic, and
+        leadership — contributes to the grand tapestry of an age marked by epic conflicts,
+        deep-seated rivalries, and the eternal struggle between light and darkness.
+      </p>
+      <p class="manifesto-text reveal reveal-delay-2">
+        From the fiery forges of the Fire Nation to the ethereal skies of the Sky Nation,
+        from the shadowy courts of Sablea to the icy peaks of Glaciana — at the heart of
+        every realm lies a complex web of alliances, betrayals, and destinies that shape
+        the fates of heroes and villains alike.
+      </p>
+      <div class="manifesto-stat-row reveal reveal-delay-3">
+        <div class="manifesto-stat">
+          <div class="manifesto-stat-num">9</div>
+          <div class="manifesto-stat-label">Nations</div>
+        </div>
+        <div class="manifesto-stat">
+          <div class="manifesto-stat-num">27</div>
+          <div class="manifesto-stat-label">States & Capitals</div>
+        </div>
+        <div class="manifesto-stat">
+          <div class="manifesto-stat-num">5</div>
+          <div class="manifesto-stat-label">Primary Story Arcs</div>
+        </div>
+        <div class="manifesto-stat">
+          <div class="manifesto-stat-num">∞</div>
+          <div class="manifesto-stat-label">Destinies in Play</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule-ornate"><span class="rule-ornate-mark">✦</span></div>
+
+<!-- ═══ REALMS GRID ═══ -->
+<section style="background: var(--ink);" id="realms">
+  <div class="realms-section">
+    <div class="realms-header">
+      <div class="realms-header-left">
+        <span class="section-label reveal">The Nine Realms</span>
+        <h2 class="realms-title reveal">
+          Nine Worlds.<br>
+          <em>One Cosmos.</em>
+        </h2>
+      </div>
+      <p class="realms-header-right reveal">
+        Each realm is a world unto itself — distinct in aesthetic,
+        culture, and conflict, yet bound by the same ancient threads
+        of prophecy and power.
+      </p>
+    </div>
+
+    <div class="realms-grid">
+      <!-- NATION 1: FIRE -->
+      <div class="realm-card realm-fire reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">01</span><span class="realm-tag">🔥 Fire Nation</span><h3 class="realm-name">The Emberous Dominion</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Forged on volcanoes, ruled by the Sibyl sisters of Valyra. Strength, aggression, and military dominance define this fiery empire.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Ashura</span><span class="state-capital">⬥ Valyra</span></div>
+            <div class="state-item"><span class="state-name">Ignis</span><span class="state-capital">⬥ Pyros</span></div>
+            <div class="state-item"><span class="state-name">Cindara</span><span class="state-capital">⬥ Emberhold</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+
+      <!-- NATION 2: SKY -->
+      <div class="realm-card realm-sky reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">02</span><span class="realm-tag">🌬 Sky Nation</span><h3 class="realm-name">The Aetherian Reaches</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Floating islands above the clouds, ruled by Darrius of Aerilon. Wind magic, aerial supremacy, and the freedom of open sky.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Aetheria</span><span class="state-capital">⬥ Aerilon</span></div>
+            <div class="state-item"><span class="state-name">Zephyra</span><span class="state-capital">⬥ Skydawn</span></div>
+            <div class="state-item"><span class="state-name">Stratos</span><span class="state-capital">⬥ Windspire</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+
+      <!-- NATION 3: OCEAN -->
+      <div class="realm-card realm-ocean reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">03</span><span class="realm-tag">🌊 Ocean Nation</span><h3 class="realm-name">The Thalassic Depths</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Underwater cities beneath vast seas, ruled by Queen Nxia of Thalassara. Mastery of water magic and the secrets of the deep.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Thalassara</span><span class="state-capital">⬥ Marisport</span></div>
+            <div class="state-item"><span class="state-name">Nereidia</span><span class="state-capital">⬥ Coralheart</span></div>
+            <div class="state-item"><span class="state-name">Pelagia</span><span class="state-capital">⬥ Deepwater</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+
+      <!-- NATION 4: FLORA -->
+      <div class="realm-card realm-flora reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">04</span><span class="realm-tag">🌿 Flora Nation</span><h3 class="realm-name">The Ancient Woodland Realm</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Ancient forests and druids, home of Queen Seraphina in Verdantia. Harmony, deep earth wisdom, and spiritual connection to all living things.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Verdantia</span><span class="state-capital">⬥ Sylvanhold</span></div>
+            <div class="state-item"><span class="state-name">Arborea</span><span class="state-capital">⬥ Leafshadow</span></div>
+            <div class="state-item"><span class="state-name">Floria</span><span class="state-capital">⬥ Petalbloom</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+
+      <!-- NATION 5: MOUNTAIN -->
+      <div class="realm-card realm-mountain reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">05</span><span class="realm-tag">⛰ Mountain Nation</span><h3 class="realm-name">The Dragon Peaks</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Indomitable fortresses carved into the highest peaks. Dragon riders of Drakenheim train in cold winds — unyielding in spirit, unconquered in war.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Drakenheim</span><span class="state-capital">⬥ Drakenhold</span></div>
+            <div class="state-item"><span class="state-name">Tauron</span><span class="state-capital">⬥ Stonewatch</span></div>
+            <div class="state-item"><span class="state-name">Valkyris</span><span class="state-capital">⬥ Frostpeak</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+
+      <!-- NATION 6: DESERT -->
+      <div class="realm-card realm-desert reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">06</span><span class="realm-tag">🏜 Desert Nation</span><h3 class="realm-name">The Golden Sands of Amun-Re</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Vast desert wealth and ancient mysticism, ruled by King Orious. Pure water wells, gold mines, and desert mages who guard the oldest secrets.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Amun-Re</span><span class="state-capital">⬥ Oasis of Amun-Re</span></div>
+            <div class="state-item"><span class="state-name">Saharae</span><span class="state-capital">⬥ Goldsand</span></div>
+            <div class="state-item"><span class="state-name">Khemara</span><span class="state-capital">⬥ Sandspire</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+
+      <!-- NATION 7: ICE -->
+      <div class="realm-card realm-ice reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">07</span><span class="realm-tag">❄ Ice Nation</span><h3 class="realm-name">The Eternal Frost</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Eternal winter and powerful ice magic. From glacier cities to the aurora-lit city of Northlight — endurance forged by cold that never ends.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Glaciana</span><span class="state-capital">⬥ Icehaven</span></div>
+            <div class="state-item"><span class="state-name">Frostreach</span><span class="state-capital">⬥ Snowspire</span></div>
+            <div class="state-item"><span class="state-name">Borealis</span><span class="state-capital">⬥ Northlight</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+
+      <!-- NATION 8: DARK -->
+      <div class="realm-card realm-dark reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">08</span><span class="realm-tag">🌑 Dark Nation</span><h3 class="realm-name">The Shadow Courts</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Shadow magic and eternal intrigue, ruled by Queen Vesper of Sablea. Where light rarely reaches and the power of the void is wielded by those who dare.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Sablea</span><span class="state-capital">⬥ Shadowhold</span></div>
+            <div class="state-item"><span class="state-name">Noctura</span><span class="state-capital">⬥ Moonveil</span></div>
+            <div class="state-item"><span class="state-name">Erebos</span><span class="state-capital">⬥ Nightshade</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+
+      <!-- NATION 9: CELESTIAL -->
+      <div class="realm-card realm-celestial-nation reveal" onclick="toggleStates(this)">
+        <div class="realm-card-bg"></div><div class="realm-card-pattern"></div><div class="realm-card-glow"></div>
+        <div class="realm-card-inner" style="flex-direction:row;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><span class="realm-number">09</span><span class="realm-tag">✦ Celestial Nation</span><h3 class="realm-name">The Heavenly Dominion</h3></div>
+          <p class="realm-desc" style="opacity:1;transform:none;max-width:360px;font-size:15px;flex:1;min-width:200px;">Where the stars and heavens guide all things. Prophecy is not power here — it is the only truth. From Starspire's oracles to Moonshadow's blessed rulers, the divine speaks through every soul born under these skies.</p>
+          <div class="states-drawer" style="opacity:1;transform:none;max-height:none;flex:1;min-width:200px;">
+            <div class="state-item"><span class="state-name">Astraea</span><span class="state-capital">⬥ Starspire</span></div>
+            <div class="state-item"><span class="state-name">Sol</span><span class="state-capital">⬥ Sunreach</span></div>
+            <div class="state-item"><span class="state-name">Lunar</span><span class="state-capital">⬥ Moonshadow</span></div>
+          </div>
+          <span class="realm-arrow" style="position:relative;top:auto;right:auto;">↗</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule-ornate"><span class="rule-ornate-mark">✦</span></div>
+
+<!-- ═══ FEATURED CHARACTER ═══ -->
+<section class="featured" id="characters">
+  <div class="featured-inner">
+    <div class="featured-image reveal">
+      <div class="featured-image-frame"></div>
+      <div class="featured-badge">Featured Character</div>
+      <img
+        src="/mnt/user-data/uploads/IMG_6262.jpeg"
+        alt="Lady Crysen — The Ascendant Balance"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="featured-lore">
+      <span class="section-label reveal">Protagonist · Verdantia</span>
+      <h2 class="reveal">
+        Lady Crysen
+        <em>The Ascendant Balance</em>
+      </h2>
+      <p class="featured-tagline reveal">
+        "Born of sacrifice. Burdened by sight. Defined by neither."
+      </p>
+      <p class="featured-body reveal">
+        An oracle who sees every future — except her own.
+        Marked divine before she could speak, exiled before she could choose,
+        Crysen emerged not as a vessel of prophecy but as its most dangerous
+        exception: a woman who learned to wield both light and shadow
+        as complementary truths rather than opposing forces.
+      </p>
+      <div class="featured-traits reveal reveal-delay-1">
+        <span class="featured-trait">Divine Foresight</span>
+        <span class="featured-trait">Ascendant Balance</span>
+        <span class="featured-trait">Exile of the Veil</span>
+        <span class="featured-trait">Oracle Born</span>
+        <span class="featured-trait">Verdantia</span>
+      </div>
+      <a href="#" class="featured-link reveal reveal-delay-2">
+        Read Her Full Chronicle
+        <span class="featured-link-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="rule-ornate"><span class="rule-ornate-mark">✦</span></div>
+
+<!-- ═══ CHRONICLE ═══ -->
+<section id="chronicle">
+  <div class="chronicle">
+    <div class="chronicle-header">
+      <div>
+        <span class="section-label reveal">Story Arcs · The Aftermath & Ascension</span>
+        <h2 class="chronicle-title reveal">
+          The Living<br>
+          <em>Chronicle</em>
+        </h2>
+      </div>
+      <p class="chronicle-intro reveal">
+        Twelve arcs. One age that will determine the fate of every throne
+        in the Nine Realms — each thread connected, each choice permanent.
+      </p>
+    </div>
+
+    <div class="chronicle-entries">
+      <div class="chronicle-entry reveal">
+        <span class="chronicle-entry-num">I</span>
+        <span class="chronicle-entry-tag">Fire Nation · Ashura</span>
+        <h3 class="chronicle-entry-title">The Emberfall Accord</h3>
+        <p class="chronicle-entry-text">The Emberfall Alchemical Project reaches its final stages — and begins to destabilize. Catastrophic volcanic eruptions threaten the Fire Nation. Calypso, Aurelian, and Ashur race against time while dissent tears the council apart. The true cost of wielding immense power becomes undeniable.</p>
+      </div>
+      <div class="chronicle-entry reveal reveal-delay-1">
+        <span class="chronicle-entry-num">II</span>
+        <span class="chronicle-entry-tag">Fire Nation · Political Intrigue</span>
+        <h3 class="chronicle-entry-title">Shadows of Betrayal</h3>
+        <p class="chronicle-entry-text">Calypso uncovers a conspiracy within her own council — members secretly working to undermine her rule, influenced by external forces. New political players emerge. The web of deceit threatens to unravel Ashura from within before any enemy outside its walls ever could.</p>
+      </div>
+      <div class="chronicle-entry reveal reveal-delay-2">
+        <span class="chronicle-entry-num">III</span>
+        <span class="chronicle-entry-tag">Fire & Mountain Nations</span>
+        <h3 class="chronicle-entry-title">The Dragon's Accord</h3>
+        <p class="chronicle-entry-text">Calypso reaches out to King Sorynn. The Fire and Mountain Nations attempt to rebuild trust through diplomatic negotiation. Old wounds and unresolved conflicts threaten the peace process — and both rulers must confront their pasts to forge a united front against common enemies.</p>
+      </div>
+      <div class="chronicle-entry reveal">
+        <span class="chronicle-entry-num">IV</span>
+        <span class="chronicle-entry-tag">Fire Nation · Faction War</span>
+        <h3 class="chronicle-entry-title">The Rise of the Infernal Order</h3>
+        <p class="chronicle-entry-text">Solara, leader of the Secret Infernal Order, exploits the turmoil of the Desert conflict and the Emberfall project to seize control of Ashura. Gathering followers and mastering forbidden dark fire magic, she challenges Calypso's authority in a fierce power struggle that will determine the Fire Nation's soul.</p>
+      </div>
+      <div class="chronicle-entry reveal reveal-delay-1">
+        <span class="chronicle-entry-num">V</span>
+        <span class="chronicle-entry-tag">Dark Nation · Vanthelon</span>
+        <h3 class="chronicle-entry-title">The Obsidian Hourglass</h3>
+        <p class="chronicle-entry-text">Lady Nyxara discovers ancient texts in the Abyssal Keep hinting at time manipulation. Her pursuit of this dangerous knowledge could change the course of history in favor of the Dark Nation. Calypso, aware of the threat, must counter this new menace before the balance of power is irreparably altered.</p>
+      </div>
+      <div class="chronicle-entry reveal reveal-delay-2">
+        <span class="chronicle-entry-num">VI</span>
+        <span class="chronicle-entry-tag">Fire Nation · Legacy</span>
+        <h3 class="chronicle-entry-title">The Twin Flames</h3>
+        <p class="chronicle-entry-text">Calypso's twins come of age with extraordinary inherited abilities. As they discover their powers and navigate their identities, they become targets for those who seek to control or destroy them. Calypso must protect and prepare her heirs in a world that already fears what they might become.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top: 52px;">
+      <a href="nine-realms-story-arcs.html" style="display:inline-flex;align-items:center;gap:12px;font-family:'Jost',sans-serif;font-size:11px;font-weight:400;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-pale);text-decoration:none;padding-bottom:4px;border-bottom:1px solid rgba(212,184,150,0.2);transition:color 0.3s,border-color 0.3s;">
+        Read All 12 Story Arcs <span style="transition:transform 0.3s;">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="rule-ornate"><span class="rule-ornate-mark">✦</span></div>
+
+<!-- ═══ CTA BAND ═══ -->
+<section class="cta-band">
+  <div class="cta-band-inner">
+    <span class="section-label reveal" style="justify-content:center;display:block;">An Epic Tale of Power, Intrigue & Destiny</span>
+    <h2 class="reveal">
+      The balance of power<br>
+      <em>can shift in the blink of an eye.</em>
+    </h2>
+    <p class="reveal">
+      Nine nations. Twenty-seven states. Rulers whose choices echo across generations.
+      The Nine Realms is a saga where every alliance is fragile, every throne contested,
+      and every destiny written in fire, shadow, or starlight.
+    </p>
+    <div class="cta-actions reveal reveal-delay-1">
+      <a href="#" class="btn-primary"><span>Explore All Characters</span></a>
+      <a href="#" class="btn-ghost">Read the Lore</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-brand-name">Nine Realms</div>
+      <div class="footer-brand-tagline">A Universe</div>
+      <p class="footer-brand-desc">
+        An original fictional universe spanning nine distinct worlds —
+        each a study in the tension between destiny and freedom,
+        light and shadow, myth and truth.
+      </p>
+    </div>
+
+    <div>
+      <span class="footer-col-title">The Nations</span>
+      <ul class="footer-links">
+        <li><a href="#">Fire Nation — Ashura</a></li>
+        <li><a href="#">Sky Nation — Aetheria</a></li>
+        <li><a href="#">Ocean Nation — Thalassara</a></li>
+        <li><a href="#">Flora Nation — Verdantia</a></li>
+        <li><a href="#">Mountain Nation — Drakenheim</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <span class="footer-col-title">Key Rulers</span>
+      <ul class="footer-links">
+        <li><a href="#">Queen Calypso — Ashura</a></li>
+        <li><a href="#">King Orious — Amun-Re</a></li>
+        <li><a href="#">King Sorynn — Drakenheim</a></li>
+        <li><a href="#">Queen Vesper — Sablea</a></li>
+        <li><a href="#">Queen Nxia — Thalassara</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <span class="footer-col-title">Story Arcs</span>
+      <ul class="footer-links">
+        <li><a href="#">The Ascension of Calypso</a></li>
+        <li><a href="#">The Drakenheim Legacy</a></li>
+        <li><a href="#">The Prophecy of Amun-Re</a></li>
+        <li><a href="#">The Shadow Wars</a></li>
+        <li><a href="#">The Frozen Thrones</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span class="footer-bottom-copy">© Nine Realms Universe — All characters & lore are original IP</span>
+    <span class="footer-bottom-ip">Created by Ron</span>
+  </div>
+</footer>
+
+<script>
+try{
+
+// ── Nation card expand/collapse ──
+function toggleStates(card) {
+  const isExpanded = card.classList.contains('expanded');
+  document.querySelectorAll('.realm-card.expanded').forEach(c => c.classList.remove('expanded'));
+  if (!isExpanded) card.classList.add('expanded');
+}
+
+// ── Cursor ──
+const dot = document.getElementById('curDot');
+const ring = document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx+'px'; dot.style.top = my+'px';
+});
+(function loop(){
+  rx += (mx-rx)*0.12; ry += (my-ry)*0.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(loop);
+})();
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

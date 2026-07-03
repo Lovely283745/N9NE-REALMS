@@ -1,0 +1,17 @@
+[build]
+  publish = "."
+  command = "python3 build.py --validate"
+
+[build.processing]
+  skip_processing = false
+
+[build.processing.html]
+  pretty_urls = false
+
+# Belt-and-suspenders: if a clean URL is ever requested,
+# fall back to serving the matching .html file instead of 404ing.
+[[redirects]]
+  from = "/:page"
+  to = "/:page.html"
+  status = 200
+  force = false

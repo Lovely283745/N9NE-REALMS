@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chronicles Registry — Volume I | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #030406;
+  --deep:      #060810;
+  --obsidian:  #090C14;
+  --archive:   #0C1018;
+  --parchment: #101418;
+
+  /* Ashura gold — fire nation records */
+  --ashura:    #604000;
+  --ashura-mid:#906000;
+  --ashura-pale:#C08820;
+  --ashura-bright:#E0A830;
+
+  /* Sablea crimson — dark nation records */
+  --sablea:    #600810;
+  --sablea-mid:#8A0E18;
+  --sablea-pale:#C02030;
+  --sablea-bright:#E03848;
+
+  /* Archive silver — neutral/celestial */
+  --arc:       #404858;
+  --arc-mid:   #607080;
+  --arc-pale:  #90A8B8;
+  --arc-bright:#B8CCD8;
+
+  /* Verdantia — flora */
+  --flora:     #204810;
+  --flora-pale:#60A040;
+
+  /* Thalassara — ocean */
+  --ocean:     #0C3060;
+  --ocean-pale:#4080C0;
+
+  /* Desert */
+  --desert:    #604020;
+  --desert-pale:#C08040;
+
+  --parch:     #A8A8B0;
+  --parch-pale:#C8C8D0;
+  --parch-dim: #484858;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:50vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 50% 60% at 50% 0%,rgba(192,136,32,0.04) 0%,transparent 60%);}
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px;}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--ashura-pale);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(144,96,0,0.4);border-radius:0;transform:translate(-50%,-50%);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.lit{width:44px;height:44px;border-color:var(--ashura-pale);box-shadow:0 0 10px rgba(144,96,0,0.25);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(3,4,6,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(144,96,0,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ashura-pale);opacity:0.55;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ashura-pale);border:1px solid rgba(144,96,0,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--ashura-mid);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:65vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;padding:120px 60px 80px;
+  background:linear-gradient(180deg,#100C04 0%,#08080C 60%,var(--void) 100%);
+}
+.hero-content{position:relative;z-index:2;}
+.h-pre{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--ashura-pale);opacity:0.5;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.h-pre::before,.h-pre::after{content:'';display:block;width:60px;height:1px;background:linear-gradient(to right,transparent,rgba(144,96,0,0.3));}
+.h-pre::after{transform:scaleX(-1);}
+.h-vol{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);display:block;margin-bottom:10px;opacity:0.7;}
+.h-title{font-family:'Cinzel Decorative',serif;font-size:clamp(28px,5.5vw,72px);font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;text-shadow:0 0 80px rgba(192,136,32,0.3),0 4px 40px rgba(0,0,0,0.8);}
+.h-sub{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,2vw,22px);font-weight:400;color:var(--ashura-pale);letter-spacing:0.18em;display:block;margin-top:8px;}
+.h-rule{width:200px;height:1px;background:linear-gradient(to right,transparent,var(--ashura-mid),transparent);margin:20px auto;}
+.h-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,19px);color:rgba(168,168,176,0.4);max-width:640px;margin:0 auto;line-height:1.8;}
+.h-meta{display:flex;gap:40px;justify-content:center;margin-top:32px;flex-wrap:wrap;}
+.hm-item{text-align:center;}
+.hm-val{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);color:var(--ashura-bright);display:block;line-height:1;}
+.hm-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;margin-top:4px;display:block;}
+
+/* UTILS */
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--ashura-pale);opacity:0.5;display:block;margin-bottom:14px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(144,96,0,0.15),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 18px;z-index:1;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ashura-mid);opacity:0.4;letter-spacing:0.06em;}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.12s;}.d2{transition-delay:.24s;}.d3{transition-delay:.36s;}
+.section-head{padding:80px 60px 40px;max-width:1200px;margin:0 auto;}
+.sh-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;text-transform:uppercase;color:var(--ashura-pale);opacity:0.5;display:block;margin-bottom:12px;}
+.sh-title{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,2.8vw,38px);font-weight:400;color:var(--parch-pale);line-height:1.15;}
+.sh-title em{font-style:italic;color:var(--ashura-bright);}
+.sh-note{font-family:'EB Garamond',serif;font-style:italic;font-size:15px;color:rgba(168,168,176,0.4);max-width:500px;margin-top:10px;line-height:1.7;}
+
+/* ═══ TIMELINE BAR ═══ */
+.timeline-sec{padding:60px 60px;background:var(--archive);}
+.tl-inner{max-width:1200px;margin:0 auto;}
+.tl-track{position:relative;margin-top:32px;}
+.tl-rail{height:1px;background:linear-gradient(to right,rgba(144,96,0,0.2),rgba(144,96,0,0.4),rgba(96,8,16,0.4),rgba(96,8,16,0.2));margin:18px 0;}
+.tl-events{display:flex;position:relative;}
+.tl-event{flex:1;position:relative;text-align:center;padding-top:0;}
+.tl-dot{width:8px;height:8px;border-radius:50%;border:1px solid;margin:0 auto 8px;position:relative;}
+.tl-dot::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid;opacity:0.2;}
+/* Gold dot = births/Ashura */
+.dot-gold{background:rgba(144,96,0,0.4);border-color:rgba(192,136,32,0.7);}
+.dot-gold::before{border-color:var(--ashura-mid);}
+/* Red dot = deaths/events */
+.dot-red{background:rgba(96,8,16,0.5);border-color:rgba(192,32,48,0.7);animation:redPulse 4s ease-in-out infinite;}
+.dot-red::before{border-color:var(--sablea-mid);}
+@keyframes redPulse{0%,100%{box-shadow:none;}50%{box-shadow:0 0 8px rgba(192,32,48,0.5);}}
+/* Neutral dot */
+.dot-arc{background:rgba(64,72,88,0.4);border-color:rgba(144,168,184,0.5);}
+.dot-arc::before{border-color:var(--arc-mid);}
+.tl-year{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--parch-pale);letter-spacing:0.04em;margin-bottom:4px;}
+.tl-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(168,168,176,0.45);line-height:1.4;max-width:100px;margin:0 auto;}
+.tl-present{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--ashura-bright);border:1px solid rgba(192,136,32,0.3);padding:2px 8px;display:inline-block;margin-top:4px;opacity:0.8;}
+
+/* ═══ CHARACTER GENERATION SECTIONS ═══ */
+.gen-sec{padding:0 60px 60px;}
+.gen-inner{max-width:1200px;margin:0 auto;}
+.gen-label{
+  padding:16px 24px;
+  border:1px solid;
+  display:inline-flex;align-items:center;gap:12px;
+  margin-bottom:3px;
+}
+.gen-label.elder{border-color:rgba(144,96,0,0.2);background:rgba(144,96,0,0.04);}
+.gen-label.queens{border-color:rgba(96,8,16,0.18);background:rgba(96,8,16,0.04);}
+.gen-label.young{border-color:rgba(64,72,88,0.18);background:rgba(64,72,88,0.04);}
+.gen-label.deceased{border-color:rgba(80,48,0,0.15);background:rgba(80,48,0,0.03);}
+.gl-tag{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.06em;opacity:0.6;}
+.gen-label.elder .gl-tag{color:var(--ashura-bright);}
+.gen-label.queens .gl-tag{color:var(--sablea-bright);}
+.gen-label.young .gl-tag{color:var(--arc-bright);}
+.gen-label.deceased .gl-tag{color:rgba(180,140,80,0.8);}
+.gl-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--parch-pale);}
+.gl-count{font-family:'Share Tech Mono',monospace;font-size:10px;opacity:0.3;margin-left:auto;}
+
+/* Character rows */
+.char-rows{display:flex;flex-direction:column;gap:2px;}
+.char-row{
+  display:grid;grid-template-columns:60px 220px 80px 100px 80px 1fr auto;
+  align-items:center;
+  border:1px solid rgba(168,168,176,0.06);
+  overflow:hidden;
+  transition:border-color .3s,background .3s;
+  position:relative;
+}
+.char-row:hover{border-color:rgba(168,168,176,0.15);background:rgba(168,168,176,0.02);}
+.char-row.ashura-row{border-left:2px solid rgba(192,136,32,0.25);}
+.char-row.sablea-row{border-left:2px solid rgba(192,32,48,0.25);}
+.char-row.other-row{border-left:2px solid rgba(100,112,128,0.25);}
+.char-row.dead-row{border-left:2px solid rgba(120,80,0,0.2);opacity:0.75;}
+.char-row.dead-row:hover{opacity:1;}
+
+/* Cell styles */
+.cr-rank{padding:14px 12px;font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--parch-dim);opacity:0.25;text-align:center;background:rgba(0,0,0,0.2);border-right:1px solid rgba(168,168,176,0.05);}
+.char-row:hover .cr-rank{opacity:0.5;}
+.cr-name-block{padding:14px 16px;border-right:1px solid rgba(168,168,176,0.05);}
+.crn-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.6vw,16px);letter-spacing:0.12em;color:var(--parch-pale);line-height:1;margin-bottom:3px;}
+.crn-title{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(168,168,176,0.35);line-height:1.3;}
+.cr-born{padding:14px 12px;border-right:1px solid rgba(168,168,176,0.05);text-align:center;}
+.crb-year{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--arc-pale);opacity:0.7;}
+.crb-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.3;display:block;margin-top:2px;}
+.cr-age{padding:14px 12px;border-right:1px solid rgba(168,168,176,0.05);text-align:center;}
+.cra-val{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2vw,22px);line-height:1;margin-bottom:2px;}
+.char-row.ashura-row .cra-val{color:var(--ashura-bright);}
+.char-row.sablea-row .cra-val{color:var(--sablea-bright);}
+.char-row.other-row .cra-val{color:var(--arc-bright);}
+.char-row.dead-row .cra-val{color:rgba(180,140,80,0.7);}
+.cra-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.3;display:block;}
+.cr-nation{padding:14px 12px;border-right:1px solid rgba(168,168,176,0.05);text-align:center;}
+.crnat-badge{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;padding:3px 8px;border:1px solid;display:inline-block;line-height:1.5;}
+.b-ash{color:var(--ashura-bright);border-color:rgba(192,136,32,0.28);}
+.b-sab{color:var(--sablea-bright);border-color:rgba(192,32,48,0.28);}
+.b-des{color:var(--desert-pale);border-color:rgba(192,128,64,0.28);}
+.b-flo{color:var(--flora-pale);border-color:rgba(96,160,64,0.28);}
+.b-oce{color:var(--ocean-pale);border-color:rgba(64,128,192,0.28);}
+.b-cel{color:var(--arc-bright);border-color:rgba(144,168,184,0.28);}
+.b-mtn{color:rgba(168,120,200,0.8);border-color:rgba(120,80,168,0.28);}
+.cr-desc{padding:14px 16px;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(168,168,176,0.5);line-height:1.5;}
+.cr-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.cr-link{padding:14px 16px;text-align:right;}
+.cr-link a{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ashura-pale);opacity:0.4;text-decoration:none;border:1px solid rgba(144,96,0,0.15);padding:4px 10px;white-space:nowrap;transition:opacity .3s,border-color .3s;}
+.char-row:hover .cr-link a{opacity:0.8;border-color:rgba(144,96,0,0.35);}
+.cr-dead-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(180,140,80,0.5);border:1px solid rgba(120,80,0,0.2);padding:4px 10px;white-space:nowrap;}
+
+/* ═══ EVENTS TABLE ═══ */
+.events-sec{padding:80px 60px;background:var(--archive);}
+.events-inner{max-width:1200px;margin:0 auto;}
+.events-table{margin-top:36px;display:flex;flex-direction:column;gap:2px;}
+.evt-row{display:grid;grid-template-columns:90px 1fr;border:1px solid rgba(168,168,176,0.07);overflow:hidden;transition:border-color .3s,background .3s;}
+.evt-row:hover{border-color:rgba(168,168,176,0.18);background:rgba(168,168,176,0.02);}
+.evt-row.evt-death{border-left:2px solid rgba(192,32,48,0.3);}
+.evt-row.evt-birth{border-left:2px solid rgba(192,136,32,0.2);}
+.evt-row.evt-present{border-left:2px solid rgba(232,168,48,0.4);background:rgba(232,168,48,0.03);}
+.ev-year{padding:18px 16px;font-family:'Cinzel Decorative',serif;font-size:clamp(14px,2vw,22px);color:var(--ashura-bright);text-align:center;background:rgba(0,0,0,0.2);border-right:1px solid rgba(168,168,176,0.06);display:flex;align-items:center;justify-content:center;font-weight:400;}
+.evt-row.evt-death .ev-year{color:var(--sablea-bright);}
+.evt-row.evt-present .ev-year{color:var(--ashura-bright);}
+.ev-body{padding:16px 20px;}
+.evb-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:var(--ashura-pale);opacity:0.5;display:block;margin-bottom:6px;}
+.evt-row.evt-death .evb-label{color:var(--sablea-pale);}
+.evt-row.evt-present .evb-label{color:var(--ashura-bright);}
+.evb-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,176,0.6);line-height:1.7;}
+.evb-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.evb-text em{color:var(--ashura-pale);}
+.evt-row.evt-death .evb-text em{color:var(--sablea-pale);}
+
+/* ═══ CANON NOTE ═══ */
+.canon-note{padding:60px 60px;background:var(--void);}
+.cn-inner{max-width:1200px;margin:0 auto;}
+.cn-block{
+  padding:28px 36px;border:1px solid rgba(144,96,0,0.1);background:rgba(144,96,0,0.03);
+  display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;
+}
+.cn-icon{font-size:24px;opacity:0.4;padding-top:2px;}
+.cn-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,176,0.55);line-height:1.85;}
+.cn-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:80px 60px;text-align:center;border-top:1px solid rgba(144,96,0,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,40px);font-weight:400;color:var(--parch-pale);margin-bottom:16px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--ashura-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:rgba(168,168,176,0.4);max-width:480px;margin:0 auto 36px;line-height:1.75;}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:13px 28px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#F5EED8;}
+.btn-g{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(168,168,176,0.15);padding:13px 28px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(168,168,176,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(144,96,0,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(168,168,176,0.18);}
+
+@media(max-width:1100px){
+  .char-row{grid-template-columns:48px 180px 72px 90px 72px 1fr auto;}
+  .nav{padding:20px 40px;}
+  .events-sec,.gen-sec,.canon-note,.page-cta,.timeline-sec{padding-left:40px;padding-right:40px;}
+  .section-head{padding-left:40px;padding-right:40px;}
+}
+@media(max-width:900px){
+  .char-row{grid-template-columns:1fr;border-left-width:2px!important;}
+  .cr-rank{padding:10px;border-right:none;border-bottom:1px solid rgba(168,168,176,0.04);text-align:left;background:none;}
+  .cr-name-block,.cr-born,.cr-age,.cr-nation,.cr-desc{border-right:none;border-bottom:1px solid rgba(168,168,176,0.04);}
+  .cr-link{text-align:left;padding-bottom:16px;}
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .tl-events{flex-wrap:wrap;gap:16px;}
+  .tl-event{min-width:80px;flex:none;}
+  .events-sec,.gen-sec,.canon-note,.page-cta,.timeline-sec{padding-left:24px;padding-right:24px;}
+  .section-head{padding:60px 24px 28px;}
+  footer{padding:28px 24px;}
+}
+
+/* ═══ ARC TIMELINE ═══ */
+.arc-sec{padding:80px 60px;background:var(--obsidian);}
+.arc-inner{max-width:1200px;margin:0 auto;}
+.arc-table{display:flex;flex-direction:column;gap:2px;margin-top:36px;}
+.arc-row{display:grid;grid-template-columns:200px 110px 110px 1fr;border:1px solid rgba(168,168,176,0.07);overflow:hidden;transition:border-color .3s,background .3s;}
+.arc-row:hover{border-color:rgba(168,168,176,0.16);background:rgba(168,168,176,0.02);}
+.arc-row.arc-crysen{border-left:2px solid rgba(144,168,184,0.35);}
+.arc-row.arc-calypso{border-left:2px solid rgba(192,136,32,0.35);}
+.arc-row.arc-solara{border-left:2px solid rgba(192,80,0,0.35);}
+.arc-row.arc-thorne{border-left:2px solid rgba(96,160,64,0.35);}
+.arc-row.arc-nxia{border-left:2px solid rgba(64,128,192,0.35);}
+.ar-name{padding:16px 16px;border-right:1px solid rgba(168,168,176,0.05);}
+.arn-title{font-family:'Cinzel',serif;font-size:clamp(11px,1.5vw,14px);letter-spacing:0.12em;color:var(--parch-pale);margin-bottom:3px;}
+.arn-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(168,168,176,0.35);line-height:1.3;}
+.ar-year{padding:16px 12px;border-right:1px solid rgba(168,168,176,0.05);text-align:center;display:flex;flex-direction:column;justify-content:center;}
+.ary-val{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--ashura-bright);}
+.ary-end{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(168,168,176,0.35);margin-top:2px;}
+.ar-realm{padding:16px 12px;border-right:1px solid rgba(168,168,176,0.05);text-align:center;display:flex;align-items:center;justify-content:center;}
+.ar-realm span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.2em;text-transform:uppercase;padding:3px 8px;border:1px solid;display:inline-block;}
+.arc-crysen .ar-realm span{color:var(--arc-bright);border-color:rgba(144,168,184,0.28);}
+.arc-calypso .ar-realm span{color:var(--ashura-bright);border-color:rgba(192,136,32,0.28);}
+.arc-solara .ar-realm span,.arc-thorne .ar-realm span{color:rgba(220,120,40,0.8);border-color:rgba(192,80,0,0.25);}
+.arc-nxia .ar-realm span{color:rgba(80,144,216,0.8);border-color:rgba(64,128,192,0.25);}
+.ar-desc{padding:16px 18px;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(168,168,176,0.5);line-height:1.55;}
+.ar-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ CRYSEN TRIPTYCH ═══ */
+.triptych-sec{padding:80px 60px;background:var(--archive);}
+.trip-inner{max-width:1200px;margin:0 auto;}
+.trip-phases{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:36px;}
+.trip-phase{padding:32px 28px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.tp-I{border-color:rgba(192,136,32,0.12);background:linear-gradient(160deg,#0E0C04 0%,#0A0A06 100%);}
+.tp-II{border-color:rgba(60,80,100,0.12);background:linear-gradient(160deg,#06080E 0%,#04060C 100%);}
+.tp-III{border-color:rgba(96,8,16,0.14);background:linear-gradient(160deg,#0E0608 0%,#0A0408 100%);}
+.tp-I:hover{border-color:rgba(192,136,32,0.3);}
+.tp-II:hover{border-color:rgba(60,80,100,0.3);}
+.tp-III:hover{border-color:rgba(96,8,16,0.32);}
+.tp-I::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(192,136,32,0.07) 0%,transparent 70%);}
+.tp-II::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(60,80,100,0.07) 0%,transparent 70%);}
+.tp-III::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(96,8,16,0.08) 0%,transparent 70%);}
+.trip-phase::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.trip-phase:hover::after{transform:scaleX(1);}
+.tp-I::after{background:linear-gradient(to right,transparent,var(--ashura-mid),transparent);}
+.tp-II::after{background:linear-gradient(to right,transparent,rgba(100,136,168,0.6),transparent);}
+.tp-III::after{background:linear-gradient(to right,transparent,var(--sablea-pale),transparent);}
+.tp-inner{position:relative;z-index:1;}
+.tp-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:4px 12px;border:1px solid;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.tp-I .tp-badge{color:var(--ashura-bright);border-color:rgba(192,136,32,0.3);}
+.tp-II .tp-badge{color:rgba(120,168,200,0.8);border-color:rgba(60,80,100,0.3);}
+.tp-III .tp-badge{color:var(--sablea-bright);border-color:rgba(96,8,16,0.3);}
+.tp-title{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,26px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:4px;}
+.tp-realm{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;display:block;}
+.tp-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,176,0.52);line-height:1.8;margin-bottom:12px;}
+.tp-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.tp-I .tp-body em{color:var(--ashura-pale);}
+.tp-II .tp-body em{color:rgba(120,168,200,0.7);}
+.tp-III .tp-body em{color:var(--sablea-pale);}
+.tp-outcome{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;padding-top:10px;border-top:1px solid rgba(168,168,176,0.06);line-height:1.6;}
+
+/* ═══ CANON DIGEST ═══ */
+.digest-sec{padding:80px 60px;background:var(--parchment);}
+.digest-inner{max-width:1100px;margin:0 auto;}
+.digest-block{
+  padding:40px 44px;
+  border:1px solid rgba(144,96,0,0.12);
+  background:rgba(4,3,2,0.7);
+  position:relative;overflow:hidden;
+  margin-top:36px;
+}
+.digest-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(192,136,32,0.05) 0%,transparent 70%);}
+.db-c{position:relative;z-index:1;}
+.db-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ashura-pale);border:1px solid rgba(144,96,0,0.2);padding:4px 14px;display:inline-block;margin-bottom:16px;opacity:0.7;letter-spacing:0.05em;}
+.db-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.8vw,34px);font-weight:400;color:var(--parch-pale);margin-bottom:14px;}
+.db-title em{font-style:italic;color:var(--ashura-bright);}
+.db-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,18px);color:rgba(168,168,176,0.6);line-height:1.9;max-width:820px;}
+.db-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.db-body em{color:var(--ashura-pale);}
+
+/* ═══ CONTINUITY LOCKS ═══ */
+.locks-sec{padding:80px 60px;background:var(--obsidian);}
+.locks-inner{max-width:1200px;margin:0 auto;}
+.locks-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:36px;}
+.lock-group{padding:28px 28px;border:1px solid rgba(168,168,176,0.07);background:rgba(3,4,6,0.5);}
+.lg-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ashura-pale);opacity:0.5;display:block;margin-bottom:14px;letter-spacing:0.06em;}
+.lock-items{display:flex;flex-direction:column;gap:8px;}
+.lock-item{display:flex;gap:10px;align-items:flex-start;}
+.li-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.lock-group.li-green .li-dot{background:rgba(96,160,64,0.6);}
+.lock-group.li-amber .li-dot{background:rgba(192,136,32,0.6);}
+.lock-group.li-red .li-dot{background:rgba(192,32,48,0.6);}
+.lock-group.li-blue .li-dot{background:rgba(100,152,200,0.6);}
+.li-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(168,168,176,0.5);line-height:1.6;}
+.li-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+@media(max-width:1100px){
+  .arc-row{grid-template-columns:160px 90px 90px 1fr;}
+  .trip-phases{grid-template-columns:1fr;}
+  .locks-split{grid-template-columns:1fr;}
+  .arc-sec,.triptych-sec,.digest-sec,.locks-sec{padding-left:40px;padding-right:40px;}
+}
+@media(max-width:900px){
+  .arc-row{grid-template-columns:1fr;}
+  .ar-name,.ar-year,.ar-realm{border-right:none;border-bottom:1px solid rgba(168,168,176,0.05);}
+  .arc-sec,.triptych-sec,.digest-sec,.locks-sec{padding-left:24px;padding-right:24px;}
+}
+
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// CHRONICLES_REGISTRY · VOLUME_I · CANONICAL //</span>
+  </a>
+  <div class="nav-right">
+    <a href="nine-realms-hub.html" class="nav-link">Hub</a>
+    <a href="nine-realms-story-arcs.html" class="nav-link">Story Arcs</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="h-pre">// CANONICAL RECORD · OFFICIAL CHRONICLE //</div>
+    <span class="h-vol">Nine Realms Universe · Volume I</span>
+    <h1 class="h-title">Chronicles Registry</h1>
+    <span class="h-sub">Canonical Birth Years · Ages · Timeline of Key Events</span>
+    <div class="h-rule"></div>
+    <p class="h-desc">The official canonical record for all significant characters present during Volume I of the Nine Realms Universe. Birth years, ages at Volume I's present year of 1355, nation affiliation, and the sequence of events that define the era.</p>
+    <div class="h-meta">
+      <div class="hm-item"><span class="hm-val">1355</span><span class="hm-label">Present Year · Volume I</span></div>
+      <div class="hm-item"><span class="hm-val">17</span><span class="hm-label">Characters Registered</span></div>
+      <div class="hm-item"><span class="hm-val">1303</span><span class="hm-label">Earliest Birth · Orious</span></div>
+      <div class="hm-item"><span class="hm-val">1341</span><span class="hm-label">Youngest Born · Nxia</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline-sec">
+  <div class="tl-inner rv">
+    <span class="sl">// CANONICAL_TIMELINE · 1299 → 1355 //</span>
+    <div class="tl-track">
+      <div class="tl-rail"></div>
+      <div class="tl-events">
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1299</div>
+          <div class="tl-desc">Ignatius born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1303</div>
+          <div class="tl-desc">Orious born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1305</div>
+          <div class="tl-desc">Dante II born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1309</div>
+          <div class="tl-desc">Roxanna born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1310</div>
+          <div class="tl-desc">Seraphina, Vesper &amp; Vashti born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1327</div>
+          <div class="tl-desc">Crysen born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-arc"></div>
+          <div class="tl-year">1331</div>
+          <div class="tl-desc">Eris conceived</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1332</div>
+          <div class="tl-desc">Eris &amp; Celestra born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-arc"></div>
+          <div class="tl-year">1334</div>
+          <div class="tl-desc">Dante II weds Seraphina</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1335</div>
+          <div class="tl-desc">Calypso born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1337</div>
+          <div class="tl-desc">Ronan born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1338</div>
+          <div class="tl-desc">Thorne, Solara &amp; Liora born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-gold"></div>
+          <div class="tl-year">1341</div>
+          <div class="tl-desc">Nxia born</div>
+        </div>
+        <div class="tl-event">
+          <div class="tl-dot dot-red"></div>
+          <div class="tl-year">1355</div>
+          <div class="tl-desc">Dante II &amp; Roxanna die. Calypso ascends.</div>
+          <div class="tl-present">PRESENT · VOL. I</div>
+        </div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-dot dot-arc"></div>
+        <div class="tl-year">1355–56</div>
+        <div class="tl-desc">Seraphina executed. Crysen exiled. Solara begins training.</div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-dot dot-arc"></div>
+        <div class="tl-year">1357</div>
+        <div class="tl-desc">Calypso's first foreign treaties</div>
+      </div>
+      <div class="tl-event">
+        <div class="tl-dot dot-arc"></div>
+        <div class="tl-year">1358+</div>
+        <div class="tl-desc">Mountain–Desert War. Emberhold Accord ignites.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--obsidian);"><div class="orn-i">// ELDER_GENERATION //</div></div>
+
+<!-- ELDER GENERATION — Born 1299–1310 -->
+<div class="section-head rv">
+  <span class="sh-label">// Generation I · Born 1299–1310 //</span>
+  <h2 class="sh-title">The Elder Generation —<br><em>Those Who Built the World Volume I Inherits</em></h2>
+  <p class="sh-note">The monarchs, queens, and high figures whose decisions — marriages, betrayals, wars, and secret children — created every crisis the younger generation now inherits.</p>
+</div>
+<section class="gen-sec">
+  <div class="gen-inner rv">
+    <div class="gen-label elder"><span class="gl-tag">// ELDER_GEN //</span><span class="gl-name">Elder Generation · Born 1299–1310</span><span class="gl-count">6</span></div>
+    <div class="char-rows">
+
+      <!-- Ignatius -->
+      <div class="char-row ashura-row">
+        <div class="cr-rank">1</div>
+        <div class="cr-name-block"><div class="crn-name">King Ignatius of Ignis</div><div class="crn-title">Monarch of the Fire Nation · Former Warlord</div></div>
+        <div class="cr-born"><div class="crb-year">1299</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">56</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">Battle-hardened monarch turned statesman. Once the greatest warlord of the Fire Nation after Dante's father. <strong>Lifelong friend of Dante II</strong>, now maneuvering through politics with the same precision he once used on the battlefield. His influence reaches every major court across the realms.</div>
+        <div class="cr-link"><span class="cr-dead-tag">Page Pending</span></div>
+      </div>
+
+      <!-- Orious -->
+      <div class="char-row other-row">
+        <div class="cr-rank">2</div>
+        <div class="cr-name-block"><div class="crn-name">King Orious of the Dunes</div><div class="crn-title">Ruler of the Desert Nation</div></div>
+        <div class="cr-born"><div class="crb-year">1303</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">52</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-des">Desert</span></div>
+        <div class="cr-desc">Charismatic and cunning ruler who believes himself the chosen "Divine Ruler" foretold by prophecy. His pursuit of destiny drives him into alliance — and conflict — with nearly <strong>every power in the Nine Realms</strong>.</div>
+        <div class="cr-link"><span class="cr-dead-tag">Page Pending</span></div>
+      </div>
+
+      <!-- Dante II — DECEASED -->
+      <div class="char-row dead-row">
+        <div class="cr-rank">3</div>
+        <div class="cr-name-block"><div class="crn-name">King Dante II</div><div class="crn-title">Late Ruler of Ashura · Father of the Dynasty</div></div>
+        <div class="cr-born"><div class="crb-year">1305</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">†50</div><span class="cra-label">Died · 1355</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">Late ruler of Ashura and husband of Queen Seraphina. His <strong>death in 1355 sparks the political chaos of Volume I</strong>, elevating Calypso to power. Known for his brilliance, cruelty, and charisma, Dante's legacy looms over his daughters — and the entire realm. Father of Eris via Vesper, in secret.</div>
+        <div class="cr-link"><a href="dante-ii.html">View Page →</a></div>
+      </div>
+
+      <!-- Roxanna — DECEASED -->
+      <div class="char-row dead-row">
+        <div class="cr-rank">4</div>
+        <div class="cr-name-block"><div class="crn-name">Roxanna</div><div class="crn-title">High Sorceress of the Eternal Flame · Solara's Mother</div></div>
+        <div class="cr-born"><div class="crb-year">1309</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">†46</div><span class="cra-label">Died · 1355</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">Revered and feared High Sorceress of the Eternal Flame and <strong>mother of Solara</strong>. Her mastery of fire magic bordered on divine. Her death in 1355 — the same year as Dante II — marks the end of an era and the beginning of Solara's path toward uncovering the truth of the Infernal Order's corruption.</div>
+        <div class="cr-link"><span class="cr-dead-tag">Page Pending</span></div>
+      </div>
+
+      <!-- Seraphina -->
+      <div class="char-row ashura-row">
+        <div class="cr-rank">5</div>
+        <div class="cr-name-block"><div class="crn-name">Queen Seraphina</div><div class="crn-title">Queen Mother of Ashura · Widow of Dante II</div></div>
+        <div class="cr-born"><div class="crb-year">1310</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">45</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">Known for diplomatic brilliance and icy composure — the <strong>architect of Dante II's alliances</strong>. After his death, she becomes the power behind the throne: mother, manipulator, and matriarch. Her rivalry with Vesper is existential.</div>
+        <div class="cr-link"><span class="cr-dead-tag">Page Pending</span></div>
+      </div>
+
+      <!-- Vesper -->
+      <div class="char-row sablea-row">
+        <div class="cr-rank">6</div>
+        <div class="cr-name-block"><div class="crn-name">Queen Vesper</div><div class="crn-title">Blood Queen of Sablea · Elder Twin · Mother of Eris</div></div>
+        <div class="cr-born"><div class="crb-year">1310</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">45</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-sab">Sablea</span></div>
+        <div class="cr-desc">Elder twin of Vashti and <strong>secret mother of Eris</strong>. Ambitious and ruthless, driven by vengeance toward Seraphina and the House of Ashura. Will stop at nothing to see her daughter recognized as Dante's rightful heir, even if it plunges the realms into chaos.</div>
+        <div class="cr-link"><a href="vesper.html">View Page →</a></div>
+      </div>
+
+      <!-- Vashti -->
+      <div class="char-row sablea-row">
+        <div class="cr-rank">7</div>
+        <div class="cr-name-block"><div class="crn-name">Queen Vashti</div><div class="crn-title">Queen Mage of Sablea · Younger Twin · Eris's Mentor</div></div>
+        <div class="cr-born"><div class="crb-year">1310</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">45</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-sab">Sablea</span></div>
+        <div class="cr-desc">Younger twin and co-ruler of Sablea. A master of bloodbinding and old sorcery, <strong>Vashti tempers her sister's fury with patience and foresight</strong> — though her loyalty has limits. Her devotion to family conceals ambitions as dangerous as Vesper's own.</div>
+        <div class="cr-link"><a href="vashti.html">View Page →</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--archive);"><div class="orn-i">// MIDDLE_GENERATION //</div></div>
+
+<!-- MIDDLE GENERATION — Born 1327–1332 -->
+<div class="section-head rv">
+  <span class="sh-label">// Generation II · Born 1327–1332 //</span>
+  <h2 class="sh-title">The Middle Generation —<br><em>Sorceresses, Oracles, and Secret Heirs</em></h2>
+  <p class="sh-note">Born between the elder rulers and the young queens — old enough to carry responsibilities, young enough to still be shaped by what they discover.</p>
+</div>
+<section class="gen-sec">
+  <div class="gen-inner rv">
+    <div class="gen-label queens"><span class="gl-tag">// MID_GEN //</span><span class="gl-name">Middle Generation · Born 1327–1332</span><span class="gl-count">4</span></div>
+    <div class="char-rows">
+
+      <!-- Crysen -->
+      <div class="char-row other-row">
+        <div class="cr-rank">8</div>
+        <div class="cr-name-block"><div class="crn-name">Lady Crysen</div><div class="crn-title">Oracle of the Celestial Veil · Protagonist</div></div>
+        <div class="cr-born"><div class="crb-year">1327</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">28</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-cel">Celestial</span></div>
+        <div class="cr-desc">A nomadic oracle who drifts between realms, dispensing prophecy and visions. Ethereal and enigmatic, <strong>her insight often blurs the line between divine guidance and manipulation</strong>. Her words ignite faith — and fear — wherever she travels. Protagonist of the Sablean Conspiracy arc.</div>
+        <div class="cr-link"><a href="crysen-showcase.html">View Page →</a></div>
+      </div>
+
+      <!-- Calydra -->
+      <div class="char-row ashura-row">
+        <div class="cr-rank">9</div>
+        <div class="cr-name-block"><div class="crn-name">Calydra</div><div class="crn-title">High Sorceress of Valyra · Solara's Mentor</div></div>
+        <div class="cr-born"><div class="crb-year">1331</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">24</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">One of Valyra's youngest High Sorceresses, renowned for calm leadership and deep spiritual insight. <strong>A mentor to Solara</strong>, providing guidance and stability as the world unravels — though her loyalty to Valyra's Council hides secrets that may threaten them both.</div>
+        <div class="cr-link"><span class="cr-dead-tag">Page Pending</span></div>
+      </div>
+
+      <!-- Celestra -->
+      <div class="char-row ashura-row">
+        <div class="cr-rank">10</div>
+        <div class="cr-name-block"><div class="crn-name">Celestra</div><div class="crn-title">Fire Mage · Former Protégée of Roxanna</div></div>
+        <div class="cr-born"><div class="crb-year">1332</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">23</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">A gifted fire mage trained under Roxanna. <strong>Once her protégée, now potentially her betrayer</strong> — Celestra's alignment with the Infernal Order creates tension and moral ambiguity. Her connection to Eris and loyalty to forbidden magic make her a dangerous mirror to Solara's path.</div>
+        <div class="cr-link"><span class="cr-dead-tag">Page Pending</span></div>
+      </div>
+
+      <!-- Eris -->
+      <div class="char-row sablea-row">
+        <div class="cr-rank">11</div>
+        <div class="cr-name-block"><div class="crn-name">Eris</div><div class="crn-title">Hidden Heir · Sablea Apprentice · Secret Daughter of Dante II</div></div>
+        <div class="cr-born"><div class="crb-year">1332</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">23</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-sab">Sablea</span></div>
+        <div class="cr-desc">Secret daughter of King Dante II and Queen Vesper — <strong>conceived before Dante's marriage to Seraphina</strong>. Lives between two worlds: the shadowed bloodline of Sablea and the royal house of Ashura. Torn between love, power, and belonging, her existence threatens to unravel both dynasties.</div>
+        <div class="cr-link"><a href="eris.html">View Page →</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--obsidian);"><div class="orn-i">// YOUNG_GENERATION //</div></div>
+
+<!-- YOUNG GENERATION — Born 1335–1341 -->
+<div class="section-head rv">
+  <span class="sh-label">// Generation III · Born 1335–1341 //</span>
+  <h2 class="sh-title">The Young Generation —<br><em>The Ones Who Inherit the Consequences</em></h2>
+  <p class="sh-note">Born into the fallout of their parents' decisions. The youngest queens in the Nine Realms' recorded history. The protagonists and their companions. The generation Volume I belongs to.</p>
+</div>
+<section class="gen-sec">
+  <div class="gen-inner rv">
+    <div class="gen-label young"><span class="gl-tag">// YOUNG_GEN //</span><span class="gl-name">Young Generation · Born 1335–1341</span><span class="gl-count">6</span></div>
+    <div class="char-rows">
+
+      <!-- Calypso -->
+      <div class="char-row ashura-row">
+        <div class="cr-rank">12</div>
+        <div class="cr-name-block"><div class="crn-name">Queen Calypso</div><div class="crn-title">Eldest Sybil Sister · New Queen of Ashura</div></div>
+        <div class="cr-born"><div class="crb-year">1335</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">20</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">Eldest of the Sybil Sisters and <strong>new ruler of Ashura following Dante II's death in 1355</strong>. Fierce, intelligent, and dangerously ambitious — her reign begins in fire and blood as she seeks to unify the fractured Nine Realms under her will, even if it means destroying her sisters.</div>
+        <div class="cr-link"><a href="calypso-arc.html">View Arc →</a></div>
+      </div>
+
+      <!-- Ronan -->
+      <div class="char-row ashura-row">
+        <div class="cr-rank">13</div>
+        <div class="cr-name-block"><div class="crn-name">Ronan</div><div class="crn-title">Solara's Protector · Napalm Magic · Gifted Mage</div></div>
+        <div class="cr-born"><div class="crb-year">1337</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">18</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">Solara's lifelong friend and protector. Gifted with <strong>Napalm Magic — raw, explosive, and barely controllable</strong>. His inner battle between rage and restraint defines his growth. His devotion to Solara tests the limits of friendship and destiny.</div>
+        <div class="cr-link"><span class="cr-dead-tag">Page Pending</span></div>
+      </div>
+
+      <!-- Solara -->
+      <div class="char-row ashura-row">
+        <div class="cr-rank">14</div>
+        <div class="cr-name-block"><div class="crn-name">Solara Valyrix</div><div class="crn-title">The Infernal Phoenix · Story Protagonist</div></div>
+        <div class="cr-born"><div class="crb-year">1338</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">17</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">Gifted young fire mage and story protagonist. <strong>Solara's journey to uncover her mother Roxanna's hidden past</strong> and the corruption within the Infernal Order defines the struggle between legacy and destiny. Her power is vast but unrefined, mirroring her search for identity amid war and myth.</div>
+        <div class="cr-link"><a href="solara.html">View Page →</a></div>
+      </div>
+
+      <!-- Thorne -->
+      <div class="char-row other-row">
+        <div class="cr-rank">15</div>
+        <div class="cr-name-block"><div class="crn-name">Queen Thorne</div><div class="crn-title">Middle Sybil Sister · Ruler of Verdantia</div></div>
+        <div class="cr-born"><div class="crb-year">1338</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">17</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-flo">Verdantia</span></div>
+        <div class="cr-desc">Middle Sybil Sister and ruler of Verdantia. <strong>Cunning, strategic, and patient</strong> — Thorne's ambitions are quieter but no less sharp. Her manipulation of alliances and mastery of diplomacy place her in constant conflict — and occasional alliance — with Calypso.</div>
+        <div class="cr-link"><a href="sybil-sisters.html">View Page →</a></div>
+      </div>
+
+      <!-- Liora -->
+      <div class="char-row ashura-row">
+        <div class="cr-rank">16</div>
+        <div class="cr-name-block"><div class="crn-name">Liora</div><div class="crn-title">Flamekeeper Descendant · Lightfire Mage</div></div>
+        <div class="cr-born"><div class="crb-year">1338</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">17</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-ash">Ashura</span></div>
+        <div class="cr-desc">A descendant of the ancient Flamekeepers, sharing Solara's age and lineage. Calm, intuitive, and quietly strong — <strong>both anchor and mirror to Solara's volatility</strong>. Her evolving mastery of lightfire magic ties her fate tightly to the story's central prophecy.</div>
+        <div class="cr-link"><span class="cr-dead-tag">Page Pending</span></div>
+      </div>
+
+      <!-- Nxia -->
+      <div class="char-row other-row">
+        <div class="cr-rank">17</div>
+        <div class="cr-name-block"><div class="crn-name">Queen Nxia</div><div class="crn-title">Youngest Sybil Sister · Ruler of Thalassara</div></div>
+        <div class="cr-born"><div class="crb-year">1341</div><span class="crb-label">Born</span></div>
+        <div class="cr-age"><div class="cra-val">14</div><span class="cra-label">Age · Vol. I</span></div>
+        <div class="cr-nation"><span class="crnat-badge b-oce">Thalassara</span></div>
+        <div class="cr-desc">Youngest of the Sybil Sisters and ruler of Thalassara. Though inexperienced, <strong>she possesses an intuitive wisdom and empathy beyond her years</strong>. Her voice of restraint and diplomacy contrasts sharply with her sisters' aggression — making her a linchpin in the balance of power.</div>
+        <div class="cr-link"><a href="sybil-sisters.html">View Page →</a></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--archive);"><div class="orn-i">// KEY_EVENTS //</div></div>
+
+<!-- EVENTS TABLE -->
+<section class="events-sec">
+  <div class="events-inner">
+    <div class="rv">
+      <span class="sl">// CANONICAL_EVENT_SEQUENCE · 1299–1355 //</span>
+      <div class="section-head" style="padding:0 0 32px 0;">
+        <h2 class="sh-title">The Event Sequence —<br><em>From First Birth to Present Day</em></h2>
+      </div>
+    </div>
+    <div class="events-table rv d1">
+      <div class="evt-row evt-birth">
+        <div class="ev-year">1299–1310</div>
+        <div class="ev-body"><span class="evb-label">// BIRTHS · ELDER GENERATION //</span><p class="evb-text">Births of the elder generation: <strong>Ignatius (1299), Orious (1303), Dante II (1305), Roxanna (1309), Seraphina / Vesper / Vashti (1310)</strong>. The rulers and queens who will define the political architecture Volume I inherits.</p></div>
+      </div>
+      <div class="evt-row evt-birth">
+        <div class="ev-year">1327–1332</div>
+        <div class="ev-body"><span class="evb-label">// BIRTHS · MIDDLE GENERATION //</span><p class="evb-text">Crysen (1327), Calydra (1331), <strong>Eris conceived (1331) and born (1332)</strong>, Celestra (1332). Eris's conception by Dante II and Vesper — before his marriage to Seraphina — is the secret that will define the political crisis of Volume I.</p></div>
+      </div>
+      <div class="evt-row">
+        <div class="ev-year">1334</div>
+        <div class="ev-body"><span class="evb-label">// MARRIAGE //</span><p class="evb-text"><strong>Marriage of King Dante II and Queen Seraphina</strong>. The political alliance that Vesper interprets as a personal betrayal. The marriage that legally sidelines Eris's claim — and drives every scheme Vesper has run since. <em>Eris was already two years old.</em></p></div>
+      </div>
+      <div class="evt-row evt-birth">
+        <div class="ev-year">1335–1341</div>
+        <div class="ev-body"><span class="evb-label">// BIRTHS · YOUNG GENERATION //</span><p class="evb-text"><strong>Calypso (1335), Ronan (1337), Thorne / Solara / Liora (1338), Nxia (1341)</strong>. The generation Volume I belongs to — born into the consequences of their parents' decisions, inheriting a Nine Realms already fractured by old grudges.</p></div>
+      </div>
+      <div class="evt-row evt-death">
+        <div class="ev-year">1355</div>
+        <div class="ev-body"><span class="evb-label">// VOLUME I PRESENT YEAR · TWIN DEATHS · POLITICAL RUPTURE //</span><p class="evb-text"><strong>Deaths of King Dante II and High Sorceress Roxanna</strong> — both in the same year — the <em>Year of Twinned Flames</em>. Calypso ascends as Queen of Ashura. <strong>Seraphina is tried and executed</strong>. Political chaos erupts across the Nine Realms. Crysen is exiled. Solara begins her search for the truth behind her mother's death. <em>Volume I begins here. Every character on this registry is alive in this year unless marked with †.</em></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="orn" style="background:var(--obsidian);"><div class="orn-i">// ACTIVE_ARCS //</div></div>
+
+<!-- ACTIVE ARC TIMELINE -->
+<section class="arc-sec">
+  <div class="arc-inner">
+    <div class="rv">
+      <span class="sl">// ACTIVE_ARCS · 1355–1364 · SIX CONCURRENT STORYLINES //</span>
+      <div class="section-head" style="padding:0 0 8px 0;">
+        <h2 class="sh-title">Active Arc Timeline —<br><em>Six Stories, One Colliding Era</em></h2>
+        <p class="sh-note">All six arcs run concurrently across the 1355–1364 window. Crysen's prequel triggers Calypso's arc. Solara's arc overlaps both. Thorne and Nxia extend beyond Volume I into the realm fracture that follows.</p>
+      </div>
+    </div>
+    <div class="arc-table rv d1">
+
+      <div class="arc-row arc-crysen">
+        <div class="ar-name"><div class="arn-title">Crysen — The Emberous Inquiry</div><div class="arn-sub">Prequel · Three Parts</div></div>
+        <div class="ar-year"><div class="ary-val">1354</div><div class="ary-end">→ 1358</div></div>
+        <div class="ar-realm"><span>Multi-Realm</span></div>
+        <div class="ar-desc"><strong>Prequel concurrent with Calypso Ch. 1.</strong> Investigates Dante II's death → exposes Sablean infiltrators → triggers Seraphina's downfall → ends in exile → voyage through Pyros and the Cursed Sea → culminates in the Sablean Conspiracy. The arc that explains why the Dark Nation is destabilized in later volumes and how Eris's legitimacy is forged.</div>
+      </div>
+
+      <div class="arc-row arc-calypso">
+        <div class="ar-name"><div class="arn-title">Calypso — Volume I</div><div class="arn-sub">Main Arc · Ashura</div></div>
+        <div class="ar-year"><div class="ary-val">1355</div><div class="ary-end">→ 1360</div></div>
+        <div class="ar-realm"><span>Ashura</span></div>
+        <div class="ar-desc">Ascension following Dante II's death → first reforms → <strong>Mountain–Desert War</strong> → twin daughters born → realm fracture. Calypso's arc is the political spine of Volume I — every other arc intersects or diverges from her decisions in the early months of her reign.</div>
+      </div>
+
+      <div class="arc-row arc-solara">
+        <div class="ar-name"><div class="arn-title">Solara — Part I: Emberhold Rot</div><div class="arn-sub">Protagonist Arc · Part I</div></div>
+        <div class="ar-year"><div class="ary-val">1355</div><div class="ary-end">→ 1356</div></div>
+        <div class="ar-realm"><span>Ashura</span></div>
+        <div class="ar-desc">Uncovers Infernal Order experiments following Roxanna's death. Solara (17) moves through the ashes of both deaths — her mother's and Dante II's — to find why the flame of creation turned on its keepers. <strong>Core question: what was Roxanna protecting, and from whom?</strong></div>
+      </div>
+
+      <div class="arc-row arc-solara">
+        <div class="ar-name"><div class="arn-title">Solara — Part II: Ashen Phoenix Rising</div><div class="arn-sub">Protagonist Arc · Part II</div></div>
+        <div class="ar-year"><div class="ary-val">1356</div><div class="ary-end">→ 1357</div></div>
+        <div class="ar-realm"><span>Ashura</span></div>
+        <div class="ar-desc">Exposes full scope of Infernal Order corruption. Solara's findings feed directly into Calypso's early reforms. The arc's conclusion — <strong>Ashen Phoenix Rising</strong> — positions Solara as a force capable of reshaping Ashura's magical order from the inside.</div>
+      </div>
+
+      <div class="arc-row arc-thorne">
+        <div class="ar-name"><div class="arn-title">Thorne — Volume II</div><div class="arn-sub">Verdantia · Coalition Arc</div></div>
+        <div class="ar-year"><div class="ary-val">1356</div><div class="ary-end">→ 1362</div></div>
+        <div class="ar-realm"><span>Verdantia</span></div>
+        <div class="ar-desc">Builds the Verdantian coalition with Athenya against Ashura. Thorne (17 at start) must navigate a <strong>regency council or spirit mandate</strong> until legal majority is clarified — her arc spans from political apprentice to the Nine Realms' most dangerous diplomat. Weaponizes Crysen's revelations about Sablea.</div>
+      </div>
+
+      <div class="arc-row arc-nxia">
+        <div class="ar-name"><div class="arn-title">Nxia — Volume III</div><div class="arn-sub">Thalassara · Sea–Sky Arc</div></div>
+        <div class="ar-year"><div class="ary-val">1356</div><div class="ary-end">→ 1364</div></div>
+        <div class="ar-realm"><span>Thalassara</span></div>
+        <div class="ar-desc">Sea–Sky unification and the truth ledger emerge. Nxia (14 at start) requires <strong>guardian protocol via Aetherian co-regency</strong> until her majority is established. She inherits Crysen's ethos of tempered truth and becomes the secrets-keeper for everything Calypso, Thorne, and Crysen uncovered — and refused to publish.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--archive);"><div class="orn-i">// CRYSEN_TRIPTYCH //</div></div>
+
+<!-- CRYSEN TRIPTYCH -->
+<section class="triptych-sec">
+  <div class="trip-inner">
+    <div class="rv">
+      <span class="sl">// CRYSEN_ARC_MASTER · THREE_PHASES · 1354–1358 //</span>
+      <div class="section-head" style="padding:0 0 8px 0;">
+        <h2 class="sh-title">The Crysen Triptych —<br><em>Emberfall Accord · Into Darkness · Sablean Conspiracy</em></h2>
+        <p class="sh-note">Three phases, three realms, one arc. Crysen's journey reframes Volume I from a single-nation crisis into a realm-spanning purification myth. Her investigation births the political cause of Seraphina's death; her exile voyage connects the Fire and Dark Nations; her final act seals the cosmic balance.</p>
+      </div>
+    </div>
+    <div class="trip-phases rv d1">
+
+      <!-- PART I -->
+      <div class="trip-phase tp-I">
+        <div class="tp-inner">
+          <div class="tp-badge">// PART_I · 1355 · WEEKS 1–10 //</div>
+          <h3 class="tp-title">The Emberfall Accord</h3>
+          <span class="tp-realm">Ashura · Concurrent with Calypso Ch. 1</span>
+          <p class="tp-body"><strong>Mode: Political thriller and tragedy.</strong> Crysen summoned to Crimson Keep by Seraphina to investigate Dante II's death. Her inquiry exposes a Sablean cult infiltration operating within Ashura's highest court. She uncovers the secret will. She discovers her own half-blood lineage. <em>The investigation makes Seraphina's downfall possible — though Crysen does not intend it.</em> Calypso's coronation is partly her doing. She is exiled for it.</p>
+          <p class="tp-body">Setting: Crimson Keep → Ceremonial Cemetery → Mount Emberon. Emotional core: sisterhood broken, faith tested, the first hint of Sablea's deeper involvement confirmed.</p>
+          <div class="tp-outcome">Outcome: Exiled · Bearing Dante's Secret Will · Sablean Conspiracy Thread Activated</div>
+        </div>
+      </div>
+
+      <!-- PART II -->
+      <div class="trip-phase tp-II">
+        <div class="tp-inner">
+          <div class="tp-badge">// PART_II · LATE 1355 → 1356 //</div>
+          <h3 class="tp-title">Into Darkness</h3>
+          <span class="tp-realm">Pyros → Cursed Sea → Nocturna</span>
+          <p class="tp-body"><strong>Mode: Pilgrimage noir.</strong> Exile voyage through Pyros's industrial decay, the Cursed Sea's fog, and the burning moons of Nocturna. The imagery shifts from political fire to metaphysical passage — <em>ash seas, cursed fogs, the moons burning from within.</em> Crysen crosses from mortal court politics into divine responsibility.</p>
+          <p class="tp-body">Gains forbidden knowledge about the Cult of Ira. Loses the mystics' divine magic in the cost of survival — the passage strips her of what she was given freely and leaves her only what she earned. She arrives in the Dark Nation diminished but intact. Intact is enough.</p>
+          <div class="tp-outcome">Outcome: Forbidden Knowledge Gained · Divine Gift Surrendered · Arrives in Nocturna / Dark Nation</div>
+        </div>
+      </div>
+
+      <!-- PART III -->
+      <div class="trip-phase tp-III">
+        <div class="tp-inner">
+          <div class="tp-badge">// PART_III · 1356 → 1358 //</div>
+          <h3 class="tp-title">The Sablean Conspiracy</h3>
+          <span class="tp-realm">Sablea · Full Celestial-Political Epic</span>
+          <p class="tp-body"><strong>Mode: Celestial-political epic. Core conflict: prophecy versus engineered apocalypse.</strong> Crysen arrives in Sablea. Allies: <em>Eris</em> (vessel of reincarnation, Dante II + Vesper's daughter), <em>Mai'leah</em> (Agent of the Moons, protector). Antagonists: <em>Selena</em> (Supreme Witch, who mechanizes divinity), <em>Vesper and Vashti</em> (dual queens of ambition and faith), <em>Vyktor</em> (Vice Lord, tech-occult liaison).</p>
+          <p class="tp-body">The Night of Dual Moons occurs exactly one lunar cycle before Thorne's Verdantian offensive. Crysen sacrifices her body to cleanse Ira's corruption through the Twilight Hand — <strong>becoming a mythic guardian ensuring cosmic balance</strong>, a force that haunts every throne that follows.</p>
+          <div class="tp-outcome">Outcome: Self-Sacrifice · Becomes the Twilight Hand · Sablean Power Structure Fractured · Eris's Legitimacy Forged</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--parchment);"><div class="orn-i">// CANON_DIGEST //</div></div>
+
+<!-- CANON DIGEST -->
+<section class="digest-sec">
+  <div class="digest-inner">
+    <div class="rv">
+      <span class="sl">// STORY_LORE_SYNC · v0.4 · POST-CRYSEN_INTEGRATION //</span>
+      <div class="section-head" style="padding:0 0 8px 0;">
+        <h2 class="sh-title">Canon Digest —<br><em>The Intergenerational Collision</em></h2>
+      </div>
+    </div>
+    <div class="digest-block rv d1">
+      <div class="db-c">
+        <div class="db-badge">// DIGEST_v0.3 · CHRONOLOGY_INTEGRATION //</div>
+        <h3 class="db-title">Volume I as <em>Intergenerational Collision</em></h3>
+        <p class="db-body">The year 1355 stands as the singular pivot of modern Ashura: a double death, a coronation, and the ignition of three parallel reigns. <strong>Calypso (20) inherits a smoldering throne</strong> while her mother's execution tears the moral center of the realm. Thorne (17) and Nxia (14) become sovereigns by paper decree but outsiders by reality. <em>Solara (17), Roxanna's orphaned daughter, moves through the ashes of both deaths</em> to uncover why the flame of creation turned on its keepers. Crysen (28) serves as the seer who threaded those events together — and paid by exile.</p>
+        <p class="db-body">The elder triumvirate (Seraphina, Vesper, Vashti) still pulls threads from their generation's sins. Each age band mirrors a moral axis: <strong>elders as legacy corruption, young as destiny in formation.</strong> Volume I and its side arcs sit at a perfectly timed intergenerational collision. The year 1355 is the moment every clock in the Nine Realms was reset simultaneously.</p>
+      </div>
+    </div>
+    <div class="digest-block rv d2" style="margin-top:3px;">
+      <div class="db-c">
+        <div class="db-badge">// DIGEST_v0.4 · POST-CRYSEN_INTEGRATION //</div>
+        <h3 class="db-title">Crysen's Arc as <em>Realm-Spanning Purification Myth</em></h3>
+        <p class="db-body">Lady Crysen's threefold journey reframes Volume I from a single-nation crisis into a realm-spanning purification myth. Her investigation births the political cause of Seraphina's death; her exile voyage connects the Fire and Dark Nations; her final act seals the cosmic balance. <strong>In-world, her legend becomes both state record (Emberfall Accord) and holy text (Twilight Chronicle).</strong> Her absence haunts every throne: <em>Calypso's fire grows harsher without her counsel</em>, Thorne weaponizes her revelations about Sablea, and Nxia inherits her ethos of tempered truth. The surviving mystics — stripped of divinity — become the potential founders of a future Twilight Order.</p>
+        <p class="db-body">The Year of Twinned Flames (1355) — both Roxanna and Dante II dying within weeks of each other — is the core mythic trigger. Their deaths must land within weeks, not months, to preserve the apocalyptic symbolism that legitimizes Calypso's accession as something beyond mere political succession. <strong>The cosmos broke twice in the same season. That is the point.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--obsidian);"><div class="orn-i">// CONTINUITY_LOCKS //</div></div>
+
+<!-- CONTINUITY LOCKS -->
+<section class="locks-sec">
+  <div class="locks-inner">
+    <div class="rv">
+      <span class="sl">// CONTINUITY_LOCKS · CONTRADICTION_WATCHLIST · STRUCTURAL_NOTES //</span>
+      <div class="section-head" style="padding:0 0 8px 0;">
+        <h2 class="sh-title">Continuity Locks &amp;<br><em>Contradiction Watchlist</em></h2>
+        <p class="sh-note">Established canonical constraints that all future lore expansions must honour. Locked events cannot be revised without cascading consequence across multiple arcs.</p>
+      </div>
+    </div>
+    <div class="locks-split rv d1">
+
+      <div class="lock-group li-green">
+        <span class="lg-label">// TEMPORAL_LOCKS · CONFIRMED //</span>
+        <div class="lock-items">
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Crysen's Emberfall Accord</strong> overlaps Calypso Ch. 1 — Weeks 1–10 of 1355</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Into Darkness</strong> spans Late 1355 → Early 1356</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Sablean Conspiracy</strong> concludes ~1358 — aligning with end of Calypso Vol. I and preluding Thorne Vol. II</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Night of Dual Moons</strong> occurs exactly one lunar cycle before Thorne's Verdantian offensive</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text">Cosmological alignment of Aara & Ira's moons recurs every ~23 years</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text">Calypso's first foreign treaties with Sorynn of Drakenheim and Orious of Amun-Re: 1357</div></div>
+        </div>
+      </div>
+
+      <div class="lock-group li-amber">
+        <span class="lg-label">// CONTRADICTION_WATCHLIST · REQUIRES_CARE //</span>
+        <div class="lock-items">
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Roxanna and Dante II must die within weeks, not months</strong> — apocalyptic symbolism requires simultaneity</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Eris's age (23 in 1355)</strong> must remain consistent with Dante II's 1331 liaison with Vesper — confirms Eris born 1332</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Thorne at 17 must rule Verdantia via regency council</strong> or spirit mandate until legal majority is clarified in lore</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Nxia's 14-year-old sovereignty</strong> requires guardian protocol — Aetherian co-regency foundation needed</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text">Crysen's apotheosis must precede the Emberhold Project timeline — no tech overlap contradictions</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text">Calypso's early treaties (1357) must align with Sorynn's and Orious's ages to keep the courtship politically credible</div></div>
+        </div>
+      </div>
+
+      <div class="lock-group li-blue">
+        <span class="lg-label">// ACTIVE_THREADS · PENDING_DEVELOPMENT //</span>
+        <div class="lock-items">
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Eris's legitimacy as Dante II's hidden heir</strong> — forged in the Sablean Conspiracy arc, formalized post-Crysen</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Surviving mystics stripped of divinity</strong> — potential founders of the future Twilight Order</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Cult of Ira remnants</strong> → proto-Shadow Bloc in later volumes</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Vesper vs. Vashti power schism</strong> → Sablea's civil dusk following Crysen's disruption</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text">Year of Twinned Flames symbolism — celestial omens and their effect on magic flux across all nine nations</div></div>
+        </div>
+      </div>
+
+      <div class="lock-group li-red">
+        <span class="lg-label">// NEXT_DEVELOPMENT_PRIORITIES //</span>
+        <div class="lock-items">
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Year of Twinned Flames lore page</strong> — symbolism, celestial omens, cause-effect on magic flux</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Roxanna's Final Year</strong> — events leading to death; connection to Dante II's death and the Infernal Order</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Twilight Doctrine</strong> — faith cults born after Crysen's apotheosis; the Twilight Chronicle as holy text</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Crysen → Eris handover scene</strong> — Sablean Conspiracy finale focus; the moment Eris's identity is confirmed</div></div>
+          <div class="lock-item"><div class="li-dot"></div><div class="li-text"><strong>Regency Structures: Verdantia and Thalassara</strong> — legitimacy at underage coronations</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

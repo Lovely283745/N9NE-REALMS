@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ancient Northern Monastery — Sablea | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #030308;
+  --deep:      #060610;
+  --obsidian:  #090914;
+  --ancient:   #0C0C18;
+  --shrine:    #0F0F1C;
+
+  /* Moonstone silver — Ara */
+  --ara:       #606880;
+  --ara-mid:   #8898B8;
+  --ara-pale:  #B8C4D8;
+  --ara-bright:#D8E0F0;
+
+  /* Twilight crimson — Ira / pools / monks */
+  --ira:       #680818;
+  --ira-mid:   #9A1020;
+  --ira-pale:  #CC2838;
+  --ira-bright:#EE4858;
+
+  /* Ancient gold — the glyphs */
+  --glyph:     #604808;
+  --glyph-mid: #8C6C10;
+  --glyph-pale:#C09820;
+  --glyph-bright:#E0B828;
+
+  /* Stone — monastery walls */
+  --stone:     #1A1820;
+  --stone-mid: #282630;
+  --stone-pale:#383648;
+
+  --parch:     #B0ACBC;
+  --parch-pale:#D0CCDC;
+  --parch-dim: #504C60;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Twin moon ambient — ara silver left, ira crimson right */
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:60vh;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 35% 55% at 15% 0%,rgba(136,152,184,0.04) 0%,transparent 60%),
+    radial-gradient(ellipse 35% 55% at 85% 0%,rgba(154,16,32,0.04) 0%,transparent 60%);
+  animation:moonShift 16s ease-in-out infinite;}
+@keyframes moonShift{0%,100%{opacity:0.7;}50%{opacity:1;}}
+
+/* Stone texture */
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--ara-pale);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:30px;height:30px;border:1px solid rgba(136,152,184,0.4);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.sacred{width:48px;height:48px;border-color:var(--ara-bright);box-shadow:0 0 12px rgba(136,152,184,0.25);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(3,3,8,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(136,152,184,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:var(--ara-pale);opacity:0.6;letter-spacing:0.12em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ara-pale);border:1px solid rgba(136,152,184,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--ara-mid);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 45%,#140C18 0%,#0A0810 40%,var(--void) 70%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Monastery silhouette SVG */
+.monastery-silhouette{position:absolute;bottom:0;left:0;right:0;height:50vh;pointer-events:none;z-index:1;}
+
+/* Twin moon symbols above name */
+.twin-moons{position:absolute;top:22%;left:50%;transform:translateX(-50%);display:flex;gap:90px;pointer-events:none;z-index:1;}
+.tm-ara,.tm-ira{width:38px;height:38px;border-radius:50%;animation:tmPulse 10s ease-in-out infinite;}
+.tm-ara{background:radial-gradient(circle,rgba(184,196,216,0.18) 0%,transparent 70%);border:1px solid rgba(136,152,184,0.14);}
+.tm-ira{background:radial-gradient(circle,rgba(204,40,56,0.18) 0%,transparent 70%);border:1px solid rgba(154,16,32,0.14);animation-delay:5s;}
+@keyframes tmPulse{0%,100%{opacity:0.5;transform:scale(1);}50%{opacity:1;transform:scale(1.12);}}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-pre{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:var(--ara-pale);text-transform:uppercase;opacity:0;animation:riseIn 1.2s .2s ease forwards;margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.h-pre::before,.h-pre::after{content:'';display:block;width:40px;height:1px;background:linear-gradient(to right,transparent,var(--ara-mid));}
+.h-pre::after{transform:scaleX(-1);}
+.h-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(26px,5.5vw,72px);font-weight:900;
+  color:var(--parch-pale);letter-spacing:0.04em;line-height:1.0;
+  text-shadow:0 0 120px rgba(136,152,184,0.3),0 0 60px rgba(154,16,32,0.15),0 4px 40px rgba(0,0,0,0.9);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-sub{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,1.7vw,18px);font-weight:400;color:var(--ara-pale);letter-spacing:0.2em;display:block;margin-top:8px;opacity:0;animation:riseIn 1s .8s ease forwards;}
+.h-rule{width:240px;height:1px;background:linear-gradient(to right,transparent,var(--ara-mid),transparent);margin:22px auto;opacity:0;animation:fadeIn 1s 1.1s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,20px);color:rgba(176,172,188,0.4);max-width:740px;margin:0 auto 40px;line-height:1.8;opacity:0;animation:riseIn 1.2s 1.2s ease forwards;}
+.h-vitals{display:flex;justify-content:center;max-width:760px;margin:0 auto;border:1px solid rgba(136,152,184,0.13);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:16px 14px;text-align:center;border-right:1px solid rgba(136,152,184,0.1);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Cinzel Decorative',serif;font-size:clamp(13px,1.8vw,22px);color:var(--ara-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--parch-dim);opacity:0.3;}
+.s-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--ara-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;text-transform:uppercase;color:var(--ara-pale);opacity:0.5;display:block;margin-bottom:18px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(136,152,184,0.15),transparent);}
+.orn span{position:relative;padding:0 20px;font-size:18px;z-index:1;opacity:0.35;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--ara-bright);}
+.big-h em.ira{color:var(--ira-pale);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(176,172,188,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--ara-pale);}
+.bp em.ira{color:var(--ira-pale);}
+.pull-ara{margin:22px 0;padding:18px 24px;border-left:2px solid var(--ara-mid);background:rgba(136,152,184,0.04);}
+.pull-ara p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(176,172,188,0.75);line-height:1.75;}
+.pull-ara cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--ara-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+.pull-ira{margin:22px 0;padding:18px 24px;border-left:2px solid var(--ira-mid);background:rgba(154,16,32,0.04);}
+.pull-ira p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(176,172,188,0.75);line-height:1.75;}
+.pull-ira cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--ira-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+
+/* ═══ EXTERIOR & STRUCTURE ═══ */
+.exterior{padding:110px 60px;background:var(--ancient);position:relative;overflow:hidden;}
+.ext-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.ext-aside .big-m{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(136,152,184,0.07);line-height:1;margin-left:-6px;}
+.ext-aside-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:var(--ara-pale);opacity:0.5;text-transform:uppercase;}
+.ext-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,172,188,0.3);margin-top:6px;line-height:1.6;}
+
+.loc-facts{display:flex;flex-direction:column;gap:2px;margin-top:28px;}
+.lf-row{display:grid;grid-template-columns:100px 1fr;border:1px solid rgba(136,152,184,0.08);overflow:hidden;}
+.lfr-k{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--ara-pale);opacity:0.5;background:rgba(136,152,184,0.03);padding:12px 14px;border-right:1px solid rgba(136,152,184,0.07);}
+.lfr-v{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,172,188,0.55);padding:10px 14px;line-height:1.5;}
+.lfr-v strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+.ext-features{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:36px;}
+.ef-cell{padding:18px 20px;border:1px solid rgba(136,152,184,0.08);background:rgba(136,152,184,0.02);transition:border-color .3s,background .3s;}
+.ef-cell:hover{border-color:rgba(136,152,184,0.2);background:rgba(136,152,184,0.05);}
+.ef-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ara-pale);opacity:0.45;display:block;margin-bottom:6px;}
+.ef-text{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,172,188,0.55);line-height:1.6;}
+.ef-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ MOONS' PATHWAY DIAGRAM ═══ */
+.pathway-sec{padding:110px 60px;background:var(--shrine);}
+.path-inner{max-width:1100px;margin:0 auto;}
+.diagram-wrap{margin-top:52px;border:1px solid rgba(136,152,184,0.1);background:rgba(3,3,10,0.8);padding:40px;position:relative;overflow:hidden;}
+.diagram-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(136,152,184,0.03) 0%,transparent 70%);}
+#pathwayDiagram{display:block;width:100%;height:auto;position:relative;z-index:1;}
+
+/* Below diagram: the four elements described */
+.path-details{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:3px;}
+.pd-cell{padding:22px 24px;border:1px solid rgba(136,152,184,0.07);background:rgba(3,3,10,0.6);transition:border-color .3s,background .3s;}
+.pd-cell:hover{border-color:rgba(136,152,184,0.18);background:rgba(136,152,184,0.03);}
+.pd-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ara-pale);opacity:0.5;display:block;margin-bottom:7px;}
+.pd-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,172,188,0.5);line-height:1.7;}
+.pd-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ THE NINE OBELISKS ═══ */
+.obelisks-sec{padding:110px 60px;background:var(--obsidian);}
+.ob-inner{max-width:1200px;margin:0 auto;}
+.ob-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+
+.ob-group{border:1px solid;padding:36px 32px;position:relative;overflow:hidden;transition:border-color .3s;}
+.ob-ara{border-color:rgba(136,152,184,0.12);background:linear-gradient(160deg,#080C14 0%,#060810 100%);}
+.ob-ira{border-color:rgba(154,16,32,0.12);background:linear-gradient(160deg,#0E0608 0%,#0A0608 100%);}
+.ob-veil{border-color:rgba(140,108,16,0.1);background:linear-gradient(160deg,#0C0C08 0%,#080C08 100%);}
+.ob-ara:hover{border-color:rgba(136,152,184,0.3);}
+.ob-ira:hover{border-color:rgba(154,16,32,0.3);}
+.ob-veil:hover{border-color:rgba(140,108,16,0.28);}
+.ob-ara::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 20%,rgba(136,152,184,0.08) 0%,transparent 70%);}
+.ob-ira::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 20%,rgba(154,16,32,0.08) 0%,transparent 70%);}
+.ob-veil::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 20%,rgba(140,108,16,0.06) 0%,transparent 70%);}
+.ob-group::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.ob-group:hover::after{transform:scaleX(1);}
+.ob-ara::after{background:linear-gradient(to right,transparent,var(--ara-mid),transparent);}
+.ob-ira::after{background:linear-gradient(to right,transparent,var(--ira-pale),transparent);}
+.ob-veil::after{background:linear-gradient(to right,transparent,var(--glyph-pale),transparent);}
+
+.obc{position:relative;z-index:1;}
+.ob-num{font-family:'Cinzel Decorative',serif;font-size:11px;letter-spacing:0.2em;padding:4px 14px;border:1px solid;display:inline-block;margin-bottom:12px;opacity:0.7;}
+.ob-ara .ob-num{color:var(--ara-bright);border-color:rgba(136,152,184,0.3);}
+.ob-ira .ob-num{color:var(--ira-pale);border-color:rgba(154,16,32,0.3);}
+.ob-veil .ob-num{color:var(--glyph-bright);border-color:rgba(140,108,16,0.3);}
+.ob-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,32px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:5px;}
+.ob-position{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;}
+.ob-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,172,188,0.5);line-height:1.8;}
+.ob-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ob-ara .ob-body em{color:var(--ara-pale);}
+.ob-ira .ob-body em{color:var(--ira-pale);}
+.ob-veil .ob-body em{color:var(--glyph-pale);}
+
+/* ═══ CRIMSON POOLS & RITUALS ═══ */
+.pools-sec{padding:110px 60px;background:var(--shrine);position:relative;overflow:hidden;}
+.pools-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 60%,rgba(154,16,32,0.06) 0%,transparent 70%);}
+.pools-inner{max-width:1100px;margin:0 auto;}
+.pools-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+
+.pool-card{padding:36px 32px;border:1px solid rgba(154,16,32,0.1);background:rgba(3,2,6,0.6);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.pool-card:hover{border-color:rgba(154,16,32,0.25);background:rgba(154,16,32,0.04);}
+.pool-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ira-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.pool-card:hover::before{transform:scaleX(1);}
+.pc-glyph{font-size:22px;opacity:0.45;margin-bottom:12px;display:block;}
+.pc-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.8vw,18px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:7px;}
+.pc-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,172,188,0.5);line-height:1.75;}
+.pc-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Chamber of Moons — CRITICAL RULE */
+.chamber-rule{
+  grid-column:span 2;padding:28px 40px;
+  border:1px solid rgba(204,40,56,0.2);
+  background:rgba(204,40,56,0.04);
+  display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;
+}
+.cr-skull{font-size:28px;opacity:0.5;flex-shrink:0;padding-top:4px;}
+.cr-text{}
+.cr-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:var(--ira-bright);border:1px solid rgba(204,40,56,0.3);padding:4px 16px;display:inline-block;margin-bottom:10px;opacity:0.8;}
+.cr-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.7vw,18px);color:rgba(176,172,188,0.6);line-height:1.8;}
+.cr-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.cr-body em{color:var(--ira-pale);}
+
+/* ═══ THE DESCENT — INTO THE VEINS ═══ */
+.descent-sec{padding:110px 60px;background:var(--ancient);position:relative;overflow:hidden;}
+.descent-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 80%,rgba(154,16,32,0.07) 0%,transparent 70%);}
+.desc-inner{max-width:1100px;margin:0 auto;}
+
+/* Descent steps */
+.descent-steps{display:flex;flex-direction:column;gap:0;margin-top:52px;position:relative;}
+.descent-steps::before{content:'';position:absolute;left:28px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,rgba(154,16,32,0.3),rgba(154,16,32,0.1));z-index:0;}
+.ds-step{display:grid;grid-template-columns:56px 1fr;gap:24px;padding:0 0 28px 0;position:relative;z-index:1;}
+.ds-step:last-child{padding-bottom:0;}
+.ds-marker{width:56px;display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+.ds-dot{width:12px;height:12px;border-radius:50%;border:2px solid;flex-shrink:0;position:relative;}
+.ds-dot::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid;opacity:0.2;}
+.ds-1 .ds-dot{background:rgba(136,152,184,0.3);border-color:var(--ara-pale);}
+.ds-1 .ds-dot::before{border-color:var(--ara-mid);}
+.ds-2 .ds-dot{background:rgba(154,16,32,0.3);border-color:var(--ira-pale);}
+.ds-2 .ds-dot::before{border-color:var(--ira-mid);}
+.ds-3 .ds-dot{background:rgba(154,16,32,0.5);border-color:var(--ira-pale);animation:descPulse 3s ease-in-out infinite;}
+.ds-3 .ds-dot::before{border-color:var(--ira-mid);}
+@keyframes descPulse{0%,100%{box-shadow:none;}50%{box-shadow:0 0 10px rgba(154,16,32,0.6);}}
+.ds-4 .ds-dot{background:rgba(100,0,0,0.5);border-color:var(--ira-bright);animation:descPulse 2s ease-in-out infinite;}
+.ds-4 .ds-dot::before{border-color:var(--ira-pale);}
+.ds-num{font-family:'Cinzel',serif;font-size:8px;color:var(--parch-dim);opacity:0.4;letter-spacing:0.05em;}
+.ds-content{padding-top:0;}
+.ds-title{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,26px);font-weight:400;color:var(--parch-pale);margin-bottom:6px;}
+.ds-sub{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:12px;}
+.ds-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(176,172,188,0.55);line-height:1.85;}
+.ds-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ds-1 .ds-body em{color:var(--ara-pale);}
+.ds-2 .ds-body em,.ds-3 .ds-body em,.ds-4 .ds-body em{color:var(--ira-pale);}
+.ds-detail{margin-top:10px;padding:10px 16px;border:1px solid rgba(154,16,32,0.1);background:rgba(154,16,32,0.03);font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(176,172,188,0.4);line-height:1.6;}
+.ds-detail strong{color:rgba(176,172,188,0.6);font-style:normal;}
+
+/* ═══ THE WINDING VEINS BELOW ═══ */
+.veins-sec{padding:110px 60px;background:var(--void);position:relative;overflow:hidden;}
+.veins-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(100,0,0,0.07) 0%,transparent 70%);}
+.veins-inner{max-width:1200px;margin:0 auto;}
+.veins-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;text-align:center;}
+.veins-title em{font-style:italic;color:var(--ira-bright);}
+.veins-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(176,172,188,0.4);max-width:580px;margin:0 auto 52px;line-height:1.75;text-align:center;}
+
+/* Inhabitants + Locations grids */
+.veins-h2{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.45em;text-transform:uppercase;color:var(--ira-pale);opacity:0.5;display:block;margin-bottom:20px;}
+.vein-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-bottom:3px;}
+.vein-card{padding:28px 24px;border:1px solid rgba(154,16,32,0.1);background:rgba(3,2,8,0.6);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.vein-card:hover{border-color:rgba(154,16,32,0.26);background:rgba(154,16,32,0.04);}
+.vein-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ira-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.vein-card:hover::after{transform:scaleX(1);}
+.vc-glyph{font-size:18px;opacity:0.4;margin-bottom:10px;display:block;}
+.vc-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.7vw,16px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:7px;}
+.vc-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,15px);color:rgba(176,172,188,0.5);line-height:1.7;}
+.vc-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ LEGENDS ═══ */
+.legends-sec{padding:100px 60px;background:var(--shrine);}
+.leg-inner{max-width:1100px;margin:0 auto;}
+.leg-list{display:flex;flex-direction:column;gap:3px;margin-top:52px;}
+.leg-entry{display:grid;grid-template-columns:200px 1fr;border:1px solid rgba(136,152,184,0.08);overflow:hidden;transition:border-color .3s;}
+.leg-entry:hover{border-color:rgba(136,152,184,0.2);}
+.le-key{padding:22px 20px;background:rgba(136,152,184,0.03);border-right:1px solid rgba(136,152,184,0.07);display:flex;flex-direction:column;justify-content:center;}
+.le-title{font-family:'Cinzel',serif;font-size:clamp(10px,1.4vw,14px);letter-spacing:0.15em;color:var(--parch-pale);line-height:1.3;}
+.le-sub{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ara-pale);opacity:0.45;display:block;margin-top:4px;}
+.le-val{padding:20px 26px;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(176,172,188,0.5);line-height:1.8;}
+.le-val strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.le-val em{color:var(--ira-pale);}
+
+/* Crysen connection */
+.crysen-sec{padding:100px 60px;background:var(--ancient);}
+.crysen-inner{max-width:1100px;margin:0 auto;}
+.crysen-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+.cc-card{padding:28px 24px;border:1px solid rgba(136,152,184,0.08);background:rgba(3,3,10,0.5);transition:border-color .3s,background .3s;}
+.cc-card:hover{border-color:rgba(136,152,184,0.2);background:rgba(136,152,184,0.03);}
+.ccc-what{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--ara-pale);opacity:0.5;display:block;margin-bottom:8px;}
+.ccc-head{font-family:'Cinzel',serif;font-size:clamp(11px,1.6vw,16px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:7px;}
+.ccc-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,15px);color:rgba(176,172,188,0.5);line-height:1.7;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(136,152,184,0.08);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--ara-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(176,172,188,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#EAE8F2;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(176,172,188,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(176,172,188,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(136,152,184,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(176,172,188,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .exterior,.pathway-sec,.obelisks-sec,.pools-sec,.descent-sec,.veins-sec,.legends-sec,.crysen-sec,.page-cta{padding:80px 40px;}
+  .ext-inner{grid-template-columns:1fr;gap:40px;}
+  .ob-grid{grid-template-columns:1fr;}
+  .pools-split{grid-template-columns:1fr;} .chamber-rule{grid-column:span 1;grid-template-columns:auto 1fr;}
+  .vein-grid{grid-template-columns:1fr 1fr;}
+  .crysen-grid{grid-template-columns:1fr;}
+  .leg-entry{grid-template-columns:1fr;} .le-key{border-right:none;border-bottom:1px solid rgba(136,152,184,0.07);}
+  .path-details{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(136,152,184,0.1);}.h-vital:last-child{border-bottom:none;}
+  .exterior,.pathway-sec,.obelisks-sec,.pools-sec,.descent-sec,.veins-sec,.legends-sec,.crysen-sec,.page-cta{padding:60px 24px;}
+  .vein-grid{grid-template-columns:1fr;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">Sablea · Sacred Locations · The Northern Monastery</span>
+  </a>
+  <div class="nav-right">
+    <a href="yzmina.html" class="nav-link">Yzmina</a>
+    <a href="sablea-city.html" class="nav-link">Sablea</a>
+    <a href="crysen-showcase.html" class="nav-link">Lady Crysen</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="twin-moons"><div class="tm-ara"></div><div class="tm-ira"></div></div>
+
+  <!-- Monastery silhouette -->
+  <div class="monastery-silhouette">
+    <svg viewBox="0 0 1440 360" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+      <defs>
+        <linearGradient id="monGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0E0C16" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="#030308" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+      <g fill="url(#monGrad)">
+        <!-- Mountain base -->
+        <polygon points="0,360 0,240 120,200 240,260 360,180 440,220 520,160 600,200 680,120 720,140 760,120 840,200 920,160 1000,220 1080,180 1160,260 1280,200 1440,240 1440,360"/>
+        <!-- Monastery structure — central mass -->
+        <rect x="560" y="80" width="320" height="240"/>
+        <!-- Central spire -->
+        <polygon points="700,10 720,80 680,80"/>
+        <!-- Left spire -->
+        <polygon points="610,40 624,80 596,80"/>
+        <!-- Right spire -->
+        <polygon points="820,40 834,80 806,80"/>
+        <!-- Secondary spires -->
+        <polygon points="582,60 592,90 572,90"/>
+        <polygon points="848,60 858,90 838,90"/>
+        <!-- Arch windows hint -->
+        <rect x="630" y="140" width="30" height="50" fill="rgba(136,152,184,0.04)"/>
+        <rect x="695" y="140" width="30" height="50" fill="rgba(154,16,32,0.04)"/>
+        <rect x="780" y="140" width="30" height="50" fill="rgba(136,152,184,0.04)"/>
+        <!-- Glyph glow dots -->
+        <circle cx="720" cy="55" r="2" fill="rgba(154,16,32,0.25)"/>
+        <circle cx="615" cy="58" r="1.5" fill="rgba(136,152,184,0.2)"/>
+        <circle cx="825" cy="58" r="1.5" fill="rgba(136,152,184,0.2)"/>
+        <!-- Obelisks row -->
+        <rect x="420" y="210" width="8" height="80"/>
+        <rect x="450" y="220" width="8" height="70"/>
+        <rect x="480" y="205" width="8" height="85"/>
+        <rect x="952" y="210" width="8" height="80"/>
+        <rect x="982" y="220" width="8" height="70"/>
+        <rect x="1012" y="205" width="8" height="85"/>
+        <!-- Moons' Pathway -->
+        <rect x="560" y="290" width="320" height="6" fill="rgba(136,152,184,0.08)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <p class="h-pre">Sablea · Sablean Desert Edge · Ancient Sacred Ground</p>
+    <span class="h-label">Gateway to the Winding Veins · Guardian of Sablea's Oldest Secrets · Site of the Celestial Possession Ritual</span>
+    <h1 class="h-name">The Ancient<br>Northern Monastery</h1>
+    <span class="h-sub">of Sablea</span>
+    <div class="h-rule"></div>
+    <p class="h-tagline">It has stood for centuries as a silent witness to the rise and fall of rulers, the birth of rebellions, and the relentless churn of Sablea's history. Its surface is reverence. Beneath it is something else entirely.</p>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">75</div><div class="h-vlabel">Steps — Moons' Stair</div></div>
+      <div class="h-vital"><div class="h-vval">IX</div><div class="h-vlabel">Obelisks · Three Groups</div></div>
+      <div class="h-vital"><div class="h-vval">☽☾</div><div class="h-vlabel">Ara · Ira · The Veil</div></div>
+      <div class="h-vital"><div class="h-vval">⬇</div><div class="h-vlabel">Entry to the Veins</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>Approach the Pathway</span><div class="s-line"></div></div>
+</section>
+
+<!-- EXTERIOR & STRUCTURE -->
+<section class="exterior">
+  <div class="ext-inner">
+    <div class="rv">
+      <div class="ext-aside">
+        <div class="big-m">M</div>
+        <span class="ext-aside-tag">Ancient Northern Monastery · Sablean Desert Edge</span>
+        <p class="ext-aside-note">Its construction is attributed to the Firstborn Sableans — an ancient civilization deeply attuned to the dual moons and their mystical influence. It predates modern Sablea itself. Yzmina's ritual took place within its Celestial Hall. She has guarded it ever since.</p>
+        <div class="loc-facts">
+          <div class="lf-row"><div class="lfr-k">Location</div><div class="lfr-v">Edge of the Sablean Desert — surrounded by jagged cliffs and ever-shifting dunes</div></div>
+          <div class="lf-row"><div class="lfr-k">Material</div><div class="lfr-v"><strong>Ebony-black basalt and obsidian</strong> — enchanted to resist the elements and time itself</div></div>
+          <div class="lf-row"><div class="lfr-k">Entrance</div><div class="lfr-v">Hidden within the cliffs, accessible only through a winding path that shifts with sandstorms — gate responds only to those blessed by the moons</div></div>
+          <div class="lf-row"><div class="lfr-k">Light</div><div class="lfr-v">Moonstone lanterns imbued with eternal light — polished stone surfaces glow faintly under the twin moons</div></div>
+          <div class="lf-row"><div class="lfr-k">Below</div><div class="lfr-v">Entry point to the Winding Veins — behind the altar in the central prayer hall · accessible via specific gestures, ancient phrases, and moonlight alignment</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">Structure and Design · The Surface Monastery</span>
+      <h2 class="big-h">It rises like a dark sentinel.<br><em>Sharp spires. Narrow arched windows. Obsidian that glows.</em></h2>
+      <p class="bp">The monastery rises like a dark sentinel against the horizon. Its weathered stone walls are forged from a mix of <strong>ebony-black basalt and obsidian</strong> — materials enchanted to resist the elements and time itself. Sharp, angular spires and narrow arched windows give it an imposing and otherworldly aesthetic. Under the light of the twin moons, its polished stone surfaces cause the entire structure to glow faintly.</p>
+      <p class="bp">Inside, the monastery is an intricate labyrinth of vaulted ceilings, torchlit corridors, and vast chambers filled with towering bookshelves, stone statues of forgotten deities, and intricate mosaics depicting the history of Sablea. The air is thick with the scent of aged parchment, wax, and faint incense. <em>Moonstone lanterns imbued with eternal light illuminate the halls</em>, casting an ethereal glow on carvings of Sablea's storied past.</p>
+      <div class="ext-features rv d2">
+        <div class="ef-cell"><span class="ef-label">The Repository</span><span class="ef-text">Its vast library contains tomes, scrolls, and tablets chronicling everything from Sablea's early myths to <strong>forbidden texts on blood magic and the Shadow Essence</strong>. Maintained by cloaked archivists rarely seen but deeply loyal to the Sablean Sisters.</span></div>
+        <div class="ef-cell"><span class="ef-label">Sanctuary of Outcasts</span><span class="ef-text">Throughout Sablea's tumultuous history, the monastery has served as a <strong>refuge for those fleeing persecution</strong> — dissenters, mystics, displaced rulers. Its secluded location and sacred aura made it an ideal place of respite.</span></div>
+        <div class="ef-cell"><span class="ef-label">The Celestial Hall</span><span class="ef-text">A grand chamber within the monastery adorned with glowing glyphs and ancient obelisks humming with forbidden energy. The site of the <strong>Obsidian Chalice of Ira</strong> and Yzmina's Celestial Possession ritual, over 700 years ago.</span></div>
+        <div class="ef-cell"><span class="ef-label">The Eternal Archivists</span><span class="ef-text">The robed caretakers are rumored to be <strong>immortal</strong> — sustained by ancient pacts with the moons. They know every secret held within the monastery's walls and guard its knowledge with fanatical devotion.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shrine);"><span style="color:var(--ara-mid);">☽ ✦ ☾</span></div>
+
+<!-- MOONS' PATHWAY DIAGRAM -->
+<section class="pathway-sec">
+  <div class="path-inner">
+    <div class="rv">
+      <span class="sl">The Outer Courtyard · The Moons' Pathway · Architectural Plan</span>
+      <h2 class="big-h">Ten minutes of polished obsidian<br><em>between the Outer Gates and the Moons' Stair.</em></h2>
+      <p class="bp" style="max-width:660px;">The Moons' Pathway is a stunning expanse of polished ebony-black obsidian stone, perfectly smooth and reflective under the shifting light of the twin moons. Stretching for a ten-minute walk from the Outer Gates to the Moons' Stair, it divides into four symmetrical quadrants segmenting the main courtyard into smaller intentional spaces. Walking off the Pathway is a mark of profound disrespect to the monastery's traditions and the celestial forces it honors.</p>
+    </div>
+
+    <div class="diagram-wrap rv d1">
+      <svg id="pathwayDiagram" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#B8C4D8" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#B8C4D8" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="araGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#B8C4D8" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="iraGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#CC2838" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Half-circle courtyard outline -->
+        <path d="M 100,460 A 350,350 0 0,1 800,460" fill="none" stroke="rgba(176,172,188,0.08)" stroke-width="1"/>
+        <path d="M 100,460 A 350,350 0 0,1 800,460" fill="rgba(136,152,184,0.02)" stroke="none"/>
+
+        <!-- Courtyard base line -->
+        <line x1="100" y1="460" x2="800" y2="460" stroke="rgba(176,172,188,0.1)" stroke-width="1"/>
+
+        <!-- Moons' Pathway — horizontal axis (Outer Gate to Moons' Stair) -->
+        <rect x="80" y="227" width="740" height="26" fill="rgba(136,152,184,0.06)" stroke="rgba(136,152,184,0.15)" stroke-width="0.8"/>
+        <!-- Pathway center line -->
+        <line x1="80" y1="240" x2="820" y2="240" stroke="rgba(136,152,184,0.2)" stroke-width="0.5" stroke-dasharray="6,4"/>
+
+        <!-- Vertical axis of pathway -->
+        <line x1="450" y1="120" x2="450" y2="460" stroke="rgba(136,152,184,0.12)" stroke-width="0.8"/>
+
+        <!-- Four quadrant labels -->
+        <text x="268" y="180" text-anchor="middle" font-family="Cinzel, serif" font-size="9" fill="rgba(176,172,188,0.2)" letter-spacing="2">QUADRANT I</text>
+        <text x="632" y="180" text-anchor="middle" font-family="Cinzel, serif" font-size="9" fill="rgba(176,172,188,0.2)" letter-spacing="2">QUADRANT II</text>
+        <text x="268" y="380" text-anchor="middle" font-family="Cinzel, serif" font-size="9" fill="rgba(176,172,188,0.2)" letter-spacing="2">QUADRANT III</text>
+        <text x="632" y="380" text-anchor="middle" font-family="Cinzel, serif" font-size="9" fill="rgba(176,172,188,0.2)" letter-spacing="2">QUADRANT IV</text>
+
+        <!-- Center intersection glow -->
+        <circle cx="450" cy="240" r="60" fill="url(#centerGlow)"/>
+        <circle cx="450" cy="240" r="8" fill="rgba(176,172,188,0.12)" stroke="rgba(176,172,188,0.3)" stroke-width="1"/>
+        <text x="450" y="212" text-anchor="middle" font-family="Cinzel, serif" font-size="8" fill="rgba(176,172,188,0.35)" letter-spacing="2">INTERSECTION</text>
+        <text x="450" y="222" text-anchor="middle" font-family="Cinzel, serif" font-size="7" fill="rgba(176,172,188,0.2)" letter-spacing="1">Ritual Alignment Point</text>
+
+        <!-- Crimson pools — border areas -->
+        <ellipse cx="200" cy="330" rx="55" ry="22" fill="rgba(154,16,32,0.1)" stroke="rgba(154,16,32,0.2)" stroke-width="0.8"/>
+        <text x="200" y="334" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="9" fill="rgba(204,40,56,0.4)">Crimson Pool</text>
+        <ellipse cx="700" cy="330" rx="55" ry="22" fill="rgba(154,16,32,0.1)" stroke="rgba(154,16,32,0.2)" stroke-width="0.8"/>
+        <text x="700" y="334" text-anchor="middle" font-family="EB Garamond, serif" font-style="italic" font-size="9" fill="rgba(204,40,56,0.4)">Crimson Pool</text>
+
+        <!-- Nine Obelisks along south edge (below pathway) -->
+        <!-- Ara obelisks — east (right) -->
+        <g fill="rgba(136,152,184,0.3)" stroke="rgba(136,152,184,0.4)" stroke-width="0.5">
+          <rect x="570" y="275" width="7" height="32"/>
+          <rect x="595" y="271" width="7" height="36"/>
+          <rect x="620" y="278" width="7" height="29"/>
+        </g>
+        <text x="595" y="318" text-anchor="middle" font-family="Cinzel, serif" font-size="7.5" fill="rgba(136,152,184,0.4)" letter-spacing="1.5">Obelisks of Ara</text>
+
+        <!-- Veil obelisks — center -->
+        <g fill="rgba(200,152,32,0.3)" stroke="rgba(200,152,32,0.4)" stroke-width="0.5">
+          <rect x="421" y="272" width="7" height="35"/>
+          <rect x="446" y="268" width="8" height="39"/>
+          <rect x="473" y="272" width="7" height="35"/>
+        </g>
+        <text x="450" y="318" text-anchor="middle" font-family="Cinzel, serif" font-size="7.5" fill="rgba(200,152,32,0.4)" letter-spacing="1.5">Obelisks of the Veil</text>
+
+        <!-- Ira obelisks — west (left) -->
+        <g fill="rgba(204,40,56,0.3)" stroke="rgba(204,40,56,0.4)" stroke-width="0.5">
+          <rect x="272" y="275" width="7" height="32"/>
+          <rect x="297" y="271" width="7" height="36"/>
+          <rect x="322" y="278" width="7" height="29"/>
+        </g>
+        <text x="297" y="318" text-anchor="middle" font-family="Cinzel, serif" font-size="7.5" fill="rgba(204,40,56,0.4)" letter-spacing="1.5">Obelisks of Ira</text>
+
+        <!-- Outer Gate — left -->
+        <rect x="82" y="218" width="20" height="44" fill="rgba(176,172,188,0.08)" stroke="rgba(176,172,188,0.2)" stroke-width="0.8"/>
+        <text x="92" y="210" text-anchor="middle" font-family="Cinzel, serif" font-size="8" fill="rgba(176,172,188,0.3)" letter-spacing="1">OUTER</text>
+        <text x="92" y="200" text-anchor="middle" font-family="Cinzel, serif" font-size="8" fill="rgba(176,172,188,0.3)" letter-spacing="1">GATE</text>
+
+        <!-- Moons' Stair — right -->
+        <!-- Stair steps visual -->
+        <rect x="798" y="230" width="16" height="4" fill="rgba(176,172,188,0.15)" stroke="rgba(176,172,188,0.2)" stroke-width="0.5"/>
+        <rect x="802" y="234" width="12" height="4" fill="rgba(176,172,188,0.12)" stroke="rgba(176,172,188,0.2)" stroke-width="0.5"/>
+        <rect x="806" y="238" width="8" height="4" fill="rgba(176,172,188,0.1)" stroke="rgba(176,172,188,0.2)" stroke-width="0.5"/>
+        <text x="814" y="215" text-anchor="middle" font-family="Cinzel, serif" font-size="8" fill="rgba(176,172,188,0.3)" letter-spacing="1">MOONS'</text>
+        <text x="814" y="225" text-anchor="middle" font-family="Cinzel, serif" font-size="8" fill="rgba(176,172,188,0.3)" letter-spacing="1">STAIR</text>
+        <text x="814" y="260" text-anchor="middle" font-family="Cinzel, serif" font-size="7.5" fill="rgba(176,172,188,0.2)" letter-spacing="1">75 steps</text>
+
+        <!-- Chamber of Moons — small door at base of stair -->
+        <rect x="794" y="248" width="10" height="14" fill="rgba(204,40,56,0.12)" stroke="rgba(204,40,56,0.25)" stroke-width="0.8"/>
+        <text x="798" y="274" text-anchor="middle" font-family="Cinzel, serif" font-size="7" fill="rgba(204,40,56,0.35)" letter-spacing="1">Chamber</text>
+        <text x="798" y="283" text-anchor="middle" font-family="Cinzel, serif" font-size="7" fill="rgba(204,40,56,0.35)" letter-spacing="1">of Moons</text>
+        <text x="798" y="292" text-anchor="middle" font-family="Cinzel, serif" font-size="7" fill="rgba(204,40,56,0.3)">↑ entry only</text>
+
+        <!-- Distance marker -->
+        <line x1="100" y1="470" x2="796" y2="470" stroke="rgba(176,172,188,0.08)" stroke-width="0.5" marker-end="url(#arr)"/>
+        <text x="450" y="480" text-anchor="middle" font-family="Cinzel, serif" font-size="8" fill="rgba(176,172,188,0.2)" letter-spacing="2">10 MINUTE WALK</text>
+      </svg>
+    </div>
+
+    <div class="path-details rv d2">
+      <div class="pd-cell">
+        <span class="pd-label">The Four Quadrants</span>
+        <p class="pd-text">The Moons' Pathway divides into four symmetrical quadrants, each segmenting the main courtyard into smaller intentional spaces. At its <strong>intersection</strong>, the Pathway forms a central point where rituals of alignment and reflection are performed. Walking off the Pathway is a mark of profound disrespect — not forbidden, but immediately noticed.</p>
+      </div>
+      <div class="pd-cell">
+        <span class="pd-label">The Moons' Stair</span>
+        <p class="pd-text">A grand staircase carved from the same black obsidian as the Pathway. <strong>75 polished ebony steps</strong> ascending to the massive entrance of the monastery. At its summit: the Moons' Embrace — colossal double doors engraved with the phases of the moons, believed to open only for those deemed worthy.</p>
+      </div>
+      <div class="pd-cell">
+        <span class="pd-label">Devotees & The Faceless Red Monks</span>
+        <p class="pd-text"><strong>Faceless Red Monks</strong> and visiting clergy members walk the Pathway and murmur prayers, their voices mingling with the desert wind. They are the monastery's enforcers and ordained servants — both ceremonial presence and executioners when the monastery's rules are broken.</p>
+      </div>
+      <div class="pd-cell">
+        <span class="pd-label">The Moons' Embrace Doors</span>
+        <p class="pd-text">The colossal double doors at the top of the Moons' Stair are engraved with <strong>lunar phases forming a celestial map</strong> that aligns with the skies above. Their carvings glow faintly under moonlight. To pass through them is believed to be an act of submission to the will of Ara and Ira simultaneously.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--obsidian);"><span style="color:var(--glyph-mid);">⬡</span></div>
+
+<!-- THE NINE OBELISKS -->
+<section class="obelisks-sec">
+  <div class="ob-inner">
+    <div class="rv" style="text-align:center;">
+      <span class="sl">Nine Black Obelisks · Three Thematic Groups · The South Edge of the Pathway</span>
+      <h2 class="big-h">Nine monuments to<br><em>Sablea's memory, wars, and mysteries.</em></h2>
+      <p class="bp" style="max-width:580px;margin:0 auto 0;">Their surfaces are inscribed with glowing red runes that shimmer faintly in the light of Ara and Ira. Arranged in deliberate symmetry and divided into three thematic groups. Reading them in sequence tells the full history of Sablea — for those who know how to read runes and have the patience to stand there for several days.</p>
+    </div>
+    <div class="ob-grid rv d1">
+      <div class="ob-group ob-ara">
+        <div class="obc">
+          <div class="ob-num">III Obelisks · East</div>
+          <h3 class="ob-name">Obelisks of Ara</h3>
+          <p class="ob-position">Eastern Position · Foresight · Wisdom · Order</p>
+          <p class="ob-body">Representing <em>foresight, wisdom, and order</em>, these obelisks chronicle Sablea's greatest moments of insight and governance — from its early foundations to its rise as a center of power. The stories of the first Oracles, the founding of Sablea, and its golden ages are etched in intricate detail. These are the obelisks most studied by scholars. They are also the least dangerous to read.</p>
+        </div>
+      </div>
+      <div class="ob-group ob-ira">
+        <div class="obc">
+          <div class="ob-num">III Obelisks · West</div>
+          <h3 class="ob-name">Obelisks of Ira</h3>
+          <p class="ob-position">Western Position · Chaos · Passion · Change</p>
+          <p class="ob-body">Embodying <em>chaos, passion, and change</em>, these obelisks depict Sablea's turbulent history — its wars, betrayals, and revolutions. Scenes of the fiery rebellion against Sablea's tyrannical rulers and the raw power of Ira's influence dominate these carvings. Among them: the Purge of Old Sablea, rendered in detail that eyewitness accounts confirm as accurate. <strong>Yzmina reviewed the carvings herself. She made no corrections.</strong></p>
+        </div>
+      </div>
+      <div class="ob-group ob-veil">
+        <div class="obc">
+          <div class="ob-num">III Obelisks · Center</div>
+          <h3 class="ob-name">Obelisks of the Veil</h3>
+          <p class="ob-position">Central Intersection · Balance · Hidden Truths · The Cosmos</p>
+          <p class="ob-body">Dedicated to the enigmatic force that binds Ara and Ira, these obelisks depict the <em>mysteries of the Veil</em> — the balance of opposing forces and the hidden truths of the cosmos. Their runes are the most cryptic of the nine, <strong>readable only by those attuned to the spiritual resonance of the Moons.</strong> What they actually say has never been publicly documented. Yzmina reads them occasionally. She has never shared what she finds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shrine);"><span style="color:var(--ira-mid);">🩸</span></div>
+
+<!-- CRIMSON POOLS & CHAMBER OF MOONS -->
+<section class="pools-sec">
+  <div class="pools-inner">
+    <div class="rv">
+      <span class="sl">The Crimson Pools · The Veil Greeting · The Chamber of Moons Rule</span>
+      <h2 class="big-h">
+        Blood on the basalt.<br>
+        <em class="ira">One door opens. One door kills.</em>
+      </h2>
+      <p class="bp" style="max-width:660px;">The outer ceremonies of the Northern Monastery are relatively restrained compared to the darker rites conducted within. The Crimson Pools serve as both physical and symbolic representations of the sacrifices made to the Moons. But it is the Chamber of Moons' entry rule that the Red Monks enforce with absolute finality.</p>
+    </div>
+    <div class="pools-split rv d1">
+      <div class="pool-card">
+        <span class="pc-glyph">🩸</span>
+        <div class="pc-name">The Crimson Pools</div>
+        <p class="pc-desc">Bordered along the main courtyard, their surfaces shimmer as though alive. Worshippers slash their palms and press their bloodied hands to the bases of the obelisks, allowing their offerings to drip into the pools. These <strong>small blood sacrifices</strong> — the Veil Greeting — honor the twin moons and maintain the balance of Sablea. The act is considered relatively restrained. What happens inside the monastery is not.</p>
+      </div>
+      <div class="pool-card">
+        <span class="pc-glyph">🏛</span>
+        <div class="pc-name">The Moons' Stair &amp; The Embrace</div>
+        <p class="pc-desc">The grand staircase of 75 polished ebony steps ascends to the <strong>Moons' Embrace</strong> — colossal double doors engraved with the lunar phases forming a celestial map. They are believed to respond to the will of the Moons, opening only for those deemed worthy. Their carvings glow faintly under moonlight. To pass through them is to be enveloped by the will of Ara and Ira simultaneously.</p>
+      </div>
+
+      <!-- CHAMBER OF MOONS — THE RULE -->
+      <div class="chamber-rule">
+        <div class="cr-skull">💀</div>
+        <div class="cr-text">
+          <div class="cr-label">// THE CHAMBER OF MOONS · ABSOLUTE RULE · NO EXCEPTIONS //</div>
+          <p class="cr-body">At the base of the Moons' Stair, a smaller carved doorway leads into the hidden <strong>Chamber of Moons</strong>. Though one may enter this way, <em>no one is permitted to exit through it</em>. Only the newly ordained <strong>Faceless Red Monks</strong> are allowed to pass through this entrance upon completing their initiation — a tradition as sacred as it is fearsome. <strong>Any breach of this rule results in immediate execution in the courtyard's crimson pools, carried out by the Red Monks themselves.</strong> This rule has never had a recorded exception. It is not expected to develop one.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--ancient);"><span style="color:var(--ira-mid);">⬇</span></div>
+
+<!-- THE DESCENT — INTO THE VEINS -->
+<section class="descent-sec">
+  <div class="desc-inner">
+    <div class="rv">
+      <span class="sl">Behind the Altar · Below the Monastery · The Winding Veins Entry Sequence</span>
+      <h2 class="big-h">
+        The surface is the monastery.<br>
+        <em class="ira">What's beneath it is the true heart of Sablea.</em>
+      </h2>
+      <p class="bp" style="max-width:660px;">Beneath the monastery lies one of the hidden entry points to the Winding Veins — the network of tunnels and caverns that snake beneath all of Sablea. The monks and archivists who have maintained the monastery have also safeguarded its connection to the Veins for centuries, ensuring that only the most trustworthy — or cunning — travelers gain access.</p>
+    </div>
+    <div class="descent-steps rv d1">
+      <div class="ds-step ds-1">
+        <div class="ds-marker"><div class="ds-dot"></div><div class="ds-num">01</div></div>
+        <div class="ds-content">
+          <div class="ds-title">The Hidden Altar</div>
+          <p class="ds-sub">Central Prayer Hall · Behind an Ordinary Stone Altar</p>
+          <p class="ds-body">Deep within the monastery, behind what appears to be an <em>ordinary stone altar</em> in the central prayer hall, lies the entrance to the Winding Veins. The altar slides open with a precise combination of movements — <strong>a dance of hand gestures, spoken phrases in the ancient tongue, and the alignment of moonlight shining through the high windows</strong>. All three conditions must be met simultaneously. Missing any one of them produces nothing. The altar does not warn you it is about to produce something worse.</p>
+        </div>
+      </div>
+      <div class="ds-step ds-2">
+        <div class="ds-marker"><div class="ds-dot"></div><div class="ds-num">02</div></div>
+        <div class="ds-content">
+          <div class="ds-title">The Descending Staircase</div>
+          <p class="ds-sub">Spiraling Stone · Pale Red Glyph-Light · Growing Cold</p>
+          <p class="ds-body">Beyond the altar lies a spiraling stone staircase that descends into darkness. Lit by <strong>enchanted glyphs glowing faintly with pale red light</strong>, casting eerie shadows on the walls. As one descends, the air grows cooler and heavier, the scent of damp earth mingling with the metallic tang of iron and blood. <em>The scent intensifies with depth.</em> There is no measured count of the steps. Those who have tried to count report losing track around forty and finding themselves at the bottom anyway.</p>
+        </div>
+      </div>
+      <div class="ds-step ds-3">
+        <div class="ds-marker"><div class="ds-dot"></div><div class="ds-num">03</div></div>
+        <div class="ds-content">
+          <div class="ds-title">The Iron Gate &amp; The Sentinels</div>
+          <p class="ds-sub">Grotesque Carvings · Two Masked Sentinels · Enchanted Scimitars</p>
+          <p class="ds-body">At the threshold of the Winding Veins lies a massive <strong>iron gate</strong> adorned with grotesque carvings of serpentine creatures and crescent moons. Two masked sentinels, clad in dark robes and wielding enchanted scimitars, stand watch at all times. They do not speak. They do not shift. If you approach without the passphrase already on your lips, they will already be moving.</p>
+          <div class="ds-detail"><strong>Entry requires:</strong> Recitation of a passphrase, whispered in the ancient language <em>Nythari</em>. The passphrase changes at irregular intervals known only to the Sisters and the archivists. The wrong phrase triggers deadly glyphs etched into the floor, releasing bursts of crimson fire — or sending bladed traps from the walls.</div>
+        </div>
+      </div>
+      <div class="ds-step ds-4">
+        <div class="ds-marker"><div class="ds-dot"></div><div class="ds-num">04</div></div>
+        <div class="ds-content">
+          <div class="ds-title">The Winding Veins</div>
+          <p class="ds-sub">The True Heart of Sablea · Below Everything · Always Active</p>
+          <p class="ds-body">Beyond the gate: the Veins spread out like the arteries of a living organism, connecting distant corners of Sablea. <em>This is the true heart of Sablea's shadowy operations</em> — sheltering a society that thrives in the darkness. The surface city is a maze of secrets. <strong>The Veins are the maze beneath the maze.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--void);"><span style="color:var(--ira-mid);">⬡</span></div>
+
+<!-- THE WINDING VEINS BELOW -->
+<section class="veins-sec">
+  <div class="veins-inner">
+    <div class="rv" style="text-align:center;">
+      <span class="sl">Below the Monastery · Below the City · Below Everything</span>
+      <h2 class="veins-title">The Winding <em>Veins</em></h2>
+      <p class="veins-intro">A population. A government. A graveyard. The Winding Veins are not simply tunnels — they are a second city operating entirely outside the surface's awareness, with their own hierarchy, their own sacred sites, and their own laws.</p>
+    </div>
+
+    <span class="veins-h2 rv">// Inhabitants</span>
+    <div class="vein-grid rv d1">
+      <div class="vein-card">
+        <span class="vc-glyph">🧟</span>
+        <div class="vc-name">The Vein Dwellers</div>
+        <p class="vc-desc">Criminals, exiles, and those who have forsaken the surface world — drawn to the Veins by promises of freedom from the rigid rules of Sablean culture. <strong>Life in the Veins is harsh and unforgiving.</strong> The surface Sablea does not ask about those who disappear into them. It knows where they went.</p>
+      </div>
+      <div class="vein-card">
+        <span class="vc-glyph">👁</span>
+        <div class="vc-name">The Council of Shadows</div>
+        <p class="vc-desc">The most secretive dealings of Sablea are conducted in the <strong>Silent Vaults</strong> hidden within the Veins — political conspiracies, trade of forbidden goods, rituals involving blood magic. The Council's true operational center is not the Eastern Ebony Tower. It is here.</p>
+      </div>
+      <div class="vein-card">
+        <span class="vc-glyph">🕯</span>
+        <div class="vc-name">The Cult of Forsaken Gods</div>
+        <p class="vc-desc">Within the Veins, there are shrines dedicated to ancient deities <strong>banished from Sablea's official worship</strong>. These shrines attract zealots and power-hungry mages willing to risk damnation for forbidden knowledge. Yzmina is aware of their existence. She has chosen not to purge them — yet.</p>
+      </div>
+    </div>
+
+    <span class="veins-h2 rv" style="margin-top:36px;">// Key Locations</span>
+    <div class="vein-grid rv d1">
+      <div class="vein-card">
+        <span class="vc-glyph">⚔</span>
+        <div class="vc-name">The Blood Galleries</div>
+        <p class="vc-desc">A macabre arena where disputes are settled in brutal duels — often to the death. The walls glisten with streaks of <strong>crimson ore</strong>. The scent of blood lingers perpetually. What passes for justice in the Veins is decided here, and the decision is always final.</p>
+      </div>
+      <div class="vein-card">
+        <span class="vc-glyph">🗝</span>
+        <div class="vc-name">The Silent Vaults</div>
+        <p class="vc-desc">Accessible only to those with specific <strong>blood-bound keys</strong>, the Vaults are protected by layers of glyphs and serve as meeting rooms for the Council of Shadows. Places where the fate of Sablea and other realms is quietly decided. There are no witnesses. There are no records. There are outcomes.</p>
+      </div>
+      <div class="vein-card">
+        <span class="vc-glyph">⬛</span>
+        <div class="vc-name">The Abyssal Gates</div>
+        <p class="vc-desc">In the deepest reaches of the Veins — towering gates carved with ancient glyphs and symbols that pulse faintly with red light. <strong>Rumored to lead to either a prison for forgotten gods or a portal to another realm.</strong> Heavily guarded and shrouded in myth. The Four Secrets crossed through one of them. They have seen what waits on the other side.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shrine);"><span style="color:var(--ara-mid);">☽</span></div>
+
+<!-- LEGENDS -->
+<section class="legends-sec">
+  <div class="leg-inner">
+    <div class="rv">
+      <span class="sl">Monastery Lore · Whispered Truths · Three Legends That May Not Be Legends</span>
+      <h2 class="big-h">What the monastery<br><em>keeps to itself.</em></h2>
+    </div>
+    <div class="leg-list rv d1">
+      <div class="leg-entry">
+        <div class="le-key"><div class="le-title">The Eternal Archivists</div><span class="le-sub">Rumor · Possibly True</span></div>
+        <div class="le-val">The robed caretakers of the monastery are rumored to be <strong>immortal</strong> — sustained by ancient pacts with the Moons. They are said to know every secret held within the monastery's walls and guard its knowledge with fanatical devotion. They are rarely seen. When they are seen, no one can recall their faces afterward. This has been noted multiple times, in multiple independent accounts, spanning multiple centuries.</div>
+      </div>
+      <div class="leg-entry">
+        <div class="le-key"><div class="le-title">The Lost Ritual of Union</div><span class="le-sub">Forbidden · Location Unknown</span></div>
+        <div class="le-val">It is whispered that the monastery houses an ancient ritual capable of <strong>binding mortal and divine essence</strong>. This forbidden practice, if rediscovered, could grant immense power to anyone daring enough to invoke it. The Celestial Possession ritual that created Yzmina may be a simplified or partial version. <em>What the full ritual produces has never been recorded</em> — because no one who attempted it survived to write it down.</div>
+      </div>
+      <div class="leg-entry">
+        <div class="le-key"><div class="le-title">The Curse of the Wrong Passphrase</div><span class="le-sub">Verified · Multiple Accounts</span></div>
+        <div class="le-val">Those who speak the wrong passphrase at the gate to the Veins do not die immediately. Instead, <strong>their souls are ripped from their bodies and bound to the caverns</strong> — forever wandering as restless shadows. The sentinels do not pursue or dispose of the body afterward. They return to their posts. The body eventually stops moving on its own. There are presently an estimated eleven wandering soul-shadows in the northern cavern section. None have been exorcised. The archivists consider their presence educational.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--ancient);"><span style="color:var(--ara-mid);">✦</span></div>
+
+<!-- CRYSEN'S CONNECTION -->
+<section class="crysen-sec">
+  <div class="crysen-inner">
+    <div class="rv">
+      <span class="sl">Lady Crysen · The Monastery as Crucible · Her Passage Into the Veins</span>
+      <h2 class="big-h">The monastery is her<br><em>testing ground, her library, and her door.</em></h2>
+      <p class="bp" style="max-width:620px;">The Ancient Northern Monastery is a crucial waypoint for Lady Crysen — serving both as a source of knowledge and as a testing ground for her courage and intellect. What she uncovers here will reshape everything she believes about Sablea, the Sisters, and the fate of Mai'leah.</p>
+    </div>
+    <div class="crysen-grid rv d1">
+      <div class="cc-card">
+        <span class="ccc-what">Knowledge · The Library</span>
+        <div class="ccc-head">Uncovering Sablea's History</div>
+        <p class="ccc-desc">Crysen's exploration of the monastery's tomes and scrolls will reveal vital truths about the Sablean Sisters, the Winding Veins, and the origins of Sablea itself — including the Third Generation records of Yzmina's possession that most living Sableans have never read firsthand.</p>
+      </div>
+      <div class="cc-card">
+        <span class="ccc-what">Trial · The Passphrase</span>
+        <div class="ccc-head">The Trial of Nythari</div>
+        <p class="ccc-desc">Crysen's ability to decipher the passphrase to enter the Veins will test her mastery of the ancient languages of Sablea — particularly Nythari, the Deception Tongue. Her failure could cost her soul. Her success will mark her as a worthy adversary in Sablea's shadowy power struggles. There is no partial credit.</p>
+      </div>
+      <div class="cc-card">
+        <span class="ccc-what">Threshold · The Veins</span>
+        <div class="ccc-head">The Gateway to Mai'leah</div>
+        <p class="ccc-desc">The monastery serves as her entry point into the underworld of Sablea — where she will uncover the darker truths of her foretelling and the fate of Mai'leah. The monastery is not her destination. It is the last familiar ground before everything becomes unknown.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('lit');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('lit');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=350;this.s=55;this.l=42;}
+      else if(t<.72){this.h=120;this.s=20;this.l=40;}
+      else if(t<.86){this.h=350+20;this.s=55-15;this.l=42+15;}
+      else{this.h=120+10;this.s=20-10;this.l=40+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

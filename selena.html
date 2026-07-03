@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selena — Supreme Witch of the Sisters of Ira | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #030208;
+  --deep:      #06040C;
+  --shadow:    #09060E;
+  --obsidian:  #0C0812;
+  --dusk:      #100C16;
+
+  /* Amber eyes — corrupt lunar gold */
+  --amber:     #7A4800;
+  --amber-mid: #A86000;
+  --amber-pale:#D08020;
+  --amber-bright:#F0A030;
+
+  /* Shadow crow black-violet */
+  --crow:      #1E0830;
+  --crow-mid:  #341050;
+  --crow-pale: #6020A0;
+  --crow-bright:#9040D0;
+
+  /* Blood — council oaths */
+  --blood:     #700818;
+  --blood-mid: #921028;
+  --blood-pale:#C03048;
+
+  /* Institutional grey — dossier */
+  --slate:     #282438;
+  --slate-pale:#3C3850;
+  --slate-bright:#504C68;
+
+  --parch:     #B0A8C0;
+  --parch-pale:#D0C8E0;
+  --parch-dim: #484058;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Ambient — two-color pulse: amber/crow */
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:50vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 40% 60% at 30% 0%,rgba(122,72,0,0.05) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 70% 0%,rgba(52,16,80,0.06) 0%,transparent 60%);animation:ambientShift 14s ease-in-out infinite;}
+@keyframes ambientShift{0%,100%{opacity:0.7;}50%{opacity:1;}}
+
+/* Fine grain */
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px;}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--amber-pale);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:30px;height:30px;border:1px solid rgba(122,72,0,0.4);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.amber-active{width:48px;height:48px;border-color:var(--amber-pale);box-shadow:0 0 14px rgba(168,96,0,0.35);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(3,2,8,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(122,72,0,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:var(--amber-pale);opacity:0.6;letter-spacing:0.1em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--amber-pale);border:1px solid rgba(122,72,0,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--amber-mid);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 45%,#160A20 0%,#0C0610 40%,var(--void) 70%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Two amber eye glows */
+.eye-left,.eye-right{
+  position:absolute;top:38%;
+  width:60px;height:60px;border-radius:50%;
+  pointer-events:none;z-index:1;
+  animation:eyePulse 4s ease-in-out infinite;
+}
+.eye-left{left:calc(50% - 80px);background:radial-gradient(circle,rgba(240,160,48,0.25) 0%,transparent 70%);}
+.eye-right{left:calc(50% + 20px);background:radial-gradient(circle,rgba(240,160,48,0.25) 0%,transparent 70%);animation-delay:0.3s;}
+@keyframes eyePulse{0%,100%{opacity:0.4;transform:scale(1);}50%{opacity:1;transform:scale(1.15);}}
+
+/* Shadow feather lines */
+.feather-l,.feather-r{
+  position:absolute;top:0;bottom:0;width:200px;
+  pointer-events:none;z-index:1;opacity:0.06;
+}
+.feather-l{left:0;background:linear-gradient(to right,rgba(52,16,80,0.8),transparent);}
+.feather-r{right:0;background:linear-gradient(to left,rgba(52,16,80,0.8),transparent);}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-pre{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:var(--amber-pale);text-transform:uppercase;opacity:0;animation:riseIn 1.2s .2s ease forwards;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.h-pre::before,.h-pre::after{content:'';display:block;width:44px;height:1px;background:linear-gradient(to right,transparent,var(--amber-mid));}
+.h-pre::after{transform:scaleX(-1);}
+.h-title-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(60px,12vw,150px);font-weight:900;
+  color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;
+  text-shadow:0 0 120px rgba(168,96,0,0.5),0 0 60px rgba(80,32,160,0.2),0 4px 40px rgba(0,0,0,0.9);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-sub{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,1.7vw,19px);font-weight:400;color:var(--amber-pale);letter-spacing:0.2em;display:block;margin-top:8px;opacity:0;animation:riseIn 1s .8s ease forwards;}
+.h-rule{width:1px;height:0;background:linear-gradient(to bottom,var(--amber-mid),transparent);margin:22px auto;animation:lineGrow 1s 1.1s ease forwards;}
+@keyframes lineGrow{to{height:50px;}}
+.h-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,21px);color:rgba(176,168,192,0.4);max-width:700px;margin:0 auto 44px;line-height:1.8;opacity:0;animation:riseIn 1.2s 1.3s ease forwards;}
+.h-vitals{display:flex;justify-content:center;max-width:680px;margin:0 auto;border:1px solid rgba(122,72,0,0.15);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:18px 16px;text-align:center;border-right:1px solid rgba(122,72,0,0.1);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,2vw,24px);color:var(--amber-bright);line-height:1;margin-bottom:6px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--parch-dim);opacity:0.3;}
+.s-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--amber-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;text-transform:uppercase;color:var(--amber-pale);opacity:0.5;display:block;margin-bottom:18px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(122,72,0,0.15),transparent);}
+.orn span{position:relative;background:var(--void);padding:0 18px;font-size:16px;color:var(--amber-mid);opacity:0.35;z-index:1;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--amber-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(176,168,192,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--amber-pale);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid var(--amber-mid);background:rgba(122,72,0,0.04);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(176,168,192,0.75);line-height:1.75;}
+.pull cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--amber-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+.pull-crow{margin:22px 0;padding:18px 24px;border-left:2px solid var(--crow-mid);background:rgba(52,16,80,0.04);}
+.pull-crow p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(176,168,192,0.75);line-height:1.75;}
+.pull-crow cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--crow-bright);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+
+/* ═══ DOSSIER PORTRAIT ═══ */
+.portrait{padding:110px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.portrait::before{content:'SELENA';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(100px,18vw,240px);font-weight:900;color:rgba(122,72,0,0.025);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.pt-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.pt-aside .big-letter{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,13vw,170px);font-weight:400;color:rgba(122,72,0,0.09);line-height:1;margin-left:-6px;}
+.pt-aside-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:var(--amber-pale);opacity:0.5;text-transform:uppercase;}
+.pt-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,192,0.3);margin-top:6px;line-height:1.6;}
+
+/* Origin trail */
+.origin-trail{margin-top:32px;display:flex;flex-direction:column;gap:2px;}
+.ot-step{display:flex;gap:10px;padding:10px 14px;border:1px solid rgba(122,72,0,0.08);background:rgba(122,72,0,0.02);align-items:flex-start;transition:border-color .3s;}
+.ot-step:hover{border-color:rgba(122,72,0,0.2);}
+.ots-dot{width:5px;height:5px;border-radius:50%;background:var(--amber-mid);flex-shrink:0;margin-top:7px;opacity:0.6;}
+.ots-text{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,192,0.5);line-height:1.5;}
+.ots-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:40px;}
+.pg-cell{padding:18px 20px;border:1px solid rgba(122,72,0,0.08);background:rgba(122,72,0,0.02);transition:border-color .3s,background .3s;}
+.pg-cell:hover{border-color:rgba(122,72,0,0.22);background:rgba(122,72,0,0.05);}
+.pg-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--amber-pale);opacity:0.4;display:block;margin-bottom:6px;}
+.pg-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,192,0.6);line-height:1.5;}
+
+/* ═══ TWO FORMS ═══ */
+.forms{padding:110px 60px;background:var(--shadow);}
+.forms-inner{max-width:1200px;margin:0 auto;}
+.forms-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;text-align:center;}
+.forms-title em{font-style:italic;color:var(--amber-bright);}
+.forms-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(176,168,192,0.4);max-width:560px;margin:0 auto 60px;line-height:1.75;text-align:center;}
+.forms-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+
+/* Base form */
+.form-base{
+  background:linear-gradient(160deg,#0C0808 0%,#080608 100%);
+  padding:48px 40px;border:1px solid rgba(122,72,0,0.12);
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.form-base:hover{border-color:rgba(122,72,0,0.3);}
+.form-base::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 30% 40%,rgba(122,72,0,0.07) 0%,transparent 70%);}
+
+/* Evolved form */
+.form-evolved{
+  background:linear-gradient(160deg,#0C0614 0%,#080410 100%);
+  padding:48px 40px;border:1px solid rgba(52,16,80,0.15);
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.form-evolved:hover{border-color:rgba(52,16,80,0.38);}
+.form-evolved::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 70% 40%,rgba(52,16,80,0.1) 0%,transparent 70%);}
+
+/* Form top bar */
+.form-base::after,.form-evolved::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.form-base:hover::after{transform:scaleX(1);background:linear-gradient(to right,transparent,var(--amber-mid),transparent);}
+.form-evolved:hover::after{transform:scaleX(1);background:linear-gradient(to right,transparent,var(--crow-bright),transparent);}
+
+.fc{position:relative;z-index:1;}
+.form-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;padding:4px 14px;border:1px solid;margin-bottom:14px;display:inline-block;opacity:0.7;}
+.form-base .form-label{color:var(--amber-pale);border-color:rgba(122,72,0,0.3);}
+.form-evolved .form-label{color:var(--crow-bright);border-color:rgba(52,16,80,0.35);}
+.form-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,2.8vw,36px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;}
+.form-role{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:18px;}
+.ability-list{display:flex;flex-direction:column;gap:2px;}
+.ability{padding:14px 18px;border:1px solid;transition:border-color .3s,background .3s;}
+.form-base .ability{border-color:rgba(122,72,0,0.07);background:rgba(122,72,0,0.02);}
+.form-base .ability:hover{border-color:rgba(122,72,0,0.2);background:rgba(122,72,0,0.05);}
+.form-evolved .ability{border-color:rgba(52,16,80,0.08);background:rgba(52,16,80,0.02);}
+.form-evolved .ability:hover{border-color:rgba(52,16,80,0.22);background:rgba(52,16,80,0.06);}
+.ab-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:5px;}
+.form-base .ab-name span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--amber-pale);opacity:0.5;letter-spacing:0.05em;margin-left:8px;}
+.form-evolved .ab-name span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--crow-bright);opacity:0.5;letter-spacing:0.05em;margin-left:8px;}
+.ab-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,168,192,0.5);line-height:1.7;}
+
+/* Temporal tech note */
+.temporal-note{
+  margin-top:16px;padding:14px 18px;
+  border:1px solid rgba(52,16,80,0.15);background:rgba(52,16,80,0.04);
+}
+.tn-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--crow-bright);opacity:0.55;display:block;margin-bottom:6px;letter-spacing:0.05em;}
+.tn-body{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,192,0.5);line-height:1.6;}
+.tn-body strong{color:var(--parch-pale);font-style:normal;}
+
+/* ═══ POWER & POLITICS ═══ */
+.politics{padding:110px 60px;background:var(--obsidian);}
+.pol-inner{max-width:1100px;margin:0 auto;}
+.pol-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;}
+.pol-col{}
+.pol-subtitle{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3vw,36px);font-weight:400;color:var(--amber-bright);line-height:1.15;margin-bottom:18px;}
+.pol-subtitle em{font-style:italic;color:var(--parch-pale);}
+.pol-items{display:flex;flex-direction:column;gap:2px;margin-top:28px;}
+.pol-item{padding:16px 20px;border:1px solid rgba(122,72,0,0.1);background:rgba(122,72,0,0.03);transition:border-color .3s;}
+.pol-item:hover{border-color:rgba(122,72,0,0.25);}
+.pi-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--amber-pale);opacity:0.5;display:block;margin-bottom:5px;}
+.pi-val{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,168,192,0.55);line-height:1.6;}
+.pi-val strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ VASHTI VS SELENA MIRROR ═══ */
+.mirror{padding:110px 60px;background:var(--dusk);}
+.mirror-inner{max-width:1100px;margin:0 auto;}
+.mirror-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+
+.ms-vashti{
+  background:linear-gradient(160deg,#0A0612 0%,#08040E 100%);
+  padding:48px 40px;border:1px solid rgba(52,16,80,0.15);
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.ms-vashti:hover{border-color:rgba(52,16,80,0.35);}
+.ms-vashti::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 30% 40%,rgba(52,16,80,0.08) 0%,transparent 70%);}
+
+.ms-selena{
+  background:linear-gradient(160deg,#0C0808 0%,#08060A 100%);
+  padding:48px 40px;border:1px solid rgba(122,72,0,0.12);
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.ms-selena:hover{border-color:rgba(122,72,0,0.3);}
+.ms-selena::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 70% 40%,rgba(122,72,0,0.07) 0%,transparent 70%);}
+
+.ms-c{position:relative;z-index:1;}
+.ms-who{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;opacity:0.5;display:block;margin-bottom:12px;}
+.ms-vashti .ms-who{color:var(--crow-bright);}
+.ms-selena .ms-who{color:var(--amber-pale);}
+.ms-name{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3vw,40px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;}
+.ms-role{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:16px;}
+.ms-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(176,168,192,0.55);line-height:1.85;margin-bottom:14px;}
+.ms-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ms-vashti .ms-body em{color:var(--crow-bright);}
+.ms-selena .ms-body em{color:var(--amber-pale);}
+.ms-verdict{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.25em;text-transform:uppercase;margin-top:16px;padding-top:14px;border-top:1px solid rgba(176,168,192,0.06);opacity:0.4;line-height:1.6;}
+.ms-vashti .ms-verdict{color:var(--crow-bright);}
+.ms-selena .ms-verdict{color:var(--amber-pale);}
+
+.tension-line{grid-column:span 2;padding:22px 40px;background:rgba(122,72,0,0.03);border:1px solid rgba(122,72,0,0.08);text-align:center;}
+.tl-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(122,72,0,0.4);margin-bottom:10px;display:block;}
+.tl-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,19px);color:rgba(176,168,192,0.6);line-height:1.7;}
+.tl-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ CRYSEN CONFLICT ═══ */
+.crysen-sec{padding:100px 60px;background:var(--shadow);}
+.crysen-inner{max-width:1100px;margin:0 auto;}
+.crysen-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.cr-entry{padding:28px 28px;border:1px solid rgba(122,72,0,0.07);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.cr-entry:hover{border-color:rgba(122,72,0,0.2);background:rgba(122,72,0,0.03);}
+.cr-entry::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--amber-mid);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.cr-entry:hover::before{transform:scaleX(1);}
+.cr-what{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--amber-pale);opacity:0.55;margin-bottom:10px;display:block;}
+.cr-head{font-family:'Cinzel',serif;font-size:clamp(11px,1.6vw,16px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:8px;}
+.cr-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,168,192,0.5);line-height:1.75;}
+
+/* ═══ SECRET AGENDA — SEALED DOSSIER CARDS ═══ */
+.agenda{padding:110px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.agenda::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(122,72,0,0.04) 0%,transparent 70%);}
+.agenda-inner{max-width:1100px;margin:0 auto;}
+.agenda-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.agenda-title em{font-style:italic;color:var(--amber-bright);}
+.agenda-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(176,168,192,0.4);max-width:560px;line-height:1.75;}
+
+.reveal-hint{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(122,72,0,0.25);text-align:center;margin:28px 0;animation:hintPulse 3s ease-in-out infinite;}
+@keyframes hintPulse{0%,100%{opacity:0.3;}50%{opacity:0.7;};}
+
+.agenda-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+.agenda-card{
+  position:relative;overflow:hidden;min-height:260px;
+  background:rgba(3,2,8,0.7);border:1px solid rgba(122,72,0,0.07);
+  cursor:pointer;transition:border-color .3s;
+}
+.agenda-card:hover{border-color:rgba(122,72,0,0.28);}
+
+/* Sealed state */
+.ac-sealed{padding:30px 26px;display:flex;flex-direction:column;gap:8px;transition:opacity .45s;}
+.agenda-card:hover .ac-sealed{opacity:0;}
+.ac-seal-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(122,72,0,0.3);margin-bottom:10px;}
+.seal-bar{background:rgba(3,2,8,0.95);height:12px;border-radius:1px;margin-bottom:7px;transition:opacity .4s;}
+.agenda-card:hover .seal-bar{opacity:0;}
+.ac-emblem{font-size:24px;opacity:0.1;transition:opacity .4s;}
+.agenda-card:hover .ac-emblem{opacity:0;}
+
+/* Revealed state */
+.ac-revealed{
+  position:absolute;inset:0;padding:30px 26px;
+  display:flex;flex-direction:column;
+  opacity:0;transition:opacity .45s;pointer-events:none;
+}
+.agenda-card:hover .ac-revealed{opacity:1;}
+.ac-num{font-family:'Cinzel Decorative',serif;font-size:48px;color:var(--amber-pale);opacity:0.08;line-height:1;margin-bottom:8px;}
+.ac-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--amber-pale);opacity:0.55;margin-bottom:10px;display:block;}
+.ac-name{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,24px);font-weight:400;color:var(--parch-pale);margin-bottom:8px;}
+.ac-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,168,192,0.55);line-height:1.75;}
+.ac-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ac-status{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;margin-top:auto;padding-top:12px;border-top:1px solid rgba(122,72,0,0.1);color:var(--amber-pale);opacity:0.45;}
+
+/* ═══ TRAGIC FLAW ═══ */
+.flaw{padding:100px 60px;background:var(--shadow);}
+.flaw-inner{max-width:1100px;margin:0 auto;}
+.flaw-content{margin-top:52px;padding:40px;border:1px solid rgba(122,72,0,0.1);background:rgba(122,72,0,0.03);position:relative;overflow:hidden;}
+.flaw-content::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 50%,rgba(122,72,0,0.04) 0%,transparent 70%);}
+.fl-c{position:relative;z-index:1;}
+.fl-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:var(--amber-pale);border:1px solid rgba(122,72,0,0.25);padding:5px 16px;display:inline-block;margin-bottom:18px;opacity:0.7;}
+.fl-title{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3vw,36px);font-weight:400;color:var(--parch-pale);margin-bottom:12px;}
+.fl-title em{font-style:italic;color:var(--amber-bright);}
+.fl-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.7vw,18px);color:rgba(176,168,192,0.55);line-height:1.85;max-width:720px;}
+.fl-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(122,72,0,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--amber-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(176,168,192,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#F0D8E0;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(176,168,192,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(176,168,192,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(122,72,0,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.ftr{font-family:'EB Garamond',serif;font-size:13px;color:rgba(176,168,192,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .portrait,.forms,.politics,.mirror,.crysen-sec,.agenda,.flaw,.page-cta{padding:80px 40px;}
+  .pt-inner{grid-template-columns:1fr;gap:40px;}
+  .forms-split{grid-template-columns:1fr;}
+  .pol-grid{grid-template-columns:1fr;}
+  .mirror-split{grid-template-columns:1fr;} .tension-line{grid-column:span 1;}
+  .crysen-split{grid-template-columns:1fr;}
+  .agenda-grid{grid-template-columns:1fr;}
+  .profile-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(122,72,0,0.1);}.h-vital:last-child{border-bottom:none;}
+  .portrait,.forms,.politics,.mirror,.crysen-sec,.agenda,.flaw,.page-cta{padding:60px 24px;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">Sablea · Sisters of Ira · Council of Shadows</span>
+  </a>
+  <div class="nav-right">
+    <a href="vashti.html" class="nav-link">Queen Vashti</a>
+    <a href="crysen-showcase.html" class="nav-link">Lady Crysen</a>
+    <a href="sablea-city.html" class="nav-link">Sablea</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="eye-left"></div>
+  <div class="eye-right"></div>
+  <div class="feather-l"></div>
+  <div class="feather-r"></div>
+  <div class="hero-content">
+    <p class="h-pre">Sablea · The Sisters of Ira · The Council of Shadows</p>
+    <span class="h-title-label">Supreme Witch · Chairwoman · The Supreme Deceiver</span>
+    <h1 class="h-name">Selena</h1>
+    <span class="h-sub">She serves both queens. She intends to destroy both queens.</span>
+    <div class="h-rule"></div>
+    <p class="h-tagline">She built her power on dead rivals, blood oaths, and the patience to serve those she plans to eventually overthrow. Every act of loyalty she has ever performed has been a weapon in preparation. The amber eyes do not warn you. They observe you first.</p>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">☽</div><div class="h-vlabel">Sister of Ira · Supreme</div></div>
+      <div class="h-vital"><div class="h-vval">II</div><div class="h-vlabel">Dual Role</div></div>
+      <div class="h-vital"><div class="h-vval">∞</div><div class="h-vlabel">Temporal Ambition</div></div>
+      <div class="h-vital"><div class="h-vval">⚠</div><div class="h-vlabel">Descending Into Madness</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>Enter the Council of Shadows</span><div class="s-line"></div></div>
+</section>
+
+<!-- PORTRAIT & ORIGIN -->
+<section class="portrait">
+  <div class="pt-inner">
+    <div class="rv">
+      <div class="pt-aside">
+        <div class="big-letter">S</div>
+        <span class="pt-aside-tag">Supreme Witch · Chairwoman · Hidden Sovereign</span>
+        <p class="pt-aside-note">Born in obscurity. Sold into servitude. Discovered by the Sisters of Ira. Rose to Supreme Witch through manipulation, betrayal, and Bloodbound Rituals. Now chairs the Council of Shadows while hiding her true agenda from the queens she serves.</p>
+        <div class="origin-trail" style="margin-top:28px;">
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Origin: Flora Nation</strong> — born amidst a war-torn province, a scholar of the mystic arts before any of this began</span></div>
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Sold into servitude</strong> to a crime syndicate — honed survival instincts, developed cunning and pragmatism that would define everything that followed</span></div>
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Discovered by the Sisters of Ira</strong> — her innate talent for sorcery recognized, indoctrinated into the order, ascended rapidly</span></div>
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Rose to Supreme Witch</strong> — orchestrated the deaths of rival Sisters, absorbed their power through Bloodbound Rituals, bound others with soul contracts</span></div>
+          <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Alliance with Queen Vashti</strong> — appointed Chairwoman of the Council of Shadows; uses the position to advance her own agenda toward sole rule of Sablea</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">The Supreme Witch · Who She Actually Is</span>
+      <h2 class="big-h">She built her leadership on<br><em>fear, not loyalty. Blood oaths, not trust.</em></h2>
+      <p class="bp">Selena's personality is a <strong>razor-sharp blend of intellect, authority, and cruelty</strong>. She thrives on control, viewing loyalty as a commodity to be earned through service and fear rather than given freely. Her disdain for weakness is palpable — she regards those who lack ambition or cunning as expendable. Even her closest allies are kept at arm's length, bound to her will not by trust but by carefully constructed webs of power and obligation.</p>
+      <p class="bp">Her pragmatism overshadows any reverence for Sablea's traditions or mysticism. She dismisses legends and prophecies — including the tale of the "Unbound Oracle" — as relics of a bygone era. <em>Tangible power and calculated strategy are the only paths to dominance.</em> This sets her at permanent odds with Crysen, whose ethereal nature challenges Selena's entirely materialistic worldview.</p>
+      <div class="pull rv d2"><p>"Despite her harsh demeanor, Selena possesses a rare complexity. Her actions, however ruthless, are driven by a belief that Sablea requires an iron-fisted ruler to thrive. The ends always justify the means. Yet this conviction often veers into hypocrisy — her pursuit of power risks the very chaos she claims to prevent."</p><cite>— The Eastern Tower Archive · Vashti's Private Assessments · Distribution: None</cite></div>
+      <div class="profile-grid rv d3">
+        <div class="pg-cell"><span class="pg-label">Title</span><span class="pg-val">Supreme Witch of the Sisters of Ira · Chairwoman of the Council of Shadows</span></div>
+        <div class="pg-cell"><span class="pg-label">True Goal</span><span class="pg-val">Overthrow both Vashti and Vesper · Consolidate Sablea under singular rule · Achieve godhood via Ira Reincarnate</span></div>
+        <div class="pg-cell"><span class="pg-label">Temporal Advantage</span><span class="pg-val">Has smuggled temporal technologies from New Sablea — fused with shadow magic for time dilation and time freeze abilities</span></div>
+        <div class="pg-cell"><span class="pg-label">Council Role</span><span class="pg-val">Uses the Council of Shadows simultaneously to enforce Vashti's will and to quietly advance her own secret agenda against both queens</span></div>
+        <div class="pg-cell"><span class="pg-label">Fatal Flaw</span><span class="pg-val">Experiments with temporal technology are unstable. Paranoia and instability growing as she approaches the threshold of her ambition.</span></div>
+        <div class="pg-cell"><span class="pg-label">Relationship to Crysen</span><span class="pg-val">Both antagonist and would-be recruiter. Views Crysen as threat and potential asset simultaneously. Offered her a Council seat as a test. Was defeated by her.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shadow);"><span>🪶</span></div>
+
+<!-- THE TWO FORMS -->
+<section class="forms">
+  <div class="forms-inner">
+    <div style="text-align:center;" class="rv">
+      <span class="sl">Two States · The Sorcery of Shadows and Time</span>
+      <h2 class="forms-title">Base Form &amp;<br><em>The Evolved State</em></h2>
+      <p class="forms-intro">Her powers are categorized into two forms — each reflecting her dominance over a different dimension of control. The base form operates in the political and personal. The evolved state is the harbinger of death and despair the Sisters of Ira worship.</p>
+    </div>
+    <div class="forms-split rv d1">
+      <!-- BASE FORM -->
+      <div class="form-base">
+        <div class="fc">
+          <div class="form-label">Base Form · Operational State</div>
+          <h3 class="form-name">The Shadow Strategist</h3>
+          <p class="form-role">Telekinesis · Whisper Spells · Cloaking · Political Warfare</p>
+          <div class="ability-list" style="margin-top:20px;">
+            <div class="ability">
+              <div class="ab-name">Telekinesis <span>// PRIMARY //</span></div>
+              <p class="ab-desc">With her mind alone, Selena can crush her enemies, fling them into the air, or disarm them. Her precision allows her to snap necks with a flick of her fingers or immobilize entire groups simultaneously. The invisible, crushing hand.</p>
+            </div>
+            <div class="ability">
+              <div class="ab-name">Whisper Spells <span>// POLITICAL //</span></div>
+              <p class="ab-desc">Plants sinister whispers in the minds of her enemies — driving them to paranoia, confusion, or madness. Victims hallucinate or turn on one another. Her most-used tool. Most of her political victories never required her to lift a finger.</p>
+            </div>
+            <div class="ability">
+              <div class="ab-name">Cloaking Aura <span>// INFILTRATION //</span></div>
+              <p class="ab-desc">Renders herself invisible to both sight and magical detection — vanishing entirely from view. Particularly effective against ethereal beasts or sorcerers. Allows her to infiltrate, assassinate, or escape without a trace.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVOLVED STATE -->
+      <div class="form-evolved">
+        <div class="fc">
+          <div class="form-label">Evolved State · Full Power</div>
+          <h3 class="form-name">The Shadow Crow — Harbinger</h3>
+          <p class="form-role">Wings · Amber Eyes · Shadow Demons · Temporal Manipulation</p>
+          <div class="ability-list" style="margin-top:20px;">
+            <div class="ability">
+              <div class="ab-name">Wings of the Shadow Crow <span>// EVOLVED //</span></div>
+              <p class="ab-desc">Gigantic black feathered wings grant supernatural speed in flight. The wings are sharp as blades — capable of slicing through steel or creating gusts that scatter enemies and level formations. The sight of them signals that negotiation has ended.</p>
+            </div>
+            <div class="ability">
+              <div class="ab-name">Amber Eyes of Lunacy <span>// EVOLVED //</span></div>
+              <p class="ab-desc">Her glowing amber-yellow eyes radiate the moons' light, disorienting foes into a state of lunacy. The light induces vivid hallucinations — enemies relive their worst fears or face nightmarish illusions until they cannot distinguish the vision from the present.</p>
+            </div>
+            <div class="ability">
+              <div class="ab-name">Summoning Shadow Demons &amp; Wraiths <span>// EVOLVED //</span></div>
+              <p class="ab-desc">Conjures shadow-born entities bound to her will. These creatures swarm her enemies — feeding on their life force and leaving behind only terror and ash. The cult reveres her most for this ability. It is the one she performs in public rituals.</p>
+            </div>
+            <div class="ability">
+              <div class="ab-name">Bloodbound Rituals <span>// EVOLVED //</span></div>
+              <p class="ab-desc">Harnesses the life energy of others to fuel her spells — allowing her to heal herself or amplify her destructive magic at the cost of her victims' lives. The Council does not know the extent of this ability. Vashti suspects it.</p>
+            </div>
+          </div>
+          <!-- Temporal tech block -->
+          <div class="temporal-note">
+            <span class="tn-label">// TEMPORAL TECHNOLOGY · SMUGGLED FROM NEW SABLEA · CLASSIFICATION: UNKNOWN TO VASHTI //</span>
+            <p class="tn-body">By fusing <strong>temporal technologies smuggled from New Sablea</strong> with her shadow magic, Selena has gained the ability to dilate time in localized areas and temporarily freeze time in small pockets — allowing her to strike or escape with complete impunity. These experiments are unstable. She does not yet fully understand the science. She does not need to fully understand something to weaponize it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--obsidian);"><span>☽</span></div>
+
+<!-- POWER & POLITICS -->
+<section class="politics">
+  <div class="pol-inner">
+    <div class="pol-grid">
+      <div class="rv">
+        <span class="sl">The Council of Shadows · Her Network · Her True Weapon</span>
+        <h2 class="pol-subtitle">The Council as<br><em>Engine of Manipulation</em></h2>
+        <p class="bp">Selena's control extends far beyond magical abilities into the political sphere, where she is a master manipulator. Her leadership of the <strong>Council of Shadows</strong> has turned it into a network of spies, assassins, and informants that operate both within Sablea and across the Nine Realms. Their loyalty is maintained through blood oaths, fear, and promises of power.</p>
+        <p class="bp">She uses the Council not only to enforce Vashti's will — but also, simultaneously, to <em>advance her own secret agenda of usurping both queens.</em> The same infrastructure that serves Vashti is quietly being redirected. The Council does not know it is being turned.</p>
+        <div class="pol-items">
+          <div class="pol-item"><span class="pi-label">Reach</span><span class="pi-val">Spies, assassins, and informants operating both within Sablea and across all Nine Realms simultaneously</span></div>
+          <div class="pol-item"><span class="pi-label">Loyalty Mechanism</span><span class="pi-val"><strong>Blood oaths, fear, and promises of power</strong> — the Council answers directly to her, not to Vashti</span></div>
+          <div class="pol-item"><span class="pi-label">Shadow Coalitions</span><span class="pi-val">Secret alliances with dissident factions within Sablea and with mercenaries and spies from rival realms — all kept from Vashti</span></div>
+          <div class="pol-item"><span class="pi-label">Foreign Influence</span><span class="pi-val">Has sown chaos in rival nations — weakening their defenses while strengthening her own position across the Nine Realms</span></div>
+        </div>
+      </div>
+      <div class="rv d1">
+        <span class="sl">The Ultimate Ambition · Ira Reincarnate</span>
+        <h2 class="pol-subtitle">Apotheosis —<br><em>a near-godlike state.</em></h2>
+        <p class="bp">Selena's ultimate ambition is to awaken <strong>Ira Reincarnate</strong> — the physical embodiment of the Moon Goddess Ira's chaotic and primal essence. She plans to sacrifice her own soul to bind Ira's power to her body, ascending to a near-godlike state. She cannot achieve this without first summoning Ira into a worthy vessel capable of holding the goddess's immense power before it is extracted.</p>
+        <p class="bp">Her cult works tirelessly to find or create such a vessel — harvesting souls and conducting horrific rituals in preparation. <em>Eris was always the intended vessel.</em> This was always the collision course with Vesper's own plans for her daughter. Only one of them can be right about what Eris is for.</p>
+        <div class="pol-items">
+          <div class="pol-item"><span class="pi-label">The Vessel Problem</span><span class="pi-val">Requires a vessel capable of containing Ira's essence before Selena can extract and bind it. Eris was chosen. Crysen prevented it.</span></div>
+          <div class="pol-item"><span class="pi-label">The Abyssal Gate</span><span class="pi-val">Has bound select cult members to the Ether-realm for limited Gate access — her temporal tech experiments operate through this connection</span></div>
+          <div class="pol-item"><span class="pi-label">Conflict with the Four Secrets</span><span class="pi-val">Thalrik views her Gate tampering as a direct threat. Loryxan views her defiance of their blood oaths as existential. She is their target.</span></div>
+          <div class="pol-item"><span class="pi-label">If Successful</span><span class="pi-val">Near-godlike state. Capable of reshaping the Nine Realms into eternal chaos and transformation. The Sisters of Ira become the governing architecture of everything.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--dusk);"><span>⚔</span></div>
+
+<!-- VASHTI vs SELENA MIRROR -->
+<section class="mirror">
+  <div class="mirror-inner">
+    <div class="rv">
+      <span class="sl">Two Queens of the Shadow Court · Zero Actual Trust</span>
+      <h2 class="big-h">
+        Mutual necessity.<br>
+        <em>Mutual awareness. Mutual patience for the right moment.</em>
+      </h2>
+      <p class="bp" style="max-width:660px;">Selena's relationship with Vashti is one of the most volatile and carefully concealed power dynamics in Sablea. Both women know the alliance is temporary. Neither has yet found the right moment to end it.</p>
+    </div>
+    <div class="mirror-split rv d1">
+      <div class="ms-vashti">
+        <div class="ms-c">
+          <span class="ms-who">The Patron · The One Who Appointed Her</span>
+          <h3 class="ms-name">Queen Vashti</h3>
+          <p class="ms-role">Theocratic Monarch · Silent Tyrant · The One Who Suspects Everything</p>
+          <p class="ms-body">Vashti relies on Selena's abilities to maintain order and enforce the Council's operations. <strong>She recognizes Selena's potential to overthrow her</strong> — but tolerates her because of the Supreme Witch's effectiveness. She does not trust Selena. She has never trusted Selena. <em>She considers the lack of trust a form of adequate insurance.</em></p>
+          <p class="ms-body">Vashti's true intentions are concealed from even Vesper. Selena's true agenda is concealed from even Vashti. They are two women who keep perfect secrets from each other — which means each of them is operating without complete information about the most dangerous person in the room.</p>
+          <div class="ms-verdict">What Vashti knows of Selena's agenda: Partial · What Selena allows Vashti to see: Curated · The gap: Existential</div>
+        </div>
+      </div>
+      <div class="ms-selena">
+        <div class="ms-c">
+          <span class="ms-who">The Servant · The One Who Intends to Kill Her Patron</span>
+          <h3 class="ms-name">Selena</h3>
+          <p class="ms-role">Supreme Witch · Chairwoman · The Hidden Sovereign in Preparation</p>
+          <p class="ms-body">Plays the role of the loyal servant with complete conviction — concealing her true intentions while quietly amassing power. <strong>Her every act of loyalty is a weapon being sharpened.</strong> She understands that Vashti watches her. She considers this a feature, not a threat — because Vashti watching means Vashti is focused on the surface, not the architecture beneath it.</p>
+          <p class="ms-body"><em>She envisions herself as the Supreme Sovereign of Sablea</em>, wielding both the Council and the Sisters of Ira as unified instruments of her command. Neither currently knows the other is part of the same chess game. That is the only remaining advantage she needs to preserve.</p>
+          <div class="ms-verdict">What Selena allows Vashti to know: A performance · What Vashti suspects: Almost enough · The gap: Not yet closed</div>
+        </div>
+      </div>
+      <div class="tension-line">
+        <span class="tl-label">// The Dynamic · The Alliance That Cannot Hold //</span>
+        <p class="tl-text"><strong>Their interactions are laced with veiled threats and unspoken challenges</strong> — a constant game of political chess where both queens seek to outmaneuver the other. Vashti tolerates Selena because she is effective. Selena serves Vashti because she is not yet ready. The day one of those conditions changes is the day Sablea's internal architecture collapses into something no one inside it will survive unchanged.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shadow);"><span>✦</span></div>
+
+<!-- CRYSEN CONFLICT -->
+<section class="crysen-sec">
+  <div class="crysen-inner">
+    <div class="rv">
+      <span class="sl">The Oracle and The Supreme Witch · Two Worldviews in Direct Conflict</span>
+      <h2 class="big-h">
+        The woman who dismissed prophecy<br>
+        <em>was defeated by the woman who embodied it.</em>
+      </h2>
+      <p class="bp" style="max-width:660px;">Selena's disdain for Crysen stems from her entirely materialistic worldview. As someone who values tangible power and control, she views Crysen's ethereal nature and reliance on prophecy as frivolous — a fundamental misread that became her most consequential strategic error.</p>
+    </div>
+    <div class="crysen-split rv d1">
+      <div class="cr-entry">
+        <span class="cr-what">Selena's View of Crysen</span>
+        <div class="cr-head">The Oracle as Irrelevant — Then as Threat</div>
+        <p class="cr-body">Selena initially dismissed Crysen's visions and questioned her relevance in Sablea's political landscape. She views the celestial, prophecy-driven worldview as incompatible with actual governance. Then Crysen began exposing the conspiracy. The dismissal became surveillance. The surveillance became the offer of a Council seat — which was itself a test of whether Crysen could be bound.</p>
+      </div>
+      <div class="cr-entry">
+        <span class="cr-what">The Council Offer — A Test and a Trap</span>
+        <div class="cr-head">Binding the Oracle to Her Arsenal</div>
+        <p class="cr-body">By offering Crysen a position on the Council of Shadows, Selena sought to turn the Oracle's foresight into another weapon in her arsenal. This offer was simultaneously a test of Crysen's loyalty and an act of manipulation — binding her celestial intelligence to Selena's political machine. Crysen recognized this. Selena did not fully account for what Crysen would do instead.</p>
+      </div>
+      <div class="cr-entry">
+        <span class="cr-what">The Abyssal Gate Confrontation</span>
+        <div class="cr-head">Selena's Plan vs. Crysen's Sacrifice</div>
+        <p class="cr-body">Selena's plan to use the Abyssal Gate for apotheosis — summoning Ira Reincarnate through Eris and extracting the goddess's essence to achieve godhood — was Crysen's primary objective to prevent. Selena could not have anticipated that the Oracle would choose self-sacrifice over merely stopping the ritual. The Twilight Hand was not in any of Selena's calculations.</p>
+      </div>
+      <div class="cr-entry">
+        <span class="cr-what">The Outcome</span>
+        <div class="cr-head">Defeated. The Cost of Dismissing Prophecy.</div>
+        <p class="cr-body">Crysen channeled the combined might of Aara and Esses — purifying the goddess through self-sacrifice, restoring cosmic balance, and closing the Gate. Selena's plan failed at the moment of its completion. Every tactical decision she made was correct except the foundational one: underestimating the woman whose weapon was truth, not power. Prophecy, as it turned out, was not a relic of a bygone era.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--obsidian);"><span>☽</span></div>
+
+<!-- SECRET AGENDA — SEALED DOSSIERS -->
+<section class="agenda">
+  <div class="agenda-inner">
+    <div class="rv">
+      <span class="sl">Her True Objectives · Hidden from Both Queens</span>
+      <h2 class="agenda-title">The Secret<br><em>Agenda</em></h2>
+      <p class="agenda-intro">Three classified operations running simultaneously beneath her public role as loyal servant. All three concealed from both Vashti and Vesper. All three already in progress.</p>
+    </div>
+    <p class="reveal-hint rv">[ Hover to declassify ]</p>
+    <div class="agenda-grid rv d1">
+      <!-- Agenda 1 -->
+      <div class="agenda-card">
+        <div class="ac-sealed">
+          <div class="ac-seal-label">// CLASSIFIED · EYES: NONE · DISTRIBUTION: ZERO //</div>
+          <div class="ac-emblem">🕸</div>
+          <div class="seal-bar" style="width:90%"></div>
+          <div class="seal-bar" style="width:76%"></div>
+          <div class="seal-bar" style="width:84%"></div>
+          <div class="seal-bar" style="width:65%"></div>
+        </div>
+        <div class="ac-revealed">
+          <div class="ac-num">I</div>
+          <span class="ac-tag">Objective One · External Network</span>
+          <h3 class="ac-name">Building Shadow Coalitions</h3>
+          <p class="ac-body">Selena has formed <strong>secret alliances with dissident factions within Sablea</strong> — as well as with mercenaries and spies from rival realms. These coalitions are kept entirely secret, allowing her to wield influence in realms far beyond Sablea's borders without Vashti or Vesper knowing the scope of her reach.</p>
+          <div class="ac-status">Status: Active · Vashti awareness: Partial · Vesper awareness: None</div>
+        </div>
+      </div>
+      <!-- Agenda 2 -->
+      <div class="agenda-card">
+        <div class="ac-sealed">
+          <div class="ac-seal-label">// CLASSIFIED · EYES: NONE · DISTRIBUTION: ZERO //</div>
+          <div class="ac-emblem">⚔</div>
+          <div class="seal-bar" style="width:82%"></div>
+          <div class="seal-bar" style="width:94%"></div>
+          <div class="seal-bar" style="width:70%"></div>
+          <div class="seal-bar" style="width:88%"></div>
+        </div>
+        <div class="ac-revealed">
+          <div class="ac-num">II</div>
+          <span class="ac-tag">Objective Two · Internal Sabotage</span>
+          <h3 class="ac-name">Sabotaging Vashti's Plans</h3>
+          <p class="ac-body">Through subtle acts of manipulation, Selena has been systematically <strong>undermining Vashti's initiatives</strong> — creating fractures in her rule without drawing suspicion. The sabotage is calibrated precisely: enough damage to weaken, not enough to trigger investigation. It has been ongoing since before the alliance was formalized.</p>
+          <div class="ac-status">Status: Active · Operations: Ongoing · Vashti awareness: Zero</div>
+        </div>
+      </div>
+      <!-- Agenda 3 -->
+      <div class="agenda-card">
+        <div class="ac-sealed">
+          <div class="ac-seal-label">// CLASSIFIED · EYES: NONE · DISTRIBUTION: ZERO //</div>
+          <div class="ac-emblem">☽</div>
+          <div class="seal-bar" style="width:87%"></div>
+          <div class="seal-bar" style="width:72%"></div>
+          <div class="seal-bar" style="width:93%"></div>
+          <div class="seal-bar" style="width:78%"></div>
+        </div>
+        <div class="ac-revealed">
+          <div class="ac-num">III</div>
+          <span class="ac-tag">Objective Three · Power Ascension</span>
+          <h3 class="ac-name">Harnessing Forbidden Magic</h3>
+          <p class="ac-body">Selena's experiments with shadow demons and blood magic — combined with temporal technologies from New Sablea — are her plan to <strong>surpass even Vesper's powers</strong>, ensuring no one can challenge her once she ascends. The experiments are unstable. The temporal technology is not fully understood. She has accepted the risk as the cost of godhood.</p>
+          <div class="ac-status">Status: Active · Stability: Deteriorating · Awareness of instability: Suppressed by obsession</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shadow);"><span>🪶</span></div>
+
+<!-- TRAGIC FLAW -->
+<section class="flaw">
+  <div class="flaw-inner">
+    <div class="rv">
+      <span class="sl">The Unraveling · What Begins to Break Her from Within</span>
+      <h2 class="big-h">The descent into madness<br><em>mirrors the chaos she seeks to unleash.</em></h2>
+      <p class="bp" style="max-width:600px;">Despite her power, Selena's lack of understanding of advanced science and her overreliance on manipulation and fear have begun to unravel her plans. Her obsession with power blinds her to the growing dissent within her cult and the increasing attention of her enemies.</p>
+    </div>
+    <div class="flaw-content rv d1">
+      <div class="fl-c">
+        <div class="fl-badge">// THE TRAGIC FLAW · THE CAUTIONARY ARC //</div>
+        <h3 class="fl-title">Paranoia, Instability,<br><em>and the Cost of the Shadows She Embraced</em></h3>
+        <p class="fl-body">As Selena teeters on the brink of godhood, her paranoia and instability grow. She fears betrayal from within her own ranks and <strong>lashes out preemptively</strong> — driving away potential allies and creating the very fractures she was trying to prevent. Her experiments with temporal technology are unstable. Her efforts to summon Ira Reincarnate are fraught with unforeseen consequences. <strong>Her descent into madness mirrors the chaos she seeks to unleash upon the Nine Realms</strong>, making her both a tragic and terrifying figure. Selena's story is a cautionary tale of the dangers of unchecked ambition — and of the corrosive effects of embracing the shadows too completely and for too long. She came from obscurity. She built herself into the most dangerous person in Sablea. And then she began to consume herself. Rise and inevitable self-destruction: these are the twin moons of her arc, and unlike Ara and Ira, they are not in balance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('lit');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('lit');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=260;this.s=65;this.l=48;}
+      else if(t<.72){this.h=200;this.s=40;this.l=55;}
+      else if(t<.86){this.h=260+20;this.s=65-15;this.l=48+15;}
+      else{this.h=200+10;this.s=40-10;this.l=55+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

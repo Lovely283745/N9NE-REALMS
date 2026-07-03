@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Draven — The Shadow Seeker | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #030408;
+  --deep:      #05060C;
+  --iron:      #080A10;
+  --obsidian:  #0B0C14;
+  --dusk:      #0E1018;
+
+  /* Amethyst violet — Noctyss soulflame */
+  --amethyst:  #2A0858;
+  --ameth-mid: #4A1090;
+  --ameth-pale:#7828C8;
+  --ameth-bright:#A840F0;
+
+  /* Mountain smoke & stone */
+  --smoke:     #284058;
+  --smoke-pale:#4A6888;
+  --smoke-bright:#708CB8;
+
+  /* Cold iron */
+  --iron-edge: #202830;
+  --iron-pale: #303C4C;
+  --iron-bright:#4A5C70;
+
+  /* Soul ember — pendant glow */
+  --soul:      #480870;
+  --soul-mid:  #6810A8;
+  --soul-pale: #9030D8;
+  --soul-bright:#C050F8;
+
+  --parch:     #A8A8B8;
+  --parch-pale:#C8C8D8;
+  --parch-dim: #404858;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Mountain atmosphere — cold from above */
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:60vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 60% 70% at 50% 0%,rgba(74,16,144,0.06) 0%,transparent 65%);animation:mountainGlow 14s ease-in-out infinite;}
+@keyframes mountainGlow{0%,100%{opacity:0.6;}50%{opacity:1;}}
+
+/* Scanline — classified document texture */
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.02) 3px,rgba(0,0,0,0.02) 4px);}
+
+/* Grain */
+.grain{position:fixed;inset:0;z-index:1000;pointer-events:none;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px;}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--ameth-pale);border-radius:0;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(74,16,144,0.45);border-radius:0;transform:translate(-50%,-50%);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.soul-active{width:46px;height:46px;border-color:var(--ameth-pale);box-shadow:0 0 12px rgba(74,16,144,0.4);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(3,4,8,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(74,16,144,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ameth-pale);opacity:0.55;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ameth-pale);border:1px solid rgba(74,16,144,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--ameth-mid);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,#120820 0%,#08060E 40%,var(--void) 70%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Mountain silhouette SVG backdrop */
+.mtn-silhouette{
+  position:absolute;bottom:0;left:0;right:0;
+  height:40vh;pointer-events:none;z-index:1;opacity:0.6;
+}
+
+/* Dragon eye glow — single amethyst pulse */
+.eye-glow{
+  position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);
+  width:120px;height:60px;
+  background:radial-gradient(ellipse,rgba(104,16,168,0.15) 0%,transparent 70%);
+  pointer-events:none;z-index:1;
+  animation:eyeGlow 6s ease-in-out infinite;
+}
+@keyframes eyeGlow{0%,100%{opacity:0.4;transform:translate(-50%,-50%) scale(1);}50%{opacity:1;transform:translate(-50%,-50%) scale(1.2);}}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-sys{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ameth-pale);opacity:0;animation:riseIn 1s .2s ease forwards;margin-bottom:16px;letter-spacing:0.06em;display:flex;align-items:center;justify-content:center;gap:12px;}
+.h-sys::before,.h-sys::after{content:'//';color:rgba(74,16,144,0.4);}
+.h-title-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(60px,12vw,150px);font-weight:900;
+  color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;
+  text-shadow:0 0 120px rgba(104,16,168,0.55),0 0 60px rgba(40,64,88,0.2),0 4px 40px rgba(0,0,0,0.9);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-sub{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,1.7vw,19px);font-weight:400;color:var(--ameth-pale);letter-spacing:0.2em;display:block;margin-top:8px;opacity:0;animation:riseIn 1s .8s ease forwards;}
+.h-rule{width:240px;height:1px;background:linear-gradient(to right,transparent,var(--ameth-mid),transparent);margin:22px auto;opacity:0;animation:fadeIn 1s 1.1s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,20px);color:rgba(168,168,184,0.4);max-width:720px;margin:0 auto 40px;line-height:1.8;opacity:0;animation:riseIn 1.2s 1.2s ease forwards;}
+.h-stats{display:flex;justify-content:center;max-width:700px;margin:0 auto;border:1px solid rgba(74,16,144,0.15);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-stat{flex:1;padding:16px 14px;text-align:center;border-right:1px solid rgba(74,16,144,0.1);}
+.h-stat:last-child{border-right:none;}
+.h-sval{font-family:'Share Tech Mono',monospace;font-size:clamp(12px,1.8vw,20px);color:var(--ameth-bright);line-height:1;margin-bottom:5px;}
+.h-slabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--ameth-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.mono{font-family:'Share Tech Mono',monospace;}
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--ameth-pale);opacity:0.5;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(74,16,144,0.2),transparent);}
+.orn-inner{position:relative;background:var(--void);padding:0 20px;z-index:1;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--ameth-mid);opacity:0.4;letter-spacing:0.08em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--ameth-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(168,168,184,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--ameth-pale);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid var(--ameth-mid);background:rgba(74,16,144,0.04);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(168,168,184,0.75);line-height:1.75;}
+.pull cite{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ameth-pale);opacity:0.4;display:block;margin-top:8px;}
+
+/* ═══ DOSSIER SECTION ═══ */
+.dossier{padding:110px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.dossier::before{content:'DRAVEN';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(120px,20vw,280px);font-weight:900;color:rgba(74,16,144,0.025);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.dos-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.dos-aside .big-d{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,13vw,170px);font-weight:400;color:rgba(74,16,144,0.09);line-height:1;margin-left:-6px;}
+.dos-aside-tag{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ameth-pale);opacity:0.5;letter-spacing:0.06em;}
+.dos-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,168,184,0.3);margin-top:6px;line-height:1.6;}
+
+/* Terminal spec table */
+.spec-table{margin-top:28px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(74,16,144,0.12);}
+.spec-row{display:grid;grid-template-columns:130px 1fr;overflow:hidden;}
+.sr-key{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--ameth-pale);opacity:0.55;background:rgba(74,16,144,0.04);padding:12px 14px;border-right:1px solid rgba(74,16,144,0.08);letter-spacing:0.04em;}
+.sr-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,168,184,0.55);padding:10px 14px;line-height:1.5;}
+.sr-val strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:36px;}
+.pg-cell{padding:16px 18px;border:1px solid rgba(74,16,144,0.08);background:rgba(74,16,144,0.02);transition:border-color .3s,background .3s;}
+.pg-cell:hover{border-color:rgba(74,16,144,0.22);background:rgba(74,16,144,0.05);}
+.pg-label{font-family:'Share Tech Mono',monospace;font-size:7px;color:var(--ameth-pale);opacity:0.45;display:block;margin-bottom:5px;letter-spacing:0.05em;}
+.pg-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,168,184,0.6);line-height:1.5;}
+
+/* ═══ NOCTYSS SECTION ═══ */
+.noctyss-sec{padding:110px 60px;background:var(--iron);}
+.noc-inner{max-width:1100px;margin:0 auto;}
+.noc-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+
+.noc-profile{
+  background:linear-gradient(180deg,#0E0A18 0%,#080612 100%);
+  padding:48px 40px;border:1px solid rgba(74,16,144,0.15);
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.noc-profile:hover{border-color:rgba(74,16,144,0.35);}
+.noc-profile::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 20%,rgba(74,16,144,0.1) 0%,transparent 70%);}
+.noc-profile::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ameth-mid),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.noc-profile:hover::after{transform:scaleX(1);}
+
+.noc-bond{
+  background:linear-gradient(180deg,#0A0C18 0%,#060810 100%);
+  padding:48px 40px;border:1px solid rgba(40,64,88,0.15);
+  position:relative;overflow:hidden;transition:border-color .3s;
+}
+.noc-bond:hover{border-color:rgba(40,64,88,0.35);}
+.noc-bond::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 80%,rgba(40,64,88,0.08) 0%,transparent 70%);}
+.noc-bond::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--smoke-pale),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.noc-bond:hover::after{transform:scaleX(1);}
+
+.nc{position:relative;z-index:1;}
+.nc-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.06em;padding:4px 12px;border:1px solid;display:inline-block;margin-bottom:14px;opacity:0.7;}
+.noc-profile .nc-label{color:var(--ameth-bright);border-color:rgba(74,16,144,0.35);}
+.noc-bond .nc-label{color:var(--smoke-bright);border-color:rgba(40,64,88,0.35);}
+.nc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,2.8vw,36px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;}
+.nc-role{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:16px;}
+.nc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,184,0.55);line-height:1.85;margin-bottom:14px;}
+.nc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.noc-profile .nc-body em{color:var(--ameth-bright);}
+.noc-bond .nc-body em{color:var(--smoke-bright);}
+
+/* ═══ EYE OF IRA PENDANT ═══ */
+.pendant-sec{padding:110px 60px;background:var(--dusk);position:relative;overflow:hidden;}
+.pendant-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(104,16,168,0.07) 0%,transparent 70%);}
+.pend-inner{max-width:1100px;margin:0 auto;}
+.pendant-layout{display:grid;grid-template-columns:1fr 1.5fr;gap:60px;margin-top:52px;align-items:start;}
+.pend-artifact{
+  padding:36px 36px;border:1px solid rgba(104,16,168,0.18);
+  background:rgba(4,2,10,0.8);position:relative;overflow:hidden;
+}
+.pend-artifact::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 40%,rgba(104,16,168,0.1) 0%,transparent 70%);}
+.pa-c{position:relative;z-index:1;}
+.pa-glyph{font-size:48px;margin-bottom:16px;opacity:0.5;display:block;text-align:center;}
+.pa-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,28px);font-weight:400;color:var(--parch-pale);margin-bottom:5px;text-align:center;}
+.pa-subtitle{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--soul-pale);opacity:0.55;margin-bottom:20px;text-align:center;letter-spacing:0.06em;}
+.pa-specs{display:flex;flex-direction:column;gap:1px;}
+.pa-spec{display:grid;grid-template-columns:80px 1fr;overflow:hidden;}
+.pas-k{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--soul-pale);opacity:0.5;background:rgba(104,16,168,0.05);padding:10px 12px;border-right:1px solid rgba(104,16,168,0.08);letter-spacing:0.04em;}
+.pas-v{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(168,168,184,0.55);padding:8px 12px;line-height:1.5;}
+.pas-v strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+.pend-body{}
+
+/* ═══ DRAGON FORM ═══ */
+.dragon-form{padding:110px 60px;background:var(--iron);position:relative;overflow:hidden;}
+.dragon-form::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(74,16,144,0.08) 0%,transparent 70%);}
+.df-inner{max-width:1200px;margin:0 auto;}
+.df-header{text-align:center;margin-bottom:60px;}
+.df-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.df-title em{font-style:italic;color:var(--ameth-bright);}
+.df-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(168,168,184,0.4);max-width:580px;margin:0 auto;line-height:1.75;}
+
+/* Classification block */
+.df-classified{
+  padding:28px 36px;border:1px solid rgba(74,16,144,0.15);
+  background:rgba(4,2,10,0.7);margin-bottom:3px;
+  display:flex;align-items:center;gap:20px;
+}
+.dfc-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ameth-pale);border:1px solid rgba(74,16,144,0.25);padding:5px 14px;white-space:nowrap;opacity:0.7;letter-spacing:0.06em;}
+.dfc-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,184,0.55);line-height:1.75;}
+.dfc-text strong{color:var(--parch-pale);font-style:normal;}
+
+/* Abilities grid */
+.df-abilities{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+.df-ab{
+  padding:32px 28px;border:1px solid rgba(74,16,144,0.1);
+  background:rgba(3,2,8,0.6);transition:border-color .3s,background .3s;
+  position:relative;overflow:hidden;
+}
+.df-ab:hover{border-color:rgba(74,16,144,0.28);background:rgba(74,16,144,0.05);}
+.df-ab::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ameth-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.df-ab:hover::before{transform:scaleX(1);}
+.dfab-sys{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ameth-pale);opacity:0.45;display:block;margin-bottom:10px;letter-spacing:0.05em;}
+.dfab-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.8vw,18px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;}
+.dfab-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,184,0.5);line-height:1.75;}
+.dfab-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Cost block */
+.df-cost{
+  margin-top:3px;padding:28px 36px;
+  border:1px solid rgba(168,0,0,0.12);background:rgba(168,0,0,0.03);
+}
+.dfc-warn{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(220,60,60,0.6);border:1px solid rgba(168,0,0,0.2);padding:4px 14px;display:inline-block;margin-bottom:12px;letter-spacing:0.06em;}
+.dfc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,184,0.55);line-height:1.85;}
+.dfc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ SABLEAN ALLIANCE ═══ */
+.alliance{padding:110px 60px;background:var(--obsidian);}
+.all-inner{max-width:1100px;margin:0 auto;}
+.all-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.all-card{
+  padding:36px 32px;border:1px solid rgba(74,16,144,0.08);
+  background:rgba(3,2,8,0.5);transition:border-color .3s,background .3s;
+  position:relative;overflow:hidden;
+}
+.all-card:hover{border-color:rgba(74,16,144,0.22);background:rgba(74,16,144,0.04);}
+.all-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--ameth-mid);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.all-card:hover::before{transform:scaleX(1);}
+.ac-glyph{font-size:22px;margin-bottom:12px;opacity:0.5;display:block;}
+.ac-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.8vw,18px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:6px;}
+.ac-role{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ameth-pale);opacity:0.45;margin-bottom:12px;letter-spacing:0.05em;}
+.ac-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,184,0.5);line-height:1.75;}
+.ac-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Vicious Tower Tribe */
+.vtt{
+  grid-column:span 2;
+  margin-top:3px;padding:28px 36px;
+  border:1px solid rgba(168,80,0,0.1);background:rgba(168,80,0,0.03);
+}
+.vtt-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(220,140,60,0.6);border:1px solid rgba(168,80,0,0.2);padding:4px 14px;display:inline-block;margin-bottom:12px;letter-spacing:0.06em;}
+.vtt-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,184,0.55);line-height:1.85;}
+.vtt-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ ERIS — THE QUIET SECTION ═══ */
+.eris-sec{padding:110px 60px;background:var(--dusk);position:relative;overflow:hidden;}
+.eris-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 40% at 50% 50%,rgba(154,90,16,0.04) 0%,transparent 70%);}
+.eris-inner{max-width:900px;margin:0 auto;}
+.eris-entry{
+  margin-top:52px;padding:40px 48px;
+  border:1px solid rgba(154,90,16,0.1);
+  background:rgba(4,2,8,0.6);
+  position:relative;overflow:hidden;
+}
+.eris-entry::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 40% at 50% 50%,rgba(154,90,16,0.05) 0%,transparent 70%);}
+.ee-c{position:relative;z-index:1;}
+.ee-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(154,90,16,0.5);border:1px solid rgba(154,90,16,0.15);padding:4px 14px;display:inline-block;margin-bottom:18px;letter-spacing:0.06em;opacity:0.7;}
+.ee-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3vw,36px);font-weight:400;color:var(--parch-pale);margin-bottom:6px;}
+.ee-sub{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:18px;}
+.ee-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.7vw,18px);color:rgba(168,168,184,0.6);line-height:1.9;margin-bottom:14px;}
+.ee-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ee-body em{color:rgba(154,90,16,0.7);}
+.ee-restraint{
+  margin-top:20px;padding:16px 20px;
+  border-left:2px solid rgba(154,90,16,0.2);
+  background:rgba(154,90,16,0.03);
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(14px,1.6vw,17px);
+  color:rgba(168,168,184,0.45);line-height:1.8;
+}
+.ee-restraint strong{color:var(--parch-pale);font-style:normal;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(74,16,144,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--ameth-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(168,168,184,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#E8E0F0;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(168,168,184,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(168,168,184,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(74,16,144,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(168,168,184,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .dossier,.noctyss-sec,.pendant-sec,.dragon-form,.alliance,.eris-sec,.page-cta{padding:80px 40px;}
+  .dos-inner{grid-template-columns:1fr;gap:40px;}
+  .noc-split{grid-template-columns:1fr;}
+  .pendant-layout{grid-template-columns:1fr;}
+  .df-abilities{grid-template-columns:1fr 1fr;}
+  .all-grid{grid-template-columns:1fr;} .vtt{grid-column:span 1;}
+  .profile-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-stats{flex-direction:column;}.h-stat{border-right:none;border-bottom:1px solid rgba(74,16,144,0.1);}.h-stat:last-child{border-bottom:none;}
+  .dossier,.noctyss-sec,.pendant-sec,.dragon-form,.alliance,.eris-sec,.page-cta{padding:60px 24px;}
+  .df-abilities{grid-template-columns:1fr;}
+  .eris-entry{padding:28px 24px;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// MOUNTAIN_NATION · SABLEAN_ALLIANCE //</span>
+  </a>
+  <div class="nav-right">
+    <a href="vesper.html" class="nav-link">Queen Vesper</a>
+    <a href="vashti.html" class="nav-link">Queen Vashti</a>
+    <a href="eris.html" class="nav-link">Lady Eris</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="eye-glow"></div>
+
+  <!-- Mountain silhouette -->
+  <div class="mtn-silhouette">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+      <defs>
+        <linearGradient id="mtnGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0C0A18" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="#030408" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+      <g fill="url(#mtnGrad)">
+        <polygon points="0,320 0,200 80,140 160,200 220,120 300,180 380,80 460,160 520,60 600,150 660,40 720,130 780,50 840,140 920,70 1000,160 1060,90 1140,170 1200,100 1280,180 1360,130 1440,200 1440,320"/>
+        <!-- Snow-capped peaks hints -->
+        <polygon points="515,60 520,50 525,60" fill="rgba(168,168,200,0.08)"/>
+        <polygon points="655,40 660,30 665,40" fill="rgba(168,168,200,0.06)"/>
+        <polygon points="775,50 780,38 785,50" fill="rgba(168,168,200,0.07)"/>
+        <polygon points="915,70 920,58 925,70" fill="rgba(168,168,200,0.05)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="h-sys">MOUNTAIN_NATION · CHIEF_SCOUT · DREADWING_CLASSIFICATION</div>
+    <span class="h-title-label">The Shadow Seeker · Chief Scout of the Dragon Fleet</span>
+    <h1 class="h-name">Draven</h1>
+    <span class="h-sub">Dreadwing — Harbinger of the Soulflame</span>
+    <div class="h-rule"></div>
+    <p class="h-tagline">He moves through courts like smoke through stone — present without announcement, gone before anyone confirms he was there. Loyal to the Mountain Nation. Allied with the Sablean Sisters. In love with the one person he refuses to endanger by admitting it.</p>
+    <div class="h-stats">
+      <div class="h-stat"><div class="h-sval">🐉</div><div class="h-slabel">Noctyss · Soulflame</div></div>
+      <div class="h-stat"><div class="h-sval">💜</div><div class="h-slabel">Eye of Ira Pendant</div></div>
+      <div class="h-stat"><div class="h-sval">☽</div><div class="h-slabel">Dragon Form</div></div>
+      <div class="h-stat"><div class="h-sval">⚠</div><div class="h-slabel">Classified Alliance</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ENTER DOSSIER //</span><div class="s-line"></div></div>
+</section>
+
+<!-- DOSSIER -->
+<section class="dossier">
+  <div class="dos-inner">
+    <div class="rv">
+      <div class="dos-aside">
+        <div class="big-d">D</div>
+        <span class="dos-aside-tag">// CHIEF_SCOUT · DRAGON_FLEET · MOUNTAIN_NATION //</span>
+        <p class="dos-aside-note">Raised in the mountain dungeons of Drakenheim. Iron discipline and quiet resolve. Speaks sparingly, calculates continuously. His visits to Sablea are unannounced and discreet. His feelings for Eris are the only thing he has never fully calculated.</p>
+      </div>
+      <div class="spec-table">
+        <div class="spec-row"><div class="sr-key">ORIGIN</div><div class="sr-val">Drakenheim · Capital of the Mountain Nation · raised in extreme conditions</div></div>
+        <div class="spec-row"><div class="sr-key">ROLE</div><div class="sr-val"><strong>Chief Scout of the Dragon Fleet</strong> · Reconnaissance specialist · Dark arcane operative</div></div>
+        <div class="spec-row"><div class="sr-key">DRAGON</div><div class="sr-val">Noctyss · The Soulflame · Purple fire that consumes body and soul simultaneously</div></div>
+        <div class="spec-row"><div class="sr-key">ARTIFACT</div><div class="sr-val"><strong>Eye of Ira Pendant</strong> · Amethyst shard from Noctyss's egg · Soul-bound power amplifier</div></div>
+        <div class="spec-row"><div class="sr-key">ALLY: SABLEA</div><div class="sr-val">Safe passage and intel from both queens · Operates with full autonomy within Sablean borders</div></div>
+        <div class="spec-row"><div class="sr-key">ENEMY</div><div class="sr-val">The Vicious Tower Tribe · Mountain warriors who threaten Sablea's regional stability</div></div>
+        <div class="spec-row"><div class="sr-key">KNOWN AS</div><div class="sr-val"><strong>Dreadwing</strong> among the Vicious Tower Tribe — a mythic figure whispered of in terror by their younger warriors</div></div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">// OPERATIVE PROFILE · THE SHADOW SEEKER //</span>
+      <h2 class="big-h">A mind always at work.<br><em>A heart kept under deliberate lock.</em></h2>
+      <p class="bp">Draven is a solitary figure by nature — preferring the dark, shadowed solitude of Drakenheim's mountain dungeons to the chaotic life of courtly intrigue. From a young age he was raised to endure extreme conditions, shaping him into a man of <strong>iron discipline and quiet resolve</strong>. This quiet demeanor conceals a mind always analyzing, calculating the smallest details, anticipating moves long before others conceive of them.</p>
+      <p class="bp">To those who know him, Draven is the epitome of self-control and caution. His training has hardened him not only physically but emotionally — he keeps his feelings buried beneath layers of discipline, lest they interfere with his duties. <em>However, his visits to Sablea and his connection with Eris have started to erode some of this composure</em>, hinting at a complexity few suspect. His feelings for her, though carefully concealed, remain one of his only weaknesses — an affection he is determined to bury for both their sakes.</p>
+      <div class="pull rv d2"><p>"His loyalty to his duty, combined with the inherent risks of entangling himself in Vesper's web, forces him to maintain a strict boundary — even as he provides Eris with guidance and support."</p><cite>// DRAKENHEIM INTELLIGENCE FILE · EXTERNAL OPERATIONS · EYES OF SORYNN ONLY //</cite></div>
+      <div class="profile-grid rv d3">
+        <div class="pg-cell"><span class="pg-label">CORE_TRAIT</span><span class="pg-val">Iron discipline and calculated calm — concealing a mind in constant motion and, beneath that, a man in conflict with his own restraint</span></div>
+        <div class="pg-cell"><span class="pg-label">COMBAT_STYLE</span><span class="pg-val">Shadow-blended reconnaissance, precision ambush, dark arcane magic channeled through the Eye of Ira pendant, Dragon Form ascension</span></div>
+        <div class="pg-cell"><span class="pg-label">UMBRAL_CONNECTION</span><span class="pg-val">Deep affinity with the Umbral Essence — shared with Vashti, amplified by his pendant, deepened further in Dragon Form</span></div>
+        <div class="pg-cell"><span class="pg-label">WEAKNESS</span><span class="pg-val">Eris. The only variable in his operational calculations he has never been able to fully eliminate or resolve.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// NOCTYSS //</div></div>
+
+<!-- NOCTYSS -->
+<section class="noctyss-sec">
+  <div class="noc-inner">
+    <div class="rv">
+      <span class="sl">// DRAGON · BOND · SOULFLAME CLASSIFICATION //</span>
+      <h2 class="big-h">Not a mount.<br><em>An extension of his will. A living embodiment of his darker nature.</em></h2>
+      <p class="bp" style="max-width:660px;">Noctyss is as enigmatic as its rider. Their bond is symbiotic — sharing a psychic connection that transcends words, thoughts and intentions perfectly aligned in both battle and strategy. Together they are known as the Dreadwing. Their movements are perfectly synchronized in combat and reconnaissance. What Draven sees, Noctyss anticipates. What Noctyss burns, Draven already knew to direct.</p>
+    </div>
+    <div class="noc-split rv d1">
+      <div class="noc-profile">
+        <div class="nc">
+          <div class="nc-label">// DRAGON_DESIGNATION: NOCTYSS //</div>
+          <h3 class="nc-name">Noctyss</h3>
+          <p class="nc-role">The Soulflame Dragon · Dreadwing's Second Self</p>
+          <p class="nc-body">Shrouded in a dark, <strong>smoke-like aura</strong> and breathing purple flames that appear to consume both body and soul, Noctyss is a terrifying force on the battlefield. These unique <em>Soulflame</em> flames do not merely burn — they consume the essence of their victims, leaving behind only ash. The consumed souls become bound to the Eye of Ira pendant, deepening Draven's connection to dark magic with every strike.</p>
+          <p class="nc-body">Noctyss's presence amplifies Draven's command over the Umbral Essence — deepening his ability to manipulate shadows and dark magic beyond what he could achieve alone. <strong>The sight of Noctyss approaching has become, for the Vicious Tower Tribe, indistinguishable from a death sentence.</strong></p>
+        </div>
+      </div>
+      <div class="noc-bond">
+        <div class="nc">
+          <div class="nc-label">// BOND_TYPE: SYMBIOTIC · PSYCHIC · UNBREAKABLE //</div>
+          <h3 class="nc-name">The Bond</h3>
+          <p class="nc-role">Psychic Synchronization · Neither Fully Dragon Nor Fully Human</p>
+          <p class="nc-body">Their bond allows them to perform feats of precision and power that surpass even the most skilled dragon-riders — <strong>their movements perfectly synchronized in combat and reconnaissance</strong>. They understand one another's intentions without a word. This unity is what makes them the Dreadwing: not one figure, but two entities functioning as a single force of calculated destruction.</p>
+          <p class="nc-body">In his Dragon Form, Noctyss and Draven become even more deeply merged. <em>The Eye of Ira pendant draws on souls consumed by Noctyss's flames</em>, creating a feedback loop of power that makes the combined entity something the Mountain Nation's records categorize simply as: <strong>singular threat, no standard countermeasure.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// EYE_OF_IRA //</div></div>
+
+<!-- EYE OF IRA PENDANT -->
+<section class="pendant-sec">
+  <div class="pend-inner">
+    <div class="rv">
+      <span class="sl">// ARTIFACT CLASSIFICATION · AMETHYST SOUL-RELIC · POWER AND COST //</span>
+      <h2 class="big-h">His greatest weapon.<br><em>His most dangerous dependency.</em></h2>
+    </div>
+    <div class="pendant-layout rv d1">
+      <div class="pend-artifact">
+        <div class="pa-c">
+          <span class="pa-glyph">💜</span>
+          <div class="pa-name">Eye of Ira Pendant</div>
+          <div class="pa-subtitle">// AMETHYST_SHARD · SOUL_BOUND · UMBRAL_CONDUIT //</div>
+          <div class="pa-specs">
+            <div class="pa-spec"><div class="pas-k">MATERIAL</div><div class="pas-v"><strong>Amethyst shards</strong> from Noctyss's egg — imbued with souls consumed by the dragon's purple flames</div></div>
+            <div class="pa-spec"><div class="pas-k">PRIMARY</div><div class="pas-v">Amplifies shadow manipulation, obscures presence entirely, enables endurance of extreme physical conditions</div></div>
+            <div class="pa-spec"><div class="pas-k">SECONDARY</div><div class="pas-v">Stores consumed souls — empowers physical strength, magical potency, and resilience with each addition</div></div>
+            <div class="pa-spec"><div class="pas-k">TERTIARY</div><div class="pas-v">Grants connection to <strong>Umbral Essence</strong> — the same primordial dark power that permeates the Dark Nation and binds him to Vashti's understanding</div></div>
+            <div class="pa-spec"><div class="pas-k">COST</div><div class="pas-v">As stored souls deplete, must replenish through combat or arcane ritual. In Dragon Form, depletion accelerates to life-siphon.</div></div>
+            <div class="pa-spec"><div class="pas-k">LEGEND</div><div class="pas-v">The Vicious Tower Tribe believes the pendant holds the souls of their fallen — <strong>its dark purple glow strikes terror</strong> before Draven's blade even clears its sheath</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="pend-body">
+        <p class="bp">The Eye of Ira pendant is both Draven's greatest weapon and his <em>curse</em>. Crafted from the amethyst shards of Noctyss's egg and imbued with the souls consumed by its devastating purple flames, <strong>the pendant grants Draven control over dark magic far beyond the ordinary</strong>. The souls within empower him — enhancing physical strength, magical potency, and resilience with each addition to the reservoir.</p>
+        <p class="bp">He can summon Noctyss's Soulflame through the pendant — unique purple fire that does not merely burn, but <em>consumes the essence of its victims</em>, leaving behind only ash. These flames are feared across the realms: their effects are irreversible. The consumed souls become bound to the pendant, deepening his connection to his dragon and bolstering his magical reserves.</p>
+        <p class="bp">The pendant has become a symbol of fear among the Vicious Tower Tribe, who believe it grants Draven dominion over the souls it holds. This is not entirely inaccurate. <strong>Some tribespeople believe the pendant is the reason for their downfall — a cursed relic that saps their strength from beyond its wearer.</strong> They are not entirely wrong about that, either.</p>
+        <div class="pull rv d1"><p>"The Vicious Tower Tribe's disdain for Draven has become legendary. He is more than just a scout to them — he is a mythic figure, an agent of death whose dark amethyst pendant is said to pulse with the souls of their fallen brethren."</p><cite>// MOUNTAIN_NATION INTELLIGENCE · EXTERNAL THREAT MYTHOLOGY FILE //</cite></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// DRAGON_FORM //</div></div>
+
+<!-- DRAGON FORM -->
+<section class="dragon-form">
+  <div class="df-inner">
+    <div class="df-header rv">
+      <span class="sl">// TRANSFORMATION · SINISTER_ASCENSION · CLASSIFICATION: EXTREME_THREAT //</span>
+      <h2 class="df-title">The Dragon Form —<br><em>A Sinister Archangel</em></h2>
+      <p class="df-intro">Draven's ability to transform into his Dragon Form is both a blessing and a curse — a manifestation of his hereditary power as a descendant of the Mountain Nation. In this form, he becomes an otherworldly figure of destruction, his human frame enhanced with draconic might and shadowy terror. No standard countermeasure exists.</p>
+    </div>
+
+    <!-- Classification block -->
+    <div class="df-classified rv d1">
+      <div class="dfc-badge">// APPEARANCE: CLASSIFIED //</div>
+      <p class="dfc-text">In Dragon Form, Draven's skin takes on a hardened, <strong>scale-like texture with an obsidian sheen</strong>. His eyes burn with violet fire. Purple flames seep from the corners of his mouth when power is fully unleashed. Ethereal <strong>shadow wings — shaped like jagged shards of night</strong> — sprout from his back, granting flight with unnerving grace. He is described by those who have survived encountering him as looking like a sinister archangel: death cloaked in shadow and flame.</p>
+    </div>
+
+    <!-- Abilities -->
+    <div class="df-abilities rv d1">
+      <div class="df-ab">
+        <div class="dfab-sys">// ABILITY_01 · SOULFLAME //</div>
+        <div class="dfab-name">Soulflame Projection</div>
+        <p class="dfab-desc">He can breathe streams of purple fire devastating everything in their path. These flames <strong>consume magic and life alike</strong>, leaving nothing but scorched earth and ash. The souls of those consumed feed directly into the Eye of Ira pendant, sustaining the transformation and deepening his power simultaneously.</p>
+      </div>
+      <div class="df-ab">
+        <div class="dfab-sys">// ABILITY_02 · AMETHYST //</div>
+        <div class="dfab-name">Amethyst Conduit</div>
+        <p class="dfab-desc">The Eye of Ira pendant <strong>glows fiercely during transformation</strong>, drawing in the energy of defeated foes to sustain the form. Allows Draven to absorb magic directed at him — converting it into raw power that can be unleashed as a destructive projectile or stored for later use. His enemies' strengths become his ammunition.</p>
+      </div>
+      <div class="df-ab">
+        <div class="dfab-sys">// ABILITY_03 · GOLDEN_BELT //</div>
+        <div class="dfab-name">Golden Dragon Scale Belt</div>
+        <p class="dfab-desc">Crafted from Noctyss's own scales — serves as both armor and weapon. <strong>Absorbs and stores opposing magic</strong>, which can be redirected with devastating precision, doubling the original spell's destructive power. Fueled by the bond between Draven and Noctyss, it neutralizes powerful magical attacks and turns enemy strengths against them.</p>
+      </div>
+    </div>
+
+    <!-- Cost block -->
+    <div class="df-cost rv d2">
+      <div class="dfc-warn">// WARNING · TRANSFORMATION_COST · CRITICAL //</div>
+      <p class="dfc-body">While immensely powerful, Draven's Dragon Form comes with <strong>significant risks</strong>. The transformation consumes the souls stored within the Eye of Ira at an alarming rate. If the reservoir runs dry, the form begins to <strong>siphon his own life force</strong>, weakening him with each passing moment. To sustain the form, Draven must remain in constant motion — attacking relentlessly to feed the pendant and prevent it from turning on him. This creates a fighting style that cannot pause, cannot defend, cannot afford mercy. The form that makes him nearly unstoppable also makes him incapable of stopping.</p>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// SABLEAN_ALLIANCE //</div></div>
+
+<!-- SABLEAN ALLIANCE -->
+<section class="alliance">
+  <div class="all-inner">
+    <div class="rv">
+      <span class="sl">// EXTERNAL_OPERATIONS · SABLEA · CLASSIFIED_ALLIANCE //</span>
+      <h2 class="big-h">He arrives unannounced.<br><em>He is always expected.</em></h2>
+      <p class="bp" style="max-width:660px;">Draven's dealings with the Sablean Sisters are shrouded in secrecy. He visits Sablea under the cover of night, arriving unannounced and slipping into the Ebony Towers through discreet pathways known only to a select few. His loyalty to the Mountain Nation demands independence — but the mutual respect between him and both queens allows for a pragmatic alliance that benefits all three.</p>
+    </div>
+    <div class="all-grid rv d1">
+      <div class="all-card">
+        <span class="ac-glyph">🩸</span>
+        <div class="ac-name">Queen Vesper</div>
+        <div class="ac-role">// TACTICAL_ASSET · POLITICAL_INTELLIGENCE //</div>
+        <p class="ac-body">Vesper sees Draven as a useful asset — particularly his ability to move undetected and gather secrets from other nations. She grants him <strong>safe passage through Sablea and shares secret intelligence</strong>, entrusting him with information that could destabilize enemy territories. In return, Draven reports pertinent knowledge from his scouting missions — particularly intel on the Vicious Tower Tribe, whose ambition threatens Vesper's regional control. His reports allow the Sisters to counteract threats before they reach Sablea's borders.</p>
+      </div>
+      <div class="all-card">
+        <span class="ac-glyph">🌒</span>
+        <div class="ac-name">Queen Vashti</div>
+        <div class="ac-role">// ARCANE_KINSHIP · UMBRAL_ESSENCE //</div>
+        <p class="ac-body">Vashti values Draven for his expertise in dark magic and his connection to the Umbral Essence. She sees in him <strong>a kindred spirit</strong> — their exchanges often silent, steeped in unspoken understanding. Both possess an affinity for darkness and secrecy that fosters a unique bond. She occasionally requests his assistance with arcane rituals requiring his power and presence. He frequently transports <strong>magical artifacts or cryptic messages</strong> to and from the Council of Shadows across realms, acting as an intermediary for forbidden knowledge.</p>
+      </div>
+      <div class="all-card">
+        <span class="ac-glyph">🏜</span>
+        <div class="ac-name">Sandstrider Mercenary Guild</div>
+        <div class="ac-role">// OPERATIONAL_COORDINATION · MUTUAL_RESPECT //</div>
+        <p class="ac-body">The SMG coordinates with Draven on missions involving reconnaissance and covert strikes against the Vicious Tower Tribe. Their alliance is one of <strong>mutual respect</strong> — the mercenaries acknowledge his superior scouting and tactical skills, while Draven values their agility and knowledge of desert terrain. He scouts the mountain ranges identifying weaknesses in the Tribe's fortresses; they provide the desert intelligence he cannot gather alone. His methods are swift and ruthless — often diminishing the Tribe's forces before they realize he's been there.</p>
+      </div>
+      <!-- Vicious Tower Tribe -->
+      <div class="vtt">
+        <div class="vtt-label">// ADVERSARY_FILE · THE VICIOUS TOWER TRIBE · DREADWING'S BANE //</div>
+        <p class="vtt-body">The Vicious Tower Tribe's disdain for Draven has become legendary. <strong>Known as Dreadwing among their warriors</strong>, he is viewed as the embodiment of terror — an avenging shadow with a dragon's soulflame at his command. The tribe's attempts to rival Sablea often end in ruin, foiled by his reconnaissance or brutal ambushes. The legend of Dreadwing has grown so potent that some tribespeople believe his pendant is the reason for their downfall — a cursed relic that saps their strength. When Draven, accompanied by the SMG, descends upon their mountain camps, his precision is merciless. <em>He strikes without warning, often weakening them to the point that the SMG can finish the job without substantial resistance.</em> Though the tribe despises him, they have come to respect his skill — the younger warriors whispering of Dreadwing as both a nightmare and a challenge to be overcome. He is, to them, mythology made real.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-inner">// RESTRICTED //</div></div>
+
+<!-- ERIS — THE QUIET SECTION -->
+<section class="eris-sec">
+  <div class="eris-inner">
+    <div class="rv" style="text-align:center;">
+      <span class="sl">// PERSONAL · NOT IN OPERATIONAL FILE · NOT DISCLOSED TO EITHER QUEEN //</span>
+      <h2 class="big-h">The one variable<br><em>he cannot calculate away.</em></h2>
+    </div>
+    <div class="eris-entry rv d1">
+      <div class="ee-c">
+        <div class="ee-label">// RESTRICTED · PERSONAL_RECORD · DRAVEN ONLY //</div>
+        <h3 class="ee-name">Eris</h3>
+        <p class="ee-sub">The Hidden Heir · Queen Vesper's Secret Daughter · His Only Acknowledged Weakness</p>
+        <p class="ee-body">In the shadows of the Sablean Exchange or the moonlit corridors of the Ebony Towers, they share quiet moments — her questions and curiosity drawing him out of his guarded shell in ways few others can. <strong>Eris sees Draven as a mentor, a mysterious figure who has walked the path of dark magic she dreams of mastering.</strong> She confides in him, seeking his wisdom on everything from the nuances of magic to the complexities of navigating the Sablean court.</p>
+        <p class="ee-body">Draven, in turn, finds himself drawn to her innocence and ambition. He senses her untapped potential and recognizes that <em>her fate is tangled with the Sablean Sisters' schemes in ways she does not yet understand.</em> Despite his feelings for her, he understands that any romantic pursuit would place both of them in grave danger. His loyalty to his duty, combined with the inherent risks of entangling himself in Vesper's web, forces him to maintain a strict boundary.</p>
+        <div class="ee-restraint">
+          He gives her fragments of advice that may aid her in the future — <strong>subtly steering her away from the more destructive paths that Vashti and Vesper have laid before her.</strong> His affection remains concealed beneath a veneer of formality. He dreams of a life beyond the shadows. He knows he must tread carefully. These two facts exist in him simultaneously, and have for some time, and he has not yet found a resolution between them. He is not sure one exists.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('shadow');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('shadow');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=205;this.s=30;this.l=55;}
+      else if(t<.72){this.h=280;this.s=55;this.l=45;}
+      else if(t<.86){this.h=205+20;this.s=30-15;this.l=55+15;}
+      else{this.h=280+10;this.s=55-10;this.l=45+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

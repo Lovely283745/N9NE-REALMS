@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Empress Morghanna — Sovereign of Morvanna | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:       #020204;
+  --crypt:      #060408;
+  --ritual:     #0A0608;
+  --throne:     #0E080C;
+  --altar:      #120A10;
+
+  /* Blood crimson — her power source */
+  --blood:      #3A0408;
+  --blood-mid:  #6A0810;
+  --blood-pale: #AA1018;
+  --blood-bright:#D01828;
+  --blood-glow: rgba(192,24,40,0.7);
+
+  /* Bone-white — her people, her aesthetic */
+  --bone:       rgba(200,192,180,0.5);
+  --bone-mid:   rgba(216,208,196,0.65);
+  --bone-pale:  #D8D0C4;
+  --bone-bright:#EDE8E0;
+
+  /* Lunar silver — the Moons she uses and hates */
+  --moon:       rgba(180,185,210,0.6);
+  --moon-mid:   rgba(200,205,230,0.7);
+  --moon-bright:#C8CCED;
+
+  /* Void-dark — Ether-Realm */
+  --ether:      rgba(40,20,60,0.7);
+  --ether-bright:#6030A0;
+
+  /* Wraithland moss-grey */
+  --wraith:     rgba(80,100,80,0.5);
+  --wraith-bright:#8CAA8C;
+
+  --parch:      #ACA4A8;
+  --parch-pale: #CAC2C6;
+  --parch-dim:  #484048;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;bottom:0;left:0;right:0;height:55vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 55% 65% at 50% 100%,rgba(58,4,8,0.09) 0%,transparent 65%);animation:bloodRise 9s ease-in-out infinite;}
+@keyframes bloodRise{0%,100%{opacity:0.5;}50%{opacity:1;}}
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.025;background:repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(192,24,40,0.04) 4px,rgba(192,24,40,0.04) 5px);}
+
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--blood-bright);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(192,24,40,0.35);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.bleed{width:46px;height:46px;border-color:var(--blood-bright);box-shadow:0 0 14px rgba(192,24,40,0.3);}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(2,2,4,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(192,24,40,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blood-bright);opacity:0.5;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--blood-bright);border:1px solid rgba(192,24,40,0.25);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--blood-pale);}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse 80% 70% at 50% 55%,#2A0408 0%,#120608 45%,var(--void) 75%);}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+/* Ritual column lines */
+.col-l,.col-r{position:absolute;top:0;bottom:0;width:1px;pointer-events:none;z-index:1;}
+.col-l{left:18%;background:linear-gradient(to bottom,transparent,rgba(192,24,40,0.06),transparent);}
+.col-r{right:18%;background:linear-gradient(to bottom,transparent,rgba(192,24,40,0.06),transparent);}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-sys{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--blood-bright);opacity:0;animation:riseIn 1s .2s ease forwards;margin-bottom:16px;letter-spacing:0.06em;display:flex;align-items:center;justify-content:center;gap:12px;}
+.h-sys::before,.h-sys::after{content:'🩸';font-size:10px;opacity:0.35;}
+.h-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;display:block;margin-bottom:8px;}
+.h-name{font-family:'Cinzel Decorative',serif;font-size:clamp(36px,6.5vw,88px);font-weight:900;color:var(--bone-bright);letter-spacing:0.04em;line-height:0.88;text-shadow:0 0 120px rgba(192,24,40,0.5),0 0 60px rgba(58,4,8,0.5),0 4px 40px rgba(0,0,0,0.95);opacity:0;animation:riseIn 1.8s .5s ease forwards;}
+.h-sub{font-family:'Cinzel',serif;font-size:clamp(10px,1.4vw,16px);letter-spacing:0.35em;text-transform:uppercase;color:var(--blood-bright);opacity:0;animation:riseIn 1s .78s ease forwards;display:block;margin-top:6px;}
+.h-rule{width:260px;height:1px;background:linear-gradient(to right,transparent,rgba(192,24,40,0.4),rgba(200,205,230,0.15),transparent);margin:20px auto;opacity:0;animation:fadeIn 1s 1.05s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-quote{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.7vw,18px);color:rgba(172,164,168,0.45);max-width:700px;margin:0 auto 36px;line-height:1.85;opacity:0;animation:riseIn 1.2s 1.15s ease forwards;border-left:2px solid rgba(192,24,40,0.35);padding-left:20px;text-align:left;}
+.h-vitals{display:flex;justify-content:center;max-width:820px;margin:0 auto;border:1px solid rgba(192,24,40,0.12);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:15px 10px;text-align:center;border-right:1px solid rgba(192,24,40,0.08);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Share Tech Mono',monospace;font-size:clamp(9px,1.4vw,15px);color:var(--blood-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--blood-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--blood-bright);opacity:0.4;display:block;margin-bottom:16px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(192,24,40,0.18),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--blood-mid);opacity:0.35;letter-spacing:0.1em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--blood-bright);}
+.big-h em.moon{color:var(--moon-bright);}
+.big-h em.ether{color:var(--ether-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(172,164,168,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--blood-pale);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid var(--blood-mid);background:rgba(58,4,8,0.07);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,20px);color:rgba(172,164,168,0.75);line-height:1.75;}
+.pull cite{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blood-bright);opacity:0.35;display:block;margin-top:10px;font-style:normal;letter-spacing:0.05em;}
+
+/* ═══ PROFILE ═══ */
+.profile-sec{padding:110px 60px;background:var(--ritual);position:relative;overflow:hidden;}
+.profile-sec::before{content:'MORGHANNA';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(60px,12vw,160px);font-weight:900;color:rgba(192,24,40,0.025);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.prof-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.prof-aside .big-m{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(192,24,40,0.08);line-height:1;margin-left:-6px;}
+.spec-table{margin-top:24px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(192,24,40,0.1);}
+.srow{display:grid;grid-template-columns:110px 1fr;overflow:hidden;}
+.srk{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blood-bright);opacity:0.45;background:rgba(192,24,40,0.03);padding:11px 12px;border-right:1px solid rgba(192,24,40,0.07);letter-spacing:0.04em;}
+.srv{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(172,164,168,0.55);padding:9px 14px;line-height:1.5;}
+.srv strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ MORVANNA ═══ */
+.morvanna-sec{padding:110px 60px;background:var(--throne);position:relative;overflow:hidden;}
+.morvanna-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 60%,rgba(58,4,8,0.08) 0%,transparent 70%);}
+.morv-inner{max-width:1100px;margin:0 auto;}
+.morv-split{display:grid;grid-template-columns:1.2fr 1fr;gap:3px;margin-top:52px;}
+.morv-card{padding:36px 32px;border:1px solid rgba(192,24,40,0.1);background:rgba(4,2,4,0.7);position:relative;overflow:hidden;transition:border-color .3s;}
+.morv-card:hover{border-color:rgba(192,24,40,0.3);}
+.morv-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--blood-mid),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.morv-card:hover::after{transform:scaleX(1);}
+.mc-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--blood-bright);border:1px solid rgba(192,24,40,0.2);padding:3px 12px;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.mc-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,20px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;}
+.mc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,164,168,0.55);line-height:1.85;}
+.mc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.mc-body em{color:var(--blood-pale);}
+
+/* ═══ THE PACT & THE MOONS ═══ */
+.moons-sec{padding:110px 60px;background:var(--altar);position:relative;overflow:hidden;}
+.moons-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 50% at 50% 50%,rgba(40,20,60,0.07) 0%,transparent 70%);}
+.moons-inner{max-width:1200px;margin:0 auto;}
+/* The Pact block */
+.pact-block{margin-top:52px;padding:40px;border:1px solid rgba(192,24,40,0.15);background:rgba(6,2,4,0.85);position:relative;overflow:hidden;}
+.pact-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(58,4,8,0.08) 0%,transparent 70%);}
+.pact-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--blood-mid),transparent);}
+.pb-c{position:relative;z-index:1;}
+.pb-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--blood-bright);border:1px solid rgba(192,24,40,0.22);padding:4px 14px;display:inline-block;margin-bottom:14px;opacity:0.7;letter-spacing:0.05em;}
+.pb-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,34px);font-weight:400;color:var(--parch-pale);margin-bottom:10px;}
+.pb-title em{font-style:italic;color:var(--blood-bright);}
+.pb-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,164,168,0.6);line-height:1.9;max-width:820px;}
+.pb-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.pb-body em{color:var(--blood-pale);}
+
+/* 8 Moons grid */
+.moons-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:3px;}
+.moon-card{padding:22px 20px;border:1px solid rgba(200,205,230,0.07);background:rgba(4,2,8,0.6);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.moon-card:hover{border-color:rgba(200,205,230,0.2);background:rgba(200,205,230,0.03);}
+.moon-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(200,205,230,0.35),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.moon-card:hover::after{transform:scaleX(1);}
+.mc-num{font-family:'Cinzel Decorative',serif;font-size:22px;color:rgba(200,205,230,0.12);line-height:1;margin-bottom:4px;}
+.mc-moon-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.4vw,15px);letter-spacing:0.15em;color:var(--moon-bright);margin-bottom:2px;}
+.mc-domain{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--moon-mid);opacity:0.45;letter-spacing:0.04em;display:block;margin-bottom:7px;}
+.mc-power{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(172,164,168,0.45);line-height:1.6;margin-bottom:6px;}
+.mc-effect{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(192,24,40,0.55);line-height:1.5;padding-top:6px;border-top:1px solid rgba(192,24,40,0.08);}
+.mc-effect strong{color:var(--blood-pale);font-style:normal;}
+
+/* Hated moons */
+.hate-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:3px;}
+.hate-card{padding:22px 22px;border:1px solid rgba(192,24,40,0.08);background:rgba(58,4,8,0.04);transition:border-color .3s;}
+.hate-card:hover{border-color:rgba(192,24,40,0.22);}
+.hc-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--blood-bright);opacity:0.5;letter-spacing:0.05em;display:block;margin-bottom:8px;}
+.hc-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.7vw,18px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:5px;}
+.hc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(172,164,168,0.5);line-height:1.75;}
+.hc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ WRAITHLANDS & ETHER-REALM ═══ */
+.wraith-sec{padding:110px 60px;background:var(--ritual);position:relative;overflow:hidden;}
+.wraith-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 60%,rgba(40,20,60,0.08) 0%,transparent 70%);}
+.wraith-inner{max-width:1100px;margin:0 auto;}
+.era-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.era-card{padding:32px 28px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.ec-phys{border-color:rgba(192,24,40,0.1);background:linear-gradient(160deg,#120408 0%,#0A0208 100%);}
+.ec-ether{border-color:rgba(40,20,60,0.14);background:linear-gradient(160deg,#0A0614 0%,#060410 100%);}
+.ec-phys:hover{border-color:rgba(192,24,40,0.28);}
+.ec-ether:hover{border-color:rgba(96,48,160,0.3);}
+.era-card::before{content:'';position:absolute;inset:0;}
+.ec-phys::before{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(192,24,40,0.07) 0%,transparent 70%);}
+.ec-ether::before{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(40,20,60,0.09) 0%,transparent 70%);}
+.era-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.era-card:hover::after{transform:scaleX(1);}
+.ec-phys::after{background:linear-gradient(to right,transparent,var(--blood-mid),transparent);}
+.ec-ether::after{background:linear-gradient(to right,transparent,var(--ether-bright),transparent);}
+.er-inner{position:relative;z-index:1;}
+.er-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 12px;border:1px solid;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.ec-phys .er-badge{color:var(--blood-bright);border-color:rgba(192,24,40,0.25);}
+.ec-ether .er-badge{color:var(--ether-bright);border-color:rgba(40,20,60,0.3);}
+.er-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);margin-bottom:8px;}
+.er-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,164,168,0.55);line-height:1.85;}
+.er-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ec-phys .er-body em{color:var(--blood-pale);}
+.ec-ether .er-body em{color:var(--ether-bright);}
+
+/* Queen Amyra */
+.amyra-block{margin-top:3px;padding:32px 36px;border:1px solid rgba(40,20,60,0.15);background:rgba(4,2,10,0.8);position:relative;overflow:hidden;}
+.amyra-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(40,20,60,0.08) 0%,transparent 70%);}
+.amyra-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--ether-bright),transparent);}
+.amyra-c{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.5fr;gap:50px;align-items:start;}
+.amyra-aside{}
+.aa-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ether-bright);border:1px solid rgba(40,20,60,0.3);padding:3px 12px;display:inline-block;margin-bottom:10px;opacity:0.7;letter-spacing:0.05em;}
+.aa-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,2.8vw,36px);font-weight:400;color:var(--parch-pale);margin-bottom:6px;}
+.aa-sub{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:10px;display:block;}
+.aa-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,164,168,0.55);line-height:1.85;}
+.aa-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.aa-body em{color:var(--ether-bright);}
+/* Talisman tiers */
+.talisman-list{display:flex;flex-direction:column;gap:2px;}
+.tal-row{display:grid;grid-template-columns:120px 1fr;border:1px solid rgba(192,24,40,0.07);overflow:hidden;transition:border-color .3s;}
+.tal-row:hover{border-color:rgba(192,24,40,0.22);}
+.tal-tier{padding:12px 14px;background:rgba(58,4,8,0.1);border-right:1px solid rgba(192,24,40,0.06);display:flex;align-items:center;justify-content:center;}
+.tt-name{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--blood-pale);opacity:0.7;text-align:center;line-height:1.5;}
+.tal-body{padding:12px 16px;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(12px,1.4vw,14px);color:rgba(172,164,168,0.5);line-height:1.6;}
+.tal-body strong{color:var(--parch-pale);font-style:normal;}
+
+/* ═══ SILENT FOREST TRIBE ═══ */
+.tribe-sec{padding:110px 60px;background:var(--throne);}
+.tribe-inner{max-width:1200px;margin:0 auto;}
+.sect-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.sect-block{padding:32px 28px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.sb-morv{border-color:rgba(140,170,140,0.1);background:linear-gradient(160deg,#080E08 0%,#060C06 100%);}
+.sb-wraith{border-color:rgba(192,24,40,0.1);background:linear-gradient(160deg,#120408 0%,#0C0306 100%);}
+.sb-morv:hover{border-color:rgba(140,170,140,0.26);}
+.sb-wraith:hover{border-color:rgba(192,24,40,0.28);}
+.sect-block::before{content:'';position:absolute;inset:0;}
+.sb-morv::before{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(80,120,80,0.06) 0%,transparent 70%);}
+.sb-wraith::before{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(192,24,40,0.07) 0%,transparent 70%);}
+.sect-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.sect-block:hover::after{transform:scaleX(1);}
+.sb-morv::after{background:linear-gradient(to right,transparent,rgba(140,170,140,0.5),transparent);}
+.sb-wraith::after{background:linear-gradient(to right,transparent,var(--blood-mid),transparent);}
+.sect-c{position:relative;z-index:1;}
+.sect-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 12px;border:1px solid;display:inline-block;margin-bottom:12px;opacity:0.7;letter-spacing:0.05em;}
+.sb-morv .sect-badge{color:var(--wraith-bright);border-color:rgba(140,170,140,0.25);}
+.sb-wraith .sect-badge{color:var(--blood-bright);border-color:rgba(192,24,40,0.25);}
+.sect-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);margin-bottom:8px;}
+.sect-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(172,164,168,0.55);line-height:1.85;margin-bottom:12px;}
+.sect-body strong{color:var(--parch-pale);font-style:normal;}
+.sb-morv .sect-body em{color:var(--wraith-bright);}
+.sb-wraith .sect-body em{color:var(--blood-pale);}
+/* Key members */
+.members-list{display:flex;flex-direction:column;gap:2px;padding-top:12px;border-top:1px solid rgba(172,164,168,0.07);}
+.member-row{padding:10px 12px;border:1px solid rgba(172,164,168,0.06);background:rgba(0,0,0,0.2);transition:border-color .3s;}
+.member-row:hover{border-color:rgba(172,164,168,0.18);}
+.mr-name{font-family:'Cinzel',serif;font-size:clamp(10px,1.3vw,14px);letter-spacing:0.12em;color:var(--parch-pale);margin-bottom:2px;}
+.mr-role{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--blood-bright);opacity:0.45;letter-spacing:0.04em;display:block;margin-bottom:4px;}
+.mr-body{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(172,164,168,0.45);line-height:1.5;}
+.mr-body strong{color:rgba(172,164,168,0.65);font-style:normal;}
+
+/* ═══ RELATIONSHIPS ═══ */
+.rel-sec{padding:100px 60px;background:var(--altar);position:relative;overflow:hidden;}
+.rel-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(58,4,8,0.06) 0%,transparent 70%);}
+.rel-inner{max-width:1100px;margin:0 auto;}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+.rel-card{padding:26px 22px;border:1px solid rgba(192,24,40,0.08);background:rgba(4,2,4,0.5);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.rel-card:hover{border-color:rgba(192,24,40,0.22);background:rgba(58,4,8,0.05);}
+.rel-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--blood-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.rel-card:hover::after{transform:scaleX(1);}
+.rc-who{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--blood-bright);opacity:0.45;display:block;margin-bottom:6px;letter-spacing:0.05em;}
+.rc-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.7vw,18px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:4px;}
+.rc-dynamic{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.28em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:9px;display:block;}
+.rc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(172,164,168,0.5);line-height:1.75;}
+.rc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.rc-body em{color:var(--blood-pale);}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(192,24,40,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--blood-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(172,164,168,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#EDE8E0;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(172,164,168,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;}
+.btn-g:hover{border-color:rgba(172,164,168,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(192,24,40,0.07);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(172,164,168,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .profile-sec,.morvanna-sec,.moons-sec,.wraith-sec,.tribe-sec,.rel-sec,.page-cta{padding:80px 40px;}
+  .prof-inner{grid-template-columns:1fr;gap:40px;}
+  .morv-split,.era-split,.sect-split,.amyra-c{grid-template-columns:1fr;}
+  .moons-grid{grid-template-columns:1fr 1fr;}
+  .rel-grid{grid-template-columns:1fr 1fr;}
+  .hate-split{grid-template-columns:1fr;}
+  .amyra-c{grid-template-columns:1fr;gap:28px;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .profile-sec,.morvanna-sec,.moons-sec,.wraith-sec,.tribe-sec,.rel-sec,.page-cta{padding:60px 24px;}
+  .moons-grid{grid-template-columns:1fr;}
+  .rel-grid{grid-template-columns:1fr;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(192,24,40,0.08);}
+  .tal-row{grid-template-columns:1fr;} .tal-tier{border-right:none;border-bottom:1px solid rgba(192,24,40,0.06);}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// DARK_NATION · MORVANNA · BLOOD_MAGIC · MISTRESS_OF_RITUAL //</span>
+  </a>
+  <div class="nav-right">
+    <a href="vesper.html" class="nav-link">Queen Vesper</a>
+    <a href="vashti.html" class="nav-link">Queen Vashti</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="col-l"></div><div class="col-r"></div>
+  <div class="hero-content">
+    <div class="h-sys">DARK_NATION · MORVANNA · BLOOD_MAGIC · VYZION'S_CELESTIAL_HAND · MOTHER_OF_VESPER_AND_VASHTI</div>
+    <span class="h-label">Empress · Sovereign of Morvanna · Mistress of Blood Magic · Mother of the Sablean Queens</span>
+    <h1 class="h-name">Empress Morghanna</h1>
+    <span class="h-sub">The Mistress of Blood Magic · Celestial Hand of Vyzion · Sovereign of the Wraithlands</span>
+    <div class="h-rule"></div>
+    <div class="h-quote">"To sustain her power, Morghanna must drain the life force of others, engaging in blood magic of unparalleled intensity. She blames the Goddesses of Fertility and Love for her tragic fate — and has never forgiven them for what she had to become to survive without their gifts."</div>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">Blood</div><div class="h-vlabel">Magic Discipline</div></div>
+      <div class="h-vital"><div class="h-vval">Vyzion</div><div class="h-vlabel">Celestial Patron</div></div>
+      <div class="h-vital"><div class="h-vval">VIII</div><div class="h-vlabel">Vyzion's Moons</div></div>
+      <div class="h-vital"><div class="h-vval">Vesper &amp; Vashti</div><div class="h-vlabel">Twin Daughters</div></div>
+      <div class="h-vital"><div class="h-vval">Wraithlands</div><div class="h-vlabel">Territory · Ether-Realm Gateway</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ENTER MORVANNA //</span><div class="s-line"></div></div>
+</section>
+
+<!-- PROFILE -->
+<section class="profile-sec">
+  <div class="prof-inner">
+    <div class="rv">
+      <div class="prof-aside">
+        <div class="big-m">M</div>
+        <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--blood-bright);opacity:0.4;letter-spacing:0.06em;">// SOVEREIGN · BLOOD_MAGIC · DARK_PACT · VYZION'S_CELESTIAL_HAND //</span>
+        <div class="spec-table" style="margin-top:20px;">
+          <div class="srow"><div class="srk">TITLE</div><div class="srv"><strong>Empress and Sovereign of Morvanna</strong> — the most hostile and brutal city within the Dark Nation. Mistress of Blood Magic.</div></div>
+          <div class="srow"><div class="srk">DAUGHTERS</div><div class="srv"><strong>Vesper and Vashti</strong> — twin daughters born of a dark pact with a malevolent ancient force. The only children she could ever have.</div></div>
+          <div class="srow"><div class="srk">POWER</div><div class="srv">Must <strong>drain the life force of others</strong> to sustain her vitality and power. Blood magic, soul-binding, and necromancy of unparalleled intensity.</div></div>
+          <div class="srow"><div class="srk">PATRON</div><div class="srv"><strong>Vyzion</strong> (God of Connection to the Divine) and <strong>Idohr</strong> (God of Life Cycles) — appointed her Celestial Hand in mortal affairs, granting executive power over living and undead entities.</div></div>
+          <div class="srow"><div class="srk">HATED</div><div class="srv"><strong>Ira</strong> (Goddess of Fertility) and <strong>Vephy</strong> (Goddess of Love) — blamed for her tragic fate. Morvanna openly defies most Moon Gods and Goddesses.</div></div>
+          <div class="srow"><div class="srk">TERRITORY</div><div class="srv">Morvanna in the physical realm + the <strong>Wraithlands</strong> — gateway to the Ether-Realm and Old Crimson City. One of the few mortals with direct access to the Dead Zones.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">// PROFILE · EMPRESS MORGHANNA · THE PRICE OF POWER //</span>
+      <h2 class="big-h">She wanted children.<br><em>She paid everything she had to have them.</em></h2>
+      <p class="bp">Queen Morghanna stands as one of the most formidable rulers in the Dark Nation — one who <strong>openly defies the guidance of most of the Moon Gods and Goddesses</strong>. Her hatred for celestial influence stems from personal tragedy and the harrowing price she paid for power. She is not simply a ruler who chose darkness. She is a woman who was refused the most ordinary human experience and made the extraordinary pay for it.</p>
+      <p class="bp">Her rise to power is rooted in dark tragedy: her desperation for children led her to make a soul-shattering pact with a malevolent ancient force. This pact granted her the birth of her twin daughters <em>Vesper and Vashti</em>, but it also cursed her to sustain her vitality by draining the life force of others. <strong>To have her daughters, she had to become something that could never stop consuming.</strong></p>
+      <div class="pull rv d2"><p>"She blames the Goddess of Fertility for all that she could never have. She blames the Goddess of Love for all the softness that led to her downfall. What Morghanna has never admitted is that she also blames herself — which is why the blood magic never stops."</p><cite>// MORVANNA_COURT_ARCHIVE · CLASSIFIED //</cite></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">🩸</div></div>
+
+<!-- MORVANNA -->
+<section class="morvanna-sec">
+  <div class="morv-inner">
+    <div class="rv">
+      <span class="sl">// MORVANNA · THE_TERRITORY · BLOOD_RITES · THE_PEOPLE //</span>
+      <h2 class="big-h">The most hostile city<br><em>in the Dark Nation.</em></h2>
+      <p class="bp" style="max-width:680px;">Morvanna is not merely a city steeped in blood magic — it is a civilization built around it. The landscape is harsh and twisted, with dead forests and the Wraithlands lying on its outskirts, teeming with spirits and wraiths. The people are fierce, primal, and dark, honed by centuries of violent tradition.</p>
+    </div>
+    <div class="morv-split rv d1">
+      <div class="morv-card">
+        <div class="mc-badge">// THE_PEOPLE · ASHEN_AND_CRIMSON //</div>
+        <div class="mc-name">The Citizens of Morvanna</div>
+        <p class="mc-body">The people of Morvanna are <strong>heavily influenced by blood magic</strong> and have a direct connection to the Ether-Realm due to the proximity of the Wraithlands. Many are practitioners of necromancy, blood rites, and soul-binding magic — not just mages but warriors, honed by centuries of violent tradition. Their magic often comes with physical and emotional sacrifice, and many Morvannans are scarred from the various rites of passage they endure.</p>
+        <p class="mc-body" style="margin-top:10px;">Citizens have skin tones of <em>ashen white or dark crimson</em>, reflecting their connection to blood rituals and necromancy. They are adorned with ritualistic tattoos that symbolize their personal sacrifices to maintain their magical prowess. The city is ruled by a brutal hierarchy where only the strongest and most cunning survive.</p>
+      </div>
+      <div class="morv-card">
+        <div class="mc-badge">// TRADITIONS · BLOODLETTING · SOUL_BINDING //</div>
+        <div class="mc-name">Traditions & Culture</div>
+        <p class="mc-body">Morvanna is a city of constant power struggles where <strong>blood rites and sacrifices are a way of life</strong>. Festivals of bloodletting and soul-binding are frequent, honoring the Lords of the Eternal Void and Moon God Idohr, the god of life and death. The people have a deep respect for the wraiths and spirits that inhabit the Wraithlands, seeing them as guides and enforcers of their rituals.</p>
+        <p class="mc-body" style="margin-top:10px;">Those who honor Morghanna's rule do so through fear. Those who worship the Moons do so in secret — aware that their Empress despises the celestial order her people have never fully abandoned. This creates a permanent <em>tension at the spiritual core of Morvanna</em> that the Silent Forest Tribe exploits with deliberate precision.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☽</div></div>
+
+<!-- THE PACT AND THE MOONS -->
+<section class="moons-sec">
+  <div class="moons-inner">
+    <div class="rv">
+      <span class="sl">// THE_DARK_PACT · VYZION · IDOHR · EIGHT_MOONS · THE_CELESTIAL_HAND //</span>
+      <h2 class="big-h">She refuses the Moons.<br><em>They use her anyway.</em></h2>
+    </div>
+    <div class="pact-block rv d1">
+      <div class="pb-c">
+        <div class="pb-badge">// THE_DARK_PACT · VESPER_AND_VASHTI · THE_PRICE //</div>
+        <h3 class="pb-title">The Pact That Made <em>Everything Else Inevitable</em></h3>
+        <p class="pb-body">Morghanna's desperation for children led her to a pact with a malevolent ancient force. It granted her Vesper and Vashti — twin daughters, alive, hers. <strong>The cost was a curse: she must drain the life force of others to sustain her own vitality and power. She can never stop.</strong> Every day she lives is a day someone else dies to let her. She has spent centuries making peace with this and has never fully succeeded.</p>
+        <p class="pb-body" style="margin-top:12px;">While Morghanna rejects most of the Moons, she aligns with <strong>Vyzion</strong> (God of Connection to the Divine) and <strong>Idohr</strong> (God of Life Cycles). Both recognize her as a powerful agent capable of wreaking havoc upon the mortal and ethereal realms. Vyzion, in particular, elevated her to the role of <em>"Celestial Hand" in mortal affairs</em> — granting her executive power to shape the affairs of not only the living but also the undead and soul-bound entities across the Nine Realms. She does not follow his commands blindly. She is an executor of chaos, and that is precisely what he requires.</p>
+      </div>
+    </div>
+
+    <!-- 8 Moons -->
+    <div class="rv d1" style="margin-top:3px;"><span class="sl" style="padding:10px 0;display:block;">// VYZION'S_EIGHT_MOONS · THEIR_POWER_OVER_MORGHANNA //</span></div>
+    <div class="moons-grid rv d2">
+      <div class="moon-card"><div class="mc-num">I</div><div class="mc-moon-name">Tynak</div><span class="mc-domain">// MOON_OF_DIVINE_COMMUNICATION //</span><p class="mc-power">Allows mortals to communicate directly with gods, spirits, and celestial beings.</p><p class="mc-effect"><strong>Morghanna's use:</strong> Negotiates with spirits and trapped souls within the Ether-Realm — ensuring her power over the undead remains unrivaled.</p></div>
+      <div class="moon-card"><div class="mc-num">II</div><div class="mc-moon-name">Asher</div><span class="mc-domain">// MOON_OF_VEILS //</span><p class="mc-power">Governs the veils between realms — empowers crossing between the physical and Ether-Realms.</p><p class="mc-effect"><strong>Morghanna's use:</strong> Controls the Dead Zones of the Wraithlands, manipulates the flow of souls, amplifies blood magic's reach into the Ether-Realm.</p></div>
+      <div class="moon-card"><div class="mc-num">III</div><div class="mc-moon-name">Sytrix</div><span class="mc-domain">// MOON_OF_SECRETS //</span><p class="mc-power">Reveals hidden truths and secrets long lost to time.</p><p class="mc-effect"><strong>Morghanna's use:</strong> Uncovers ancient knowledge through soul-binding techniques, furthering mastery of forbidden magic and dominance over enemies.</p></div>
+      <div class="moon-card"><div class="mc-num">IV</div><div class="mc-moon-name">Velros</div><span class="mc-domain">// MOON_OF_MADNESS //</span><p class="mc-power">Induces madness — pushes mortals to the brink through overexposure to divine power.</p><p class="mc-effect"><strong>Morghanna's use:</strong> Drives enemies insane, trapping their minds in eternal torment — breaking the wills of those who oppose her, rendering them useless.</p></div>
+      <div class="moon-card"><div class="mc-num">V</div><div class="mc-moon-name">Lior</div><span class="mc-domain">// MOON_OF_BINDING //</span><p class="mc-power">Governs soul-binding and blood oaths — promises made in his name are unbreakable.</p><p class="mc-effect"><strong>Morghanna's use:</strong> Forged countless blood pacts that cannot be broken. Soul-bound servants forced to carry out her bidding — and beyond their deaths.</p></div>
+      <div class="moon-card"><div class="mc-num">VI</div><div class="mc-moon-name">Eriah</div><span class="mc-domain">// MOON_OF_JUDGEMENT //</span><p class="mc-power">Represents divine judgment — weighs the scales of fate and doles out karmic punishment.</p><p class="mc-effect"><strong>Morghanna's use:</strong> Casts judgment on others, determining the fates of enemies — shaping the balance between life and death entirely in her favor.</p></div>
+      <div class="moon-card"><div class="mc-num">VII</div><div class="mc-moon-name">Othros</div><span class="mc-domain">// MOON_OF_REVELATION //</span><p class="mc-power">Reveals cosmic knowledge — both enlightening and damning truths simultaneously.</p><p class="mc-effect"><strong>Morghanna's use:</strong> Channels in search of ultimate knowledge, unlocking ancient magical techniques and hidden truths that give greater command over dark forces.</p></div>
+      <div class="moon-card"><div class="mc-num">VIII</div><div class="mc-moon-name">Nalys</div><span class="mc-domain">// MOON_OF_CORRUPTION //</span><p class="mc-power">Governs corruption — twists the moral compass of mortals, turning virtues into vices.</p><p class="mc-effect"><strong>Morghanna's use:</strong> Corrupts the hearts and minds of others — turning loyal allies into treacherous enemies to destabilize rivals in both the Dark and Celestial Nations.</p></div>
+    </div>
+
+    <!-- Moons she hates -->
+    <div class="rv d2" style="margin-top:3px;"><span class="sl" style="padding:10px 0;display:block;">// THE_MOONS_SHE_DESPISES · PERSONAL_HATRED //</span></div>
+    <div class="hate-split rv d3">
+      <div class="hate-card">
+        <div class="hc-badge">// IRA · GODDESS_OF_FERTILITY · ACTIVELY_HATED //</div>
+        <div class="hc-name">Ira — Goddess of Fertility</div>
+        <p class="hc-body">Represents all that Morghanna could never have — <strong>natural birth and nurturing growth</strong> — forcing Morghanna into a position where she had to forsake the natural order of life for power. Ira did not take her fertility. But in Morghanna's understanding of what she had to sacrifice to have Vesper and Vashti, Ira's domain is the constant reminder of how far outside the natural order she had to step. <em>She will never forgive the goddess for existing.</em></p>
+      </div>
+      <div class="hate-card">
+        <div class="hc-badge">// VEPHY · GODDESS_OF_LOVE · MORE_ACTIVELY_HATED //</div>
+        <div class="hc-name">Vephy — Goddess of Love</div>
+        <p class="hc-body">Hated even more than Ira — Vephy represents the <strong>warmth of love, connection, and passion</strong>, the emotions Morghanna once craved but has since turned her back on. In Morghanna's eyes, both goddesses represent the softness and vulnerability that led to her downfall as a woman seeking a family. She did not simply lose love. She paid for the one thing love was supposed to give her freely, and paid the kind of price that makes love itself feel like a trap that was set for her specifically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">🌑</div></div>
+
+<!-- THE WRAITHLANDS & ETHER-REALM -->
+<section class="wraith-sec">
+  <div class="wraith-inner">
+    <div class="rv">
+      <span class="sl">// THE_WRAITHLANDS · ETHER-REALM · OLD_CRIMSON_CITY · QUEEN_AMYRA //</span>
+      <h2 class="big-h">Two realities.<br><em>One cursed territory. One living ghost city.</em></h2>
+      <p class="bp" style="max-width:680px;">Centuries ago, the Celestial Nation unleashed their most powerful weapon — the <strong>Sun-Breaker</strong> — on Crimson City, vaporizing it and condemning the souls of its inhabitants to exist as wraiths in the Ether-Realm. The physical realm became the Wraithlands. The Ether-Realm became Old Crimson City — still thriving, still ruled, still dangerous. Morghanna controls the gateway between both.</p>
+    </div>
+    <div class="era-split rv d1">
+      <div class="era-card ec-phys">
+        <div class="er-inner">
+          <div class="er-badge">// PHYSICAL_REALM · THE_WRAITHLANDS //</div>
+          <h3 class="er-name">The Wraithlands</h3>
+          <p class="er-body">Dead forests, abandoned ghost towns, and cursed lands where the souls of the dead wander aimlessly. A place of savage cults practicing forbidden magics, dark creatures hunting for lost souls, and malevolent spirits that can cross from the Ether-Realm under certain conditions. <strong>Traveling through the Wraithlands without Ethereal Talismans is almost certain death.</strong> The Wraithway Gateways scattered across the region provide access to the Ether-Realm, but only those with the proper talismans or mastery over dark magic can use them. <em>Morghanna has direct access to the Dead Zones here</em> — one of the few mortals who can manipulate both realms simultaneously.</p>
+        </div>
+      </div>
+      <div class="era-card ec-ether">
+        <div class="er-inner">
+          <div class="er-badge">// ETHER-REALM · OLD_CRIMSON_CITY //</div>
+          <h3 class="er-name">Old Crimson City</h3>
+          <p class="er-body">In the Ether-Realm, <strong>Crimson City still stands as it did centuries ago</strong> — teeming with twisted life, its souls retaining all the knowledge, secrets, and power they held in life, condemned to eternal unrest. Neither heaven nor hell — a liminal prison where time and space operate differently. Wraith and Wraithlords, Ethereal Creatures, Archons and Dark Archons, Templars and Dark Templars all inhabit this realm. <em>Queen Amyra</em> rules Old Crimson City, once meek and humble in life, now a powerful warrior-queen gathering followers of lost souls who remember her good deeds — and seeking justice for what Lady Nyxara did to her.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Queen Amyra + Talismans -->
+    <div class="amyra-block rv d2">
+      <div class="amyra-c">
+        <div class="amyra-aside">
+          <div class="aa-badge">// QUEEN_AMYRA · ETHER-REALM_SOVEREIGN //</div>
+          <h3 class="aa-name">Queen Amyra</h3>
+          <span class="aa-sub">Once meek. Now warrior-queen. Betrayed by Lady Nyxara.</span>
+          <p class="aa-body">Queen Amyra of Morvanna was betrayed by <strong>Lady Nyxara</strong> and lost her life, becoming bound to the Ether-Realm. Yet her mastery of soulbinding magic allowed her to overcome the Wraithlord that claimed her soul. In the Ether-Realm she has become a powerful figure — establishing herself as a warrior queen, gathering a following of lost souls who honor her memory and sense of justice. She commands an ethereal version of Crimson City, <em>serving as a symbol of hope</em> within the otherwise dangerous Wraithlands, fighting to protect souls from predatory wraiths and dark entities. She cannot return to the physical realm. Her followers honor her through rituals. Her influence bleeds through.</p>
+        </div>
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--blood-bright);opacity:0.4;margin-bottom:12px;letter-spacing:0.05em;">// ETHEREAL_TALISMANS · THREE_TIERS //</div>
+          <div class="talisman-list">
+            <div class="tal-row"><div class="tal-tier"><div class="tt-name">Common<br>Talisman</div></div><div class="tal-body">Basic protection during ethereal travel — binds the traveler's soul to a return path. Used for short journeys and basic trade across the Wraithlands.</div></div>
+            <div class="tal-row"><div class="tal-tier"><div class="tt-name">Upgraded<br>Talisman</div></div><div class="tal-body">Allows interaction with ethereal creatures — <strong>grants control over wraiths and dark spirits</strong>. Greater protection for dark sorcerers seeking to harness the Ether-Realm's power.</div></div>
+            <div class="tal-row"><div class="tal-tier"><div class="tt-name">Rare<br>Talisman</div></div><div class="tal-body"><strong>Grants immortality within the physical realm</strong> — allows return from death as long as the talisman remains intact. The ultimate control: command ethereal armies and interact freely with the realm's inhabitants.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">🌿</div></div>
+
+<!-- THE SILENT FOREST TRIBE -->
+<section class="tribe-sec">
+  <div class="tribe-inner">
+    <div class="rv">
+      <span class="sl">// THE_SILENT_FOREST_TRIBE · TWO_SECTS · KEY_MEMBERS · MOON_ALLEGIANCE //</span>
+      <h2 class="big-h">They worship the Moons<br><em>inside Morghanna's own territory.</em></h2>
+      <p class="bp" style="max-width:680px;">The Silent Forest Tribe is one of the most mysterious groups in the Nine Realms — descended from the ancient inhabitants of Old Crimson City, with unique access to the Ether-Realm through their ancestry. Their consistent worship of the Moons places them in high favor with celestial entities. <strong>This makes them a quiet, constant source of ideological conflict within Morghanna's kingdom.</strong> She cannot destroy them without creating martyrs. She cannot convert them without abandoning her hatred of the Moons. She tolerates them — and that tolerance costs her more than she admits.</p>
+    </div>
+    <div class="sect-split rv d1">
+      <!-- MORVANNA SECT -->
+      <div class="sect-block sb-morv">
+        <div class="sect-c">
+          <div class="sect-badge">// MORVANNA_SECT · DENSE_SHADOWY_FORESTS //</div>
+          <h3 class="sect-name">Morvanna Sect</h3>
+          <p class="sect-body">Deep in the shadowy forests — known for their eerie silence during hunts and rituals. They <em>speak only through gestures and symbols</em> to avoid attracting malicious entities. Spirit Walkers can travel into the Ether-Realm to commune with ancient spirits using ethereal talismans. <strong>Silent Combat specialists</strong> — highly trained in stealth and ambush. Often serve as spies for the Dark Nation and lend services to Vesper and Vashti when subtlety is required.</p>
+          <div class="members-list">
+            <div class="member-row"><div class="mr-name">Chieftain Zykaris</div><span class="mr-role">// CHIEFTAIN · FAVORED_BY_YASIS //</span><p class="mr-body">Master of covert operations, tasked by Yasis to infiltrate the highest political echelons of Morvanna. Holds an upgraded talisman — communes with the lost souls of Old Crimson City for subterfuge.</p></div>
+            <div class="member-row"><div class="mr-name">Shaman Lythara</div><span class="mr-role">// SPIRITUAL_LEADER · FAVORED_BY_IDOHR //</span><p class="mr-body">Astral projection — guides dark rites that honor the cycle of life, death, and rebirth. Keeper of <strong>rare talismans</strong> that protect the tribe from malevolent forces in the Ether-Realm.</p></div>
+            <div class="member-row"><div class="mr-name">Widow-Maker Talissa</div><span class="mr-role">// MASTER_OF_ASSASSINS · FAVORED_BY_JATYYA //</span><p class="mr-body">Dream-weaving abilities — uses nightmares as weapons. Enters the dreams of powerful figures in Morvanna to deliver lethal messages. Executes covert assassinations for the Moons.</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- WRAITHLANDS SECT -->
+      <div class="sect-block sb-wraith">
+        <div class="sect-c">
+          <div class="sect-badge">// WRAITHLANDS_SECT · RUINS_OF_OLD_CRIMSON_CITY //</div>
+          <h3 class="sect-name">Wraithlands Sect</h3>
+          <p class="sect-body">Far more savage — living among the ruins, practicing dark rituals to harness the Ether-Realm. They worship Wraithlords and powerful ethereal beings, seeking their favor for power and protection. <em>Wraithbinding</em> — capable of binding wraiths for combat, protection, or intelligence. <strong>Blood Rituals</strong> involving spirits and lost souls. Outsiders are rarely welcome and often sacrificed. A destabilizing force in the region, causing unrest near Crimson City and feared by even the most powerful sorcerers.</p>
+          <div class="members-list">
+            <div class="member-row"><div class="mr-name">Dark Mage Kaeldros</div><span class="mr-role">// HIGH_MAGE · FAVORED_BY_VYZION //</span><p class="mr-body">Wields the ability to summon ethereal creatures and bind wraiths. Tasked by Vyzion with building a network of spiritual alliances in the Ether-Realm. Holds one of the <strong>rarest talismans</strong> — bends even the most powerful wraiths to his command.</p></div>
+            <div class="member-row"><div class="mr-name">Wraithcaller Myrrha</div><span class="mr-role">// ORACLE · FAVORED_BY_ESSES //</span><p class="mr-body">Communicates directly with lost souls of the Wraithlands — bridge between living and dead. Connection with Esses grants celestial communication, preventing spirits from wreaking havoc on the physical world.</p></div>
+            <div class="member-row"><div class="mr-name">Blood Witch Zevanna</div><span class="mr-role">// HIGH_PRIESTESS · FAVORED_BY_AARA //</span><p class="mr-body">Blood magic allows dark rituals that reshape the physical world — transforms creatures or landscapes. <strong>Aara grants immense power to bring about transformation</strong>, both personal and environmental. Frequently travels to the Ether-Realm with upgraded talisman.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">🩸</div></div>
+
+<!-- RELATIONSHIPS -->
+<section class="rel-sec">
+  <div class="rel-inner">
+    <div class="rv">
+      <span class="sl">// RELATIONSHIP_WEB · BLOOD_TIES · RIVALS · CELESTIAL_ENEMIES //</span>
+      <h2 class="big-h">Every relationship<br><em>is a transaction in blood.</em></h2>
+    </div>
+    <div class="rel-grid rv d1">
+      <div class="rel-card">
+        <span class="rc-who">// VESPER · ELDER_TWIN_DAUGHTER //</span>
+        <div class="rc-name">Queen Vesper</div>
+        <span class="rc-dynamic">Blood Queen of Sablea · The Ambition She Recognizes</span>
+        <p class="rc-body">Morghanna sees in Vesper the ruthlessness she herself cultivated — the cold, unrelenting drive to secure her daughter's claim to Ashura's throne by any means necessary. <strong>Vesper's pursuit of Eris's recognition as Dante II's heir mirrors Morghanna's own pact</strong>: the willingness to sacrifice everything for a bloodline. Morghanna approves, even when she does not say so.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// VASHTI · YOUNGER_TWIN_DAUGHTER //</span>
+        <div class="rc-name">Queen Vashti</div>
+        <span class="rc-dynamic">Queen Mage of Sablea · The Patience She Respects</span>
+        <p class="rc-body">Vashti's patience and deep sorcery remind Morghanna of what she herself might have been without the pact — a practitioner of immense, disciplined power operating at a measured pace. <strong>Vashti inherited her mother's capacity for faith in dark practice</strong>. Her mastery of bloodbinding and old sorcery carries Morghanna's lineage in a different expression than Vesper's. Both daughters carry her. Neither fully knows what she paid to have them.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// DUKE_VALTOR · FIERCE_RIVAL //</span>
+        <div class="rc-name">Duke Valtor of Vanthelon</div>
+        <span class="rc-dynamic">Abyssal Keep Rival · Cold War of Influence</span>
+        <p class="rc-body">Valtor views Morghanna with deep mistrust — she seeks immortality and <strong>views the Abyssal Keep as the means to achieve it</strong>. He guards the Keep and regards her as one of the primary threats to his oath. She regards his oath as the primary obstacle to her goal. Neither has made a direct move. Both know the other is circling. The cold war between them is conducted entirely through proxy alliances and territorial positioning.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// LADY_NYXARA · DIRECT_ENEMY //</span>
+        <div class="rc-name">Lady Nyxara of Tenebris</div>
+        <span class="rc-dynamic">Betrayer of Queen Amyra · Ideological Rival</span>
+        <p class="rc-body">Nyxara <strong>betrayed Queen Amyra</strong>, condemning her to the Ether-Realm — which Morghanna both exploits and resents. As rulers in the same Dark Nation, their ambitions circle the same resources and the same ancient powers. <em>Morghanna does not trust Nyxara</em> in the way one rival does not trust another who has already demonstrated the capacity for that particular kind of betrayal.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// QUEEN_AMYRA · COMPLICATED_ASSET //</span>
+        <div class="rc-name">Queen Amyra</div>
+        <span class="rc-dynamic">Ether-Realm Sovereign · Enemy of the Enemy</span>
+        <p class="rc-body">Amyra rules Old Crimson City in the Ether-Realm and cannot return to the physical world. <strong>Morghanna's access to the Dead Zones depends partly on Amyra's continued influence in the Ether-Realm</strong> — making them reluctant co-dependent powers across realms. Amyra opposes what Morghanna represents in the physical realm. Morghanna needs what Amyra maintains in the ethereal one. They have found a way to coexist with this.  </p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// VYZION_AND_IDOHR · PATRONS //</span>
+        <div class="rc-name">Vyzion & Idohr</div>
+        <span class="rc-dynamic">Moon Patrons · She Serves Without Submitting</span>
+        <p class="rc-body">She does not follow Vyzion's commands blindly. She is <strong>an executor of chaos</strong> — which is precisely what he requires. The distinction matters to her: she is not his servant, she is his instrument, and there is a difference she insists upon in private even when the practical effect is the same. Idohr understands the cycles of life and death as she does them — through blood, through necessity, through the cost that power always extracts eventually.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="page-cta">
+  <div class="page-cta-inner rv">
+    <span class="sl" style="display:block;text-align:center;margin-bottom:20px;">// EMPRESS_MORGHANNA · SOVEREIGN_OF_MORVANNA · MOTHER_OF_THE_SABLEAN_QUEENS //</span>
+    <h2>She paid everything<br><em>to have two daughters.</em></h2>
+    <p>And then she spent centuries making the world pay for what the act of having them cost her. Vesper and Vashti carry her blood. They do not fully know what she paid to make that blood theirs.</p>
+    <div class="cta-row">
+      <a href="vesper.html" class="btn-p">Queen Vesper — Elder Twin →</a>
+      <a href="vashti.html" class="btn-g">Queen Vashti — Younger Twin →</a>
+      <a href="duke-valtor.html" class="btn-g">Duke Valtor →</a>
+      <a href="lady-nyxara.html" class="btn-g">Lady Nyxara →</a>
+    </div>
+  </div>
+</div>
+<footer><span class="fc">Nine Realms Universe — Empress Morghanna · Sovereign of Morvanna · Mistress of Blood Magic · Original IP</span><span class="fc">Created by Ron</span></footer>
+
+<script>
+try{
+
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('.morv-card,.moon-card,.era-card,.hate-card,.sect-block,.member-row,.rel-card,.tal-row').forEach(el=>{el.addEventListener('mouseenter',()=>ring.classList.add('bleed'));el.addEventListener('mouseleave',()=>ring.classList.remove('bleed'));});
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+/* Particles — blood crimson + bone white + lunar silver + ether purple */
+const canvas=document.getElementById('heroCanvas'),ctx=canvas.getContext('2d');
+let W,H,pts=[];
+function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
+window.addEventListener('resize',resize);resize();
+class BloodMote{
+  constructor(){this.reset(true);}
+  reset(init=false){
+    this.x=Math.random()*W;
+    this.y=init?Math.random()*H:(Math.random()<0.5?H+6:-6);
+    this.vx=(Math.random()-.5)*0.4;
+    this.vy=this.y>0?-(Math.random()*0.7+0.1):(Math.random()*0.7+0.1);
+    this.r=Math.random()*2+0.2;
+    this.life=init?Math.random():1;
+    this.decay=Math.random()*0.004+0.001;
+    this.wobble=(Math.random()-.5)*0.018;
+    const t=Math.random();
+    if(t<0.4){this.h=350+Math.random()*15;this.s=75;this.l=35;}     // blood crimson
+    else if(t<0.58){this.h=30+Math.random()*15;this.s=15;this.l=75;} // bone white
+    else if(t<0.74){this.h=225+Math.random()*20;this.s=25;this.l=68;}// lunar silver
+    else if(t<0.86){this.h=275+Math.random()*20;this.s=45;this.l=45;}// ether purple
+    else{this.h=355+Math.random()*10;this.s=60;this.l=50;}            // bright blood
+  }
+  update(){
+    this.x+=this.vx+Math.sin(Date.now()*0.0004+this.x*0.007)*this.wobble;
+    this.y+=this.vy;
+    this.life-=this.decay;
+    if(this.life<=0||this.y<-6||this.y>H+6)this.reset();
+  }
+  draw(){
+    ctx.save();
+    ctx.globalAlpha=this.life*0.55;
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;
+    if(this.r>1.2){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}
+    ctx.fill();
+    ctx.restore();
+  }
+}
+for(let i=0;i<75;i++)pts.push(new BloodMote());
+(function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Chronicle — Nine Realms Story Arcs</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root {
+  --ink:       #08060A;
+  --ink-mid:   #110D16;
+  --ink-lift:  #1C1622;
+  --parch:     #D4B896;
+  --parch-dim: #9A8570;
+  --parch-pale:#EDE0CE;
+  --ember:     #B8732A;
+  --ember-bright:#D4893A;
+  --ember-pale:#E8C090;
+  --ash:       #4A3F52;
+
+  /* Arc accent colors — one per arc -->  */
+  --fire:   #C04020;
+  --fire2:  #A83018;
+  --dragon: #8A6030;
+  --order:  #803020;
+  --void:   #401878;
+  --twin:   #B86820;
+  --desert: #C08020;
+  --shadow: #481068;
+  --purge:  #902018;
+  --echo:   #706040;
+  --veil:   #581868;
+  --phoenix:#B04018;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--ink);
+  color:var(--parch);
+  font-family:'Jost',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-font-smoothing:antialiased;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  pointer-events:none;
+  opacity:0.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size:128px 128px;
+}
+
+/* cursor */
+.cur{ position:fixed; pointer-events:none; z-index:9999; }
+.cur-dot{ width:6px;height:6px;background:var(--parch);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:difference; }
+.cur-ring{ width:34px;height:34px;border:1px solid rgba(212,184,150,0.35);border-radius:50%;transform:translate(-50%,-50%);transition:transform .5s cubic-bezier(.16,1,.3,1); }
+
+/* nav */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  padding:26px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s,padding .4s;
+}
+.nav.scrolled{
+  background:rgba(8,6,10,0.94);
+  backdrop-filter:blur(12px);
+  padding:16px 60px;
+  border-bottom:1px solid rgba(212,184,150,0.06);
+}
+.nav-home{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:400;
+  color:var(--parch-pale);
+  letter-spacing:0.12em;
+  text-decoration:none;
+  display:flex;flex-direction:column;gap:2px;
+}
+.nav-home-sub{
+  font-family:'Jost',sans-serif;
+  font-size:8px;letter-spacing:0.45em;
+  color:var(--ember);opacity:0.7;
+  text-transform:uppercase;
+}
+.nav-label{
+  font-family:'Jost',sans-serif;
+  font-size:9px;letter-spacing:0.4em;
+  color:var(--parch-dim);text-transform:uppercase;opacity:0.5;
+}
+
+/* hero */
+.hero{
+  min-height:60vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:140px 40px 80px;
+  position:relative;
+  overflow:hidden;
+  background:var(--ink);
+}
+.hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 40%, rgba(184,115,42,0.06) 0%, transparent 70%);
+}
+.hero-pre{
+  font-family:'Jost',sans-serif;font-size:9px;
+  letter-spacing:0.55em;color:var(--ember);
+  text-transform:uppercase;opacity:0;
+  animation:riseIn 1.2s .2s ease forwards;
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:16px;
+}
+.hero-pre::before,.hero-pre::after{
+  content:'';display:block;
+  width:40px;height:1px;background:rgba(184,115,42,0.4);
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(42px,9vw,110px);
+  font-weight:300;color:var(--parch-pale);
+  letter-spacing:0.08em;line-height:0.95;
+  opacity:0;animation:riseIn 1.6s .4s ease forwards;
+}
+.hero-title em{
+  display:block;font-style:italic;
+  color:var(--ember-pale);font-size:0.5em;
+  letter-spacing:0.2em;margin-top:10px;
+}
+.hero-rule{
+  width:1px;height:0;
+  background:linear-gradient(to bottom,var(--ember),transparent);
+  margin:32px auto;
+  animation:lineGrow 1s .9s ease forwards;
+}
+@keyframes lineGrow{ to{ height:50px; } }
+.hero-desc{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(15px,2vw,20px);
+  color:rgba(212,184,150,0.55);
+  max-width:580px;line-height:1.75;
+  opacity:0;animation:riseIn 1.2s 1.2s ease forwards;
+}
+@keyframes riseIn{
+  from{opacity:0;transform:translateY(22px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* stats band */
+.stats-band{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:0;
+  border-top:1px solid rgba(212,184,150,0.08);
+  border-bottom:1px solid rgba(212,184,150,0.08);
+  background:var(--ink-mid);
+}
+.stat-item{
+  padding:40px 60px;
+  text-align:center;
+  border-right:1px solid rgba(212,184,150,0.06);
+}
+.stat-item:last-child{border-right:none;}
+.stat-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5vw,56px);
+  font-weight:300;color:var(--ember-pale);
+  line-height:1;margin-bottom:8px;
+}
+.stat-label{
+  font-family:'Jost',sans-serif;
+  font-size:8px;letter-spacing:0.4em;
+  color:var(--parch-dim);text-transform:uppercase;opacity:0.5;
+}
+
+/* arc layout */
+.arcs-wrapper{
+  max-width:1300px;
+  margin:0 auto;
+  padding:100px 60px;
+}
+
+.arc-entry{
+  display:grid;
+  grid-template-columns:80px 1fr;
+  gap:0 40px;
+  padding:60px 0;
+  border-bottom:1px solid rgba(212,184,150,0.06);
+  position:relative;
+  opacity:0;transform:translateY(30px);
+  transition:opacity .9s ease,transform .9s ease;
+}
+.arc-entry.visible{opacity:1;transform:translateY(0);}
+.arc-entry:last-child{border-bottom:none;}
+
+/* Arc number column */
+.arc-num-col{
+  display:flex;flex-direction:column;
+  align-items:flex-end;
+  padding-top:6px;
+}
+.arc-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,6vw,80px);
+  font-weight:300;
+  line-height:1;
+  letter-spacing:-0.02em;
+  opacity:0.12;
+  transition:opacity .4s;
+}
+.arc-entry:hover .arc-num{opacity:0.25;}
+.arc-divider{
+  width:1px;
+  flex:1;
+  margin-top:12px;
+  min-height:30px;
+}
+
+/* Arc body */
+.arc-body{padding-left:0;}
+.arc-meta{
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:18px;flex-wrap:wrap;
+}
+.arc-tag{
+  font-family:'Jost',sans-serif;
+  font-size:8px;letter-spacing:0.4em;
+  text-transform:uppercase;
+  padding:5px 14px;
+  border:1px solid;
+  opacity:0.7;
+}
+.arc-themes{
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.arc-theme{
+  font-family:'Jost',sans-serif;
+  font-size:8px;letter-spacing:0.25em;
+  text-transform:uppercase;
+  color:var(--parch-dim);opacity:0.5;
+}
+.arc-theme::before{content:'· ';}
+.arc-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(26px,3.5vw,46px);
+  font-weight:400;color:var(--parch-pale);
+  line-height:1.1;margin-bottom:20px;
+}
+.arc-desc{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:clamp(15px,1.7vw,18px);
+  color:rgba(212,184,150,0.6);
+  line-height:1.85;
+  max-width:700px;
+  margin-bottom:24px;
+}
+.arc-theme-row{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-top:20px;
+}
+.arc-theme-pill{
+  font-family:'Jost',sans-serif;
+  font-size:9px;letter-spacing:0.25em;
+  text-transform:uppercase;
+  color:var(--parch-dim);
+  border:1px solid rgba(212,184,150,0.1);
+  padding:6px 14px;
+  transition:border-color .3s,color .3s;
+}
+.arc-entry:hover .arc-theme-pill{
+  border-color:rgba(212,184,150,0.22);
+  color:var(--parch);
+}
+
+/* accent line left edge */
+.arc-entry::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;
+  width:2px;height:0;
+  transition:height .6s cubic-bezier(.16,1,.3,1);
+}
+.arc-entry:hover::before{height:100%;}
+
+/* Arc-specific accent colors */
+.arc-1 .arc-num{color:var(--fire);}
+.arc-1 .arc-divider{background:var(--fire);}
+.arc-1 .arc-tag{color:var(--fire);border-color:var(--fire);}
+.arc-1::before{background:var(--fire);}
+
+.arc-2 .arc-num{color:var(--fire2);}
+.arc-2 .arc-divider{background:var(--fire2);}
+.arc-2 .arc-tag{color:var(--fire2);border-color:var(--fire2);}
+.arc-2::before{background:var(--fire2);}
+
+.arc-3 .arc-num{color:var(--dragon);}
+.arc-3 .arc-divider{background:var(--dragon);}
+.arc-3 .arc-tag{color:var(--dragon);border-color:var(--dragon);}
+.arc-3::before{background:var(--dragon);}
+
+.arc-4 .arc-num{color:var(--order);}
+.arc-4 .arc-divider{background:var(--order);}
+.arc-4 .arc-tag{color:var(--order);border-color:var(--order);}
+.arc-4::before{background:var(--order);}
+
+.arc-5 .arc-num{color:var(--void);}
+.arc-5 .arc-divider{background:var(--void);}
+.arc-5 .arc-tag{color:var(--void);border-color:var(--void);}
+.arc-5::before{background:var(--void);}
+
+.arc-6 .arc-num{color:var(--twin);}
+.arc-6 .arc-divider{background:var(--twin);}
+.arc-6 .arc-tag{color:var(--twin);border-color:var(--twin);}
+.arc-6::before{background:var(--twin);}
+
+.arc-7 .arc-num{color:var(--desert);}
+.arc-7 .arc-divider{background:var(--desert);}
+.arc-7 .arc-tag{color:var(--desert);border-color:var(--desert);}
+.arc-7::before{background:var(--desert);}
+
+.arc-8 .arc-num{color:var(--shadow);}
+.arc-8 .arc-divider{background:var(--shadow);}
+.arc-8 .arc-tag{color:var(--shadow);border-color:var(--shadow);}
+.arc-8::before{background:var(--shadow);}
+
+.arc-9 .arc-num{color:var(--purge);}
+.arc-9 .arc-divider{background:var(--purge);}
+.arc-9 .arc-tag{color:var(--purge);border-color:var(--purge);}
+.arc-9::before{background:var(--purge);}
+
+.arc-10 .arc-num{color:var(--echo);}
+.arc-10 .arc-divider{background:var(--echo);}
+.arc-10 .arc-tag{color:var(--echo);border-color:var(--echo);}
+.arc-10::before{background:var(--echo);}
+
+.arc-11 .arc-num{color:var(--veil);}
+.arc-11 .arc-divider{background:var(--veil);}
+.arc-11 .arc-tag{color:var(--veil);border-color:var(--veil);}
+.arc-11::before{background:var(--veil);}
+
+.arc-12 .arc-num{color:var(--phoenix);}
+.arc-12 .arc-divider{background:var(--phoenix);}
+.arc-12 .arc-tag{color:var(--phoenix);border-color:var(--phoenix);}
+.arc-12::before{background:var(--phoenix);}
+
+/* Characters referenced -->  */
+.arc-characters{
+  margin-top:24px;
+  padding-top:20px;
+  border-top:1px solid rgba(212,184,150,0.06);
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.arc-char-label{
+  font-family:'Jost',sans-serif;
+  font-size:8px;letter-spacing:0.35em;
+  color:var(--parch-dim);text-transform:uppercase;opacity:0.4;
+  margin-right:4px;
+}
+.arc-char{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-size:13px;color:rgba(212,184,150,0.45);
+}
+.arc-char+.arc-char::before{content:' · ';}
+
+/* footer cta -->  */
+.arc-cta{
+  background:var(--ink-mid);
+  border-top:1px solid rgba(212,184,150,0.06);
+  padding:100px 60px;
+  text-align:center;
+}
+.arc-cta h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,4vw,52px);
+  font-weight:300;color:var(--parch-pale);
+  margin-bottom:16px;line-height:1.2;
+}
+.arc-cta h2 em{font-style:italic;color:var(--ember-pale);}
+.arc-cta p{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:17px;
+  color:rgba(212,184,150,0.45);
+  max-width:520px;margin:0 auto 44px;line-height:1.75;
+}
+.btn-back{
+  font-family:'Jost',sans-serif;font-size:11px;
+  font-weight:400;letter-spacing:0.35em;
+  text-transform:uppercase;color:var(--ink);
+  background:var(--parchment);
+  padding:16px 36px;text-decoration:none;
+  display:inline-block;
+  transition:background .3s;
+}
+.btn-back:hover{background:var(--ember-pale);}
+
+footer{
+  background:var(--ink);
+  border-top:1px solid rgba(212,184,150,0.06);
+  padding:40px 60px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.footer-copy{
+  font-family:'Jost',sans-serif;font-size:11px;font-weight:300;
+  color:rgba(212,184,150,0.2);letter-spacing:0.1em;
+}
+
+@media(max-width:768px){
+  .nav{padding:20px 24px;}
+  .nav.scrolled{padding:14px 24px;}
+  .hero{padding:120px 24px 60px;}
+  .stat-item{padding:30px 30px;}
+  .arcs-wrapper{padding:60px 24px;}
+  .arc-entry{grid-template-columns:50px 1fr;gap:0 20px;}
+  .arc-cta{padding:70px 24px;}
+  footer{padding:30px 24px;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-home">
+    Nine Realms
+    <span class="nav-home-sub">Return to Hub</span>
+  </a>
+  <span class="nav-label">The Chronicle · Story Arcs</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-pre">The Aftermath & Ascension of Queen Calypso</p>
+  <h1 class="hero-title">
+    The Chronicle
+    <em>Twelve Arcs. One Age.</em>
+  </h1>
+  <div class="hero-rule"></div>
+  <p class="hero-desc">
+    Every arc is a thread in the greater tapestry of the Nine Realms.
+    Pull one — and the entire universe shifts.
+    These are the stories that will define every throne, every alliance,
+    and every soul caught between destiny and choice.
+  </p>
+</section>
+
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stat-item">
+    <div class="stat-num">12</div>
+    <div class="stat-label">Story Arcs</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">9</div>
+    <div class="stat-label">Nations Involved</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">5</div>
+    <div class="stat-label">Primary Themes</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">Consequences</div>
+  </div>
+</div>
+
+<!-- ALL 12 ARCS -->
+<div class="arcs-wrapper">
+
+  <!-- ARC 1 -->
+  <div class="arc-entry arc-1">
+    <div class="arc-num-col">
+      <span class="arc-num">I</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · Ashura</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Ambition</span>
+          <span class="arc-theme">Science vs. Tradition</span>
+          <span class="arc-theme">Leadership</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Emberfall Accord</h2>
+      <p class="arc-desc">The Emberfall Alchemical Project reaches its final stages — and begins to destabilize. Catastrophic volcanic eruptions threaten to tear the Fire Nation apart from within. Queen Calypso, alongside Aurelian and Ashur, must race against time to contain the disaster. Meanwhile dissent fractures the council, with members questioning whether the pursuit of such dangerous power was ever worth the cost. The arc forces a reckoning with the true price of ambition — and the delicate balance between progress and the traditions that hold a civilization together.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">Consequences of unchecked ambition</span>
+        <span class="arc-theme-pill">Science vs. tradition</span>
+        <span class="arc-theme-pill">The burden of leadership</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">Aurelian</span>
+        <span class="arc-char">Ashur</span>
+        <span class="arc-char">The Fire Nation Council</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 2 -->
+  <div class="arc-entry arc-2">
+    <div class="arc-num-col">
+      <span class="arc-num">II</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · Political Intrigue</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Loyalty</span>
+          <span class="arc-theme">Betrayal</span>
+          <span class="arc-theme">Fragility of Power</span>
+        </div>
+      </div>
+      <h2 class="arc-title">Shadows of Betrayal</h2>
+      <p class="arc-desc">As tensions between the Fire Nation and the Desert Nation simmer, Calypso uncovers something far more dangerous than any external enemy — a conspiracy within her own ranks. Members of her council, influenced by outside forces, have been secretly working to undermine her rule. Calypso must identify the traitors and navigate a web of deceit that threatens to unravel Ashura from within. New political players enter the arena, and the intricate web of alliances and rivalries across the Nine Realms grows darker and more volatile.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">Loyalty and betrayal</span>
+        <span class="arc-theme-pill">Political intrigue</span>
+        <span class="arc-theme-pill">The fragility of power</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">The Fire Nation Council</span>
+        <span class="arc-char">King Orious</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 3 -->
+  <div class="arc-entry arc-3">
+    <div class="arc-num-col">
+      <span class="arc-num">III</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · Mountain Nation</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Diplomacy</span>
+          <span class="arc-theme">Reconciliation</span>
+          <span class="arc-theme">Alliance</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Dragon's Accord</h2>
+      <p class="arc-desc">In the aftermath of Calypso's decision to reach out to Sorynn, the two kingdoms enter a delicate series of diplomatic negotiations. The complex relationship between Fire and Mountain unfolds — old wounds and unresolved conflicts threaten to derail every step toward peace. Both Calypso and Sorynn must confront the full weight of their pasts and the legacy of their respective nations if they hope to secure a united front against the enemies that surround them both.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">Diplomacy and reconciliation</span>
+        <span class="arc-theme-pill">Impact of past conflicts</span>
+        <span class="arc-theme-pill">The strength of alliances</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">King Sorynn of Drakenheim</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 4 -->
+  <div class="arc-entry arc-4">
+    <div class="arc-num-col">
+      <span class="arc-num">IV</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · Faction War</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Radicalism</span>
+          <span class="arc-theme">Unchecked Power</span>
+          <span class="arc-theme">Mentorship & Rivalry</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Rise of the Infernal Order</h2>
+      <p class="arc-desc">Solara, the leader of the Secret Infernal Order, begins her campaign to seize control of Ashura — exploiting the chaos of the Desert Nation conflict and the Emberfall project's fallout. Gathering followers and secretly mastering forbidden dark fire magic, Solara challenges Calypso's authority with a radical vision that could fracture the Fire Nation beyond repair. The tension between Solara's extremism and Calypso's rule culminates in a fierce power struggle that will determine what the Fire Nation truly stands for.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">Radicalism vs. tradition</span>
+        <span class="arc-theme-pill">Consequences of unchecked power</span>
+        <span class="arc-theme-pill">Mentorship and rivalry</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">Solara</span>
+        <span class="arc-char">The Secret Infernal Order</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 5 -->
+  <div class="arc-entry arc-5">
+    <div class="arc-num-col">
+      <span class="arc-num">V</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Dark Nation · Vanthelon</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Time</span>
+          <span class="arc-theme">Moral Implications</span>
+          <span class="arc-theme">Balance of Power</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Obsidian Hourglass</h2>
+      <p class="arc-desc">Lady Nyxara — having successfully manipulated Zyphor and Kyphos — discovers ancient texts buried within the Abyssal Keep that hint at something far more dangerous than conquest: time manipulation. Her pursuit of this forbidden knowledge could alter the course of history itself, rewriting the fate of the Nine Realms in favor of the Dark Nation. Calypso, aware of the threat Nyxara poses, must find a way to counter this new menace before the balance of power is permanently and irreparably altered.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">The dangers of tampering with time</span>
+        <span class="arc-theme-pill">Moral implications of altered history</span>
+        <span class="arc-theme-pill">Balance of power between nations</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Lady Nyxara</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">Zyphor</span>
+        <span class="arc-char">Kyphos</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 6 -->
+  <div class="arc-entry arc-6">
+    <div class="arc-num-col">
+      <span class="arc-num">VI</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · Legacy</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Inheritance</span>
+          <span class="arc-theme">Extraordinary Ability</span>
+          <span class="arc-theme">Protection</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Twin Flames</h2>
+      <p class="arc-desc">As Calypso's twins come of age, it becomes clear they have inherited extraordinary abilities from both sides of their bloodline. Their journey of self-discovery — learning the full scope of their powers and the responsibilities that accompany them — makes them targets for those who seek to control, corrupt, or destroy the next generation of the Fire Nation's legacy. Calypso must protect her children while preparing them to inherit everything she has built, in a world that fears what they might one day become.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">Inheritance and legacy</span>
+        <span class="arc-theme-pill">Raising powerful heirs</span>
+        <span class="arc-theme-pill">The burden of extraordinary ability</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">The Twin Heirs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 7 -->
+  <div class="arc-entry arc-7">
+    <div class="arc-num-col">
+      <span class="arc-num">VII</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · Desert Nation</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Revenge</span>
+          <span class="arc-theme">War</span>
+          <span class="arc-theme">Resilience</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Desert's Revenge</h2>
+      <p class="arc-desc">After Calypso's calculated delay in striking the Desert Nation, Orious — enraged by embargoes and sustained economic warfare — orchestrates a devastating counterattack. Key Ashuran territories fall under assault from new weapons and strategies developed in secret. Calypso must marshal every resource at her disposal, including her alliances and the power of the Emberfall Accord, to defend her kingdom and exact retribution on the king who dared strike first.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">The cycle of revenge</span>
+        <span class="arc-theme-pill">Consequences of war</span>
+        <span class="arc-theme-pill">Resilience under siege</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">King Orious of Amun-Re</span>
+        <span class="arc-char">Aurelian</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 8 -->
+  <div class="arc-entry arc-8">
+    <div class="arc-num-col">
+      <span class="arc-num">VIII</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Dark Nation · Fire Nation</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Secrets</span>
+          <span class="arc-theme">Legacy of Past Sins</span>
+          <span class="arc-theme">Alliance</span>
+        </div>
+      </div>
+      <h2 class="arc-title">Blood and Shadow</h2>
+      <p class="arc-desc">Queen Vesper and Queen Vashti — harboring their deep-seated grudge against the Sibyl sisters — begin to subtly sow discord across the Nine Realms. Using secrets, blackmail, and dark magic, they destabilize realm after realm with the ultimate goal of destroying Calypso's reign entirely. As Calypso becomes aware of their machinations, she must delve into the darkest secrets of her own past, confronting the legacy left by her parents and the shadowy forces that have always been closing in on her future.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">The power of secrets</span>
+        <span class="arc-theme-pill">Legacy of past sins</span>
+        <span class="arc-theme-pill">Strength and fragility of alliances</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Vesper</span>
+        <span class="arc-char">Queen Vashti</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">The Sibyl Sisters</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 9 -->
+  <div class="arc-entry arc-9">
+    <div class="arc-num-col">
+      <span class="arc-num">IX</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · All Nations</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Moral Dilemma</span>
+          <span class="arc-theme">Technological Power</span>
+          <span class="arc-theme">Peace vs. Destruction</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Purge of Ashura</h2>
+      <p class="arc-desc">The Emberfall Accord — now complete — presents Ashura with unprecedented power: a new energy source or weapon unlike anything the Nine Realms has seen. Other nations vie for control of it. Some seek to destroy it before it can be used against them. Calypso must navigate the full political and military fallout while confronting a choice that will define her legacy: wield this power to maintain peace, or unleash it as a deterrent against every enemy who has ever threatened her throne.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">The moral dilemmas of power</span>
+        <span class="arc-theme-pill">Technological advancement and its cost</span>
+        <span class="arc-theme-pill">The balance between peace and destruction</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">Aurelian</span>
+        <span class="arc-char">All Nine Nations</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 10 -->
+  <div class="arc-entry arc-10">
+    <div class="arc-num-col">
+      <span class="arc-num">X</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · Mountain Nation · Prophecy</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Prophecy</span>
+          <span class="arc-theme">Unity vs. Division</span>
+          <span class="arc-theme">Mysticism & Politics</span>
+        </div>
+      </div>
+      <h2 class="arc-title">Echoes of the Mountain</h2>
+      <p class="arc-desc">As the Fire and Mountain Nations begin to mend their relationship, an ancient prophecy surfaces — one that speaks of a unifier born of fire and stone. As it becomes clear that Calypso's twins may fulfill this prophecy, factions emerge on all sides: those who see the prophecy as a threat to be extinguished, and those who see it as the only hope for lasting unity. Calypso must navigate the political and mystical implications of the prophecy while protecting her children from those who would determine their fate for them.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">The power of prophecy</span>
+        <span class="arc-theme-pill">Unity vs. division</span>
+        <span class="arc-theme-pill">Mysticism and politics</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">King Sorynn</span>
+        <span class="arc-char">The Twin Heirs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 11 -->
+  <div class="arc-entry arc-11">
+    <div class="arc-num-col">
+      <span class="arc-num">XI</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Dark Nation · Sablea</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Inheritance of Darkness</span>
+          <span class="arc-theme">Redemption</span>
+          <span class="arc-theme">Destiny vs. Free Will</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Crimson Veil</h2>
+      <p class="arc-desc">In the wake of Morghanna's death, her daughters Queen Vesper and Queen Vashti begin unraveling the dark secrets of the Crimson City — discovering the true extent of their mother's legacy, including the dark pacts and soulbinding rituals that have sustained the city for generations. As they confront the forces that have manipulated their fates from the beginning, they must make a choice that will echo across the Dark Nation and the Nine Realms: embrace their dark inheritance, or find a path toward something neither of them was raised to believe existed — redemption.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">Inheritance of darkness</span>
+        <span class="arc-theme-pill">The search for redemption</span>
+        <span class="arc-theme-pill">Destiny vs. free will</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Vesper</span>
+        <span class="arc-char">Queen Vashti</span>
+        <span class="arc-char">Morghanna (legacy)</span>
+        <span class="arc-char">The Crimson City</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARC 12 -->
+  <div class="arc-entry arc-12">
+    <div class="arc-num-col">
+      <span class="arc-num">XII</span>
+      <div class="arc-divider"></div>
+    </div>
+    <div class="arc-body">
+      <div class="arc-meta">
+        <span class="arc-tag">Fire Nation · Internal Rebellion</span>
+        <div class="arc-themes">
+          <span class="arc-theme">Rebellion</span>
+          <span class="arc-theme">Crisis Leadership</span>
+          <span class="arc-theme">Rebirth of a Nation</span>
+        </div>
+      </div>
+      <h2 class="arc-title">The Ashen Phoenix</h2>
+      <p class="arc-desc">Calypso — now a seasoned ruler — faces a threat from the most dangerous source of all: her own kingdom. Radical factions within the Fire Nation, inspired by Solara and the Secret Infernal Order, rise up against her rule. Internal conflict tears Ashura apart along ideological lines. The arc culminates in a decisive battle for the soul of the Fire Nation itself — where Calypso must prove, once and for all, that she is the true phoenix: the one who will rise from every ash, and lead her people into an era that no prophecy could have foretold.</p>
+      <div class="arc-theme-row">
+        <span class="arc-theme-pill">Internal strife and rebellion</span>
+        <span class="arc-theme-pill">Leadership in crisis</span>
+        <span class="arc-theme-pill">The rebirth of a nation</span>
+      </div>
+      <div class="arc-characters">
+        <span class="arc-char-label">Characters</span>
+        <span class="arc-char">Queen Calypso</span>
+        <span class="arc-char">Solara</span>
+        <span class="arc-char">The Secret Infernal Order</span>
+        <span class="arc-char">The Fire Nation</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CTA -->
+<div class="arc-cta">
+  <h2>The saga continues.<br><em>Every realm has a role to play.</em></h2>
+  <p>Twelve arcs. One queen at the center. And every other nation watching — waiting to see whether she rises or burns.</p>
+  <a href="nine-realms-hub.html" class="btn-back">Return to Nine Realms Hub</a>
+</div>
+
+<footer>
+  <span class="footer-copy">© Nine Realms Universe — Original IP · All story arcs and characters are original works</span>
+  <span class="footer-copy">Created by Ron</span>
+</footer>
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurelian & Vireen — The Emberfall Conspiracy | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+/* ═══════════════════════════
+   TOKENS — COLD INDUSTRIAL
+═══════════════════════════ */
+:root{
+  --void:    #04050A;
+  --deep:    #060708;
+  --vault:   #080A0E;
+  --iron:    #0E1014;
+  --steel:   #14181E;
+
+  /* Aurelian — iron ember */
+  --aur:     #C04018;
+  --aur-mid: #D85828;
+  --aur-pale:#F07040;
+  --aur-dim: #602010;
+
+  /* Vireen — blue void */
+  --vir:     #1840A8;
+  --vir-mid: #2858C8;
+  --vir-pale:#60A0E8;
+  --vir-dim: #0C2050;
+
+  /* Data / terminal */
+  --data:    #40C080;
+  --data-dim:#1A5030;
+  --warn:    #D09020;
+  --warn-pale:#F0C040;
+  --redact:  #06040A;
+
+  --parch:   #B8A088;
+  --parch-pale:#D8C0A0;
+  --parch-dim: #60504A;
+}
+
+/* ═══════════════════════════
+   BASE
+═══════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);color:var(--parch);
+  font-family:'EB Garamond',serif;
+  overflow-x:hidden;cursor:none;
+  -webkit-font-smoothing:antialiased;
+}
+/* Scanline overlay */
+body::before{
+  content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 4px);
+  opacity:0.5;
+}
+/* Grain */
+body::after{
+  content:'';position:fixed;inset:0;z-index:999;pointer-events:none;opacity:0.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:128px;
+}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--data);border-radius:50%;transform:translate(-50%,-50%);}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(64,192,128,0.3);border-radius:0;transform:translate(-50%,-50%);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.aur-mode{border-color:var(--aur);width:44px;height:44px;}
+.cur-ring.vir-mode{border-color:var(--vir);width:44px;height:44px;border-radius:50%;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(4,5,10,0.98);backdrop-filter:blur(12px);padding:13px 60px;border-bottom:1px solid rgba(64,192,128,0.08);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--data);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(64,192,128,0.4);letter-spacing:0.15em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch);}
+.nav-back{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--data);border:1px solid rgba(64,192,128,0.2);padding:8px 18px;text-decoration:none;transition:border-color .3s,background .3s;}
+.nav-back:hover{border-color:rgba(64,192,128,0.5);background:rgba(64,192,128,0.04);}
+
+/* ═══════════════════════════
+   HERO — CLASSIFIED DOSSIER
+═══════════════════════════ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:var(--void);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Grid lines */
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(64,192,128,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(64,192,128,0.03) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;max-width:1000px;margin:0 auto;}
+
+/* Classification badge */
+.class-badge{
+  font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.4em;
+  color:var(--data);background:rgba(64,192,128,0.06);
+  border:1px solid rgba(64,192,128,0.2);
+  padding:6px 20px;display:inline-block;margin-bottom:30px;
+  opacity:0;animation:riseIn 1s .2s ease forwards;
+}
+.class-badge::before{content:'◈ ';opacity:0.6;}
+.class-badge::after{content:' ◈';opacity:0.6;}
+
+.h-pre{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.5em;color:var(--aur-pale);text-transform:uppercase;opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:18px;}
+.h-names{
+  display:flex;align-items:center;justify-content:center;gap:0;
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+  margin-bottom:12px;flex-wrap:wrap;
+}
+.h-name-aur{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(36px,7vw,90px);
+  font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;
+  text-shadow:0 0 80px rgba(192,64,24,0.35),0 4px 30px rgba(0,0,0,0.9);
+}
+.h-name-sep{
+  font-family:'Share Tech Mono',monospace;font-size:clamp(14px,2vw,24px);
+  color:rgba(64,192,128,0.2);padding:0 18px;align-self:center;
+}
+.h-name-vir{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(36px,7vw,90px);
+  font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;
+  text-shadow:0 0 80px rgba(24,64,168,0.4),0 4px 30px rgba(0,0,0,0.9);
+}
+.h-titles{font-family:'Cinzel',serif;font-size:clamp(8px,1.2vw,11px);letter-spacing:0.35em;text-transform:uppercase;opacity:0;animation:riseIn 1s .9s ease forwards;margin-bottom:8px;}
+.h-titles .aur-t{color:var(--aur-pale);}
+.h-titles .sep-t{color:rgba(64,192,128,0.3);padding:0 10px;}
+.h-titles .vir-t{color:var(--vir-pale);}
+.h-rule{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(64,192,128,0.2),transparent);margin:24px auto;opacity:0;animation:fadeIn 1s 1.2s ease forwards;}
+.h-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,21px);color:rgba(184,160,136,0.45);max-width:700px;margin:0 auto 40px;line-height:1.75;opacity:0;animation:riseIn 1.2s 1.4s ease forwards;}
+
+/* Threat level meter */
+.threat-row{
+  display:flex;justify-content:center;gap:0;
+  border:1px solid rgba(64,192,128,0.1);max-width:640px;margin:0 auto;
+  opacity:0;animation:riseIn 1s 1.6s ease forwards;
+}
+.threat-cell{flex:1;padding:18px 20px;text-align:center;border-right:1px solid rgba(64,192,128,0.08);}
+.threat-cell:last-child{border-right:none;}
+.threat-val{font-family:'Share Tech Mono',monospace;font-size:clamp(14px,2vw,22px);line-height:1;margin-bottom:6px;}
+.threat-val.aur-v{color:var(--aur-pale);}
+.threat-val.vir-v{color:var(--vir-pale);}
+.threat-val.data-v{color:var(--data);}
+.threat-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.25em;color:rgba(64,192,128,0.35);}
+
+.h-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.25em;color:rgba(64,192,128,0.3);}
+.s-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--data),transparent);animation:sPulse 2s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* ═══════════════════════════
+   UTILS
+═══════════════════════════ */
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.3em;opacity:0.5;display:block;margin-bottom:16px;}
+.sl-data{color:var(--data);}
+.sl-aur{color:var(--aur-pale);}
+.sl-vir{color:var(--vir-pale);}
+.sl-warn{color:var(--warn-pale);}
+.div-line{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(64,192,128,0.1),transparent);}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(64,192,128,0.08),transparent);}
+.orn span{position:relative;background:var(--void);padding:0 18px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--data);opacity:0.3;z-index:1;}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:20px;}
+.big-h em{font-style:italic;}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(15px,1.7vw,18px);color:rgba(184,160,136,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--aur-pale);}
+.pull-aur{margin:20px 0;padding:16px 22px;border-left:2px solid var(--aur);background:rgba(192,64,24,0.04);}
+.pull-aur p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.7vw,19px);color:rgba(184,160,136,0.7);line-height:1.7;}
+.pull-aur cite{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--aur-pale);opacity:0.4;display:block;margin-top:8px;font-style:normal;}
+.pull-vir{margin:20px 0;padding:16px 22px;border-left:2px solid var(--vir);background:rgba(24,64,168,0.05);}
+.pull-vir p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.7vw,19px);color:rgba(184,160,136,0.7);line-height:1.7;}
+.pull-vir cite{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.2em;color:var(--vir-pale);opacity:0.4;display:block;margin-top:8px;font-style:normal;}
+
+/* ═══════════════════════════
+   SPLIT DOSSIER
+═══════════════════════════ */
+.dossier{
+  display:grid;grid-template-columns:1fr 1fr;
+  position:relative;min-height:90vh;
+}
+.dossier::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(64,192,128,0.1) 10%,rgba(64,192,128,0.1) 90%,transparent);z-index:2;}
+
+/* Aurelian pane */
+.pane-aur{
+  background:linear-gradient(160deg, #0A0604 0%, #060402 70%, #040302 100%);
+  padding:90px 60px 90px 80px;
+  position:relative;overflow:hidden;
+}
+.pane-aur::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 40% 40%, rgba(192,64,24,0.07) 0%, transparent 65%);}
+
+/* Vireen pane */
+.pane-vir{
+  background:linear-gradient(160deg, #04060E 0%, #020408 70%, #020306 100%);
+  padding:90px 80px 90px 60px;
+  position:relative;overflow:hidden;
+}
+.pane-vir::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 60% 40%, rgba(24,64,168,0.08) 0%, transparent 65%);}
+
+.pane-header{margin-bottom:36px;}
+.pane-class{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.3em;opacity:0.4;display:block;margin-bottom:12px;}
+.pane-aur .pane-class{color:var(--aur-pale);}
+.pane-vir .pane-class{color:var(--vir-pale);}
+.pane-name{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;line-height:1.05;margin-bottom:8px;color:var(--parch-pale);}
+.pane-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:6px;}
+.pane-alias{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.2em;opacity:0.35;margin-bottom:20px;}
+.pane-aur .pane-alias{color:var(--aur-pale);}
+.pane-vir .pane-alias{color:var(--vir-pale);}
+
+.pane-body{font-family:'EB Garamond',serif;font-size:clamp(14px,1.6vw,17px);color:rgba(184,160,136,0.55);line-height:1.85;margin-bottom:16px;}
+.pane-body strong{color:var(--parch-pale);font-weight:500;}
+.pane-body em{font-style:italic;}
+.pane-aur .pane-body em{color:var(--aur-pale);}
+.pane-vir .pane-body em{color:var(--vir-pale);}
+
+/* Trait chips */
+.pane-traits{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px;}
+.trait{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.15em;padding:5px 12px;border:1px solid;}
+.trait-aur{color:var(--aur-pale);border-color:rgba(192,64,24,0.25);}
+.trait-vir{color:var(--vir-pale);border-color:rgba(24,64,168,0.3);}
+
+/* ═══════════════════════════
+   LEGACY CHAIN — DANTE I → AURELIAN
+═══════════════════════════ */
+.legacy-chain{padding:100px 60px;background:var(--vault);position:relative;overflow:hidden;}
+.legacy-chain::before{content:'CLASSIFIED';position:absolute;font-family:'Share Tech Mono',monospace;font-size:clamp(60px,12vw,150px);font-weight:400;color:rgba(64,192,128,0.015);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;letter-spacing:0.15em;}
+.lc-inner{max-width:1100px;margin:0 auto;}
+.chain-flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:52px auto;max-width:900px;}
+.chain-node{text-align:center;padding:0 20px;}
+.chain-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:4px;}
+.chain-role{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(64,192,128,0.4);letter-spacing:0.15em;}
+.chain-dot{width:10px;height:10px;border-radius:50%;margin:10px auto 0;}
+.chain-aur-dot{background:var(--aur);}
+.chain-vir-dot{background:var(--vir);}
+.chain-data-dot{background:var(--data);}
+.chain-arrow{font-family:'Share Tech Mono',monospace;font-size:18px;color:rgba(64,192,128,0.2);padding:0 10px;flex-shrink:0;padding-top:20px;}
+
+/* ═══════════════════════════
+   EMBERHOLD PROJECTS — DECLASSIFIED
+═══════════════════════════ */
+.projects{padding:100px 60px;background:var(--iron);}
+.proj-inner{max-width:1100px;margin:0 auto;}
+.proj-header{margin-bottom:60px;}
+.proj-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.proj-title em{font-style:italic;color:var(--aur-pale);}
+.proj-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(184,160,136,0.4);max-width:580px;line-height:1.75;}
+
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+
+/* Each project card — redacted-reveal interaction */
+.proj-card{
+  position:relative;overflow:hidden;
+  background:var(--vault);
+  border:1px solid rgba(64,192,128,0.06);
+  cursor:pointer;
+  transition:border-color .3s;
+}
+.proj-card:hover{border-color:rgba(64,192,128,0.2);}
+
+/* Redacted state */
+.proj-redacted{
+  padding:36px 32px;
+  min-height:200px;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:10px;
+  transition:opacity .5s ease;
+}
+.proj-card:hover .proj-redacted{opacity:0;}
+.redact-bar{background:rgba(6,4,10,0.95);height:14px;border-radius:1px;transition:opacity .5s,background .5s;}
+.proj-card:hover .redact-bar{opacity:0;}
+
+/* Project label visible even in redacted state */
+.proj-label{
+  font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.3em;
+  color:rgba(64,192,128,0.3);margin-bottom:14px;
+}
+
+/* Revealed state */
+.proj-revealed{
+  position:absolute;inset:0;padding:36px 32px;
+  display:flex;flex-direction:column;justify-content:flex-start;
+  opacity:0;transition:opacity .5s ease;
+  pointer-events:none;
+}
+.proj-card:hover .proj-revealed{opacity:1;}
+.proj-code{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--data);opacity:0.5;margin-bottom:10px;}
+.proj-name{font-family:'Cinzel',serif;font-size:clamp(14px,1.8vw,20px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:10px;}
+.proj-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(184,160,136,0.6);line-height:1.75;}
+.proj-threat{
+  margin-top:auto;font-family:'Share Tech Mono',monospace;font-size:8px;
+  letter-spacing:0.25em;padding-top:14px;
+  border-top:1px solid rgba(64,192,128,0.08);
+}
+.proj-card:nth-child(1) .proj-threat{color:var(--warn-pale);}
+.proj-card:nth-child(2) .proj-threat{color:var(--aur-pale);}
+.proj-card:nth-child(3) .proj-threat{color:var(--vir-pale);}
+.proj-card:nth-child(4) .proj-threat{color:rgba(220,60,60,0.7);}
+
+/* REVEAL HINT */
+.reveal-hint{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.3em;color:rgba(64,192,128,0.2);text-align:center;margin-bottom:32px;animation:hintPulse 3s ease-in-out infinite;}
+@keyframes hintPulse{0%,100%{opacity:0.3;}50%{opacity:0.7;};}
+
+/* ═══════════════════════════
+   THE FOUR DOCTRINES
+═══════════════════════════ */
+.doctrines{padding:100px 60px;background:var(--deep);}
+.doc-inner{max-width:1100px;margin:0 auto;}
+.doc-list{display:flex;flex-direction:column;gap:3px;margin-top:52px;}
+.doctrine{
+  display:grid;grid-template-columns:200px 80px 1fr;
+  border:1px solid rgba(192,64,24,0.08);
+  overflow:hidden;transition:border-color .3s;position:relative;
+}
+.doctrine:hover{border-color:rgba(192,64,24,0.25);}
+.doctrine::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;background:var(--aur);transform:scaleY(0);transform-origin:top;transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.doctrine:hover::before{transform:scaleY(1);}
+.doc-num{padding:24px 20px;background:rgba(192,64,24,0.04);border-right:1px solid rgba(192,64,24,0.06);display:flex;align-items:center;justify-content:center;}
+.doc-num-val{font-family:'Share Tech Mono',monospace;font-size:24px;color:var(--aur);opacity:0.4;}
+.doc-name-col{padding:24px 20px;border-right:1px solid rgba(192,64,24,0.06);display:flex;align-items:center;}
+.doc-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--aur-pale);line-height:1.4;}
+.doc-content{padding:24px 28px;}
+.doc-tag{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.25em;color:rgba(64,192,128,0.4);margin-bottom:8px;display:block;}
+.doc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.5vw,16px);color:rgba(184,160,136,0.55);line-height:1.75;}
+.doc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══════════════════════════
+   VIREEN — BLUE FIRE SECTION
+═══════════════════════════ */
+.blue-fire{padding:100px 60px;background:var(--vault);}
+.bf-inner{max-width:1100px;margin:0 auto;}
+
+/* Abilities grid */
+.abilities-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.ability-card{
+  padding:32px 28px;border:1px solid rgba(24,64,168,0.1);
+  position:relative;overflow:hidden;
+  transition:border-color .3s,background .3s;
+  background:rgba(4,6,14,0.5);
+}
+.ability-card:hover{border-color:rgba(24,64,168,0.3);background:rgba(24,64,168,0.04);}
+.ability-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--vir-mid);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.ability-card:hover::before{transform:scaleX(1);}
+.ab-code{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:0.3em;color:rgba(24,64,168,0.5);margin-bottom:8px;}
+.ab-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,20px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:10px;}
+.ab-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(184,160,136,0.5);line-height:1.75;}
+.ab-class{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:0.25em;color:var(--vir-pale);opacity:0.4;margin-top:10px;padding-top:10px;border-top:1px solid rgba(24,64,168,0.08);}
+
+/* CINDER-X */
+.cinder-x{
+  margin-top:3px;padding:40px;
+  border:1px solid rgba(24,64,168,0.15);
+  background:linear-gradient(135deg, rgba(4,6,14,0.8), rgba(8,4,14,0.8));
+  position:relative;overflow:hidden;
+}
+.cinder-x::before{content:'PROJECT CINDER-X';position:absolute;font-family:'Share Tech Mono',monospace;font-size:clamp(40px,8vw,100px);color:rgba(24,64,168,0.04);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;letter-spacing:0.2em;}
+.cx-header{display:flex;align-items:center;gap:20px;margin-bottom:24px;}
+.cx-badge{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.3em;color:var(--vir-pale);background:rgba(24,64,168,0.1);border:1px solid rgba(24,64,168,0.25);padding:6px 16px;}
+.cx-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,32px);font-weight:400;color:var(--parch-pale);}
+.cx-subtitle{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-top:4px;}
+.cx-body{font-family:'EB Garamond',serif;font-size:clamp(14px,1.6vw,17px);color:rgba(184,160,136,0.55);line-height:1.85;margin-bottom:16px;}
+.cx-body strong{color:var(--parch-pale);font-weight:500;}
+.cx-squad{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-top:24px;
+}
+.cx-squad-item{padding:16px 18px;background:rgba(24,64,168,0.04);border:1px solid rgba(24,64,168,0.08);}
+.cxs-label{font-family:'Share Tech Mono',monospace;font-size:7px;letter-spacing:0.3em;color:rgba(96,160,232,0.4);margin-bottom:6px;}
+.cxs-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(184,160,136,0.5);}
+
+/* ═══════════════════════════
+   THE DUALITY — TOGETHER
+═══════════════════════════ */
+.duality{padding:100px 60px;background:var(--iron);}
+.dual-inner{max-width:1100px;margin:0 auto;}
+.dual-table{width:100%;border-collapse:collapse;margin-top:52px;}
+.dt-head th{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.3em;padding:14px 20px;text-align:left;border-bottom:1px solid rgba(64,192,128,0.08);}
+.th-axis{color:rgba(64,192,128,0.3);}
+.th-aur{color:var(--aur-pale);}
+.th-vir{color:var(--vir-pale);}
+.dual-table td{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(184,160,136,0.5);padding:18px 20px;border-bottom:1px solid rgba(64,192,128,0.04);vertical-align:top;line-height:1.6;}
+.dual-table tr:hover td{background:rgba(64,192,128,0.01);}
+.td-axis{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.2em;color:rgba(64,192,128,0.25);font-style:normal;}
+.td-aur{color:rgba(240,112,64,0.7);}
+.td-vir{color:rgba(96,160,232,0.65);}
+
+/* ═══════════════════════════
+   PAGE CTA
+═══════════════════════════ */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(64,192,128,0.06);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.cta-badge{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.3em;color:rgba(64,192,128,0.35);border:1px solid rgba(64,192,128,0.12);padding:6px 18px;display:inline-block;margin-bottom:24px;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--data);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(184,160,136,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--void);background:var(--parch);padding:14px 28px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:var(--parch-pale);}
+.btn-g{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(64,192,128,0.5);border:1px solid rgba(64,192,128,0.15);padding:14px 28px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(64,192,128,0.4);color:var(--data);}
+
+footer{background:var(--void);border-top:1px solid rgba(64,192,128,0.04);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(64,192,128,0.15);letter-spacing:0.15em;}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .dossier{grid-template-columns:1fr;}
+  .dossier::before{display:none;}
+  .pane-aur,.pane-vir{padding:70px 40px;}
+  .legacy-chain,.projects,.doctrines,.blue-fire,.duality,.page-cta{padding:80px 40px;}
+  .proj-grid{grid-template-columns:1fr;}
+  .abilities-grid{grid-template-columns:1fr;}
+  .cx-squad{grid-template-columns:1fr;}
+  .doctrine{grid-template-columns:1fr;} .doc-num,.doc-name-col{border-right:none;border-bottom:1px solid rgba(192,64,24,0.06);}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;} .nav.scrolled{padding:12px 24px;} .nav-link{display:none;}
+  .threat-row{flex-direction:column;} .threat-cell{border-right:none;border-bottom:1px solid rgba(64,192,128,0.08);} .threat-cell:last-child{border-bottom:none;}
+  .legacy-chain,.projects,.doctrines,.blue-fire,.duality,.page-cta{padding:60px 24px;}
+  .dual-table{display:none;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">NINE_REALMS // ASHURA</span>
+    <span class="nav-brand-sub">RESTRICTED ACCESS · EMBERHOLD DIVISION</span>
+  </a>
+  <div class="nav-right">
+    <a href="solara.html" class="nav-link">Solara</a>
+    <a href="calypso-arc.html" class="nav-link">Calypso</a>
+    <a href="ashura-nation.html" class="nav-link">Ashura</a>
+    <a href="sybil-sisters.html" class="nav-link">Sybil Sisters</a>
+    <a href="nine-realms-hub.html" class="nav-back">◈ HUB</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="class-badge">LEVEL SEVEN CLEARANCE · EMBERHOLD INTERNAL · REGENT EYES ONLY</div>
+    <p class="h-pre">Ashura · The Emberfall Conspiracy · Year 1355</p>
+    <div class="h-names">
+      <span class="h-name-aur">Aurelian</span>
+      <span class="h-name-sep">&amp;</span>
+      <span class="h-name-vir">Vireen</span>
+    </div>
+    <p class="h-titles">
+      <span class="aur-t">The Iron Flame · Regent-Executor of Ashura</span>
+      <span class="sep-t">//</span>
+      <span class="vir-t">The Blue Flame · Shadow Chancellor</span>
+    </p>
+    <div class="h-rule"></div>
+    <p class="h-tagline">
+      The Fire Nation thinks it safeguards embers. But under Emberhold, a star is being forged — and only two people know how close it already is to detonation.
+    </p>
+    <div class="threat-row">
+      <div class="threat-cell"><div class="threat-val aur-v">ARCHITECT</div><div class="threat-label">AURELIAN · ROLE</div></div>
+      <div class="threat-cell"><div class="threat-val vir-v">SCALPEL</div><div class="threat-label">VIREEN · ROLE</div></div>
+      <div class="threat-cell"><div class="threat-val data-v">ACTIVE</div><div class="threat-label">PROJECT STATUS</div></div>
+      <div class="threat-cell"><div class="threat-val" style="color:rgba(220,60,60,0.8);">CRITICAL</div><div class="threat-label">THREAT LEVEL</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ACCESS DOSSIER //</span><div class="s-line"></div></div>
+</section>
+
+<!-- DOSSIER SPLIT -->
+<section class="dossier">
+  <!-- AURELIAN -->
+  <div class="pane-aur rv">
+    <div class="pane-header">
+      <span class="pane-class">// SUBJECT: AURELIAN VELIS // CLEARANCE: OMEGA //</span>
+      <h2 class="pane-name">Aurelian</h2>
+      <p class="pane-title">Regent-Executor of Ashura · Grand Sorceress · Chancellor of Valyra</p>
+      <p class="pane-alias">[ THE IRON FLAME ] [ HAND OF ASCENSION ] [ WARDEN OF ASHEN EXCELLENCE ]</p>
+    </div>
+    <p class="pane-body">Not born of royal blood — <strong>forged of relentless merit.</strong> A mathematician of consequence in a world drunk on nostalgia. She rose through Valyra's elite not through charm, but through a mind sharpened like obsidian. She is the only woman Calypso will eventually trust to do the one thing she could never stomach herself: <em>burn down the old world.</em></p>
+    <p class="pane-body">She stopped asking for permission somewhere between Calypso's second year of reign and the day she unsealed the vaults of Dante I's forbidden inheritance. <strong>She alone carries the Emberhold Mandate — passed hand-to-hand through generations like a curse, finally reached by someone willing to use it.</strong></p>
+    <div class="pull-aur"><p>"You think I'm cruel because I lack mercy. But mercy is a luxury paid for by peace. We are at war with memory, and I will not let ghosts dictate the future."</p><cite>— Aurelian Velis · Emberhold Internal Address</cite></div>
+    <div class="pane-traits">
+      <span class="trait trait-aur">Unflinching Rationalist</span>
+      <span class="trait trait-aur">Progress at Any Price</span>
+      <span class="trait trait-aur">Loyal, Not Obedient</span>
+      <span class="trait trait-aur">Paranoia with Precision</span>
+      <span class="trait trait-aur">Executioner of the Past</span>
+    </div>
+  </div>
+
+  <!-- VIREEN -->
+  <div class="pane-vir rv d1">
+    <div class="pane-header">
+      <span class="pane-class">// SUBJECT: VIREEN OF CINDARA // CLEARANCE: PHANTOM //</span>
+      <h2 class="pane-name">Vireen</h2>
+      <p class="pane-title">Warden of Emberhold College · Icefire Chancellor · Shadow Executor</p>
+      <p class="pane-alias">[ THE BLUE FLAME ] [ SILENT EMBER ASSASSIN ] [ KAON'S HIDDEN BLADE ]</p>
+    </div>
+    <p class="pane-body">Raised during Cindara's imperialist era — <em>her worldview permanently etched by betrayal, control, and sacrifice.</em> A radical pragmatist who views tradition as a chain forged by the weak. She rose through Calypso's councils not through charisma but through <strong>surgical ruthlessness</strong>, mastering the art of political silence and weaponized obedience.</p>
+    <p class="pane-body">Where Aurelian lights the match, <strong>Vireen cuts the throats.</strong> Her Blue Flame burns at frequencies invisible to standard magical detection — cold emission, zero heat signature, activated only on impact. She is the fire you never see. The one you never recover from.</p>
+    <div class="pull-vir"><p>"The quietest fire is the one that ends the loudest."</p><cite>— Vireen of Cindara · Blue Flame Doctrine, Chapter One</cite></div>
+    <div class="pane-traits">
+      <span class="trait trait-vir">Dangerous Charm</span>
+      <span class="trait trait-vir">Discipline as Elegance</span>
+      <span class="trait trait-vir">Emotionally Complex</span>
+      <span class="trait trait-vir">Lawful Evil</span>
+      <span class="trait trait-vir">Institutionally Protected</span>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--vault);"><span>◈</span></div>
+
+<!-- THE LEGACY CHAIN -->
+<section class="legacy-chain">
+  <div class="lc-inner">
+    <div class="rv">
+      <span class="sl sl-data">// INHERITANCE CHAIN · EMBERHOLD MANDATE //</span>
+      <h2 class="big-h" style="color:var(--parch-pale);">The Secret That<br><em style="color:var(--aur-pale);">Passed Through Generations</em></h2>
+      <p class="bp">Dante I planted the seeds of Emberhold as a crucible where fire itself could be reforged into something transcendent. Every king and regent since has upheld the vision in secret — until the woman who finally had both the mandate and the will to detonate it.</p>
+    </div>
+    <div class="chain-flow rv d1">
+      <div class="chain-node"><div class="chain-name">DANTE I</div><div class="chain-role">// PLANTED THE SEED //</div><div class="chain-dot chain-aur-dot"></div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-name">AURELIAN'S<br>GRANDFATHER</div><div class="chain-role">// RECEIVED THE MANDATE //</div><div class="chain-dot chain-data-dot"></div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-name">DANTE II</div><div class="chain-role">// UPHELD IN SECRET //</div><div class="chain-dot chain-aur-dot"></div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-name">AURELIAN'S<br>BLOODLINE</div><div class="chain-role">// MAINTAINED THE PROJECTS //</div><div class="chain-dot chain-data-dot"></div></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node"><div class="chain-name">AURELIAN<br>VELIS</div><div class="chain-role">// UNSEALS THE VAULTS //</div><div class="chain-dot chain-aur-dot" style="background:var(--warn);"></div></div>
+    </div>
+    <p class="bp rv d2" style="max-width:700px;margin:0 auto;">What Queen Calypso sees as an administrative regency is, in truth, <strong>the awakening of the Fire Nation's greatest secret</strong> — a revolution of magitech hidden for centuries beneath the bedrock of Ashura. Dante II knew. He kept it under wraps while building global peace above it. <em>Calypso does not know how deep the roots go.</em></p>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--iron);"><span>◈</span></div>
+
+<!-- EMBERHOLD PROJECTS -->
+<section class="projects">
+  <div class="proj-inner">
+    <div class="proj-header rv">
+      <span class="sl sl-data">// TOP SECRET · EMBERHOLD MILITARY RESEARCH DIVISION //</span>
+      <h2 class="proj-title">The Emberfall<br><em>Projects</em></h2>
+      <p class="proj-intro">Technologies ages beyond what the current systems of the Nine Realms can comprehend. Built in subterranean labs beneath Emberhold. Unknown to the Fire Nation. Unknown to Calypso herself.</p>
+    </div>
+
+    <p class="reveal-hint rv">[ HOVER TO DECLASSIFY ]</p>
+
+    <div class="proj-grid rv d1">
+      <!-- Project 1 -->
+      <div class="proj-card">
+        <div class="proj-redacted">
+          <div class="proj-label">// PROJECT FILE: ████████ //</div>
+          <div class="redact-bar" style="width:90%"></div>
+          <div class="redact-bar" style="width:75%"></div>
+          <div class="redact-bar" style="width:85%"></div>
+          <div class="redact-bar" style="width:60%"></div>
+          <div class="redact-bar" style="width:70%"></div>
+        </div>
+        <div class="proj-revealed">
+          <div class="proj-code">// PROJECT FILE: GEM-REACTOR-001 //</div>
+          <div class="proj-name">Gem-Reactor Forges</div>
+          <p class="proj-desc">Self-sustaining fire-core engines capable of powering entire cities — reshaping economies and climates. Fire gems, when processed correctly, emit controlled thermic signatures and atomic chain reactions. Functionally: nuclear fire magic. Cities powered without a single mage on duty.</p>
+          <div class="proj-threat">THREAT LEVEL: CIVILIZATION-ALTERING · STATUS: ACTIVE</div>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="proj-card">
+        <div class="proj-redacted">
+          <div class="proj-label">// PROJECT FILE: ████████ //</div>
+          <div class="redact-bar" style="width:85%"></div>
+          <div class="redact-bar" style="width:92%"></div>
+          <div class="redact-bar" style="width:68%"></div>
+          <div class="redact-bar" style="width:78%"></div>
+        </div>
+        <div class="proj-revealed">
+          <div class="proj-code">// PROJECT FILE: PHOENIX-PROSTHETIC-002 //</div>
+          <div class="proj-name">Phoenix-Tear Prosthetics</div>
+          <p class="proj-desc">Limbs and organs laced with regenerative fire matrices — powered by Phoenix Tears, the rarest fire-gem derivative. Magitech prosthetics that integrate with living tissue, restore sensation, and enhance physical capability beyond baseline human function. Military application: a soldier who cannot be permanently disabled.</p>
+          <div class="proj-threat">THREAT LEVEL: MILITARY-TRANSFORMATIVE · STATUS: PROTOTYPE PHASE</div>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="proj-card">
+        <div class="proj-redacted">
+          <div class="proj-label">// PROJECT FILE: ████████ //</div>
+          <div class="redact-bar" style="width:80%"></div>
+          <div class="redact-bar" style="width:95%"></div>
+          <div class="redact-bar" style="width:72%"></div>
+          <div class="redact-bar" style="width:88%"></div>
+          <div class="redact-bar" style="width:60%"></div>
+        </div>
+        <div class="proj-revealed">
+          <div class="proj-code">// PROJECT FILE: FLAME-DRIVE-003 //</div>
+          <div class="proj-name">Flame-Drive Vessels</div>
+          <p class="proj-desc">Skyships and war machines propelled by condensed Firestorm Opals — capable of velocities no existing vessel can match. Opal-fueled thrust systems achieve sustained atmospheric flight without wind magic dependency. Range: indefinite with on-board gem reserves. Stealth mode: heat signature cloaking via cold-frequency dampeners.</p>
+          <div class="proj-threat">THREAT LEVEL: STRATEGIC SUPREMACY · STATUS: FIELD TESTING</div>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="proj-card">
+        <div class="proj-redacted">
+          <div class="proj-label">// PROJECT FILE: ████████ //</div>
+          <div class="redact-bar" style="width:88%"></div>
+          <div class="redact-bar" style="width:70%"></div>
+          <div class="redact-bar" style="width:92%"></div>
+          <div class="redact-bar" style="width:65%"></div>
+        </div>
+        <div class="proj-revealed">
+          <div class="proj-code">// PROJECT FILE: SOLAR-MIMIC-004 //</div>
+          <div class="proj-name">Solar-Mimic Weapons</div>
+          <p class="proj-desc">Gem-fusion superweapons that mimic solar eruptions — controlled detonations rivaling miniature suns. Quantum arcana harmonics allow for precision targeting at distances previously impossible. Single-device yield: sufficient to level a city-state. Detonation leaves no fire signature traceable to Ashura. The last weapon anyone will ever need to build.</p>
+          <div class="proj-threat">THREAT LEVEL: EXISTENTIAL · STATUS: THEORETICAL COMPLETE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--deep);"><span>◈</span></div>
+
+<!-- THE FOUR DOCTRINES -->
+<section class="doctrines">
+  <div class="doc-inner">
+    <div class="rv">
+      <span class="sl sl-aur">// AURELIAN'S GOVERNANCE MANDATES · YEAR 1355 //</span>
+      <h2 class="big-h" style="margin-bottom:12px;">The Four<br><em style="color:var(--aur-pale);">Irreversible Orders</em></h2>
+      <p class="bp" style="max-width:600px;">These are not proposals. They are already in effect. The Fire Nation will not vote on them. They will simply discover what was done after it is too late to undo.</p>
+    </div>
+    <div class="doc-list">
+      <div class="doctrine rv d1">
+        <div class="doc-num"><span class="doc-num-val">01</span></div>
+        <div class="doc-name-col"><span class="doc-name">The Irreversibility Doctrine</span></div>
+        <div class="doc-content"><span class="doc-tag">// ENFORCEMENT: IMMEDIATE // SCOPE: ALL ASHURA TERRITORIES //</span><p class="doc-body"><em>"Rebellion is a luxury of the undisciplined."</em> Associating with Solara or any magical cult is treated as a capital offense. Families are exiled. Records scrubbed. Descendants disinherited from all magical registry. <strong>No trial. No appeal. No exception.</strong></p></div>
+      </div>
+      <div class="doctrine rv">
+        <div class="doc-num"><span class="doc-num-val">02</span></div>
+        <div class="doc-name-col"><span class="doc-name">The Eye of Aurelian</span></div>
+        <div class="doc-content"><span class="doc-tag">// ENCHANTMENT-TECHNOLOGY HYBRID // DEPLOYED: ALL MAJOR CITIES //</span><p class="doc-body">Pulse glyphs record citizen movement across all nine city-states. Speech pattern archives analyzed by Ember Alchemists for subversive rhetoric. <strong>The Eye sees everything. Vireen decides what the Eye acts on.</strong> Citizens believe the glyphs are protective wards. They are not wrong — they protect only the regime.</p></div>
+      </div>
+      <div class="doctrine rv d1">
+        <div class="doc-num"><span class="doc-num-val">03</span></div>
+        <div class="doc-name-col"><span class="doc-name">The Ash Sentinels</span></div>
+        <div class="doc-content"><span class="doc-tag">// INVISIBLE ENFORCERS // DESIGNATION: CLASSIFIED //</span><p class="doc-body">Silent, masked, magically sterilized — they leave no trace and carry no name. Their only mandate: <strong>prevent leaks, eliminate threats, within and without.</strong> They answer to no court, no council, no High Sorcerer. They answer to Aurelian through Vireen's channel. The Blue Choir often provides cover for their operations.</p></div>
+      </div>
+      <div class="doctrine rv">
+        <div class="doc-num"><span class="doc-num-val">04</span></div>
+        <div class="doc-name-col"><span class="doc-name">The Arcane Absolution</span></div>
+        <div class="doc-content"><span class="doc-tag">// WARNING: CLASSIFIED // CASUALTIES: CLASSIFIED //</span><p class="doc-body">Libraries of fire magic sealed, digitized, then <strong>incinerated.</strong> "Reharmonization Chambers" erase arcane memory in mages — replacing it with standardized Emberhold curriculum. Massive casualties are classified as <em>"Ember Reconciliation Events."</em> Old magic is not defeated. It is erased before the next generation can learn to miss it.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--vault);"><span>◈</span></div>
+
+<!-- VIREEN — THE BLUE FIRE -->
+<section class="blue-fire">
+  <div class="bf-inner">
+    <div class="rv">
+      <span class="sl sl-vir">// VIREEN OF CINDARA · FLAME CLASS: BLUE FREQUENCY //</span>
+      <h2 class="big-h" style="color:var(--parch-pale);margin-bottom:12px;">The Blue<br><em style="color:var(--vir-pale);">Silent Flame</em></h2>
+      <p class="bp" style="max-width:580px;">Blue flame burns at such high temperature it phases through matter and decimates atomic cohesion. Cold emission mode: zero heat signature. Completely undetectable by standard magical sensors. It has no fury. It has only precision.</p>
+    </div>
+
+    <div class="abilities-grid rv d1">
+      <div class="ability-card">
+        <div class="ab-code">// TECHNIQUE: WBE-01 //</div>
+        <div class="ab-name">Whisperbrand Execution</div>
+        <p class="ab-desc">Channels a thin trail of blue flame into a target's shadow — ignites from the inside. The subject feels nothing. Used for silent assassinations requiring zero forensic trace. The flame consumes from within, leaving no external burn signature.</p>
+        <div class="ab-class">CLASSIFICATION: ASSASSINATION · DETECTION: IMPOSSIBLE</div>
+      </div>
+      <div class="ability-card">
+        <div class="ab-code">// TECHNIQUE: NV-02 //</div>
+        <div class="ab-name">Nullburn Veil</div>
+        <p class="ab-desc">Suppresses all visible fire within a 20-meter radius. Enemies feel nothing — no heat, no warning, no magical alarm. Then combust. Perfect for controlled environments where collateral damage must be managed and attribution must be denied.</p>
+        <div class="ab-class">CLASSIFICATION: AREA DENIAL · ATTRIBUTION: NONE</div>
+      </div>
+      <div class="ability-card">
+        <div class="ab-code">// TECHNIQUE: SS-03 //</div>
+        <div class="ab-name">Silent Sunderstep</div>
+        <p class="ab-desc">Teleports in a wraithlike trail of blue smoke with brief afterimages. Movement cannot be tracked by fire-based sight. The afterimages are functional decoys — they hold heat signature for approximately 3 seconds, sufficient to mislead any pursuit.</p>
+        <div class="ab-class">CLASSIFICATION: EVASION · COUNTER: NONE KNOWN</div>
+      </div>
+      <div class="ability-card">
+        <div class="ab-code">// TECHNIQUE: SFB-04 · RARELY DEPLOYED //</div>
+        <div class="ab-name">Starflare Bloom</div>
+        <p class="ab-desc">Her finisher. Forms a flame blossom the size of a human heart. It pulses once. Everything within range atomizes without a sound — no flash, no impact wave, no residue. Used twice in recorded history. Both incidents classified as "structural failures."</p>
+        <div class="ab-class">CLASSIFICATION: TOTAL TERMINATION · RANGE: VARIABLE · EVENTS: 2 CONFIRMED</div>
+      </div>
+    </div>
+
+    <!-- CINDER-X -->
+    <div class="cinder-x rv">
+      <div class="cx-header">
+        <div class="cx-badge">// CLASSIFIED: PROJECT CINDER-X //</div>
+        <div>
+          <h3 class="cx-title">Project CINDER-X</h3>
+          <p class="cx-subtitle">Vireen's Weapon-X Initiative · Weaponized Mage Conscription Program</p>
+        </div>
+      </div>
+      <p class="cx-body"><em>"A flame you build is stronger than a flame you inherit."</em></p>
+      <p class="cx-body">Vireen operates a covert conversion wing of Emberhold College where failed students, exiles, war orphans, and captured fire mages are subjected to <strong>magical neural imprinting, fire frequency modification, and soul compression glyphs</strong> — forcibly weaponizing them into living bombs, assassins, or nullcasters.</p>
+      <p class="cx-body">Each operative carries a <strong>Blue Sigil Glyph embedded in their sternum.</strong> If they rebel, she activates it. Death is instantaneous. They have no memory of Vireen. They have no memory of their origin. They only have the mission they were built to complete.</p>
+      <div class="cx-squad">
+        <div class="cx-squad-item"><div class="cxs-label">// SQUAD MODEL //</div><div class="cxs-val">Blue Requiem Fireteams · 3–5 modified operatives per squad</div></div>
+        <div class="cx-squad-item"><div class="cxs-label">// NICKNAME //</div><div class="cxs-val">"The Blue Choir" — for the silent glow left at strike sites</div></div>
+        <div class="cx-squad-item"><div class="cxs-label">// AURELIAN AWARENESS //</div><div class="cxs-val">Partial. She knows it exists. She does not know the full scope of the prototype gem Vireen may have forged herself.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--iron);"><span>◈</span></div>
+
+<!-- THE DUALITY TABLE -->
+<section class="duality">
+  <div class="dual-inner">
+    <div class="rv">
+      <span class="sl sl-data">// OPERATIONAL DUALITY · THE SILENT PARTNERSHIP //</span>
+      <h2 class="big-h" style="margin-bottom:12px;">The Iron Flame<br><em style="color:var(--data);">and the Blue Flame</em></h2>
+      <p class="bp" style="max-width:600px;">Where Aurelian sets policy, Vireen enforces reality. Where Aurelian lights the match, Vireen cuts the throats. They are two instruments of the same score — one played loudly in public, one played in frequencies no one can hear until it is over.</p>
+    </div>
+    <table class="dual-table rv d1">
+      <thead class="dt-head">
+        <tr>
+          <th class="th-axis">AXIS</th>
+          <th class="th-aur">🔥 AURELIAN</th>
+          <th class="th-vir">🔷 VIREEN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="td-axis">Function</td><td class="td-aur">The Architect — designs the future</td><td class="td-vir">The Scalpel — silences the present</td></tr>
+        <tr><td class="td-axis">Method</td><td class="td-aur">Policy, doctrine, mandated reform</td><td class="td-vir">Proxies, misinformation, the Blue Choir</td></tr>
+        <tr><td class="td-axis">Public Face</td><td class="td-aur">Reformer, Regent, Rationalist</td><td class="td-vir">Respected Dean, paragon of scholarship</td></tr>
+        <tr><td class="td-axis">Secret Face</td><td class="td-aur">Executioner of Ashura's past</td><td class="td-vir">Shadow strategist, architect of CINDER-X</td></tr>
+        <tr><td class="td-axis">Relationship to Calypso</td><td class="td-aur">Trusted executor — Calypso's willing villain</td><td class="td-vir">Unknown depth — Calypso does not know what Vireen is</td></tr>
+        <tr><td class="td-axis">Relationship to Solara</td><td class="td-aur">Underestimates the pull of legacy and myth</td><td class="td-vir">Wants to break, condition, or erase her entirely</td></tr>
+        <tr><td class="td-axis">Fatal Risk</td><td class="td-aur">The nation learns what was built under Emberhold before the revolution is complete</td><td class="td-vir">The cursed gem prototype she may have forged herself — the secret even Aurelian doesn't know</td></tr>
+        <tr><td class="td-axis">Legacy</td><td class="td-aur">The one who lit the match, then watched the nation burn so it could be forged anew</td><td class="td-vir">The fire you never see, never feel, and never recover from</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('lit');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('lit');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=38;this.s=72;this.l=54;}
+      else if(t<.72){this.h=205;this.s=30;this.l=55;}
+      else if(t<.86){this.h=38+20;this.s=72-15;this.l=54+15;}
+      else{this.h=205+10;this.s=30-10;this.l=55+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

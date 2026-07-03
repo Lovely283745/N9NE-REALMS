@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nine Realms Universe — Complete Index</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:   #030408;
+  --deep:   #060810;
+  --frame:  #0A0C14;
+
+  --gold:       #906000;
+  --gold-mid:   #C08820;
+  --gold-bright:#E8B040;
+  --gold-pale:  #F8D870;
+  --gold-dim:   rgba(200,136,32,0.12);
+
+  --fire:   rgba(200,80,20,0.7);
+  --dark:   rgba(80,20,120,0.7);
+  --mtn:    rgba(120,90,60,0.7);
+  --cel:    rgba(200,180,80,0.7);
+  --sys:    rgba(80,120,160,0.7);
+
+  --parch:      #B0AAA0;
+  --parch-pale: #D8D0C4;
+  --parch-dim:  #504840;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:50vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 50% 60% at 50% 0%,rgba(144,96,0,0.05) 0%,transparent 60%);}
+body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;opacity:0.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;}
+
+/* HEADER */
+.site-header{
+  position:relative;z-index:1;
+  padding:80px 60px 60px;
+  text-align:center;
+  background:linear-gradient(180deg,#180E04 0%,#0C0A10 60%,var(--void) 100%);
+  border-bottom:1px solid rgba(200,136,32,0.12);
+}
+.sh-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold-mid);opacity:0.6;letter-spacing:0.08em;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.sh-eyebrow::before,.sh-eyebrow::after{content:'';display:block;width:40px;height:1px;background:linear-gradient(to right,transparent,rgba(200,136,32,0.3));}
+.sh-eyebrow::after{transform:scaleX(-1);}
+.sh-title{font-family:'Cinzel Decorative',serif;font-size:clamp(32px,6vw,80px);font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;text-shadow:0 0 80px rgba(200,136,32,0.3),0 4px 40px rgba(0,0,0,0.8);margin-bottom:10px;}
+.sh-subtitle{font-family:'Cinzel',serif;font-size:clamp(10px,1.5vw,16px);letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-bright);opacity:0.7;margin-bottom:20px;display:block;}
+.sh-rule{width:200px;height:1px;background:linear-gradient(to right,transparent,rgba(200,136,32,0.4),transparent);margin:0 auto 24px;}
+.sh-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,19px);color:rgba(176,168,160,0.45);max-width:640px;margin:0 auto 36px;line-height:1.8;}
+.sh-meta{display:flex;gap:36px;justify-content:center;flex-wrap:wrap;}
+.shm-item{text-align:center;}
+.shm-val{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,28px);color:var(--gold-bright);display:block;line-height:1;}
+.shm-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);margin-top:4px;display:block;opacity:0.6;}
+
+/* SEARCH BAR */
+.search-wrap{position:sticky;top:0;z-index:500;padding:14px 60px;background:rgba(3,4,8,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,136,32,0.08);display:flex;align-items:center;gap:16px;}
+.search-inner{flex:1;max-width:500px;position:relative;}
+#search{width:100%;background:rgba(200,136,32,0.05);border:1px solid rgba(200,136,32,0.2);color:var(--parch-pale);font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 16px 10px 38px;letter-spacing:0.04em;outline:none;transition:border-color .3s;}
+#search::placeholder{color:rgba(176,168,160,0.3);}
+#search:focus{border-color:rgba(200,136,32,0.5);}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:13px;opacity:0.35;pointer-events:none;}
+#search-count{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold-mid);opacity:0.5;letter-spacing:0.05em;white-space:nowrap;}
+.search-wrap a{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-pale);border:1px solid rgba(200,136,32,0.25);padding:8px 18px;text-decoration:none;transition:border-color .3s;white-space:nowrap;}
+.search-wrap a:hover{border-color:rgba(200,136,32,0.55);}
+
+/* MAIN LAYOUT */
+.main{max-width:1300px;margin:0 auto;padding:60px 60px 100px;position:relative;z-index:1;}
+
+/* CATEGORY SECTIONS */
+.cat-section{margin-bottom:52px;}
+.cat-head{display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(200,136,32,0.1);}
+.cat-icon{font-size:18px;opacity:0.6;}
+.cat-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:0.06em;color:var(--gold-mid);opacity:0.5;}
+.cat-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:0.2em;text-transform:uppercase;color:var(--parch-pale);}
+.cat-count{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gold-mid);opacity:0.35;margin-left:auto;}
+
+/* PAGE CARDS GRID */
+.pages-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:3px;}
+.pages-grid.wide{grid-template-columns:repeat(auto-fill,minmax(340px,1fr));}
+
+/* Individual page card */
+.page-card{
+  display:block;text-decoration:none;
+  padding:20px 22px;
+  border:1px solid rgba(176,168,160,0.07);
+  background:rgba(6,8,12,0.6);
+  position:relative;overflow:hidden;
+  transition:border-color .25s,background .25s,transform .2s;
+}
+.page-card:hover{border-color:var(--card-accent, rgba(200,136,32,0.3));background:var(--card-bg, rgba(200,136,32,0.04));transform:translateY(-1px);}
+.page-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;background:var(--card-accent, rgba(200,136,32,0.4));transform:scaleY(0);transform-origin:bottom;transition:transform .3s cubic-bezier(.16,1,.3,1);}
+.page-card:hover::before{transform:scaleY(1);}
+
+/* Card color themes by category */
+.card-fire  {--card-accent:rgba(200,80,20,0.4);--card-bg:rgba(200,80,20,0.04);}
+.card-dark  {--card-accent:rgba(100,20,160,0.45);--card-bg:rgba(100,20,160,0.04);}
+.card-mtn   {--card-accent:rgba(120,90,60,0.45);--card-bg:rgba(120,90,60,0.04);}
+.card-cel   {--card-accent:rgba(200,180,80,0.45);--card-bg:rgba(200,180,80,0.04);}
+.card-sys   {--card-accent:rgba(80,120,180,0.45);--card-bg:rgba(80,120,180,0.04);}
+.card-loc   {--card-accent:rgba(60,100,80,0.45);--card-bg:rgba(60,100,80,0.04);}
+.card-lore  {--card-accent:rgba(160,120,60,0.45);--card-bg:rgba(160,120,60,0.04);}
+
+.pc-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px;}
+.pc-icon{font-size:18px;opacity:0.5;flex-shrink:0;margin-top:1px;}
+.pc-titles{}
+.pc-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.6vw,17px);letter-spacing:0.12em;color:var(--parch-pale);line-height:1.1;margin-bottom:3px;display:block;}
+.pc-role{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(176,168,160,0.4);line-height:1.3;}
+.pc-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,15px);color:rgba(176,168,160,0.5);line-height:1.6;margin-bottom:10px;}
+.pc-tags{display:flex;gap:4px;flex-wrap:wrap;}
+.pc-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.2em;text-transform:uppercase;padding:2px 7px;border:1px solid rgba(176,168,160,0.1);color:rgba(176,168,160,0.35);}
+.pc-arrow{position:absolute;top:18px;right:16px;font-family:'Cinzel',serif;font-size:11px;color:var(--parch-dim);opacity:0;transition:opacity .25s,right .25s;}
+.page-card:hover .pc-arrow{opacity:0.5;right:13px;}
+
+/* Hidden class for search */
+.page-card.hidden{display:none;}
+
+/* Responsive */
+@media(max-width:1024px){.main{padding:40px 40px 80px;}.search-wrap{padding:12px 40px;}}
+@media(max-width:768px){
+  .site-header{padding:60px 24px 44px;}
+  .main{padding:28px 24px 60px;}
+  .search-wrap{padding:12px 24px;flex-wrap:wrap;} #search-count{display:none;}
+  .pages-grid,.pages-grid.wide{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="sh-eyebrow">// NINE REALMS UNIVERSE · COMPLETE INDEX //</div>
+  <h1 class="sh-title">Nine Realms</h1>
+  <span class="sh-subtitle">Original IP · Complete Lore Index</span>
+  <div class="sh-rule"></div>
+  <p class="sh-desc">Every page of the Nine Realms Universe — all characters, nations, locations, and lore systems — connected in one place. Created by Ron.</p>
+  <div class="sh-meta">
+    <div class="shm-item"><span class="shm-val">26</span><span class="shm-label">Pages</span></div>
+    <div class="shm-item"><span class="shm-val">9</span><span class="shm-label">Nations</span></div>
+    <div class="shm-item"><span class="shm-val">20+</span><span class="shm-label">Characters</span></div>
+    <div class="shm-item"><span class="shm-val">12</span><span class="shm-label">Story Arcs</span></div>
+    <div class="shm-item"><span class="shm-val">1355</span><span class="shm-label">Present Year</span></div>
+  </div>
+</header>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <span class="search-icon">🔍</span>
+    <input id="search" type="text" placeholder="Search pages, characters, locations..." autocomplete="off">
+  </div>
+  <span id="search-count">26 of 26</span>
+  <a href="nine-realms-hub.html">Enter the Hub →</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- WORLD FOUNDATION -->
+  <section class="cat-section">
+    <div class="cat-head">
+      <span class="cat-icon">🌐</span>
+      <div>
+        <div class="cat-label">// CATEGORY //</div>
+        <div class="cat-name">World Foundation</div>
+      </div>
+      <span class="cat-count">5 pages</span>
+    </div>
+    <div class="pages-grid wide">
+      <a href="nine-realms-hub.html" class="page-card card-sys" data-search="hub main entry gateway overview">
+        <div class="pc-top"><span class="pc-icon">🌐</span><div class="pc-titles"><span class="pc-name">The Hub</span><div class="pc-role">Main Entry Point</div></div></div>
+        <p class="pc-desc">The primary gateway to the entire Nine Realms Universe — all nine nations, featured characters, story arcs, and entry points to every section of the lore.</p>
+        <div class="pc-tags"><span class="pc-tag">Entry Point</span><span class="pc-tag">All Nations</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="nine-realms-map.html" class="page-card card-sys" data-search="map world interactive nations geography">
+        <div class="pc-top"><span class="pc-icon">🗺</span><div class="pc-titles"><span class="pc-name">World Map</span><div class="pc-role">Interactive SVG Map</div></div></div>
+        <p class="pc-desc">Interactive world map of all nine nations. Click any region to explore its identity, culture, and connection to the larger Nine Realms cosmology.</p>
+        <div class="pc-tags"><span class="pc-tag">Interactive</span><span class="pc-tag">Geography</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="nine-realms-story-arcs.html" class="page-card card-sys" data-search="story arcs 12 chronicle narrative">
+        <div class="pc-top"><span class="pc-icon">📜</span><div class="pc-titles"><span class="pc-name">All 12 Story Arcs</span><div class="pc-role">Complete Chronicle</div></div></div>
+        <p class="pc-desc">All twelve story arcs from the Emberfall Accord through the Ashen Phoenix — their timelines, intersections, and role in the macro canon of Volume I.</p>
+        <div class="pc-tags"><span class="pc-tag">Arcs</span><span class="pc-tag">Volume I</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="nine-realms-sigils.html" class="page-card card-sys" data-search="sigils symbols 36 heraldry nations">
+        <div class="pc-top"><span class="pc-icon">⚜</span><div class="pc-titles"><span class="pc-name">Sigil Library</span><div class="pc-role">All 36 Sigils</div></div></div>
+        <p class="pc-desc">All 36 nation and city-state sigils with full lore, meanings, and visual reference. The complete heraldic archive of the Nine Realms.</p>
+        <div class="pc-tags"><span class="pc-tag">Heraldry</span><span class="pc-tag">Reference</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="essence-resonance.html" class="page-card card-cel" data-search="magic essence resonance power system celestial aether umbral">
+        <div class="pc-top"><span class="pc-icon">✦</span><div class="pc-titles"><span class="pc-name">Essence & Resonance</span><div class="pc-role">The Power System</div></div></div>
+        <p class="pc-desc">The complete cosmological power system — the Celestial Aether, the Umbral Essence, nine elemental sources, and the three disciplines: Arcane, Divine, and Primal.</p>
+        <div class="pc-tags"><span class="pc-tag">Cosmology</span><span class="pc-tag">Power System</span><span class="pc-tag">All Nations</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="chronicles-registry.html" class="page-card card-lore" data-search="chronicles registry birth years ages timeline canonical volume 1">
+        <div class="pc-top"><span class="pc-icon">📅</span><div class="pc-titles"><span class="pc-name">Chronicles Registry</span><div class="pc-role">Canonical Timeline</div></div></div>
+        <p class="pc-desc">Official canonical record — all 17 Volume I characters with birth years, ages in 1355, six active arc timelines, the Crysen triptych, and continuity locks.</p>
+        <div class="pc-tags"><span class="pc-tag">Canon</span><span class="pc-tag">Timeline</span><span class="pc-tag">1299–1364</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- NATIONS -->
+  <section class="cat-section">
+    <div class="cat-head">
+      <span class="cat-icon">🏛</span>
+      <div>
+        <div class="cat-label">// CATEGORY //</div>
+        <div class="cat-name">Nations · The Realms</div>
+      </div>
+      <span class="cat-count">2 pages</span>
+    </div>
+    <div class="pages-grid wide">
+      <a href="ashura-nation.html" class="page-card card-fire" data-search="ashura fire nation ten city-states flame">
+        <div class="pc-top"><span class="pc-icon">🌋</span><div class="pc-titles"><span class="pc-name">Ashura — The Fire Nation</span><div class="pc-role">Nation Detail Page</div></div></div>
+        <p class="pc-desc">The Fire Nation — ten city-states, biome gallery, culture, the Flameheart Core, and the political architecture Volume I inherits from Dante II's reign.</p>
+        <div class="pc-tags"><span class="pc-tag">Fire Nation</span><span class="pc-tag">Ten Cities</span><span class="pc-tag">Flameheart Core</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="sablea-city.html" class="page-card card-dark" data-search="sablea dark nation three towers exchange guilds ancient languages winding veins">
+        <div class="pc-top"><span class="pc-icon">🏜</span><div class="pc-titles"><span class="pc-name">Sablea — The Dark Nation City-State</span><div class="pc-role">Most Comprehensive Page</div></div></div>
+        <p class="pc-desc">Three Ebony Towers, the Exchange, culture, five ancient languages, Winding Veins, guilds (SMG + Shadow Elite), heraldry, and the Ruling Sisters.</p>
+        <div class="pc-tags"><span class="pc-tag">Dark Nation</span><span class="pc-tag">Sablea</span><span class="pc-tag">Largest Page</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ASHURA DYNASTY -->
+  <section class="cat-section">
+    <div class="cat-head">
+      <span class="cat-icon">♛</span>
+      <div>
+        <div class="cat-label">// CATEGORY //</div>
+        <div class="cat-name">Royal Dynasty — Ashura</div>
+      </div>
+      <span class="cat-count">4 pages</span>
+    </div>
+    <div class="pages-grid">
+      <a href="dante-i.html" class="page-card card-fire" data-search="dante i king warlord unstoppable ember testament fire">
+        <div class="pc-top"><span class="pc-icon">⚔</span><div class="pc-titles"><span class="pc-name">King Dante I</span><div class="pc-role">The Unstoppable Warlord</div></div></div>
+        <p class="pc-desc">The Unstoppable Warlord — the banned Ember Testament, the reign that defined everything Ashura's royalty inherited. Born 1258.</p>
+        <div class="pc-tags"><span class="pc-tag">Ashura</span><span class="pc-tag">Founding King</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="dante-ii.html" class="page-card card-fire" data-search="dante ii king golden reign seraphina vesper ashura death 1355">
+        <div class="pc-top"><span class="pc-icon">♛</span><div class="pc-titles"><span class="pc-name">King Dante II</span><div class="pc-role">The Golden Reign · Died 1355</div></div></div>
+        <p class="pc-desc">The Golden Reign — Seraphina vs Vesper, the affair with Vesper that created Eris, the sealed testament, and the death that triggers Volume I. Born 1305.</p>
+        <div class="pc-tags"><span class="pc-tag">Ashura</span><span class="pc-tag">Year of Twinned Flames</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="sybil-sisters.html" class="page-card card-fire" data-search="calypso thorne nxia sybil sisters three kingdoms">
+        <div class="pc-top"><span class="pc-icon">👑</span><div class="pc-titles"><span class="pc-name">The Sybil Sisters</span><div class="pc-role">Calypso · Thorne · Nxia</div></div></div>
+        <p class="pc-desc">Three kingdoms, one father's legacy. Calypso (Queen of Ashura), Thorne (Queen of Verdantia), Nxia (Queen of Thalassara) — born 1335, 1338, 1341.</p>
+        <div class="pc-tags"><span class="pc-tag">Three Queens</span><span class="pc-tag">Volume I</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="calypso-arc.html" class="page-card card-fire" data-search="calypso arc aftermath ascension eight chapters sorynn">
+        <div class="pc-top"><span class="pc-icon">🔥</span><div class="pc-titles"><span class="pc-name">Calypso: Aftermath & Ascension</span><div class="pc-role">Eight-Chapter Arc</div></div></div>
+        <p class="pc-desc">Eight chapters — Sorynn, Orious, the twin daughters born of betrayal, and Calypso's transformation from heir to conqueror. Arc: 1355–1360.</p>
+        <div class="pc-tags"><span class="pc-tag">Full Arc</span><span class="pc-tag">Ashura Politics</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ASHURA CHARACTERS -->
+  <section class="cat-section">
+    <div class="cat-head">
+      <span class="cat-icon">🔥</span>
+      <div>
+        <div class="cat-label">// CATEGORY //</div>
+        <div class="cat-name">Ashura Characters</div>
+      </div>
+      <span class="cat-count">5 pages</span>
+    </div>
+    <div class="pages-grid">
+      <a href="solara.html" class="page-card card-fire" data-search="solara valyrix infernal phoenix protagonist grand sorceress fire mage roxanna">
+        <div class="pc-top"><span class="pc-icon">🦅</span><div class="pc-titles"><span class="pc-name">Solara Valyrix</span><div class="pc-role">The Infernal Phoenix · Protagonist · Grand Sorceress</div></div></div>
+        <p class="pc-desc">The story's protagonist. From Roxanna's daughter to Grand Sorceress in her own right. Four-act arc, the Emberhold Conspiracy, the truth about Umbrax. Born 1338.</p>
+        <div class="pc-tags"><span class="pc-tag">Protagonist</span><span class="pc-tag">Grand Sorceress</span><span class="pc-tag">Fire Mage</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="umbrax.html" class="page-card card-fire" data-search="umbrax flame thief exarch infernal order crypt emberglass hollow flame villain">
+        <div class="pc-top"><span class="pc-icon">☠</span><div class="pc-titles"><span class="pc-name">Umbrax</span><div class="pc-role">Exarch · The Flame Thief of the Abyss</div></div></div>
+        <p class="pc-desc">Born without Resonance. Rose through theft and construction to lead the Secret Infernal Order. Murdered Roxanna. Project Hollow Flame threatens to replace the divine flame entirely.</p>
+        <div class="pc-tags"><span class="pc-tag">Antagonist</span><span class="pc-tag">Essence Reaver</span><span class="pc-tag">Crypt of Emberglass</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="aurelian-vireen.html" class="page-card card-fire" data-search="aurelian vireen emberfall conspiracy chancellor project cinder">
+        <div class="pc-top"><span class="pc-icon">⚗</span><div class="pc-titles"><span class="pc-name">Aurelian & Vireen</span><div class="pc-role">Chancellor & Strategist</div></div></div>
+        <p class="pc-desc">The Emberfall Conspiracy — four doctrines, Project CINDER-X, the power behind Calypso's throne. Aurelian as the law in Calypso's absence.</p>
+        <div class="pc-tags"><span class="pc-tag">Ashura</span><span class="pc-tag">Emberhold</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="crysen-showcase.html" class="page-card card-cel" data-search="crysen oracle celestial veil ascendant balance protagonist triptych twilight hand">
+        <div class="pc-top"><span class="pc-icon">✦</span><div class="pc-titles"><span class="pc-name">Lady Crysen</span><div class="pc-role">Oracle · The Ascendant Balance</div></div></div>
+        <p class="pc-desc">Oracle of the Celestial Veil. The Celestial Twelve. Three-part arc from Emberfall Accord to self-sacrifice as the Twilight Hand. Bridge between Fire and Dark Nations. Born 1327.</p>
+        <div class="pc-tags"><span class="pc-tag">Oracle</span><span class="pc-tag">Protagonist</span><span class="pc-tag">Twilight Hand</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="solara.html" class="page-card card-fire" data-search="roxanna high sorceress eternal flame solara mother dead 1355" style="opacity:0.65;">
+        <div class="pc-top"><span class="pc-icon">🕯</span><div class="pc-titles"><span class="pc-name">Roxanna</span><div class="pc-role">High Sorceress · Solara's Mother · Died 1355</div></div></div>
+        <p class="pc-desc">The late High Sorceress of the Eternal Flame. Born 1309, died 1355 — the Year of Twinned Flames. Her death begins Solara's arc. Full lore on Solara's page.</p>
+        <div class="pc-tags"><span class="pc-tag">Deceased</span><span class="pc-tag">See Solara's Page</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- MOUNTAIN NATION -->
+  <section class="cat-section">
+    <div class="cat-head">
+      <span class="cat-icon">🏔</span>
+      <div>
+        <div class="cat-label">// CATEGORY //</div>
+        <div class="cat-name">Mountain Nation · Allies</div>
+      </div>
+      <span class="cat-count">1 page</span>
+    </div>
+    <div class="pages-grid wide">
+      <a href="draven.html" class="page-card card-mtn" data-search="draven shadow seeker mountain nation noctyss dragon soulflame dreadwing chief scout">
+        <div class="pc-top"><span class="pc-icon">🐉</span><div class="pc-titles"><span class="pc-name">Draven</span><div class="pc-role">The Shadow Seeker · Chief Scout of the Dragon Fleet</div></div></div>
+        <p class="pc-desc">Mountain Nation's Chief Scout. Noctyss the Soulflame Dragon. Eye of Ira pendant. Dragon Form. Sablean ally — intelligence for both queens. Secret affection for Eris. Dreadwing to his enemies.</p>
+        <div class="pc-tags"><span class="pc-tag">Mountain Nation</span><span class="pc-tag">Dragon Rider</span><span class="pc-tag">Sablean Ally</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- DARK NATION — SABLEA CHARACTERS -->
+  <section class="cat-section">
+    <div class="cat-head">
+      <span class="cat-icon">🌑</span>
+      <div>
+        <div class="cat-label">// CATEGORY //</div>
+        <div class="cat-name">Dark Nation · Sablea Characters</div>
+      </div>
+      <span class="cat-count">9 pages</span>
+    </div>
+    <div class="pages-grid">
+      <a href="yzmina.html" class="page-card card-dark" data-search="yzmina eternal dark priestess vessel ira third generation 700 years supreme sorceress">
+        <div class="pc-top"><span class="pc-icon">✦</span><div class="pc-titles"><span class="pc-name">Yzmina</span><div class="pc-role">Eternal Dark Priestess · Former Vessel of Ira</div></div></div>
+        <p class="pc-desc">Third Generation. Supreme Dark Sorceress turned Eternal Priestess. The only vessel to survive Celestial Possession. Founded the dual reverence of Ara and Ira. 700+ years alive.</p>
+        <div class="pc-tags"><span class="pc-tag">Immortal</span><span class="pc-tag">Vessel of Ira</span><span class="pc-tag">Third Generation</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="vesper.html" class="page-card card-dark" data-search="vesper bloodborne sovereign queen sablea dark nation four secrets eris mother">
+        <div class="pc-top"><span class="pc-icon">🩸</span><div class="pc-titles"><span class="pc-name">Queen Vesper</span><div class="pc-role">The Bloodborne Sovereign · Mother of Eris</div></div></div>
+        <p class="pc-desc">Elder twin, Blood Queen of Sablea. Mother of Eris — Dante II's secret heir. The Four Secrets. Her affair with Dante II and the conspiracy it spawned. Born 1310.</p>
+        <div class="pc-tags"><span class="pc-tag">Sablea</span><span class="pc-tag">Blood Queen</span><span class="pc-tag">Elder Twin</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="vashti.html" class="page-card card-dark" data-search="vashti queen mage sablea theocratic bloodbinding eris mentor">
+        <div class="pc-top"><span class="pc-icon">🌒</span><div class="pc-titles"><span class="pc-name">Queen Vashti</span><div class="pc-role">The Theocratic Monarch · Eris's Mentor</div></div></div>
+        <p class="pc-desc">Younger twin, Queen Mage of Sablea. Master of bloodbinding and old sorcery. Eris's mentor and protector. The Handmaidens. Her own hidden agenda. Born 1310.</p>
+        <div class="pc-tags"><span class="pc-tag">Sablea</span><span class="pc-tag">Queen Mage</span><span class="pc-tag">Younger Twin</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="vyktor.html" class="page-card card-dark" data-search="vyktor vice lord driftpost baron temporal triad shroud 13 fates oracle kernel">
+        <div class="pc-top"><span class="pc-icon">◆</span><div class="pc-titles"><span class="pc-name">Lord Vyktor</span><div class="pc-role">Vice Lord · Baron of Driftpost</div></div></div>
+        <p class="pc-desc">Undefeated master strategist. Shroud of 13 Fates. Oracle Kernel with 8-minute future sight. Temporal Threading. Project Hollow Flame adjacent. Runs Sablea's forbidden-tech ring with Selena.</p>
+        <div class="pc-tags"><span class="pc-tag">Driftpost</span><span class="pc-tag">Undefeated</span><span class="pc-tag">Temporal Triad</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="selena.html" class="page-card card-dark" data-search="selena supreme witch sisters ira chairwoman council shadows hidden sovereign temporal">
+        <div class="pc-top"><span class="pc-icon">🪶</span><div class="pc-titles"><span class="pc-name">Selena</span><div class="pc-role">Supreme Witch · Chairwoman · Hidden Sovereign</div></div></div>
+        <p class="pc-desc">Supreme Witch of the Sisters of Ira and Chairwoman of the Council of Shadows. Secretly plans to overthrow both queens. Temporal tech from New Sablea. Defeated by Crysen.</p>
+        <div class="pc-tags"><span class="pc-tag">Sisters of Ira</span><span class="pc-tag">Council of Shadows</span><span class="pc-tag">Temporal Sorceress</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="eris.html" class="page-card card-dark" data-search="eris hidden heir vesper dante ii dark fire handmaiden pawn vessel ira">
+        <div class="pc-top"><span class="pc-icon">🔥</span><div class="pc-titles"><span class="pc-name">Lady Eris</span><div class="pc-role">The Hidden Heir · Vessel of Ira</div></div></div>
+        <p class="pc-desc">Secret daughter of Dante II and Vesper. Believes herself a handmaiden. Carries Ashura fire and Sablean shadow. Prophesied vessel for Ira's rebirth. Five-stage arc from pawn to power. Born 1332.</p>
+        <div class="pc-tags"><span class="pc-tag">Hidden Heir</span><span class="pc-tag">Two Bloodlines</span><span class="pc-tag">Vessel of Ira</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="four-secrets.html" class="page-card card-dark" data-search="four secrets loryxan thalrik calivor sanguinor blood moons vesper sons">
+        <div class="pc-top"><span class="pc-icon">⚔</span><div class="pc-titles"><span class="pc-name">The Four Secrets</span><div class="pc-role">Loryxan · Thalrik · Calivor · Sanguinor</div></div></div>
+        <p class="pc-desc">Four sons born of blood moon ritual. Bound by Vesper's dark ambition. Thalrik can traverse the Abyssal Gate. They have seen New Sablea — and what their bloodline built when no one stopped it.</p>
+        <div class="pc-tags"><span class="pc-tag">Blood Moon</span><span class="pc-tag">Abyssal Gate</span><span class="pc-tag">Sablea</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="new-sablea.html" class="page-card card-dark" data-search="new sablea underworld perdition future dystopian ironforge realm four descendants">
+        <div class="pc-top"><span class="pc-icon">🏙</span><div class="pc-titles"><span class="pc-name">New Sablea — The Underworld Perdition</span><div class="pc-role">Future Timeline · Accessed via Abyssal Gate</div></div></div>
+        <p class="pc-desc">The dystopian future the Four Secrets found through the Gate. Crimson-lit soul mines, four ruling descendants, the Ironforge Realm teaser. The confirmed consequence of unchecked ambition.</p>
+        <div class="pc-tags"><span class="pc-tag">Future Timeline</span><span class="pc-tag">Soul Mines</span><span class="pc-tag">Ironforge Realm</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+      <a href="ancient-monastery.html" class="page-card card-loc" data-search="ancient northern monastery sablea moons pathway obelisks winding veins crysen faceless red monks">
+        <div class="pc-top"><span class="pc-icon">🏛</span><div class="pc-titles"><span class="pc-name">The Ancient Northern Monastery</span><div class="pc-role">Sacred Location · Gateway to the Winding Veins</div></div></div>
+        <p class="pc-desc">The Moons' Pathway, nine obelisks, the Chamber of Moons' one-way rule, descent into the Winding Veins via Nythari passphrase, the Faceless Red Monks. Crysen's crucible.</p>
+        <div class="pc-tags"><span class="pc-tag">Sacred Location</span><span class="pc-tag">Winding Veins</span><span class="pc-tag">Yzmina's Domain</span></div>
+        <span class="pc-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solara Valyrix — The Infernal Phoenix | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:#06030A;--deep:#080402;--coal:#0E0604;
+  --infernal:#A02808;--inf-mid:#C83010;--inf-pale:#E86030;
+  --phoenix:#E08018;--phoenix-pale:#F0A030;
+  --violet:#601880;--violet-mid:#802098;--violet-pale:#A040B8;
+  --gold:#B08020;--gold-pale:#D09830;
+  --parch:#C8A870;--parch-pale:#E8C890;--parch-dim:#7A6040;
+  /* Act colors */
+  --act1:#B06020;--act2:#A02808;--act3:#801060;--act4:#C07010;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px;}
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--parch);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cur-ring{width:32px;height:32px;border:1px solid rgba(160,40,8,0.4);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.phoenix{width:50px;height:50px;border-color:var(--phoenix);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(6,3,10,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(160,40,8,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:var(--phoenix-pale);opacity:0.7;letter-spacing:0.1em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--phoenix-pale);border:1px solid rgba(160,40,8,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--infernal);}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 55%, #160804 0%, var(--void) 65%);}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-pre{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:var(--phoenix-pale);text-transform:uppercase;opacity:0;animation:riseIn 1.2s .2s ease forwards;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.h-pre::before,.h-pre::after{content:'';display:block;width:44px;height:1px;background:linear-gradient(to right,transparent,var(--phoenix));}
+.h-pre::after{transform:scaleX(-1);}
+.h-klass{font-family:'Cinzel',serif;font-size:clamp(9px,1.2vw,13px);letter-spacing:0.45em;text-transform:uppercase;color:var(--phoenix-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-name{font-family:'Cinzel Decorative',serif;font-size:clamp(48px,10vw,130px);font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;text-shadow:0 0 100px rgba(224,128,24,0.4),0 4px 40px rgba(0,0,0,0.9);opacity:0;animation:riseIn 1.8s .5s ease forwards;}
+.h-epithet{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,1.5vw,18px);font-weight:400;color:var(--phoenix-pale);letter-spacing:0.2em;display:block;margin-top:8px;opacity:0;animation:riseIn 1s .8s ease forwards;}
+.h-rule{width:1px;height:0;background:linear-gradient(to bottom,var(--phoenix),transparent);margin:26px auto;animation:lineGrow 1s 1.1s ease forwards;}
+@keyframes lineGrow{to{height:52px;}}
+.h-tag{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,2vw,20px);color:rgba(200,168,112,0.45);max-width:640px;margin:0 auto 48px;line-height:1.75;opacity:0;animation:riseIn 1.2s 1.3s ease forwards;}
+.h-vitals{display:flex;justify-content:center;max-width:680px;margin:0 auto;border:1px solid rgba(160,40,8,0.15);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:18px 20px;text-align:center;border-right:1px solid rgba(160,40,8,0.1);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.5vw,28px);color:var(--phoenix-pale);line-height:1;margin-bottom:6px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--parch-dim);opacity:0.3;}
+.s-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--phoenix),transparent);animation:sPulse 2s ease-in-out infinite;}
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;text-transform:uppercase;opacity:0.6;display:block;margin-bottom:18px;color:var(--phoenix-pale);}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(224,128,24,0.12),transparent);}
+.orn span{position:relative;background:var(--void);padding:0 18px;font-size:14px;color:var(--phoenix);opacity:0.35;z-index:1;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,46px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(200,168,112,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--phoenix-pale);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid var(--phoenix);background:rgba(224,128,24,0.04);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.7vw,19px);color:rgba(200,168,112,0.7);line-height:1.7;}
+.pull cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--phoenix-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+
+/* PROFILE */
+.profile{padding:100px 60px;background:var(--coal);}
+.profile-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.6fr;gap:90px;align-items:start;}
+.prof-aside .big-roman{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(224,128,24,0.08);line-height:1;margin-left:-6px;}
+.prof-aside-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:var(--phoenix-pale);opacity:0.5;text-transform:uppercase;}
+.prof-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(200,168,112,0.3);margin-top:6px;}
+
+/* Context box — year 1355 */
+.context-box{margin-top:40px;padding:24px 28px;border:1px solid rgba(224,128,24,0.15);background:rgba(224,128,24,0.03);}
+.context-box-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:var(--phoenix-pale);opacity:0.6;display:block;margin-bottom:12px;}
+.context-box p{font-family:'EB Garamond',serif;font-style:italic;font-size:15px;color:rgba(200,168,112,0.55);line-height:1.75;}
+.context-box p strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* MAGE RANK HIERARCHY */
+.hierarchy{padding:100px 60px;background:var(--deep);}
+.hier-inner{max-width:1100px;margin:0 auto;}
+.hier-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,46px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.hier-title em{font-style:italic;color:var(--phoenix-pale);}
+.hier-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(200,168,112,0.4);max-width:560px;line-height:1.75;margin-bottom:52px;}
+
+.rank-tower{display:flex;flex-direction:column;gap:3px;}
+.rank-tier{
+  display:grid;grid-template-columns:180px 1fr auto;
+  gap:0;
+  border:1px solid;
+  overflow:hidden;
+  transition:border-color .3s;
+  cursor:default;
+}
+.rank-tier:hover{filter:brightness(1.1);}
+
+.tier-5{border-color:rgba(160,40,8,0.08);background:rgba(6,3,10,0.5);}
+.tier-4{border-color:rgba(192,48,24,0.15);background:rgba(192,48,24,0.04);}
+.tier-3{border-color:rgba(224,128,24,0.15);background:rgba(224,128,24,0.05);}
+.tier-2{border-color:rgba(176,80,40,0.15);background:rgba(176,80,40,0.04);}
+.tier-1{border-color:rgba(200,160,80,0.12);background:rgba(200,160,80,0.03);}
+
+.rank-label{padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(200,168,112,0.06);}
+.rank-label-num{font-family:'Cinzel Decorative',serif;font-size:10px;letter-spacing:0.3em;opacity:0.3;margin-bottom:4px;}
+.rank-label-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.15em;color:var(--parch-pale);}
+.tier-5 .rank-label-name{color:rgba(200,168,112,0.3);font-style:italic;}
+.tier-4 .rank-label-name{color:var(--inf-pale);}
+.tier-3 .rank-label-name{color:var(--phoenix-pale);}
+.tier-2 .rank-label-name{color:rgba(200,168,112,0.7);}
+.tier-1 .rank-label-name{color:rgba(200,168,112,0.5);}
+
+.rank-desc{padding:20px 28px;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(200,168,112,0.5);line-height:1.7;display:flex;align-items:center;}
+.rank-holders{padding:20px 24px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;display:flex;align-items:center;border-left:1px solid rgba(200,168,112,0.06);min-width:200px;}
+.tier-5 .rank-holders{color:rgba(160,40,8,0.4);}
+.tier-4 .rank-holders{color:var(--inf-pale);opacity:0.7;}
+.tier-3 .rank-holders{color:var(--phoenix-pale);opacity:0.8;}
+.tier-2 .rank-holders{color:rgba(200,168,112,0.5);}
+.tier-1 .rank-holders{color:rgba(200,168,112,0.3);}
+
+/* Solara indicator */
+.solara-marker{
+  display:inline-block;padding:3px 10px;
+  background:rgba(224,128,24,0.15);
+  border:1px solid rgba(224,128,24,0.3);
+  font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;
+  color:var(--phoenix-pale);text-transform:uppercase;
+  margin-left:8px;
+}
+
+/* FOUR ACTS */
+.acts{padding:80px 60px 100px;max-width:1100px;margin:0 auto;}
+
+.act{
+  margin-bottom:80px;
+  border:1px solid;
+  position:relative;overflow:hidden;
+  transition:border-color .3s;
+}
+.act:hover{filter:brightness(1.05);}
+.act-header{padding:32px 40px;border-bottom:1px solid rgba(200,168,112,0.06);display:flex;align-items:center;gap:28px;}
+.act-num{font-family:'Cinzel Decorative',serif;font-size:clamp(36px,5vw,60px);font-weight:400;line-height:1;flex-shrink:0;opacity:0.5;}
+.act-header-text{}
+.act-roman{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;opacity:0.5;display:block;margin-bottom:6px;}
+.act-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,32px);font-weight:400;color:var(--parch-pale);line-height:1.1;}
+.act-subtitle{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-top:5px;}
+.act-body{padding:36px 40px;}
+.act-beat{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid rgba(200,168,112,0.05);}
+.act-beat:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.act-beat-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:8px;}
+.act-beat-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(200,168,112,0.55);line-height:1.8;}
+.act-beat-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Act accent colors */
+.act-1{border-color:rgba(176,96,32,0.15);}
+.act-1 .act-num{color:var(--act1);}
+.act-1 .act-roman{color:var(--act1);}
+.act-2{border-color:rgba(160,40,8,0.15);}
+.act-2 .act-num{color:var(--act2);}
+.act-2 .act-roman{color:var(--act2);}
+.act-3{border-color:rgba(128,16,96,0.15);}
+.act-3 .act-num{color:var(--act3);}
+.act-3 .act-roman{color:var(--act3);}
+.act-4{border-color:rgba(192,112,16,0.15);}
+.act-4 .act-num{color:var(--act4);}
+.act-4 .act-roman{color:var(--act4);}
+
+/* KEY FIGURES */
+.figures{padding:100px 60px;background:var(--coal);}
+.fig-inner{max-width:1100px;margin:0 auto;}
+.fig-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+.fig-card{padding:36px 28px;border:1px solid rgba(200,168,112,0.06);position:relative;overflow:hidden;transition:border-color .3s,background .3s;}
+.fig-card:hover{border-color:rgba(200,168,112,0.18);background:rgba(200,168,112,0.02);}
+.fig-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:0;transition:height .5s cubic-bezier(.16,1,.3,1);}
+.fig-card:hover::before{height:100%;}
+.fc-calydra::before{background:var(--infernal);}
+.fc-celestra::before{background:var(--violet-mid);}
+.fc-ronan::before{background:var(--phoenix);}
+.fc-liora::before{background:#406080;}
+.fc-solara::before{background:var(--phoenix);}
+.fc-calypso::before{background:var(--inf-mid);}
+.fig-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;padding:4px 12px;border:1px solid;margin-bottom:14px;display:inline-block;opacity:0.7;}
+.fc-calydra .fig-tag{color:var(--inf-pale);border-color:var(--infernal);}
+.fc-celestra .fig-tag{color:var(--violet-pale);border-color:var(--violet-mid);}
+.fc-ronan .fig-tag{color:var(--phoenix-pale);border-color:var(--phoenix);}
+.fc-liora .fig-tag{color:#6090B0;border-color:#406080;}
+.fc-solara .fig-tag{color:var(--phoenix-pale);border-color:var(--phoenix);}
+.fc-calypso .fig-tag{color:var(--inf-pale);border-color:var(--inf-mid);}
+.fig-name{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,26px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:6px;}
+.fig-title{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;}
+.fig-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(200,168,112,0.5);line-height:1.75;}
+.fig-arc{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;margin-top:14px;padding-top:12px;border-top:1px solid rgba(200,168,112,0.06);opacity:0.4;}
+
+/* TIMELINE IMPACT */
+.impact{padding:100px 60px;background:var(--deep);}
+.imp-inner{max-width:1100px;margin:0 auto;}
+.imp-list{display:flex;flex-direction:column;gap:3px;margin-top:48px;}
+.imp-entry{display:grid;grid-template-columns:180px 1fr;border:1px solid rgba(200,168,112,0.06);overflow:hidden;transition:border-color .3s;}
+.imp-entry:hover{border-color:rgba(200,168,112,0.18);}
+.imp-who{background:rgba(200,168,112,0.03);padding:22px 26px;border-right:1px solid rgba(200,168,112,0.06);display:flex;flex-direction:column;justify-content:center;}
+.imp-name{font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:4px;}
+.imp-role{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(200,168,112,0.3);}
+.imp-what{padding:22px 30px;}
+.imp-action{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--phoenix-pale);opacity:0.6;margin-bottom:8px;display:block;}
+.imp-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(200,168,112,0.5);line-height:1.75;}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(160,40,8,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,46px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--phoenix-pale);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(200,168,112,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:var(--parch-pale);}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(200,168,112,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(200,168,112,0.4);color:var(--parch);}
+footer{background:var(--void);border-top:1px solid rgba(160,40,8,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(200,168,112,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .profile{padding:80px 40px;}
+  .profile-inner{grid-template-columns:1fr;gap:40px;}
+  .hierarchy{padding:80px 40px;}
+  .rank-tier{grid-template-columns:1fr;} .rank-label{border-right:none;border-bottom:1px solid rgba(200,168,112,0.06);}
+  .rank-holders{border-left:none;border-top:1px solid rgba(200,168,112,0.06);}
+  .acts{padding:60px 40px 80px;}
+  .act-header{flex-direction:column;align-items:flex-start;gap:14px;}
+  .figures{padding:80px 40px;}
+  .fig-grid{grid-template-columns:1fr 1fr;}
+  .impact{padding:80px 40px;}
+  .imp-entry{grid-template-columns:1fr;} .imp-who{border-right:none;border-bottom:1px solid rgba(200,168,112,0.06);}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;} .nav.scrolled{padding:12px 24px;} .nav-link{display:none;}
+  .h-vitals{flex-direction:column;} .h-vital{border-right:none;border-bottom:1px solid rgba(160,40,8,0.1);} .h-vital:last-child{border-bottom:none;}
+  .acts{padding:50px 24px 60px;}
+  .act-body,.act-header{padding:24px;}
+  .fig-grid{grid-template-columns:1fr;}
+  .page-cta{padding:60px 24px;}
+  footer{padding:28px 24px;}
+}
+@keyframes phoenixGlowTick{0%,100%{opacity:0.25;}50%{opacity:0.5;}}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="calypso-arc.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">Ashura · The Prodigal Child</span>
+  </a>
+  <div class="nav-right">
+    <a href="calypso-arc.html" class="nav-link">Calypso</a>
+    <a href="ashura-nation.html" class="nav-link">Ashura</a>
+    <a href="aurelian-vireen.html" class="nav-link">Aurelian →</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-content">
+    <p class="h-pre">Ashura · Daughter of Roxanna · Cousin to the Crown</p>
+    <span class="h-klass">The Prodigal Child of Ashura</span>
+    <h1 class="h-name">Solara Valyrix</h1>
+    <span class="h-epithet">The Infernal Phoenix of Valyra</span>
+    <div class="h-rule"></div>
+    <p class="h-tag">Born inheriting her mother's flame, she forged her own. She is now Grand Sorceress — not the daughter of Roxanna, but the myth she became in the ashes of everything Roxanna could not say aloud. Feared by nobles. Worshipped by rebels. Watched by ancient spirits. Her legacy is still forming. Unlike her mother's, it will not be written in obedience to tradition.</p>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">IV</div><div class="h-vlabel">Acts</div></div>
+      <div class="h-vital"><div class="h-vval">1355</div><div class="h-vlabel">The Year It Burns</div></div>
+      <div class="h-vital"><div class="h-vval">Kin</div><div class="h-vlabel">To the Crown</div></div>
+      <div class="h-vital"><div class="h-vval">GS</div><div class="h-vlabel">Grand Sorceress</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>Read the Dossier</span><div class="s-line"></div></div>
+</section>
+
+<!-- PROFILE -->
+<section class="profile">
+  <div class="profile-inner">
+    <div class="rv">
+      <div class="prof-aside">
+        <div class="big-roman">S</div>
+        <span class="prof-aside-tag">The Prodigal · The Cousin</span>
+        <p class="prof-aside-note">Daughter of Roxanna · Granddaughter of Dante I · High Sorceress (Inherited)</p>
+      </div>
+      <div class="context-box" style="margin-top:32px;">
+        <span class="context-box-label">Timeline Context · Year 1355</span>
+        <p>Solara's uprising is happening <strong>just before Calypso leaves Ashura</strong> — just as the Emberhold Accord reaches its critical phase. The stress she creates is part of the reason Calypso will delegate full control to <strong>Aurelian</strong> — and secretly entrust her to dispose of the Infernal Order by any means necessary. The chaos Solara creates is why Calypso distrusts old magic entirely, and why she wants the Emberhold Project to succeed.</p>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">The Character · Origin & Context</span>
+      <h2 class="big-h">
+        Kin to the Crown.<br>
+        <em>Heir to a fire</em><br>
+        the Crown wants extinguished.
+      </h2>
+      <p class="bp">Solara Valyrix is the daughter of <strong>Roxanna</strong> — High Sorceress and Dante I's surviving daughter. This makes her Calypso's cousin. It also makes her the only person in Ashura with a bloodline claim to both the royal legacy and the fire magic tradition that predates the kingdom itself.</p>
+      <p class="bp">She begins her story as a student at the <em>Academy of Fire Mages</em> in Valyra — curious, gifted beyond her rank, and increasingly obsessed with her mother's hidden past. What she discovers pulls her into the oldest and most dangerous power structure in the Fire Nation: the <strong>Secret Infernal Order.</strong></p>
+      <div class="pull"><p>"Cleanser or conqueror — her choice decides whether her grandfather's memoir becomes scripture or warning."</p><cite>— The Ember Testament · Notes on Bloodlines</cite></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--deep);"><span>✦</span></div>
+
+<!-- MAGE RANK HIERARCHY -->
+<section class="hierarchy">
+  <div class="hier-inner">
+    <div class="rv">
+      <span class="sl">The Ranking Structure · Fire Mages & Sorcerers of Ashura</span>
+      <h2 class="hier-title">The Hierarchy<br><em>Solara Must Climb</em></h2>
+      <p class="hier-intro">Five tiers. Each one carrying not just magical rank but political and administrative authority. Solara begins at the bottom. By the end of Act IV, she will have disrupted every level above her.</p>
+    </div>
+    <div class="rank-tower rv d1">
+      <!-- Tier 5 — Abolished -->
+      <div class="rank-tier tier-5">
+        <div class="rank-label"><div class="rank-label-num">Rank 5</div><div class="rank-label-name">Supreme Sorcerer · Abolished</div></div>
+        <div class="rank-desc">Once held by Emberion — a tyrannical fire mage. The title was abolished after his reign ended in catastrophe. It serves now as a warning. It will serve as Solara's unconscious aspiration.</div>
+        <div class="rank-holders">Emberion (abolished) · Serves as grim reminder</div>
+      </div>
+      <!-- Tier 4 — High Sorcerer -->
+      <div class="rank-tier tier-4">
+        <div class="rank-label"><div class="rank-label-num">Rank 4</div><div class="rank-label-name">High Sorcerer/ess · Active</div></div>
+        <div class="rank-desc">Executive, Judicial, and Congressional power divided across three positions. The governing trio of all magical operations. They advise the Queen directly and oversee every branch of Fire Nation magic.</div>
+        <div class="rank-holders">Calydra · Valyra (Executive)<br>Celestra · Ignis (Judicial)<br>Kaon · Cindara (Congressional)</div>
+      </div>
+      <!-- Tier 3 — Grand Sorcerer -->
+      <div class="rank-tier tier-3">
+        <div class="rank-label"><div class="rank-label-num">Rank 3</div><div class="rank-label-name">Grand Sorcerer/ess</div></div>
+        <div class="rank-desc">Strategic commanders and elemental overseers. They manage entire city-states, lead major military campaigns, and ensure volcanic and magma stability. District governors in times of peace; regional warlords in conflict.</div>
+        <div class="rank-holders">Aurelian · Chancellor of Valyra<br>Grand Sorcerer rank, operates as Chancellor</div>
+      </div>
+      <!-- Tier 2 — Sorcerer -->
+      <div class="rank-tier tier-2">
+        <div class="rank-label"><div class="rank-label-num">Rank 2</div><div class="rank-label-name">Sorcerer/Sorceress</div></div>
+        <div class="rank-desc">Field commanders of battalion-level operations. City guardians who protect key locations and maintain fire magic equilibrium. Respected figures with both military and civic responsibilities.</div>
+        <div class="rank-holders">Multiple across the Fire Nation · Named field commanders</div>
+      </div>
+      <!-- Tier 1 — Fire Mage -->
+      <div class="rank-tier tier-1">
+        <div class="rank-label"><div class="rank-label-num">Rank 1</div><div class="rank-label-name">Fire Mage <span class="solara-marker">Solara Starts Here</span></div></div>
+        <div class="rank-desc">Fresh Academy graduates. Trained in basic fire manipulation, arcane principles, and elemental control. The backbone of day-to-day magical operations. Numerous, essential, and hungry to advance.</div>
+        <div class="rank-holders">All Academy graduates · Including Liora & Ronan · Solara at story start</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--void);"><span>✦</span></div>
+
+<!-- FOUR ACTS -->
+<div class="acts">
+  <span class="sl rv" style="text-align:left;margin-bottom:40px;">The Four Acts · Complete Story Arc</span>
+
+  <!-- ACT I -->
+  <div class="act act-1 rv">
+    <div class="act-header">
+      <div class="act-num">I</div>
+      <div class="act-header-text">
+        <span class="act-roman">Act I</span>
+        <h3 class="act-title">Awakening</h3>
+        <p class="act-subtitle">The Academy · The Festival · The Journals · The First Step Toward the Order</p>
+      </div>
+    </div>
+    <div class="act-body">
+      <div class="act-beat">
+        <div class="act-beat-title">The Academy of Fire Mages · Valyra</div>
+        <p class="act-beat-body">Solara arrives at the Academy curious, intelligent, and unaware of her true lineage. Her academic progress is exceptional — but her obsession with uncovering hidden knowledge and pushing magical boundaries creates tension with her instructors, particularly <strong>Calydra</strong> and <strong>Celestra</strong>. She has inherited something her mother left in every flame she ever touched.</p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">The Festival of Flames · The Ember Reflection</div>
+        <p class="act-beat-body">At the Festival, a mysterious figure approaches Solara with hints about <em>her mother's hidden past and possible involvement with the Infernal Order.</em> At the Ember Reflection, an elder Flame Keeper reveals that her mother possessed knowledge of dark magic — and was possibly connected to the Order. The door opens. Solara steps toward it.</p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">The Journals · The Two Books</div>
+        <p class="act-beat-body">Solara finds her mother Roxanna's journals — containing references to two hidden texts: <strong>The Phoenix of Requena</strong> and <strong>The Book of the Curator.</strong> Both detail dark fire magic practices. The internal conflict ignites: was her mother a member of the Order? She decides to find out by infiltrating it herself.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT II -->
+  <div class="act act-2 rv">
+    <div class="act-header">
+      <div class="act-num">II</div>
+      <div class="act-header-text">
+        <span class="act-roman">Act II</span>
+        <h3 class="act-title">Descent into Darkness</h3>
+        <p class="act-subtitle">The Arena Trials · The Infiltration · Celestra's True Face</p>
+      </div>
+    </div>
+    <div class="act-body">
+      <div class="act-beat">
+        <div class="act-beat-title">The Inferno Arena Trials</div>
+        <p class="act-beat-body">Academy combat trials begin. Solara showcases the <strong>Ember Shield</strong> and <strong>Ember Dagger</strong>, followed by mastery of Emberstorm Technique — techniques that set her apart from every peer. She earns Celestra's professional favor. Calydra grows concerned. The gap between what Solara shows and what she hides widens daily.</p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">Infiltration of the Secret Infernal Order</div>
+        <p class="act-beat-body">Solara gains access to the Order's secret meetings using her mother's journals. Powerful members see her potential immediately and begin grooming her. She is torn between the Order's vision of a <em>"liberated Fire Nation"</em> and the warnings her teachers have given her. She keeps her mission secret from Liora and Ronan — who grow suspicious of her increasingly reckless behavior.</p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">Celestra's True Allegiance Revealed</div>
+        <p class="act-beat-body">Celestra — the High Sorceress of Ignis, keeper of magical law — is revealed to be a <strong>high-ranking member of the Infernal Order.</strong> She has been manipulating Solara's rise through both the Academy and the Order. She tries to persuade Solara to join fully, arguing that Ashura's current leadership is corrupt and that only the Order's vision can save the Fire Nation. Solara is tempted. She has not yet decided.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT III -->
+  <div class="act act-3 rv">
+    <div class="act-header">
+      <div class="act-num">III</div>
+      <div class="act-header-text">
+        <span class="act-roman">Act III</span>
+        <h3 class="act-title">Betrayal and Sacrifice</h3>
+        <p class="act-subtitle">Calydra's Sacrifice · The Final Duel · Celestra Defeated · The New High Sorceress</p>
+      </div>
+    </div>
+    <div class="act-body">
+      <div class="act-beat">
+        <div class="act-beat-title">Calydra's Sacrifice</div>
+        <p class="act-beat-body">As Solara rises through the Order's ranks, she and her allies uncover Celestra's full plan. A major battle erupts. Calydra confronts Celestra alongside Solara — and <strong>Celestra mortally wounds Calydra.</strong> In her final moments, Calydra transfers her powers to Solara, including <em>Phoenix Ascension.</em> Solara is appointed the new High Sorceress of Ashura. Her grief is immediate. The weight of the position is heavier than she expected.</p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">Solara vs. Celestra · The Final Duel</div>
+        <p class="act-beat-body">Now infused with Calydra's power, Solara faces Celestra in a brutal duel. Celestra reveals her ultimate plan: to use Solara as a <strong>vessel for a dark fire deity</strong> the Order worships — the reason she has been grooming her since the beginning. Solara is forced to choose: embrace the dark power she has gained, or reject it in favor of her mother's legacy of balance. She chooses the latter. Celestra is defeated — but escapes, warning that <em>the darkness within Solara is not easily vanquished.</em></p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">The Pivot · Where the Arc Turns</div>
+        <p class="act-beat-body">Here the original arc would end in victory. But in the broader Nine Realms context — with Calypso absent, Aurelian in control, and year 1355 approaching — <strong>Solara's story takes its second turn.</strong> Her emergence as High Sorceress coincides with Calypso's growing frustration with the Infernal Order and all old magic. What was a story of redemption becomes a story of a new kind of radicalization.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACT IV -->
+  <div class="act act-4 rv">
+    <div class="act-header">
+      <div class="act-num">IV</div>
+      <div class="act-header-text">
+        <span class="act-roman">Act IV · Year 1355 Context</span>
+        <h3 class="act-title">The Infernal Phoenix Rises</h3>
+        <p class="act-subtitle">The Emberhold Accord Threatened · Solara Leads the Order · Aurelian Acts · The Realm Fractures</p>
+      </div>
+    </div>
+    <div class="act-body">
+      <div class="act-beat">
+        <div class="act-beat-title">The Resolve Made New</div>
+        <p class="act-beat-body">Solara's victory over Celestra and her discovery of her mother's full legacy reshapes her original mission. She now leads the Secret Infernal Order herself — but reframes its objective: <strong>preserve all fire magic (current and forbidden) and stop the Emberhold Project by any means necessary.</strong> She is not the cult's puppet anymore. She is its phoenix — and she believes she is protecting Ashura from the wrong future.</p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">The Civil Fracture · Sect Formation</div>
+        <p class="act-beat-body">The Order splinters under her leadership into competing factions: <em>The Flames of Purity</em> (radical purgers) and <em>The Ashen Council</em> (political infiltrators). Parts of the military and civilian population quietly align with different sects. The Fire Nation — which Calypso spent years consolidating — begins to divide from within. <strong>This is exactly what Calypso feared.</strong></p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">Aurelian vs. The Order · Year 1355</div>
+        <p class="act-beat-body">Calypso, aware of the brewing chaos and preparing to delegate control during her absence, secretly entrusts <strong>Aurelian</strong> with two mandates: make the Emberhold Project succeed, and dispose of the Infernal Order. Aurelian — Grand Sorceress and Chancellor of Valyra — moves aggressively. The confrontation between the Doctrine she represents and the old magic Solara is defending will determine whether the Fire Nation enters a new era or tears itself apart at its foundations.</p>
+      </div>
+      <div class="act-beat">
+        <div class="act-beat-title">Cleanser or Conqueror · The Unresolved Question</div>
+        <p class="act-beat-body">Solara's arc remains unresolved at Year 1355. She stands at the pivot point her grandfather Dante I never had: <em>Sacred Gemcraft offers a third way — cleanse corrupt power or fuse it into something survivable.</em> Whether she becomes the cleanser who redeems old magic, or the conqueror who becomes exactly what she set out to oppose, is the question her entire story has been building toward. <strong>Her choice decides whether Dante I's memoir becomes scripture or warning.</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="orn" style="background:var(--coal);"><span>✦</span></div>
+
+<!-- KEY FIGURES -->
+<section class="figures">
+  <div class="fig-inner">
+    <div class="rv">
+      <span class="sl">The Characters Orbiting Her Arc</span>
+      <h2 class="big-h" style="margin-bottom:12px;">The People Who Shape<br><em>Solara's Path</em></h2>
+    </div>
+    <div class="fig-grid">
+      <div class="fig-card fc-calydra rv">
+        <span class="fig-tag">Mentor → Martyr</span>
+        <h3 class="fig-name">Calydra</h3>
+        <p class="fig-title">High Sorceress of Valyra · Executive Power</p>
+        <p class="fig-body">Solara's mentor and the closest thing to a protector she has within the hierarchy. Governs military and magical operations, advises Queen Calypso directly. Sacrifices herself to transfer her power to Solara. Her death creates the High Sorceress that neither of them fully anticipated.</p>
+        <div class="fig-arc">Arc: Protector → Sacrifice → Power Transfer</div>
+      </div>
+      <div class="fig-card fc-celestra rv d1">
+        <span class="fig-tag">Mentor → Villain</span>
+        <h3 class="fig-name">Celestra</h3>
+        <p class="fig-title">High Sorceress of Ignis · Judicial Power · Secret Order Leader</p>
+        <p class="fig-body">The true antagonist. Used her position as keeper of magical law to conceal her role as the Order's architect. Groomed Solara as a vessel for a dark fire deity. Her defeat leaves the door open — she escapes, and her warning about the darkness inside Solara is the most honest thing she ever said.</p>
+        <div class="fig-arc">Arc: Respected Mentor → Revealed Villain → Defeated but Unresolved</div>
+      </div>
+      <div class="fig-card fc-ronan rv d2">
+        <span class="fig-tag">Brash Ally → Dangerous Partner</span>
+        <h3 class="fig-name">Ronan</h3>
+        <p class="fig-title">Academy Peer · Napalm Magic Specialist</p>
+        <p class="fig-body">Brash warrior. Struggles to master Napalm Magic — raw power on the edge of uncontrollable. Witnesses Calydra's sacrifice and finally unlocks his full potential, but his growing power drives him toward a dangerous path of aggression. His loyalty to Solara is what redeems him — barely.</p>
+        <div class="fig-arc">Arc: Brash Warrior → Reckless Mage → Redemption through Control</div>
+      </div>
+      <div class="fig-card fc-liora rv">
+        <span class="fig-tag">Quiet Ally → Master Strategist</span>
+        <h3 class="fig-name">Liora</h3>
+        <p class="fig-title">Academy Peer · Smoke & Ember Magic</p>
+        <p class="fig-body">Descended from a line of smoke and ember mages. Discovers her own hidden powers — including Smoke Teleportation — and becomes Solara's most trusted ally and intelligence asset. Uses her abilities to infiltrate enemy camps and gather crucial intelligence during the civil war.</p>
+        <div class="fig-arc">Arc: Quiet Ally → Hidden Power → Master of Smoke and Ember</div>
+      </div>
+      <div class="fig-card fc-calypso rv d1">
+        <span class="fig-tag">The Crown She Threatens</span>
+        <h3 class="fig-name">Queen Calypso</h3>
+        <p class="fig-title">Queen of Ashura · The Iron Flame</p>
+        <p class="fig-body">Solara's cousin and the ruler whose authority Solara's Order threatens. Calypso's frustration with the Infernal Order's rise is one of the reasons she trusts Aurelian with absolute authority during her absence — and why she wants old fire magic replaced with Emberhold technology entirely.</p>
+        <div class="fig-arc">Connection: Cousin · Frustrated Crown · Catalyst for Aurelian's mandate</div>
+      </div>
+      <div class="fig-card fc-solara rv d2">
+        <span class="fig-tag">The Phoenix Herself</span>
+        <h3 class="fig-name">Solara Valyrix</h3>
+        <p class="fig-title">High Sorceress · Infernal Phoenix · Heir to Roxanna's Legacy</p>
+        <p class="fig-body">Curious student → secret infiltrator → reluctant leader → potential savior or destroyer of Ashura. Her quest for her mother's truth led her to become the very thing she set out to understand. Whether she becomes a cleanser or a conqueror is the single most important unresolved question in the Fire Nation.</p>
+        <div class="fig-arc">Arc: Student → Infiltrator → High Sorceress → Cleanser or Conqueror</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--deep);"><span>✦</span></div>
+
+<!-- IMPACT ON YEAR 1355 -->
+<section class="impact">
+  <div class="imp-inner">
+    <div class="rv">
+      <span class="sl">Year 1355 · The Domino Effect</span>
+      <h2 class="big-h" style="margin-bottom:12px;">How Solara's Arc Forces<br><em>Everyone Else to React</em></h2>
+      <p class="bp" style="max-width:600px;">Her story doesn't end in isolation. Every choice she makes creates a pressure wave that reaches every other character in Ashura — and some beyond it.</p>
+    </div>
+    <div class="imp-list">
+      <div class="imp-entry rv">
+        <div class="imp-who"><div class="imp-name">Calypso</div><div class="imp-role">Queen · Absent</div></div>
+        <div class="imp-what"><span class="imp-action">Delegates & Distrusts</span><p class="imp-body">Becomes highly frustrated with the way Solara's uprising unfolds. This becomes one of the primary reasons she secretly entrusts Aurelian to dispose of the Infernal Order — and why she is in favor of evolving past old magic entirely. Too much access to fire magic leads to chaos.</p></div>
+      </div>
+      <div class="imp-entry rv d1">
+        <div class="imp-who"><div class="imp-name">Aurelian</div><div class="imp-role">Chancellor · In Control</div></div>
+        <div class="imp-what"><span class="imp-action">Acts Aggressively</span><p class="imp-body">The rise of Solara's rebellion and chaos — framed as revolution by Solara — forces Aurelian to act far more aggressively than a chancellor typically would. In Calypso's absence, she is effectively the law. Her mandate to make the Emberhold Project work and to destroy the Order becomes a war on two fronts simultaneously.</p></div>
+      </div>
+      <div class="imp-entry rv">
+        <div class="imp-who"><div class="imp-name">The Emberhold Project</div><div class="imp-role">The Accord · Year 1355</div></div>
+        <div class="imp-what"><span class="imp-action">Under Direct Threat</span><p class="imp-body">Solara's Order has made stopping the Emberhold Project their central objective. The alchemical advancement that could stabilize Ashura's future is now the symbol of everything the Order opposes — and Solara will use every tool at her disposal to prevent it from succeeding.</p></div>
+      </div>
+      <div class="imp-entry rv d1">
+        <div class="imp-who"><div class="imp-name">The Fire Nation</div><div class="imp-role">Ashura · Fractured</div></div>
+        <div class="imp-what"><span class="imp-action">Divided from Within</span><p class="imp-body">The nation Dante II built in peace and Calypso consolidated through fear is now fracturing along ideological lines — old magic versus new technology, the Order's vision versus the Crown's doctrine. The civil war Solara's rise threatens is not just a military conflict. It is a war for the soul of what Ashura is supposed to be.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:#0A0806;"><span style="font-size:14px;color:rgba(192,80,0,0.35);letter-spacing:0.15em;">🔥</span></div>
+
+<!-- CHARACTER ARC: FROM INHERITANCE TO INDIVIDUATION -->
+<section style="padding:110px 60px;background:#0A0806;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(192,80,0,0.05) 0%,transparent 70%);pointer-events:none;"></div>
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <div class="rv">
+      <span class="sl">The Full Arc · From Inheritance to Individuation</span>
+      <h2 class="big-h" style="margin-bottom:16px;">Not her mother's daughter.<br><em>Her own myth.</em></h2>
+      <p class="bp" style="max-width:660px;">Solara's character arc is a journey from inheritance to individuation — from the shadow of her mother's greatness to the forging of her own legend. Four life stages. One continuous becoming. The flame does not disappear. It learns who it belongs to.</p>
+    </div>
+
+    <!-- Four life stages -->
+    <div style="display:flex;flex-direction:column;gap:2px;margin-top:52px;">
+
+      <!-- CHILDHOOD -->
+      <div class="rv" style="display:grid;grid-template-columns:180px 1fr;border:1px solid rgba(192,80,0,0.1);overflow:hidden;transition:border-color .3s;" onmouseenter="this.style.borderColor='rgba(192,80,0,0.28)'" onmouseleave="this.style.borderColor='rgba(192,80,0,0.1)'">
+        <div style="background:rgba(192,80,0,0.04);padding:32px 24px;border-right:1px solid rgba(192,80,0,0.08);display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-family:'Cinzel Decorative',serif;font-size:32px;color:rgba(192,80,0,0.15);line-height:1;margin-bottom:8px;transition:color .3s;">I</div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(192,160,100,0.5);line-height:1.4;">Childhood<br>The Flame's<br>Inheritance</div>
+        </div>
+        <div style="padding:32px 36px;">
+          <div style="font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:0.15em;color:#D8D0C0;margin-bottom:8px;">Born with the Blood of Fire Nobles and the Spirit of Rebellion</div>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.85;">As the daughter of Roxanna — the former High Sorceress of the Eternal Flame — she inherits not only powerful flame spirits but also an unspoken burden: to either carry or surpass a legacy feared and revered in equal measure. Her early life is marked by <strong style="color:#D8D0C0;font-style:normal;">whispers of prophecy, seclusion for safety, and scattered lessons in restraint</strong>. She is told she is destined for greatness. No one tells her what that greatness should look like.</p>
+        </div>
+      </div>
+
+      <!-- ADOLESCENCE -->
+      <div class="rv d1" style="display:grid;grid-template-columns:180px 1fr;border:1px solid rgba(192,80,0,0.1);overflow:hidden;transition:border-color .3s;" onmouseenter="this.style.borderColor='rgba(192,80,0,0.28)'" onmouseleave="this.style.borderColor='rgba(192,80,0,0.1)'">
+        <div style="background:rgba(192,80,0,0.04);padding:32px 24px;border-right:1px solid rgba(192,80,0,0.08);display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-family:'Cinzel Decorative',serif;font-size:32px;color:rgba(200,100,20,0.18);line-height:1;margin-bottom:8px;">II</div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(200,140,80,0.5);line-height:1.4;">Adolescence<br>The Ember<br>Awakens</div>
+        </div>
+        <div style="padding:32px 36px;">
+          <div style="font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:0.15em;color:#D8D0C0;margin-bottom:8px;">College of Flame Arts · Kaon's Apprentice · The Cracks Begin to Show</div>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.85;">After her mother's mysterious disappearance — later confirmed death — Solara enters the College of Flame Arts and Sciences, becoming Kaon's apprentice. She earns the respect of some and the envy of others. She begins to uncover <strong style="color:#D8D0C0;font-style:normal;">the cracks in the institutions that shaped her mother</strong>: discovers the forbidden, questions the purity of flame sorcery's traditions, encounters relics and truths that challenge her loyalty to the nation her mother died protecting. Her powers accelerate dangerously. Her emotions — grief, anger, longing — become fuel.</p>
+        </div>
+      </div>
+
+      <!-- YOUNG ADULTHOOD -->
+      <div class="rv d2" style="display:grid;grid-template-columns:180px 1fr;border:1px solid rgba(192,80,0,0.12);overflow:hidden;transition:border-color .3s;" onmouseenter="this.style.borderColor='rgba(192,80,0,0.32)'" onmouseleave="this.style.borderColor='rgba(192,80,0,0.12)'">
+        <div style="background:rgba(192,80,0,0.05);padding:32px 24px;border-right:1px solid rgba(192,80,0,0.08);display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-family:'Cinzel Decorative',serif;font-size:32px;color:rgba(220,100,20,0.2);line-height:1;margin-bottom:8px;">III</div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(220,140,60,0.55);line-height:1.4;">Young<br>Adulthood<br>The Ashen<br>Breakthrough</div>
+        </div>
+        <div style="padding:32px 36px;">
+          <div style="font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:0.15em;color:#D8D0C0;margin-bottom:8px;">Fame and Infamy · The Emberhold Conspiracy · The Truth About Umbrax</div>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.85;">Solara gains fame and infamy as a prodigy. She survives assassination attempts, uncovers the Emberhold Conspiracy, and discovers the truth about <strong style="color:#D8D0C0;font-style:normal;">Umbrax — the man who murdered her mother</strong>. In her pursuit of vengeance, she becomes what the world fears most: a wielder of dark, forbidden flame. But she does so on her own terms, mastering the Infernal Fury within her without letting it consume her. Her transformation into the Ashen Phoenix is not just a physical evolution — it is a spiritual rupture, a severance from passive inheritance.</p>
+        </div>
+      </div>
+
+      <!-- PRESENT -->
+      <div class="rv d3" style="display:grid;grid-template-columns:180px 1fr;border:1px solid rgba(240,160,40,0.15);overflow:hidden;transition:border-color .3s;background:linear-gradient(160deg,rgba(16,10,4,1) 0%,rgba(10,8,6,1) 100%);" onmouseenter="this.style.borderColor='rgba(240,160,40,0.35)'" onmouseleave="this.style.borderColor='rgba(240,160,40,0.15)'">
+        <div style="background:rgba(240,160,40,0.04);padding:32px 24px;border-right:1px solid rgba(240,160,40,0.1);display:flex;flex-direction:column;justify-content:center;">
+          <div style="font-family:'Cinzel Decorative',serif;font-size:32px;color:rgba(240,160,40,0.25);line-height:1;margin-bottom:8px;animation:phoenixGlowTick 3s ease-in-out infinite;">IV</div>
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:rgba(240,160,40,0.6);line-height:1.4;">Present<br>Grand<br>Sorceress<br>Reforged</div>
+        </div>
+        <div style="padding:32px 36px;">
+          <div style="font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:0.15em;color:#D8D0C0;margin-bottom:8px;">Late Twenties · Grand Sorceress · No Longer Her Mother's Daughter</div>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.6);line-height:1.85;">Now in her late twenties, Solara is no longer defined by Roxanna's legacy — <strong style="color:#D8D0C0;font-style:normal;">she is her own myth</strong>. As Grand Sorceress, she walks a path her mother could not: leading a fractured fire nation, battling the embedded rot of old power, and standing between tradition and revolution. She is feared by nobles, worshipped by rebels, and watched by ancient spirits. Her goal now is not vengeance — it is balance through flame, and truth, even if it scorches.</p>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(240,160,40,0.5);line-height:1.7;margin-top:12px;padding-top:12px;border-top:1px solid rgba(240,160,40,0.08);">Her legacy is still forming. Unlike her mother's, it will not be written in obedience to tradition. <strong style="color:rgba(240,160,40,0.75);font-style:normal;">It will be forged in fire, tempered by fury, and sealed in the ashes of what came before.</strong></p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Umbrax connection note -->
+    <div class="rv" style="margin-top:3px;padding:24px 32px;border:1px solid rgba(42,96,16,0.15);background:rgba(4,8,4,0.6);display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;">
+      <div style="font-size:22px;opacity:0.5;padding-top:2px;">☠</div>
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(42,136,16,0.6);border:1px solid rgba(42,96,16,0.2);padding:3px 12px;display:inline-block;margin-bottom:10px;letter-spacing:0.05em;opacity:0.8;">// THREAT_LINK · UMBRAX · THE_MAN_WHO_MURDERED_ROXANNA //</div>
+        <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.8;"><strong style="color:#D8D0C0;font-style:normal;">Umbrax — Exarch of the Secret Infernal Order</strong> — is not merely her antagonist. He is the answer to the question that defined her adolescence: why did her mother die? He is the man who murdered Roxanna, the architect of the experiments that turned fire against its own people, and the living argument that everything Ashura's flame traditions protected was never safe to begin with. Solara's pursuit of him is not just vengeance. <strong style="color:#D8D0C0;font-style:normal;">It is the act of finally understanding what her mother was actually fighting.</strong></p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('lit');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('lit');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=30;this.s=80;this.l=55;}
+      else if(t<.72){this.h=22;this.s=70;this.l=42;}
+      else if(t<.86){this.h=30+20;this.s=80-15;this.l=55+15;}
+      else{this.h=22+10;this.s=70-10;this.l=42+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

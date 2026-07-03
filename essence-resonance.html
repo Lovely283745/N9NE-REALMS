@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essence & Resonance — The Power System | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #030408;
+  --deep:      #060810;
+  --cosmos:    #0A0C16;
+  --shrine:    #0D1020;
+  --aether:    #10141E;
+
+  /* Celestial gold-white — the Aether */
+  --divine:    #604400;
+  --divine-mid:#907000;
+  --divine-pale:#C8A020;
+  --divine-bright:#E8C040;
+  --divine-white:#F8E8A0;
+
+  /* Umbral — the dark counterpart */
+  --umbral:    #1A0430;
+  --umbral-mid:#380870;
+  --umbral-pale:#6818B0;
+  --umbral-bright:#9030E0;
+
+  /* Realm colors */
+  --fire:      rgba(200,80,20,0.7);
+  --ocean:     rgba(20,100,180,0.7);
+  --mountain:  rgba(100,80,60,0.7);
+  --flora:     rgba(40,140,40,0.7);
+  --ice:       rgba(100,180,220,0.7);
+  --desert:    rgba(200,140,40,0.7);
+  --sky:       rgba(100,160,220,0.7);
+  --dark:      rgba(80,20,120,0.7);
+  --celestial: rgba(200,180,80,0.7);
+
+  --parch:     #B0AABB;
+  --parch-pale:#D0CCD8;
+  --parch-dim: #504858;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(144,112,0,0.05) 0%,transparent 55%),
+             radial-gradient(ellipse 40% 40% at 80% 80%,rgba(56,8,112,0.04) 0%,transparent 55%);
+  animation:cosmosBreath 18s ease-in-out infinite;}
+@keyframes cosmosBreath{0%,100%{opacity:0.6;}50%{opacity:1;}}
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--divine-pale);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(144,112,0,0.4);border-radius:50%;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.glow{width:46px;height:46px;border-color:var(--divine-pale);box-shadow:0 0 12px rgba(144,112,0,0.25);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(3,4,8,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(144,112,0,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:var(--divine-pale);opacity:0.6;letter-spacing:0.12em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--divine-pale);border:1px solid rgba(144,112,0,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--divine-mid);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 40%,#1C1408 0%,#0E0C10 40%,var(--void) 70%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* The two forces — ambient halos */
+.aether-halo{position:absolute;width:360px;height:360px;border-radius:50%;left:50%;top:42%;transform:translate(-50%,-50%);pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(200,160,0,0.08) 0%,transparent 65%);animation:aetherPulse 12s ease-in-out infinite;}
+.umbral-halo{position:absolute;width:500px;height:200px;border-radius:50%;left:50%;top:62%;transform:translate(-50%,-50%);pointer-events:none;z-index:1;background:radial-gradient(ellipse,rgba(56,8,112,0.06) 0%,transparent 65%);animation:umbralPulse 15s ease-in-out infinite;}
+@keyframes aetherPulse{0%,100%{opacity:0.5;transform:translate(-50%,-50%) scale(1);}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}}
+@keyframes umbralPulse{0%,100%{opacity:0.4;}50%{opacity:0.9;}}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-pre{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:var(--divine-pale);text-transform:uppercase;opacity:0;animation:riseIn 1.2s .2s ease forwards;margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.h-pre::before,.h-pre::after{content:'✦';color:rgba(200,160,0,0.3);}
+.h-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-title{font-family:'Cinzel Decorative',serif;font-size:clamp(36px,7vw,90px);font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;text-shadow:0 0 120px rgba(200,160,0,0.35),0 4px 40px rgba(0,0,0,0.9);opacity:0;animation:riseIn 1.8s .5s ease forwards;}
+.h-amp{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,4vw,52px);color:var(--divine-pale);opacity:0;animation:riseIn 1s .7s ease forwards;display:block;margin:4px 0;letter-spacing:0.15em;}
+.h-title2{font-family:'Cinzel Decorative',serif;font-size:clamp(36px,7vw,90px);font-weight:900;color:var(--umbral-bright);letter-spacing:0.04em;line-height:0.9;text-shadow:0 0 120px rgba(56,8,112,0.35),0 4px 40px rgba(0,0,0,0.9);opacity:0;animation:riseIn 1.8s .9s ease forwards;}
+.h-rule{width:280px;height:1px;background:linear-gradient(to right,transparent,rgba(200,160,0,0.3),rgba(56,8,112,0.3),transparent);margin:22px auto;opacity:0;animation:fadeIn 1s 1.2s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,21px);color:rgba(176,170,187,0.4);max-width:740px;margin:0 auto 40px;line-height:1.8;opacity:0;animation:riseIn 1.2s 1.3s ease forwards;}
+
+.h-duality{display:flex;gap:0;justify-content:center;max-width:640px;margin:0 auto;border:1px solid rgba(168,162,179,0.1);opacity:0;animation:riseIn 1s 1.6s ease forwards;}
+.hd-half{flex:1;padding:18px 20px;text-align:center;}
+.hd-aether{border-right:1px solid rgba(168,162,179,0.08);background:rgba(200,160,0,0.03);}
+.hd-umbral{background:rgba(56,8,112,0.04);}
+.hd-name{font-family:'Cinzel Decorative',serif;font-size:clamp(12px,1.8vw,20px);margin-bottom:4px;}
+.hd-aether .hd-name{color:var(--divine-bright);}
+.hd-umbral .hd-name{color:var(--umbral-bright);}
+.hd-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(176,170,187,0.4);line-height:1.5;}
+
+.h-scroll{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--parch-dim);opacity:0.3;}
+.s-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--divine-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.sl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;text-transform:uppercase;color:var(--divine-pale);opacity:0.5;display:block;margin-bottom:18px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(144,112,0,0.15),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 20px;z-index:1;font-family:'Cinzel',serif;font-size:14px;color:var(--divine-mid);opacity:0.4;letter-spacing:0.15em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--divine-bright);}
+.big-h em.dark{color:var(--umbral-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(176,170,187,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--divine-pale);}
+.bp em.dark{color:var(--umbral-bright);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid var(--divine-mid);background:rgba(144,112,0,0.04);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(176,170,187,0.75);line-height:1.75;}
+.pull cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--divine-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+.pull-dark{margin:22px 0;padding:18px 24px;border-left:2px solid var(--umbral-mid);background:rgba(56,8,112,0.04);}
+.pull-dark p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(176,170,187,0.75);line-height:1.75;}
+.pull-dark cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--umbral-bright);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+
+/* ═══ TERMINOLOGY ═══ */
+.terminology{padding:110px 60px;background:var(--cosmos);}
+.term-inner{max-width:1100px;margin:0 auto;}
+.term-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.term-card{padding:44px 40px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.tc-essence{border-color:rgba(144,112,0,0.15);background:linear-gradient(160deg,#100E04 0%,#0A0C08 100%);}
+.tc-resonance{border-color:rgba(56,8,112,0.14);background:linear-gradient(160deg,#0A0614 0%,#080812 100%);}
+.tc-essence:hover{border-color:rgba(144,112,0,0.32);}
+.tc-resonance:hover{border-color:rgba(56,8,112,0.32);}
+.tc-essence::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(144,112,0,0.08) 0%,transparent 70%);}
+.tc-resonance::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(56,8,112,0.09) 0%,transparent 70%);}
+.term-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.term-card:hover::after{transform:scaleX(1);}
+.tc-essence::after{background:linear-gradient(to right,transparent,var(--divine-mid),transparent);}
+.tc-resonance::after{background:linear-gradient(to right,transparent,var(--umbral-pale),transparent);}
+.tc-c{position:relative;z-index:1;}
+.tc-glyph{font-size:44px;opacity:0.2;display:block;margin-bottom:12px;}
+.tc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;margin-bottom:8px;}
+.tc-essence .tc-name{color:var(--divine-bright);}
+.tc-resonance .tc-name{color:var(--umbral-bright);}
+.tc-def{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:14px;}
+.tc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.7vw,18px);color:rgba(176,170,187,0.6);line-height:1.85;margin-bottom:14px;}
+.tc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.tc-essence .tc-body em{color:var(--divine-pale);}
+.tc-resonance .tc-body em{color:var(--umbral-bright);}
+.tc-examples{display:flex;flex-direction:column;gap:6px;padding-top:14px;border-top:1px solid rgba(176,170,187,0.06);}
+.tc-ex{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(176,170,187,0.4);padding-left:12px;border-left:1px solid rgba(176,170,187,0.12);line-height:1.5;}
+.tc-ex strong{color:rgba(176,170,187,0.65);font-style:normal;}
+
+/* ═══ CELESTIAL AETHER ═══ */
+.aether-sec{padding:110px 60px;background:var(--aether);position:relative;overflow:hidden;}
+.aether-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 30%,rgba(200,160,0,0.05) 0%,transparent 70%);}
+.ae-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.6fr;gap:80px;align-items:start;}
+.ae-aside{position:relative;z-index:1;}
+.ae-glyph{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,13vw,170px);font-weight:400;color:rgba(144,112,0,0.08);line-height:1;margin-left:-8px;}
+.ae-aside-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:var(--divine-pale);opacity:0.5;text-transform:uppercase;}
+.ae-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,170,187,0.3);margin-top:6px;line-height:1.6;}
+
+/* ═══ NINE REALM ESSENCES ═══ */
+.realms-sec{padding:110px 60px;background:var(--cosmos);}
+.realms-inner{max-width:1200px;margin:0 auto;}
+.realm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:52px;}
+
+.realm-card{padding:30px 26px;border:1px solid rgba(176,170,187,0.07);background:rgba(3,4,8,0.5);position:relative;overflow:hidden;transition:border-color .3s,background .3s;cursor:default;}
+.realm-card:hover{background:rgba(10,8,14,0.7);}
+
+/* Individual realm color themes */
+.rc-fire{--rc:rgba(200,80,20,0.6);--rcb:rgba(200,80,20,0.1);}
+.rc-ocean{--rc:rgba(20,100,180,0.6);--rcb:rgba(20,100,180,0.08);}
+.rc-mountain{--rc:rgba(120,95,70,0.6);--rcb:rgba(120,95,70,0.08);}
+.rc-flora{--rc:rgba(40,140,40,0.6);--rcb:rgba(40,140,40,0.07);}
+.rc-ice{--rc:rgba(100,180,220,0.6);--rcb:rgba(100,180,220,0.07);}
+.rc-desert{--rc:rgba(200,140,40,0.6);--rcb:rgba(200,140,40,0.08);}
+.rc-sky{--rc:rgba(80,140,220,0.6);--rcb:rgba(80,140,220,0.07);}
+.rc-dark{--rc:rgba(100,20,160,0.7);--rcb:rgba(100,20,160,0.1);}
+.rc-celestial{--rc:rgba(220,180,60,0.7);--rcb:rgba(220,180,60,0.1);}
+
+.realm-card{border-color:rgba(176,170,187,0.07);}
+.realm-card:hover{border-color:var(--rc);background:var(--rcb);}
+.realm-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--rc),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.realm-card:hover::after{transform:scaleX(1);}
+
+.rc-inner{position:relative;z-index:1;}
+.rc-realm{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;display:block;margin-bottom:6px;}
+.rc-name{font-family:'Cinzel',serif;font-size:clamp(14px,1.9vw,20px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:4px;}
+.rc-essence-name{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:var(--divine-pale);opacity:0.6;display:block;margin-bottom:10px;}
+.rc-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(176,170,187,0.5);line-height:1.7;margin-bottom:10px;}
+.rc-abilities{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(176,170,187,0.06);}
+.rc-ab{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.2em;text-transform:uppercase;padding:3px 8px;border:1px solid rgba(176,170,187,0.1);color:rgba(176,170,187,0.4);}
+.rc-celestial-card{grid-column:span 3;display:grid;grid-template-columns:1fr 2fr;gap:0;}
+.rc-celestial-card .rc-inner{padding:30px 26px;}
+.rc-celestial-card .rc-aside{padding:30px 26px;border-right:1px solid rgba(220,180,60,0.1);}
+
+/* ═══ UMBRAL ESSENCE ═══ */
+.umbral-sec{padding:110px 60px;background:var(--shrine);position:relative;overflow:hidden;}
+.umbral-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 60%,rgba(56,8,112,0.09) 0%,transparent 70%);}
+.um-inner{max-width:1100px;margin:0 auto;}
+.um-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.um-card{padding:28px 26px;border:1px solid rgba(56,8,112,0.1);background:rgba(3,2,8,0.6);position:relative;overflow:hidden;transition:border-color .3s,background .3s;}
+.um-card:hover{border-color:rgba(56,8,112,0.26);background:rgba(56,8,112,0.05);}
+.um-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--umbral-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.um-card:hover::before{transform:scaleX(1);}
+.um-c{position:relative;z-index:1;}
+.um-glyph{font-size:20px;opacity:0.4;margin-bottom:10px;display:block;}
+.um-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.8vw,18px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:7px;}
+.um-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,170,187,0.5);line-height:1.75;}
+.um-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.um-desc em{color:var(--umbral-bright);}
+
+/* Historical events */
+.um-history{margin-top:3px;display:flex;flex-direction:column;gap:2px;}
+.um-event{display:grid;grid-template-columns:180px 1fr;border:1px solid rgba(56,8,112,0.1);overflow:hidden;transition:border-color .3s;}
+.um-event:hover{border-color:rgba(56,8,112,0.25);}
+.ue-label{padding:16px 16px;background:rgba(56,8,112,0.05);border-right:1px solid rgba(56,8,112,0.08);display:flex;flex-direction:column;justify-content:center;}
+.uel-name{font-family:'Cinzel',serif;font-size:clamp(10px,1.4vw,14px);letter-spacing:0.12em;color:var(--parch-pale);}
+.uel-type{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--umbral-bright);opacity:0.5;display:block;margin-top:3px;}
+.ue-body{padding:16px 20px;font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(176,170,187,0.5);line-height:1.7;}
+.ue-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ THREE DISCIPLINES ═══ */
+.disciplines-sec{padding:110px 60px;background:var(--aether);position:relative;overflow:hidden;}
+.disciplines-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(144,112,0,0.04) 0%,transparent 70%);}
+.disc-inner{max-width:1200px;margin:0 auto;}
+.disc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+
+.disc-card{padding:40px 32px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.dc-arcane{border-color:rgba(56,8,112,0.15);background:linear-gradient(180deg,#0A0618 0%,#060412 100%);}
+.dc-divine{border-color:rgba(144,112,0,0.14);background:linear-gradient(180deg,#100E06 0%,#0C0A06 100%);}
+.dc-primal{border-color:rgba(40,80,20,0.14);background:linear-gradient(180deg,#080C08 0%,#060A06 100%);}
+.dc-arcane:hover{border-color:rgba(56,8,112,0.35);}
+.dc-divine:hover{border-color:rgba(144,112,0,0.3);}
+.dc-primal:hover{border-color:rgba(40,80,20,0.3);}
+.dc-arcane::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(56,8,112,0.1) 0%,transparent 70%);}
+.dc-divine::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(144,112,0,0.08) 0%,transparent 70%);}
+.dc-primal::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(40,80,20,0.07) 0%,transparent 70%);}
+.disc-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.disc-card:hover::after{transform:scaleX(1);}
+.dc-arcane::after{background:linear-gradient(to right,transparent,var(--umbral-pale),transparent);}
+.dc-divine::after{background:linear-gradient(to right,transparent,var(--divine-mid),transparent);}
+.dc-primal::after{background:linear-gradient(to right,transparent,rgba(80,160,40,0.6),transparent);}
+
+.disc-c{position:relative;z-index:1;}
+.disc-type{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;padding:4px 14px;border:1px solid;display:inline-block;margin-bottom:14px;opacity:0.7;}
+.dc-arcane .disc-type{color:var(--umbral-bright);border-color:rgba(56,8,112,0.35);}
+.dc-divine .disc-type{color:var(--divine-bright);border-color:rgba(144,112,0,0.35);}
+.dc-primal .disc-type{color:rgba(100,180,60,0.9);border-color:rgba(40,80,20,0.35);}
+.disc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,2.8vw,36px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;}
+.disc-sub{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;}
+.disc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(176,170,187,0.55);line-height:1.85;margin-bottom:14px;}
+.disc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.dc-arcane .disc-body em{color:var(--umbral-bright);}
+.dc-divine .disc-body em{color:var(--divine-pale);}
+.dc-primal .disc-body em{color:rgba(100,180,60,0.8);}
+
+/* Practitioner examples */
+.disc-examples{display:flex;flex-direction:column;gap:4px;padding-top:14px;border-top:1px solid rgba(176,170,187,0.07);}
+.de-item{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(176,170,187,0.4);padding-left:10px;border-left:1px solid rgba(176,170,187,0.1);line-height:1.5;}
+.de-item strong{color:rgba(176,170,187,0.65);font-style:normal;}
+/* Gem examples */
+.disc-gems{display:flex;gap:4px;flex-wrap:wrap;margin-top:14px;}
+.disc-gem{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.2em;text-transform:uppercase;padding:3px 10px;border:1px solid rgba(176,170,187,0.09);color:rgba(176,170,187,0.35);}
+
+/* ═══ COMBINED RESONANCE ═══ */
+.combined-sec{padding:100px 60px;background:var(--cosmos);}
+.comb-inner{max-width:1100px;margin:0 auto;}
+.comb-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.comb-card{padding:28px 26px;border:1px solid rgba(144,112,0,0.08);background:rgba(3,4,8,0.5);position:relative;overflow:hidden;transition:border-color .3s,background .3s;}
+.comb-card:hover{border-color:rgba(144,112,0,0.2);background:rgba(144,112,0,0.03);}
+.comb-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--divine-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.comb-card:hover::before{transform:scaleX(1);}
+.cc-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,18px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:5px;}
+.cc-blend{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--divine-pale);opacity:0.5;margin-bottom:10px;display:block;}
+.cc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(176,170,187,0.5);line-height:1.75;}
+.cc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.cc-body em{color:var(--umbral-bright);}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(144,112,0,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--divine-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(176,170,187,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#F5F0E4;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(176,170,187,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(176,170,187,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(144,112,0,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(176,170,187,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .terminology,.aether-sec,.realms-sec,.umbral-sec,.disciplines-sec,.combined-sec,.page-cta{padding:80px 40px;}
+  .ae-inner{grid-template-columns:1fr;gap:40px;}
+  .term-split{grid-template-columns:1fr;}
+  .realm-grid{grid-template-columns:1fr 1fr;} .rc-celestial-card{grid-column:span 2;}
+  .um-split{grid-template-columns:1fr;}
+  .disc-grid{grid-template-columns:1fr;}
+  .comb-grid{grid-template-columns:1fr;}
+  .um-event{grid-template-columns:1fr;} .ue-label{border-right:none;border-bottom:1px solid rgba(56,8,112,0.08);}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-duality{flex-direction:column;} .hd-aether{border-right:none;border-bottom:1px solid rgba(176,170,187,0.08);}
+  .terminology,.aether-sec,.realms-sec,.umbral-sec,.disciplines-sec,.combined-sec,.page-cta{padding:60px 24px;}
+  .realm-grid{grid-template-columns:1fr;} .rc-celestial-card{grid-column:span 1;grid-template-columns:1fr;} .rc-celestial-card .rc-aside{border-right:none;border-bottom:1px solid rgba(220,180,60,0.1);}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">Cosmology · Essence & Resonance · The Power System</span>
+  </a>
+  <div class="nav-right">
+    <a href="nine-realms-hub.html" class="nav-link">Hub</a>
+    <a href="chronicles-registry.html" class="nav-link">Chronicles</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="aether-halo"></div>
+  <div class="umbral-halo"></div>
+  <div class="hero-content">
+    <p class="h-pre">Nine Realms · Cosmological Foundation · The Power System</p>
+    <span class="h-label">The Two Forces That Define Every Ability in the Nine Realms</span>
+    <h1 class="h-title">Essence</h1>
+    <span class="h-amp">&amp;</span>
+    <h2 class="h-title2">Resonance</h2>
+    <div class="h-rule"></div>
+    <p class="h-tagline">Essence is what the power <em>is</em> — the raw energy flowing from the Celestial Aether through every realm's elemental core. Resonance is what practitioners <em>do</em> — the act of channeling that energy, shaped by discipline, heritage, and will. All abilities in the Nine Realms are one of these things, or both.</p>
+    <div class="h-duality">
+      <div class="hd-half hd-aether">
+        <div class="hd-name">The Celestial Aether</div>
+        <p class="hd-desc">Source Essence. The original and ultimate origin of all power in the Nine Realms — flowing outward from the Celestial Nation into every elemental core.</p>
+      </div>
+      <div class="hd-half hd-umbral">
+        <div class="hd-name">The Umbral Essence</div>
+        <p class="hd-desc">Counter Essence. Its absolute opposite — seething with malevolent energy, rooted beneath the Abyssal Void. Amplifies. Corrupts. Fractures Resonance.</p>
+      </div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>Begin the Cosmology</span><div class="s-line"></div></div>
+</section>
+
+<!-- TERMINOLOGY DECLARATION -->
+<section class="terminology">
+  <div class="term-inner">
+    <div class="rv">
+      <span class="sl">The In-Universe Vocabulary · Two Words. Everything They Contain.</span>
+      <h2 class="big-h">Not magic.<br><em>Essence and Resonance.</em></h2>
+      <p class="bp" style="max-width:660px;">In the Nine Realms, there is no word for "magic" because magic implies something separate from the world. The power of the Nine Realms is not separate — it <em>is</em> the world. Two words carry the entire system. Every ability any character has ever possessed is described by one of them, or by the point where they meet.</p>
+    </div>
+    <div class="term-split rv d1">
+      <div class="term-card tc-essence">
+        <div class="tc-c">
+          <span class="tc-glyph">✦</span>
+          <h3 class="tc-name">Essence</h3>
+          <p class="tc-def">The Energy Itself · What Power Is</p>
+          <p class="tc-body">Essence is <strong>the raw energy that flows from the Celestial Aether through every elemental core in the Nine Realms</strong>. It exists independent of any practitioner — in the Flameheart Core, in the Tidal Essence, in the Shadow Essence of the Dark Nation. The Umbral Essence is its dark counterpart, existing in opposition to the Celestial Aether's life-giving flow. Essence does not require a person to exist. It predates everything.</p>
+          <p class="tc-body">When practitioners draw power, they draw on the Essence of their realm. When something is corrupted, its Essence has been <em>touched by the Umbral</em>. When a relic amplifies a practitioner, it concentrates Essence into a form they can channel more directly. Essence is the noun.</p>
+          <div class="tc-examples">
+            <div class="tc-ex"><strong>Flameheart Core</strong> — the Fire Nation's Essence source</div>
+            <div class="tc-ex"><strong>Shadow Essence</strong> — the Dark Nation's elemental Essence</div>
+            <div class="tc-ex"><strong>Umbral Essence</strong> — the corruptive counter-force to the Celestial Aether</div>
+            <div class="tc-ex"><strong>Dark Amethyst</strong> — a mineral that concentrates Dark Realm Essence</div>
+          </div>
+        </div>
+      </div>
+      <div class="term-card tc-resonance">
+        <div class="tc-c">
+          <span class="tc-glyph">☽</span>
+          <h3 class="tc-name">Resonance</h3>
+          <p class="tc-def">The Practice of Channeling · What Power Does</p>
+          <p class="tc-body">Resonance is <strong>a practitioner's connection to and channeling of Essence</strong> — the act, the discipline, the inherited bond. A character with strong Resonance channels their realm's Essence with precision and power. A character with fractured Resonance has been corrupted, destabilized, or stripped. Resonance is the verb made into a noun — it describes both the connection itself and the act of using it.</p>
+          <p class="tc-body">Resonance is shaped by three disciplines: <strong>Arcane</strong> (channeled through gems, artifacts, and ritual), <strong>Divine</strong> (flowing through celestial connection and faith), and <strong>Primal</strong> (raw, instinctive, sourced directly from elemental nature). A practitioner's Resonance type determines not just what they can do, but <em>how they do it and what it costs them.</em></p>
+          <div class="tc-examples">
+            <div class="tc-ex"><strong>"Her Resonance with the Flameheart Core was unmatched"</strong> — describing Calypso's power</div>
+            <div class="tc-ex"><strong>"His Resonance fractured under the Umbral's influence"</strong> — describing corruption</div>
+            <div class="tc-ex"><strong>"She holds Resonance in three disciplines simultaneously"</strong> — describing Vashti</div>
+            <div class="tc-ex"><strong>"The pendant amplifies his Resonance beyond natural limits"</strong> — describing Draven's Eye of Ira</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">✦</div></div>
+
+<!-- THE CELESTIAL AETHER -->
+<section class="aether-sec">
+  <div class="ae-inner">
+    <div class="rv">
+      <div class="ae-aside">
+        <div class="ae-glyph">✦</div>
+        <span class="ae-aside-tag">The Source Essence · Origin of All Power</span>
+        <p class="ae-aside-note">It exists beyond time and space, permeating the cosmos, imbuing each realm with its unique elemental character. In the Celestial Nation, gods act as its guardians, distributing its energy while maintaining equilibrium across all nine realms.</p>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">The Celestial Aether · Source of All Essence in the Nine Realms</span>
+      <h2 class="big-h">The original and ultimate source.<br><em>Everything else flows from this.</em></h2>
+      <p class="bp">The Celestial Aether is the origin of all Essence within the Nine Realms. It embodies the essence of creation, balance, and unity — <strong>a cosmic lifeforce that exists beyond time and space</strong>, imbuing each realm with its unique elemental properties. In the Celestial Nation, gods act as guardians of the Celestial Aether, distributing its energy while maintaining equilibrium. It is through this sacred Essence that each realm draws its power, shaping their respective elemental systems and awakening Resonance within their inhabitants.</p>
+      <p class="bp">Inhabitants with closer connections to their realm's elemental source experience <em>heightened sensitivity</em> to its power — manifesting as hereditary abilities or unique Resonance that sets them apart from ordinary practitioners. This link creates both pride and responsibility. It also creates vulnerability: those who abandon their realm's Essence for the Umbral do not simply change power sources. <strong>They fracture something that cannot be fully repaired.</strong></p>
+      <div class="pull rv d2"><p>"The Celestial Aether does not grant power. It reveals the power that was always present, waiting for the practitioner whose Resonance was strong enough to reach it."</p><cite>— The Celestial Archive · Guardians of the Divine Light</cite></div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◈</div></div>
+
+<!-- NINE REALM ESSENCES -->
+<section class="realms-sec">
+  <div class="realms-inner">
+    <div class="rv" style="text-align:center;">
+      <span class="sl">The Nine Elemental Essences · One Per Realm · Each Unique</span>
+      <h2 class="big-h">Nine realms. Nine Essences.<br><em>Nine different ways the Aether speaks.</em></h2>
+      <p class="bp" style="max-width:620px;margin:0 auto;">The Celestial Aether does not manifest the same way in every realm. Each realm's environment, history, and culture shapes how the Aether's energy takes form within it — producing nine distinct elemental Essences that define the Resonance of every native practitioner.</p>
+    </div>
+    <div class="realm-grid rv d1">
+
+      <!-- FIRE -->
+      <div class="realm-card rc-fire">
+        <div class="rc-inner">
+          <span class="rc-realm">Fire Nation · Ashura</span>
+          <div class="rc-name">The Flameheart Core</div>
+          <span class="rc-essence-name">Passion · Destruction · Rebirth</span>
+          <p class="rc-desc">A molten heart of fire pulsing with intense, raw energy. Fire Nation Resonants are known for their fierce spirit — drawing power from its heat and regenerative properties. Fire transformed by the Umbral becomes a force of devastation rather than protection, burning with malice instead of purpose.</p>
+          <div class="rc-abilities"><span class="rc-ab">Fire Manipulation</span><span class="rc-ab">Heat Control</span><span class="rc-ab">Transformation</span></div>
+        </div>
+      </div>
+
+      <!-- OCEAN -->
+      <div class="realm-card rc-ocean">
+        <div class="rc-inner">
+          <span class="rc-realm">Ocean Nation · Thalassara</span>
+          <div class="rc-name">The Tidal Essence</div>
+          <span class="rc-essence-name">Fluidity · Adaptability · Emotional Depth</span>
+          <p class="rc-desc">A boundless well of water energy symbolizing the rhythm of tides. Ocean Resonants use it for healing, emotional balance, and defense. Under the Umbral's influence, calm depths turn turbulent — water becoming isolation and despair rather than connection.</p>
+          <div class="rc-abilities"><span class="rc-ab">Water Manipulation</span><span class="rc-ab">Storm Summoning</span><span class="rc-ab">Marine Communication</span></div>
+        </div>
+      </div>
+
+      <!-- MOUNTAIN -->
+      <div class="realm-card rc-mountain">
+        <div class="rc-inner">
+          <span class="rc-realm">Mountain Nation · Drakenheim</span>
+          <div class="rc-name">The Stoneheart Nexus</div>
+          <span class="rc-essence-name">Strength · Resilience · Endurance</span>
+          <p class="rc-desc">A core of earth energy representing unyielding determination. Mountain Resonants shape the land and withstand great challenges. Corrupted by the Umbral, the solid foundations become brittle — once-stalwart spirits driven to isolation and paranoia.</p>
+          <div class="rc-abilities"><span class="rc-ab">Stone Manipulation</span><span class="rc-ab">Land Shaping</span><span class="rc-ab">Resilience Fortification</span></div>
+        </div>
+      </div>
+
+      <!-- FLORA -->
+      <div class="realm-card rc-flora">
+        <div class="rc-inner">
+          <span class="rc-realm">Flora Nation · Verdantia</span>
+          <div class="rc-name">The Verdant Spirit</div>
+          <span class="rc-essence-name">Growth · Harmony · Renewal</span>
+          <p class="rc-desc">A life-giving force flowing through plants and nature. Flora Resonants are stewards of the natural world. Under Umbral corruption — as in the Blight of Verdantia — plants become poisonous, healing herbs turn lethal, nurturing spirits grow hostile.</p>
+          <div class="rc-abilities"><span class="rc-ab">Plant Communication</span><span class="rc-ab">Accelerated Growth</span><span class="rc-ab">Nature Healing</span></div>
+        </div>
+      </div>
+
+      <!-- ICE -->
+      <div class="realm-card rc-ice">
+        <div class="rc-inner">
+          <span class="rc-realm">Ice Nation · Glaciana</span>
+          <div class="rc-name">The Frostbound Essence</div>
+          <span class="rc-essence-name">Clarity · Purity · Preservation</span>
+          <p class="rc-desc">A chilling energy embodying discipline and strategy. Ice Resonants bring balance and protection to their surroundings. Touched by the Umbral, cold clarity becomes ruthless desolation — even the kindest practitioners growing cold, detached, and unyieldingly rigid.</p>
+          <div class="rc-abilities"><span class="rc-ab">Ice Manipulation</span><span class="rc-ab">Temperature Control</span><span class="rc-ab">Barrier Creation</span></div>
+        </div>
+      </div>
+
+      <!-- DESERT -->
+      <div class="realm-card rc-desert">
+        <div class="rc-inner">
+          <span class="rc-realm">Desert Nation · Amun-Re</span>
+          <div class="rc-name">The Sandstorm Force</div>
+          <span class="rc-essence-name">Resilience · Adaptability · Survival</span>
+          <p class="rc-desc">A swirling energy of sand and wind. Desert Resonants are resourceful and tenacious, thriving in arid extremes. Under the Umbral's influence, the sands seem to thirst for blood — treacherous winds and illusions turning travelers against one another.</p>
+          <div class="rc-abilities"><span class="rc-ab">Sand Manipulation</span><span class="rc-ab">Wind Control</span><span class="rc-ab">Terrain Navigation</span></div>
+        </div>
+      </div>
+
+      <!-- SKY -->
+      <div class="realm-card rc-sky">
+        <div class="rc-inner">
+          <span class="rc-realm">Sky Nation · Aetheria</span>
+          <div class="rc-name">The Aetherial Wind</div>
+          <span class="rc-essence-name">Freedom · Inspiration · Vision</span>
+          <p class="rc-desc">A light, airy energy symbolizing freedom and idealism. Sky Resonants soar to new heights through their connection to the Wind. Corrupted by the Umbral, freedom becomes entrapment — visionaries driven to obsession, skies turning storm-ridden and perilous.</p>
+          <div class="rc-abilities"><span class="rc-ab">Air Manipulation</span><span class="rc-ab">Storm Summoning</span><span class="rc-ab">Flight</span></div>
+        </div>
+      </div>
+
+      <!-- DARK -->
+      <div class="realm-card rc-dark">
+        <div class="rc-inner">
+          <span class="rc-realm">Dark Nation · Eight Kingdoms incl. Sablea</span>
+          <div class="rc-name">The Shadow Essence</div>
+          <span class="rc-essence-name">Secrecy · Intuition · The Unknown</span>
+          <p class="rc-desc">A mysterious force embodying what is hidden. Dark Resonants are enigmatic and insightful, wielding the Shadow Essence to uncover hidden truths and navigate complexity. The Umbral Essence is most tangible here — manifesting as whispers, shadows, and half-formed fears at the edges of vision.</p>
+          <div class="rc-abilities"><span class="rc-ab">Shadow Manipulation</span><span class="rc-ab">Cloaking</span><span class="rc-ab">Hidden Knowledge</span></div>
+        </div>
+      </div>
+
+      <!-- CELESTIAL — full width -->
+      <div class="realm-card rc-celestial rc-celestial-card">
+        <div class="rc-aside">
+          <span class="rc-realm">Celestial Nation · Astraea</span>
+          <div class="rc-name">The Divine Light</div>
+          <span class="rc-essence-name">Creation · Enlightenment · The Source of All Essence</span>
+          <p class="rc-desc">The purest form of energy — from which all other Essences flow. The Divine Light is not just one of nine elemental powers; it is the origin of the entire system. Celestial Resonants serve as custodians of the Divine Light, preserving harmony and ensuring the continuous flow of the Celestial Aether to all realms.</p>
+          <div class="rc-abilities"><span class="rc-ab">Cosmic Manipulation</span><span class="rc-ab">Universal Balance</span><span class="rc-ab">Divine Protection</span></div>
+        </div>
+        <div class="rc-inner">
+          <span class="rc-realm">Celestial Resonance · Special Designation</span>
+          <p class="rc-desc">Even in the Celestial Nation, the Umbral Essence seeks to corrupt — tempting gods and celestial beings with whispers of ambition, jealousy, and betrayal. Though few deities fall, those that do bring chaos to both mortal and celestial planes, shifting balances of power and altering destinies across all nine realms simultaneously. The Fallen Seraph who sought to corrupt the Divine Light itself stands as the most significant example: a celestial being whose fractured Resonance nearly destroyed the source of all Essence.</p>
+          <p class="rc-desc" style="margin-top:12px;">Lady Crysen, Oracle of the Celestial Veil, carries Celestial Resonance as a nomadic practitioner — the reason her abilities bridge Divine foresight and Arcane illusion simultaneously, and the reason her eventual sacrifice carries cosmological weight rather than merely personal cost.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">☽</div></div>
+
+<!-- THE UMBRAL ESSENCE -->
+<section class="umbral-sec">
+  <div class="um-inner">
+    <div class="rv">
+      <span class="sl">The Umbral Essence · Counter-Force · The Absolute Counterpart</span>
+      <h2 class="big-h">Where the Aether unifies,<br><em class="dark">the Umbral divides.</em></h2>
+      <p class="bp" style="max-width:660px;">The Umbral Essence is the absolute counterpart to the Celestial Aether. Rooted beneath the dark citadel of Tenebris in the Abyssal Void — a vast chasm of swirling darkness known to corrupt even the purest Resonance that approaches it. The dark energies within are chaotic, binding to the darkest facets of sentient beings, seeding their fears, insecurities, and vices until they become insidious acts that spread across realms.</p>
+    </div>
+    <div class="um-split rv d1">
+      <div class="um-card"><div class="um-c"><span class="um-glyph">😨</span><div class="um-name">Amplifying Negative Emotion</div><p class="um-desc">The Umbral Essence seeps into the minds of mortals and gods alike, <strong>amplifying fear, hatred, envy, and despair</strong>. It thrives on discord, subtly twisting thoughts until conflict arises. Under its influence, allies become rivals, leaders fall to corruption, and peace crumbles — not through a single catastrophic event, but through the slow accumulation of <em>small fractures</em>.</p></div></div>
+      <div class="um-card"><div class="um-c"><span class="um-glyph">🩸</span><div class="um-name">Strengthening Dark Resonance</div><p class="um-desc">The dark energies empower practitioners of shadow Resonance, blood rituals, and dark alchemy — granting abilities <strong>far beyond the reach of conventional Resonance</strong>. Those who draw from it find their power amplified, but often at the cost of their morality or sanity. It is the source of necromancy, summoned horrors, and the curses that plague the Nine Realms.</p></div></div>
+      <div class="um-card"><div class="um-c"><span class="um-glyph">🌑</span><div class="um-name">Corrupting Life and Nature</div><p class="um-desc">The Umbral Essence corrupts nature — spreading blight, decay, and twisted growth where its influence is strongest. Forests become dark and foreboding. Waters stagnant. Creatures mutated. This corruption spreads outward from the Dark Nation, <strong>forming corrupted landscapes that extend into neighboring realms</strong>, darkening lands that were once harmonious.</p></div></div>
+      <div class="um-card"><div class="um-c"><span class="um-glyph">⚖</span><div class="um-name">The Eternal Opposition</div><p class="um-desc">Where the Celestial Aether seeks to unite, the Umbral Essence aims to divide. The two forces are in eternal opposition — a cosmic balance that is both delicate and violently contested. Their clash manifests across the mortal and celestial realms as an ongoing power struggle that ensures <strong>balance is never stagnant</strong> and that the realms remain in a cycle of growth and decay.</p></div></div>
+    </div>
+
+    <!-- Historical events -->
+    <div class="pull-dark rv d2" style="margin-top:36px;"><p>"The Umbral Essence does not attack. It waits. It finds the fracture that was already there and makes it a door."</p><cite>— The Dark Clergy Archive · Pre-Purge Era · Sablea Third Generation</cite></div>
+    <div class="um-history rv d3">
+      <div class="um-event">
+        <div class="ue-label"><div class="uel-name">The Shadow Wars</div><span class="uel-type">Ancient Era · Realm-Wide</span></div>
+        <div class="ue-body"><strong>The Umbral Essence surged in power</strong>, corrupting leaders and sowing discontent across all realms simultaneously. Every realm was tempted by darkness. Alliances crumbled. Centuries of battles followed until the Celestial Aether managed to quell the Umbral's influence — leaving behind a scar in each realm's Resonance tradition that is still referenced in their defensive practices today.</div>
+      </div>
+      <div class="um-event">
+        <div class="ue-label"><div class="uel-name">The Blight of Verdantia</div><span class="uel-type">Flora Nation · Deliberate Seeding</span></div>
+        <div class="ue-body">The Flora Realm was nearly destroyed by a blight that twisted plants and poisoned the soil. Later discovered to have been <strong>seeded by dark mages channeling the Umbral Essence</strong>, hoping to make the Flora Realm dependent on their forbidden knowledge. The Verdant Spirit's Resonance was disrupted at its root — literally. Recovery took generations.</div>
+      </div>
+      <div class="um-event">
+        <div class="ue-label"><div class="uel-name">The Madness of the Mountain Kings</div><span class="uel-type">Mountain Nation · Dynasty of Fracture</span></div>
+        <div class="ue-body">A dynasty of Mountain rulers driven mad by <strong>Umbral whispers</strong> — descending into paranoia, convinced their subjects and families plotted against them. The madness only ended when an heir whose Resonance had been purified by the Celestial Aether ascended, breaking the chain of corruption. The Stoneheart Nexus still carries a trace of that dynasty's fractured Resonance.</div>
+      </div>
+      <div class="um-event">
+        <div class="ue-label"><div class="uel-name">The Fallen Seraph</div><span class="uel-type">Celestial Nation · The Deepest Corruption</span></div>
+        <div class="ue-body">A celestial being who succumbed to the Umbral Essence's temptations sought to establish a dark celestial order and nearly succeeded in <strong>corrupting the Divine Light itself</strong>. An event that shook the foundations of the Celestial Aether and reverberated through all realms. The fact that it was possible at all — that even a guardian of the source could fall — remains the most unsettling truth in the Nine Realms' theological record.</div>
+      </div>
+      <div class="um-event">
+        <div class="ue-label"><div class="uel-name">The Umbral Confluence</div><span class="uel-type">Dark Nation · Tenebris · Night of Endless Fear</span></div>
+        <div class="ue-body">The capital of the Dark Nation, Tenebris, experienced the Umbral Essence at its strongest recorded influence. <strong>Every living creature was touched by shadow</strong> — the Night of Endless Fear spread. Power-seekers and dark Resonants gained immense abilities, but the resulting anarchy plunged the Dark Nation into near self-destruction. Yzmina's later purge of the Old Dark Clergy was a direct consequence of the vacuum this event left in Sablea's power structure.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">◆</div></div>
+
+<!-- THE THREE DISCIPLINES -->
+<section class="disciplines-sec">
+  <div class="disc-inner">
+    <div class="rv" style="text-align:center;">
+      <span class="sl">The Three Disciplines · How Resonance Is Channeled</span>
+      <h2 class="big-h">Three disciplines.<br><em>Every practitioner channels one — or more.</em></h2>
+      <p class="bp" style="max-width:620px;margin:0 auto;">Resonance is not channeled the same way by all practitioners. Three disciplines define the method of connection — the pathway through which a practitioner accesses their realm's Essence. Each discipline carries distinct requirements, costs, and capabilities.</p>
+    </div>
+    <div class="disc-grid rv d1">
+
+      <!-- ARCANE -->
+      <div class="disc-card dc-arcane">
+        <div class="disc-c">
+          <div class="disc-type">Arcane Resonance</div>
+          <h3 class="disc-name">Arcane</h3>
+          <p class="disc-sub">Channeled Through Artifacts · Gems · Ritual</p>
+          <p class="disc-body">Arcane Resonance is accessed through <strong>gems, minerals, and magical artifacts specific to each realm</strong>. It requires an understanding of energy manipulation and mastery of incantations, rituals, or tools. Gems and minerals are highly coveted for their ability to channel and amplify Arcane Resonance — concentrating Essence into a form the practitioner can direct with precision.</p>
+          <p class="disc-body">Arcane is the most learnable discipline — it can be studied, replicated, and transferred through objects. <em>This makes it the most dangerous discipline in the wrong hands.</em> The Orb of Truth, the Dark Amethyst, the Shadow Vault, the Inferno Diamond — all are objects of concentrated Arcane potential waiting for a practitioner whose Resonance is strong enough to activate them.</p>
+          <div class="disc-examples">
+            <div class="de-item"><strong>Vashti</strong> — dark alchemy and blood ritual; Arcane Resonance bound to the Umbral Essence</div>
+            <div class="de-item"><strong>Zyphor of Tenebris</strong> — combines Arcane Resonance with dark alchemy via the Amethyst Engine</div>
+            <div class="de-item"><strong>Draven</strong> — Eye of Ira pendant as Arcane amplifier for his Shadow Resonance</div>
+          </div>
+          <div class="disc-gems">
+            <span class="disc-gem">Inferno Diamond · Fire</span>
+            <span class="disc-gem">Frostbite Gem · Ice</span>
+            <span class="disc-gem">Dark Amethyst · Dark Nation</span>
+            <span class="disc-gem">Tidal Sapphire · Ocean</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIVINE -->
+      <div class="disc-card dc-divine">
+        <div class="disc-c">
+          <div class="disc-type">Divine Resonance</div>
+          <h3 class="disc-name">Divine</h3>
+          <p class="disc-sub">Flowing Through Celestial Connection · Faith · Heritage</p>
+          <p class="disc-body">Divine Resonance flows from the Celestial Aether through the practitioner's connection to their realm's gods and elemental source. Those wielding Divine Resonance act as <strong>intermediaries — drawing upon celestial forces to shape the realms according to their moral or spiritual alignment</strong>. It is most potent when invoked by faithful practitioners who dedicate themselves to a deity or elemental source.</p>
+          <p class="disc-body">Divine Resonance cannot be transferred through objects — it must be earned through <em>genuine connection</em>. This makes it the most powerful discipline in its upper ranges and the most demanding in its requirements. Practitioners who lose their faith, corrupt their devotion, or are severed from their source do not merely lose their power — they lose part of their identity.</p>
+          <div class="disc-examples">
+            <div class="de-item"><strong>Calypso</strong> — Divine fire Resonance amplified by the Ashen Phoenix Feather</div>
+            <div class="de-item"><strong>Queen Seraphina</strong> — healing and protective Resonance through connection to the Celestial Aether</div>
+            <div class="de-item"><strong>Crysen</strong> — Celestial Veil Divine Resonance combined with Arcane illusion</div>
+          </div>
+          <div class="disc-gems">
+            <span class="disc-gem">Flameheart Core · Fire</span>
+            <span class="disc-gem">Tidal Essence · Ocean</span>
+            <span class="disc-gem">Divine Light · Celestial</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRIMAL -->
+      <div class="disc-card dc-primal">
+        <div class="disc-c">
+          <div class="disc-type">Primal Resonance</div>
+          <h3 class="disc-name">Primal</h3>
+          <p class="disc-sub">Raw · Instinctive · Sourced Directly From Elemental Nature</p>
+          <p class="disc-body">Primal Resonance is <strong>ancient, raw energy sourced directly from nature and the elemental forces within each realm</strong>. Practitioners — shamans, druids, certain warriors — tap into the untamed energies of their environment, drawing power from the elemental cores of their homelands. This discipline is often seen as chaotic and instinctive, connecting mortals deeply to the earth, its cycles, and its creatures.</p>
+          <p class="disc-body">Primal Resonance is the hardest to corrupt because it has no doctrine to subvert and no artifact to steal. It simply <em>is</em>. The Verdant Spirit responds to a Flora Realm shaman the way a river responds to gravity — not by choice, but by nature. This intimacy with the Essence is its greatest strength and, when the Umbral corrupts the environment itself, its greatest vulnerability.</p>
+          <div class="disc-examples">
+            <div class="de-item"><strong>Orious of Amun-Re</strong> — Sandstorm Force Primal Resonance; command over sand and wind</div>
+            <div class="de-item"><strong>Lady Nyxara</strong> — Shadow Essence Primal Resonance; draws strength from the land itself</div>
+            <div class="de-item"><strong>Ronan</strong> — raw Napalm Resonance; Primal and barely controllable</div>
+          </div>
+          <div class="disc-gems">
+            <span class="disc-gem">Verdant Spirit · Flora</span>
+            <span class="disc-gem">Aetherial Wind · Sky</span>
+            <span class="disc-gem">Stoneheart Nexus · Mountain</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">✦</div></div>
+
+<!-- COMBINED RESONANCE -->
+<section class="combined-sec">
+  <div class="comb-inner">
+    <div class="rv">
+      <span class="sl">Combined Resonance · Rare · Multiple Disciplines Simultaneously</span>
+      <h2 class="big-h">Some practitioners hold<br><em>more than one discipline at once.</em></h2>
+      <p class="bp" style="max-width:660px;">Rare practitioners — due to mixed heritage, significant artifacts, or intense training — channel multiple forms of Resonance simultaneously. These combined Resonants are typically the most powerful figures in the Nine Realms, and the most dangerous, because their power draws from multiple Essence sources that do not always pull in the same direction.</p>
+    </div>
+    <div class="comb-grid rv d1">
+      <div class="comb-card">
+        <div class="cc-name">Crysen — Oracle of the Celestial Veil</div>
+        <span class="cc-blend">Divine Resonance + Arcane Resonance</span>
+        <p class="cc-body">Draws on Divine foresight and Arcane illusion simultaneously — allowing her to predict and obscure outcomes, weaving both prophecy and deception. <strong>The combination is what makes her an oracle rather than merely a seer</strong>: she does not just receive visions, she can shape how those visions are conveyed, concealed, or revealed to others.</p>
+      </div>
+      <div class="comb-card">
+        <div class="cc-name">Queen Vashti of Sablea</div>
+        <span class="cc-blend">Arcane + Divine + Primal Resonance · Umbral-Infused</span>
+        <p class="cc-body">Combines dark Arcane rituals with Divine blood rites and Primal shapeshifting — all <em>amplified by the Umbral Essence</em>. This combination gives her the power to alter her form, summon shadows, and infuse her physical being with dark Divine strength, allowing her to wield Resonance that rivals even the most ancient Sablean sorceresses.</p>
+      </div>
+      <div class="comb-card">
+        <div class="cc-name">Eris</div>
+        <span class="cc-blend">Divine Resonance + Arcane Resonance · Two Bloodlines</span>
+        <p class="cc-body">Has inherited both Divine and Arcane Resonance from her dual heritage — Ashura fire through Dante II, Sablean shadow through Vesper. Under Vashti's guidance, she practices dark Arcane Resonance while <strong>her innate Divine fire Resonance remains largely unrecognized</strong> as the Ashura inheritance she does not yet know she carries.</p>
+      </div>
+      <div class="comb-card">
+        <div class="cc-name">Draven</div>
+        <span class="cc-blend">Primal Resonance + Arcane Resonance · Noctyss-Bonded</span>
+        <p class="cc-body">His Primal Shadow Resonance through Drakenheim's Stoneheart Nexus and his Arcane Resonance through the Eye of Ira pendant operate in constant symbiosis. <strong>Noctyss amplifies both simultaneously</strong> — the dragon's soulflame feeding souls into the pendant, which returns amplified Arcane power to the Primal connection. Neither discipline fully explains him. Both are required.</p>
+      </div>
+      <div class="comb-card">
+        <div class="cc-name">Selena</div>
+        <span class="cc-blend">Arcane + Divine Resonance · Temporal Infusion · Umbral-Tainted</span>
+        <p class="cc-body">Her Arcane Resonance draws from dark ritual and temporal technology smuggled from New Sablea. Her Divine Resonance was originally connected to the Sisters of Ira — now <em>deliberately corrupted</em> toward false apotheosis. The combination makes her a dimensional saboteur: her Resonance does not merely channel Essence, it tears into the rules that govern where Essence is permitted to flow.</p>
+      </div>
+      <div class="comb-card">
+        <div class="cc-name">Yzmina</div>
+        <span class="cc-blend">Divine Resonance · Ira's Mark · Post-Possession State</span>
+        <p class="cc-body">The only mortal to survive Celestial Possession — her Resonance is no longer hers alone. <strong>Ira's mark remains ingrained in her being</strong>, meaning her Divine Resonance is permanently co-authored by a goddess who has technically departed. She can summon 1/3 of Ira's full Resonance in her Enraged State. She rarely does. The cost is not just power — it is the risk of being overwritten again by what once replaced her soul entirely.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('glow');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('glow');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=48;this.s=82;this.l=58;}
+      else if(t<.72){this.h=270;this.s=60;this.l=55;}
+      else if(t<.86){this.h=48+20;this.s=82-15;this.l=58+15;}
+      else{this.h=270+10;this.s=60-10;this.l=55+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

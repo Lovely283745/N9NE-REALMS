@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Umbrax — The Flame Thief of the Abyss | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #030404;
+  --deep:      #060806;
+  --charred:   #090B08;
+  --obsidian:  #0C0E0A;
+  --crypt:     #0F100C;
+
+  /* Deadlight — corrupted green-black flame */
+  --dead:      #0A1A04;
+  --dead-mid:  #1A3808;
+  --dead-pale: #2A6010;
+  --dead-bright:#3A8818;
+  --dead-glow: rgba(48,136,24,0.8);
+
+  /* Cracked ember — stolen fire */
+  --ember:     #580A00;
+  --ember-mid: #881408;
+  --ember-pale:#C02410;
+  --ember-bright:#E04020;
+
+  /* Emberglass — amber-sickly */
+  --glass:     #402800;
+  --glass-mid: #704800;
+  --glass-pale:#B07010;
+  --glass-bright:#D09820;
+
+  /* Abyssal — deep void */
+  --abyss:     #060210;
+  --abyss-mid: #100618;
+  --abyss-pale:#300840;
+
+  --parch:     #A8A898;
+  --parch-pale:#C8C8B8;
+  --parch-dim: #484840;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+
+/* Deadlight ambient — sickly green seeping from below */
+body::before{content:'';position:fixed;bottom:0;left:0;right:0;height:40vh;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 80% at 50% 100%,rgba(26,56,8,0.08) 0%,transparent 65%);
+  animation:deadBreath 8s ease-in-out infinite;}
+@keyframes deadBreath{0%,100%{opacity:0.5;}50%{opacity:1;}}
+
+/* Anti-scan lines — oppressive texture */
+body::after{content:'';position:fixed;inset:0;z-index:1001;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 3px);
+  opacity:0.6;}
+
+/* Cursor — sharp, jagged */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--dead-bright);transform:translate(-50%,-50%) rotate(45deg);mix-blend-mode:screen;}
+.cur-ring{width:28px;height:28px;border:1px solid rgba(48,136,24,0.4);border-radius:0;transform:translate(-50%,-50%) rotate(45deg);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.drain{width:48px;height:48px;border-color:var(--dead-bright);box-shadow:0 0 14px rgba(48,136,24,0.35);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(3,4,4,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(42,96,16,0.15);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dead-bright);opacity:0.55;display:block;margin-top:2px;letter-spacing:0.06em;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--dead-bright);border:1px solid rgba(42,96,16,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--dead-pale);}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 50%,#120C04 0%,#080A06 40%,var(--void) 70%);
+}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Cracked emberglass overlay — stolen fire veins */
+.crack-l,.crack-r{position:absolute;top:0;bottom:0;width:180px;pointer-events:none;z-index:1;}
+.crack-l{left:0;background:linear-gradient(to right,rgba(26,56,8,0.12),transparent);}
+.crack-r{right:0;background:linear-gradient(to left,rgba(26,56,8,0.12),transparent);}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-sys{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dead-bright);opacity:0;animation:riseIn 1s .2s ease forwards;margin-bottom:14px;letter-spacing:0.06em;display:flex;align-items:center;justify-content:center;gap:10px;}
+.h-sys::before,.h-sys::after{content:'//';color:rgba(42,96,16,0.5);}
+.h-label{font-family:'Cinzel',serif;font-size:clamp(9px,1.3vw,13px);letter-spacing:0.5em;text-transform:uppercase;color:var(--parch-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(60px,12vw,150px);font-weight:900;
+  color:var(--parch-pale);letter-spacing:0.04em;line-height:0.88;
+  text-shadow:0 0 120px rgba(42,96,16,0.5),0 0 60px rgba(136,20,8,0.2),0 4px 40px rgba(0,0,0,0.95);
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+}
+.h-titles{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;opacity:0;animation:riseIn 1s .8s ease forwards;}
+.h-ttag{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dead-bright);border:1px solid rgba(42,96,16,0.25);padding:4px 12px;letter-spacing:0.05em;opacity:0.7;}
+.h-rule{width:280px;height:1px;background:linear-gradient(to right,transparent,rgba(42,96,16,0.4),transparent);margin:20px auto;opacity:0;animation:fadeIn 1s 1.1s ease forwards;}
+@keyframes fadeIn{to{opacity:1;}}
+.h-quote{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(15px,2vw,21px);color:rgba(168,168,152,0.5);
+  max-width:680px;margin:0 auto 36px;line-height:1.75;
+  opacity:0;animation:riseIn 1.2s 1.2s ease forwards;
+  border-left:2px solid rgba(42,96,16,0.3);padding-left:20px;text-align:left;
+}
+.h-vitals{display:flex;justify-content:center;max-width:720px;margin:0 auto;border:1px solid rgba(42,96,16,0.15);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:16px 12px;text-align:center;border-right:1px solid rgba(42,96,16,0.1);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Share Tech Mono',monospace;font-size:clamp(11px,1.6vw,18px);color:var(--dead-bright);line-height:1;margin-bottom:5px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--parch-dim);opacity:0.3;letter-spacing:0.06em;}
+.s-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--dead-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* UTILS */
+.mono{font-family:'Share Tech Mono',monospace;}
+.sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:0.06em;color:var(--dead-bright);opacity:0.5;display:block;margin-bottom:14px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(42,96,16,0.18),transparent);}
+.orn-i{position:relative;background:var(--void);padding:0 18px;z-index:1;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dead-mid);opacity:0.4;letter-spacing:0.08em;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--dead-bright);}
+.big-h em.ember{color:var(--ember-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(168,168,152,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--dead-pale);}
+.bp em.ember{color:var(--ember-pale);}
+.threat-pull{margin:22px 0;padding:16px 22px;border:1px solid rgba(42,96,16,0.18);background:rgba(10,26,4,0.4);position:relative;}
+.threat-pull::before{content:'// THREAT_ASSESSMENT //';position:absolute;top:-9px;left:14px;font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dead-bright);background:var(--void);padding:0 8px;opacity:0.5;letter-spacing:0.05em;}
+.threat-pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,19px);color:rgba(168,168,152,0.7);line-height:1.75;}
+.quote-block{margin:24px 0;padding:18px 24px;border-left:2px solid var(--dead-mid);background:rgba(10,26,4,0.3);}
+.qb-text{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(168,168,152,0.75);line-height:1.75;}
+.qb-attr{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dead-bright);opacity:0.4;display:block;margin-top:8px;letter-spacing:0.05em;}
+
+/* ═══ PROFILE ═══ */
+.profile-sec{padding:110px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.profile-sec::before{content:'UMBRAX';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(100px,18vw,240px);font-weight:900;color:rgba(42,96,16,0.025);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.prof-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.prof-aside .big-u{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,12vw,160px);font-weight:400;color:rgba(42,96,16,0.09);line-height:1;margin-left:-6px;}
+.prof-aside-tag{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dead-bright);opacity:0.5;letter-spacing:0.06em;}
+
+/* Spec table */
+.spec-table{margin-top:24px;display:flex;flex-direction:column;gap:1px;border:1px solid rgba(42,96,16,0.1);}
+.srow{display:grid;grid-template-columns:110px 1fr;overflow:hidden;}
+.srk{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dead-bright);opacity:0.5;background:rgba(42,96,16,0.04);padding:11px 12px;border-right:1px solid rgba(42,96,16,0.08);letter-spacing:0.04em;}
+.srv{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,168,152,0.55);padding:9px 14px;line-height:1.5;}
+.srv strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+.origin-trail{margin-top:28px;display:flex;flex-direction:column;gap:2px;}
+.ot-step{display:flex;gap:10px;padding:10px 14px;border:1px solid rgba(42,96,16,0.08);background:rgba(42,96,16,0.02);align-items:flex-start;transition:border-color .3s;}
+.ot-step:hover{border-color:rgba(42,96,16,0.22);}
+.ots-dot{width:5px;height:5px;border-radius:0;background:var(--dead-mid);flex-shrink:0;margin-top:7px;opacity:0.7;}
+.ots-text{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(168,168,152,0.5);line-height:1.55;}
+.ots-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.ots-text em{color:var(--dead-pale);}
+
+/* ═══ ABILITIES ═══ */
+.abilities-sec{padding:110px 60px;background:var(--crypt);}
+.ab-inner{max-width:1200px;margin:0 auto;}
+
+/* Three ability blocks */
+.ab-block{margin-bottom:3px;border:1px solid rgba(42,96,16,0.12);background:rgba(4,6,4,0.7);position:relative;overflow:hidden;transition:border-color .3s;}
+.ab-block:hover{border-color:rgba(42,96,16,0.28);}
+.ab-block::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--dead-mid),transparent);transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.ab-block:hover::before{transform:scaleX(1);}
+
+/* Ability header */
+.ab-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;padding:28px 36px;border-bottom:1px solid rgba(42,96,16,0.08);}
+.ab-icon{font-size:32px;opacity:0.5;}
+.ab-title-block{}
+.ab-category{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dead-bright);opacity:0.5;display:block;margin-bottom:4px;letter-spacing:0.06em;}
+.ab-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,32px);font-weight:400;color:var(--parch-pale);line-height:1.05;}
+.ab-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dead-bright);border:1px solid rgba(42,96,16,0.25);padding:5px 14px;opacity:0.7;letter-spacing:0.05em;white-space:nowrap;}
+
+/* Sub-abilities */
+.ab-subs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;padding:0;}
+.ab-sub{padding:24px 28px;border-right:1px solid rgba(42,96,16,0.06);transition:background .3s;}
+.ab-sub:last-child{border-right:none;}
+.ab-sub:hover{background:rgba(42,96,16,0.04);}
+.abs-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.6vw,16px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:6px;}
+.abs-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,152,0.5);line-height:1.7;}
+.abs-desc strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.abs-desc em{color:var(--dead-pale);}
+
+/* Combat style */
+.combat-block{margin-top:3px;padding:28px 36px;border:1px solid rgba(136,20,8,0.12);background:rgba(88,10,0,0.06);position:relative;overflow:hidden;}
+.cb-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--ember-pale);border:1px solid rgba(136,20,8,0.2);padding:4px 14px;display:inline-block;margin-bottom:14px;opacity:0.7;letter-spacing:0.05em;}
+.cb-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);margin-bottom:10px;}
+.cb-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,152,0.55);line-height:1.85;max-width:780px;}
+.cb-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.cb-body em{color:var(--ember-pale);}
+
+/* ═══ THE ORDER — FACTION SPLIT ═══ */
+.order-sec{padding:110px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.order-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(42,96,16,0.05) 0%,transparent 70%);}
+.order-inner{max-width:1100px;margin:0 auto;}
+.order-split{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+
+.faction{padding:44px 40px;border:1px solid;position:relative;overflow:hidden;transition:border-color .3s;}
+.f-trad{border-color:rgba(200,136,32,0.14);background:linear-gradient(160deg,#100E06 0%,#0C0A04 100%);}
+.f-abyss{border-color:rgba(136,20,8,0.15);background:linear-gradient(160deg,#120606 0%,#0C0404 100%);}
+.f-trad:hover{border-color:rgba(200,136,32,0.32);}
+.f-abyss:hover{border-color:rgba(136,20,8,0.35);}
+.f-trad::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(200,136,32,0.08) 0%,transparent 70%);}
+.f-abyss::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(136,20,8,0.09) 0%,transparent 70%);}
+.faction::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.faction:hover::after{transform:scaleX(1);}
+.f-trad::after{background:linear-gradient(to right,transparent,rgba(200,136,32,0.6),transparent);}
+.f-abyss::after{background:linear-gradient(to right,transparent,var(--ember-mid),transparent);}
+
+.fc{position:relative;z-index:1;}
+.f-badge{font-family:'Share Tech Mono',monospace;font-size:8px;padding:4px 12px;border:1px solid;display:inline-block;margin-bottom:14px;opacity:0.7;letter-spacing:0.05em;}
+.f-trad .f-badge{color:rgba(220,160,40,0.9);border-color:rgba(200,136,32,0.3);}
+.f-abyss .f-badge{color:var(--ember-pale);border-color:rgba(136,20,8,0.35);}
+.f-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,32px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;}
+.f-alignment{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:14px;}
+.f-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,152,0.55);line-height:1.85;margin-bottom:12px;}
+.f-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.f-trad .f-body em{color:rgba(220,160,40,0.7);}
+.f-abyss .f-body em{color:var(--ember-pale);}
+
+.kaon-note{margin-top:3px;padding:22px 36px;border:1px solid rgba(42,96,16,0.1);background:rgba(4,6,4,0.6);}
+.kn-label{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dead-bright);border:1px solid rgba(42,96,16,0.2);padding:4px 14px;display:inline-block;margin-bottom:10px;opacity:0.7;letter-spacing:0.05em;}
+.kn-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,152,0.55);line-height:1.8;}
+.kn-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ THE CRYPT OF EMBERGLASS ═══ */
+.crypt-sec{padding:110px 60px;background:var(--charred);position:relative;overflow:hidden;}
+.crypt-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 80%,rgba(42,96,16,0.07) 0%,transparent 70%);}
+.crypt-inner{max-width:1200px;margin:0 auto;}
+.crypt-head{text-align:center;margin-bottom:60px;}
+.crypt-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:10px;}
+.crypt-title em{font-style:italic;color:var(--dead-bright);}
+.crypt-quote{font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:rgba(168,168,152,0.35);max-width:480px;margin:0 auto;line-height:1.7;}
+
+.crypt-location{padding:20px 32px;border:1px solid rgba(42,96,16,0.12);background:rgba(10,26,4,0.4);margin-bottom:3px;display:flex;gap:16px;align-items:center;}
+.cl-icon{font-size:18px;opacity:0.5;flex-shrink:0;}
+.cl-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,16px);color:rgba(168,168,152,0.55);line-height:1.6;}
+.cl-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* Zone cards */
+.zones-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:3px;}
+.zone{padding:30px 28px;border:1px solid rgba(42,96,16,0.1);background:rgba(3,4,3,0.6);position:relative;overflow:hidden;transition:border-color .3s,background .3s;}
+.zone:hover{border-color:rgba(42,96,16,0.26);background:rgba(42,96,16,0.04);}
+.zone::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--dead-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.zone:hover::before{transform:scaleX(1);}
+.zone.zone-full{grid-column:span 2;}
+.zone-id{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dead-bright);opacity:0.45;display:block;margin-bottom:8px;letter-spacing:0.05em;}
+.zone-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,20px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:7px;}
+.zone-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,152,0.5);line-height:1.75;}
+.zone-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.zone-body em{color:var(--dead-pale);}
+.zone-ambient{font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(168,168,152,0.25);margin-top:10px;padding-top:10px;border-top:1px solid rgba(42,96,16,0.08);display:block;letter-spacing:0.04em;line-height:1.5;}
+
+/* ═══ RELATIONSHIP WEB ═══ */
+.rel-sec{padding:100px 60px;background:var(--obsidian);}
+.rel-inner{max-width:1100px;margin:0 auto;}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+.rel-card{padding:28px 24px;border:1px solid rgba(42,96,16,0.08);background:rgba(3,4,3,0.5);transition:border-color .3s,background .3s;position:relative;overflow:hidden;}
+.rel-card:hover{border-color:rgba(42,96,16,0.22);background:rgba(42,96,16,0.04);}
+.rel-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--dead-mid),transparent);transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.rel-card:hover::before{transform:scaleX(1);}
+.rc-who{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dead-bright);opacity:0.45;display:block;margin-bottom:6px;letter-spacing:0.05em;}
+.rc-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,19px);letter-spacing:0.15em;color:var(--parch-pale);margin-bottom:5px;}
+.rc-dynamic{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:10px;display:block;}
+.rc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(168,168,152,0.5);line-height:1.75;}
+.rc-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.rc-body em{color:var(--dead-pale);}
+
+/* ═══ PROJECT HOLLOW FLAME ═══ */
+.endgame-sec{
+  padding:110px 60px;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%,#160E04 0%,#0C0808 50%,var(--void) 80%);
+  position:relative;overflow:hidden;
+}
+.endgame-sec::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(42,96,16,0.08) 0%,transparent 70%);}
+.eg-inner{max-width:1100px;margin:0 auto;}
+.eg-block{
+  margin-top:52px;padding:44px;
+  border:1px solid rgba(42,96,16,0.15);
+  background:rgba(4,6,4,0.8);
+  position:relative;overflow:hidden;
+}
+.eg-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(42,96,16,0.08) 0%,transparent 70%);}
+.eg-block::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--dead-mid),transparent);}
+.eg-c{position:relative;z-index:1;}
+.eg-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--dead-bright);border:1px solid rgba(42,96,16,0.25);padding:5px 16px;display:inline-block;margin-bottom:18px;opacity:0.7;letter-spacing:0.06em;}
+.eg-title{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,42px);font-weight:400;color:var(--parch-pale);margin-bottom:14px;}
+.eg-title em{font-style:italic;color:var(--dead-bright);}
+.eg-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,18px);color:rgba(168,168,152,0.6);line-height:1.9;margin-bottom:16px;max-width:780px;}
+.eg-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.eg-body em{color:var(--dead-bright);}
+
+/* CTA */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(42,96,16,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--dead-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(168,168,152,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#E8E8D8;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(168,168,152,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(168,168,152,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(42,96,16,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(168,168,152,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .profile-sec,.abilities-sec,.order-sec,.crypt-sec,.rel-sec,.endgame-sec,.page-cta{padding:80px 40px;}
+  .prof-inner{grid-template-columns:1fr;gap:40px;}
+  .ab-subs{grid-template-columns:1fr;}
+  .ab-sub{border-right:none;border-bottom:1px solid rgba(42,96,16,0.06);}
+  .order-split{grid-template-columns:1fr;}
+  .zones-grid{grid-template-columns:1fr;} .zone.zone-full{grid-column:span 1;}
+  .rel-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(42,96,16,0.1);}.h-vital:last-child{border-bottom:none;}
+  .profile-sec,.abilities-sec,.order-sec,.crypt-sec,.rel-sec,.endgame-sec,.page-cta{padding:60px 24px;}
+  .rel-grid{grid-template-columns:1fr;}
+  .ab-head{grid-template-columns:auto 1fr;} .ab-badge{display:none;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// ASHURA_THREAT · SECRET_INFERNAL_ORDER · EXARCH //</span>
+  </a>
+  <div class="nav-right">
+    <a href="solara.html" class="nav-link">Solara</a>
+    <a href="ashura-nation.html" class="nav-link">Ashura</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="crack-l"></div><div class="crack-r"></div>
+  <div class="hero-content">
+    <div class="h-sys">THREAT_CLASSIFICATION · EXARCH · HOLLOW_EMBER · ESSENCE_PREDATOR</div>
+    <span class="h-label">Exarch of the Secret Infernal Order · The Flame Thief of the Abyss</span>
+    <h1 class="h-name">Umbrax</h1>
+    <div class="h-titles">
+      <span class="h-ttag">The Ember Leech</span>
+      <span class="h-ttag">The Flamebreaker</span>
+      <span class="h-ttag">Lord of Hollow Heat</span>
+      <span class="h-ttag">The Shard Tyrant</span>
+    </div>
+    <div class="h-rule"></div>
+    <div class="h-quote">"They made me nothing. So I will show them what nothing becomes when it devours gods."</div>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">∅</div><div class="h-vlabel">Born Resonance</div></div>
+      <div class="h-vital"><div class="h-vval">∞</div><div class="h-vlabel">Stolen Techniques</div></div>
+      <div class="h-vital"><div class="h-vval">II</div><div class="h-vlabel">Order Factions</div></div>
+      <div class="h-vital"><div class="h-vval">☠</div><div class="h-vlabel">Project Hollow Flame</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>// ENTER THE CRYPT //</span><div class="s-line"></div></div>
+</section>
+
+<!-- PROFILE & ORIGIN -->
+<section class="profile-sec">
+  <div class="prof-inner">
+    <div class="rv">
+      <div class="prof-aside">
+        <div class="big-u">U</div>
+        <span class="prof-aside-tag">// DARK_NATION_EXILE · HOLLOW_EMBER · BORN_WITHOUT_RESONANCE //</span>
+        <div class="spec-table" style="margin-top:20px;">
+          <div class="srow"><div class="srk">ORIGIN</div><div class="srv">Dark Nation — exiled for failing to resonate with the divine flame. <strong>Born hollow</strong>. Labeled discarded.</div></div>
+          <div class="srow"><div class="srk">ROLE</div><div class="srv"><strong>Exarch of the Secret Infernal Order</strong> — the organization's architect, ideologist, and most dangerous operative</div></div>
+          <div class="srow"><div class="srk">RESONANCE</div><div class="srv">None innate. <strong>Parasitic Essence Absorption</strong> — steals, copies, and mutates the Resonance of others through direct contact</div></div>
+          <div class="srow"><div class="srk">METHOD</div><div class="srv">Shard absorption · Gem destruction · Mirror Flame Synthesis · Necrotech soulforging</div></div>
+          <div class="srow"><div class="srk">ENDGAME</div><div class="srv"><strong>Project Hollow Flame</strong> — replacing the Fire Nation's divine flame wells with a manmade hellstar powered by soulless mages</div></div>
+          <div class="srow"><div class="srk">COUNTER</div><div class="srv">Solara — the living embodiment of everything he hates and everything he secretly envies. His obsession and his greatest threat.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">// ORIGIN · THE HOLLOW EMBER · HOW NOTHING BECOMES DANGEROUS //</span>
+      <h2 class="big-h">Born without flame.<br><em>Built something worse from everyone else's.</em></h2>
+      <p class="bp">Born in the Dark Nation — a territory cast out centuries ago for failing to resonate with the divine flame. Umbrax was born with <strong>no innate fire signature</strong>. The Fire Nation purists labeled him a "hollow ember" and left him to die. He developed a method of surviving by parasitically absorbing fire Essence from others — a magical predator built from necessity and rage.</p>
+      <p class="bp">Banished and tortured, he eventually stole a fire crystal from an Ashuran noble, unlocking his ability to wield flame not through lineage, but through <em>theft and reconstruction</em>. He did not become a fire mage. He became something the Nine Realms had no category for: a practitioner whose entire power set is the accumulated stolen Resonance of every mage he has ever defeated. <strong>He does not practice fire. He practices consumption.</strong></p>
+      <div class="threat-pull rv d2"><p>Umbrax is the anti-flame Messiah. Where Solara is fire given purpose and legacy, Umbrax is fire untethered, parasitic, and mutating. He is a soul-harvesting predator forged in exile, obsessed with dominion over Essence, and a walking rejection of every sacred flame tradition Ashura holds sacred.</p></div>
+      <div class="origin-trail rv d3">
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Born in the Dark Nation</strong> without innate fire Resonance — labeled a "hollow ember," considered defective, left to die</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Developed parasitic Essence absorption</strong> — survival mechanism evolved into a full power system</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Stole a fire crystal from an Ashuran noble</strong> — unlocked Mirror Flame Synthesis; could now wield flame through theft and reconstruction</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Rose to leader of the Secret Infernal Order</strong> — Kaon allowed it, believing him a manageable tool. This was a mistake that will cost the Fire Nation dearly.</span></div>
+        <div class="ot-step"><span class="ots-dot"></span><span class="ots-text"><strong>Initiated Project Hollow Flame</strong> — began constructing the Hollow Sun Reactor in the Crypt of Emberglass, recruiting Abyssal Purists to his vision</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// ABILITIES //</div></div>
+
+<!-- ABILITIES -->
+<section class="abilities-sec">
+  <div class="ab-inner">
+    <div class="rv">
+      <span class="sl">// SIGNATURE_ABILITIES · THREE_SYSTEMS · ALL_STOLEN //</span>
+      <h2 class="big-h">He does not learn abilities.<br><em>He steals them. Breaks them open. Makes them worse.</em></h2>
+      <p class="bp" style="max-width:660px;">Every technique Umbrax possesses was taken from someone else. Every spell he casts is a mutated copy of its original. He does not practice fire — he practices extraction. The terrifying detail is that his versions are almost always more destructive than the originals, because he removes the restraint built into every disciplined practitioner's Resonance along with the ability.</p>
+    </div>
+
+    <!-- Essence Reaver -->
+    <div class="ab-block rv d1">
+      <div class="ab-head">
+        <div class="ab-icon">💀</div>
+        <div class="ab-title-block">
+          <span class="ab-category">// PRIMARY_SYSTEM · CORE_ABILITY //</span>
+          <h3 class="ab-name">Essence Reaver</h3>
+        </div>
+        <div class="ab-badge">// THREAT_LEVEL: EXTREME //</div>
+      </div>
+      <div class="ab-subs">
+        <div class="ab-sub">
+          <div class="abs-name">Shard Absorption</div>
+          <p class="abs-desc">Absorbs fire Essence through <strong>direct touch or weapon contact</strong>. Gems cracked by his touch become permanently useless — their stored Resonance extracted and integrated into his Abysscore Reactor. Every mage he touches becomes slightly less of what they were.</p>
+        </div>
+        <div class="ab-sub">
+          <div class="abs-name">Mirror Flame Synthesis</div>
+          <p class="abs-desc">Once he absorbs a technique, he <strong>rebuilds it in corrupted form</strong> — like a virus that copies then mutates. The reconstructed ability retains its power signature but loses all the ethical constraints its original practitioner built into it over years of disciplined training.</p>
+        </div>
+        <div class="ab-sub">
+          <div class="abs-name">Infernal Leech Mark</div>
+          <p class="abs-desc">Places a brand on the target that <em>continuously bleeds their Essence into him from a distance</em>. The victim weakens gradually, their Resonance draining over days or weeks without knowing the source. The mark is invisible. It is felt as fatigue, doubt, and disconnection from flame.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gemcraft Necrotech -->
+    <div class="ab-block rv d2">
+      <div class="ab-head">
+        <div class="ab-icon">🔩</div>
+        <div class="ab-title-block">
+          <span class="ab-category">// SOULFORGING · NECROTECH · FORBIDDEN_CONSTRUCTION //</span>
+          <h3 class="ab-name">Gemcraft Necrotech & Soulforging</h3>
+        </div>
+        <div class="ab-badge">// CLASSIFICATION: ABYSSAL_HERESY //</div>
+      </div>
+      <div class="ab-subs">
+        <div class="ab-sub">
+          <div class="abs-name">Soulshard Soldiers</div>
+          <p class="abs-desc">Constructs made from <strong>shattered fire gems bound with the final screams of the absorbed</strong>. Mindless, obedient, and flame-hungry — undead fire constructs powered not by life, but by death. The gems scream in unison when activated in number.</p>
+        </div>
+        <div class="ab-sub">
+          <div class="abs-name">Darkfire Homunculi</div>
+          <p class="abs-desc">Soulless mages infused with <em>corrupted fire Essence</em> — used as assassins, guards, or lab fodder. They can cast stolen techniques but feel nothing. Their eyes are empty. Their fire burns without warmth. They are what Umbrax would make of every fire mage in Ashura if Project Hollow Flame succeeds.</p>
+        </div>
+        <div class="ab-sub">
+          <div class="abs-name">Abysscore Reactor</div>
+          <p class="abs-desc">A device <strong>built into his body</strong> from broken solar gems and necromantic wiring — allowing him to channel multiple stolen flame types simultaneously. This is why he can wield techniques from different fire disciplines without conflict: the Reactor arbitrates between them, sorting stolen Resonance like a switchboard of stolen identities.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Forbidden Spell Engineering -->
+    <div class="ab-block rv d3">
+      <div class="ab-head">
+        <div class="ab-icon">⚙️</div>
+        <div class="ab-title-block">
+          <span class="ab-category">// SPELL_HACKING · CORRUPTION · ENTROPY_ENGINEERING //</span>
+          <h3 class="ab-name">Forbidden Spell Engineering</h3>
+        </div>
+        <div class="ab-badge">// SOURCE: STOLEN · ALL OF IT //</div>
+      </div>
+      <div class="ab-subs">
+        <div class="ab-sub">
+          <div class="abs-name">Infernal Cascade</div>
+          <p class="abs-desc">A stolen and mutated version of Solara's Flame Lash Barrage — but the fire is <strong>necrotic</strong>. It does not simply incinerate: it reanimates the corpses it burns. The original was purifying flame. His version is a resurrection engine that fills the battlefield with burning undead.</p>
+        </div>
+        <div class="ab-sub">
+          <div class="abs-name">Ashlock Virus</div>
+          <p class="abs-desc">Infects magical systems — <em>disabling fire wards and rituals</em> by embedding entropy runes into the Resonance structure of existing enchantments. The wards do not fail suddenly. They decay over time, their own Essence turning against them, eating themselves from the inside.</p>
+        </div>
+        <div class="ab-sub">
+          <div class="abs-name">Ember Parasite Protocol</div>
+          <p class="abs-desc">Sends out a swarm of burning cinders that latch onto enemies and <strong>drain Essence with each spell cast</strong>. The more the target fights back using their Resonance, the faster they drain. The optimal counter is to stop using abilities — which is the hardest instruction to give a fire mage in combat.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combat Style -->
+    <div class="combat-block rv">
+      <div class="cb-label">// COMBAT_STYLE · PREDATORY //</div>
+      <h3 class="cb-name">Predatory · Taunting · Improvisational</h3>
+      <p class="cb-body">Umbrax uses <em>deceptive, disjointed motion</em> and teleportation via burned glyph zones — never where he should be, always in a direction that serves his observation. He throws fire shards and retracts them into his body like boomerangs, <strong>absorbing data and Essence with each pass</strong>. He fights with chaotic Resonance mimicry: starts weak, grows stronger with every spell the opponent casts against him. <em>He wins slowly — watching, draining, corrupting.</em> Every technique he faces is a gift. Every mage who fights him with their full power is feeding him. The worst thing anyone can do against Umbrax is to be excellent at what they do — because he will simply become a version of it with none of the conscience and twice the malice.</p>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// THE_ORDER //</div></div>
+
+<!-- THE SECRET INFERNAL ORDER — FACTION SPLIT -->
+<section class="order-sec">
+  <div class="order-inner">
+    <div class="rv">
+      <span class="sl">// THE_SECRET_INFERNAL_ORDER · INTERNAL_FRACTURE · TWO_FACTIONS //</span>
+      <h2 class="big-h">One order. One schism.<br><em class="ember">Neither side plans to share the flame.</em></h2>
+      <p class="bp" style="max-width:660px;">The Secret Infernal Order once served as a religious fire cult protecting the balance between celestial flame and infernal flame. Since Umbrax's rise, it has fractured along a fault line that was always present but never acted upon — the question of whether fire's power should be inherited or taken.</p>
+    </div>
+    <div class="order-split rv d1">
+      <!-- TRADITIONALISTS -->
+      <div class="faction f-trad">
+        <div class="fc">
+          <div class="f-badge">// FACTION_I · TRADITIONALISTS //</div>
+          <h3 class="f-name">The Traditionalists</h3>
+          <p class="f-alignment">Fire Monks · Flame Sages · Ancient Lineages · Leaning Toward Solara</p>
+          <p class="f-body">Fire monks, flame sages, and ancient lineages <em>still loyal to the Fire Gods and their rites</em>. They represent the Order's original purpose: guardians of the balance between celestial flame and infernal flame, preservers of the traditions that give Ashura's fire its sacred character. <strong>They are leaning toward Solara</strong> — recognizing in her the flame-born legitimacy Umbrax can only steal.</p>
+          <p class="f-body">They are not naive — they know the Order has been used as cover for darker practices. But they believe in reform from within, in the sacred flame's capacity to cleanse itself. <em>Umbrax considers them sentimental obstacles.</em> They consider him an abomination. Both are correct about each other.</p>
+        </div>
+      </div>
+      <!-- ABYSSAL PURISTS -->
+      <div class="faction f-abyss">
+        <div class="fc">
+          <div class="f-badge">// FACTION_II · ABYSSAL_PURISTS //</div>
+          <h3 class="f-name">The Abyssal Purists</h3>
+          <p class="f-alignment">Radical Infernalists · Followers of Umbrax · Loyal to Stolen Flame</p>
+          <p class="f-body">Radical infernalists who believe <em>fire should cleanse tradition and create a new world ruled by stolen flame</em>. They do not merely want to reform the Order — they want to <strong>purge it entirely</strong>, reigniting the forbidden destructive practices of the ancient dark flame order that predates even Ashura's divine fire traditions. They see Umbrax's parasitic Resonance not as corruption but as evolution.</p>
+          <p class="f-body">Their loyalty to Umbrax is ideological as much as personal — they genuinely believe that power should not be inherited, that bloodline-based Resonance is an injustice, that the divine flame wells are a monopoly on power held by those who were simply born lucky. <em>They are not entirely wrong about the injustice. They are entirely wrong about the solution.</em></p>
+        </div>
+      </div>
+    </div>
+    <div class="kaon-note rv d2">
+      <div class="kn-label">// KAON'S_ROLE · THE_MISTAKE_THAT_ENABLED_THIS //</div>
+      <p class="kn-body">Kaon quietly allowed Umbrax's rise, believing the bloodline-less thief was a <strong>manageable tool</strong> — a controllable radical who could be directed and discarded when his usefulness expired. This was a fundamental misreading of a man who spent his entire life being underestimated and surviving it. Umbrax sees Kaon as his intellectual equal lacking the courage to burn the old world down. He will eventually try to absorb Kaon's Flame Codex and kill him to become <strong>the Last Fire Scholar</strong>. Kaon does not yet understand that the tool is already holding the handle.</p>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// CRYPT_OF_EMBERGLASS //</div></div>
+
+<!-- THE CRYPT OF EMBERGLASS -->
+<section class="crypt-sec">
+  <div class="crypt-inner">
+    <div class="crypt-head rv">
+      <span class="sl">// HIS_BASE · HIS_STATEMENT · HIS_SHRINE_TO_FIRE_HERESY //</span>
+      <h2 class="crypt-title">The Crypt of<br><em>Emberglass</em></h2>
+      <p class="crypt-quote">"Beneath the ash-choked stone sleeps the sun that should not rise."</p>
+    </div>
+
+    <!-- Location -->
+    <div class="crypt-location rv">
+      <div class="cl-icon">🌋</div>
+      <div class="cl-body">Hidden deep beneath the <strong>Dead Obsidian Caldera</strong> — a shattered volcano cursed by the Fire Gods after a flame oracle tried to defy divine will. Accessible only through sunken glyph keys and blood-marked flame wells, miles below ground beneath layers of cooled magma and collapsed god-temples. No Ashuran fire ward reaches this far down. This was the point.</div>
+    </div>
+
+    <div class="zones-grid rv d1">
+      <!-- Zone 1 — Flame Crucible Core -->
+      <div class="zone">
+        <span class="zone-id">// ZONE_01 · CORE //</span>
+        <div class="zone-name">The Flame Crucible Core</div>
+        <p class="zone-body">A massive hexagonal furnace with suspended platforms powered by <strong>shattered fire-gem reactors</strong>. Used for soul-extractions, fire experiments, and forbidden spell-forging. The heat here does not burn flesh — <em>it burns identity</em>. Any mage unprotected feels their Essence unravel. Molten pipes hiss and groan, running like veins across the ceiling. A ritual platform floats at the core, bound by chains made of melted sigils.</p>
+        <span class="zone-ambient">// AMBIENT: Heat that strips rather than warms. The silence between the pipe-sounds is worse than the pipes.</span>
+      </div>
+
+      <!-- Zone 2 — Ashvault Labs -->
+      <div class="zone">
+        <span class="zone-id">// ZONE_02 · LABS //</span>
+        <div class="zone-name">The Ashvault Labs</div>
+        <p class="zone-body">Stained iron workstations, vivisection slabs, crystal chambers for <strong>imprisoned souls and artificial mages</strong>. Soulforging machines powered by emberwraiths — creatures once human, now bound to powering his machinery. Walls lined with cracked fire gems stored like organ jars, each labeled with the mage it was stolen from.</p>
+        <span class="zone-ambient">// AMBIENT: Whispering from failed experiments. Sometimes the gems scream in unison. The label on jar #47 says "Calydra's Apprentice." It is not empty.</span>
+      </div>
+
+      <!-- Zone 3 — Emberglass Ossuary -->
+      <div class="zone">
+        <span class="zone-id">// ZONE_03 · OSSUARY //</span>
+        <div class="zone-name">The Emberglass Ossuary</div>
+        <p class="zone-body">Hall of mirrors made of shattered emberglass where Umbrax stores the <strong>memories of those he has consumed</strong>. The walls reflect not one's body, but their inner flame — revealing fears, regrets, and corrupted futures. This is where Umbrax meditates, standing amidst the memories of his victims, drawing strength from their lost potential. Rituals here allow him to briefly summon <em>ghostly shades with shattered minds and fractured speech</em>.</p>
+        <span class="zone-ambient">// AMBIENT: The reflections move a fraction of a second after you do. Occasionally they don't move at all.</span>
+      </div>
+
+      <!-- Zone 4 — Hollow Sun Reactor -->
+      <div class="zone">
+        <span class="zone-id">// ZONE_04 · RESTRICTED · HOLLOW_SUN //</span>
+        <div class="zone-name">The Hollow Sun Reactor Room</div>
+        <p class="zone-body">The deepest chamber — forbidden to all except Umbrax and his elite <strong>Ashbound Lieges</strong>. A dark star is being grown in a massive sealed sarcophagus of obsidian runes and bone-lattice circuitry. <em>Under construction.</em> Designed to replace the Fire Nation's divine flame wells — a star born from synthetic flame and soul-debt. If completed, it will obliterate the distinction between divine and infernal fire, and rewrite the rules of flame Resonance in Umbrax's image.</p>
+        <span class="zone-ambient">// STATUS: WIP · Completion estimate classified · Access: Umbrax only · Current soul-debt capacity: 74%</span>
+      </div>
+
+      <!-- Zone 5 — Sanctum — Full Width -->
+      <div class="zone zone-full">
+        <span class="zone-id">// ZONE_05 · PERSONAL_SANCTUM //</span>
+        <div class="zone-name">Umbrax's Personal Sanctum &amp; The Shatter Archive</div>
+        <p class="zone-body">A throne of obsidian bone and embersteel, floating above a basin of <strong>soulfire</strong> — flame made from consumed will. Behind him: a shrine of cracked fire relics, trophies from every mage he has defeated. His personal library, <em>The Shatter Archive</em>, contains scrolls on flame-coding, necro-gem alchemy, and lost Fire Nation blood rituals — each sealed with soul-bind locks that react to unauthorized Resonance by triggering the nearest Soulshard Soldier. The architectural symbolism is deliberate throughout: <strong>ceilings and doors are deliberately lower in areas meant for Ashuran mages</strong>, to diminish them symbolically. Statues of headless fire gods line the halls. Their decapitated heads hang by chains from the ceiling. The central corridor is shaped like a broken flame glyph — Umbrax's personal sigil, representing flame stolen, not inherited.</p>
+        <span class="zone-ambient">// DESIGN NOTE: You never feel safe here. You feel watched. The crypt is oppressive, intelligent, desecrated, and alive. It humbles tradition. It devours Essence. It reflects its master perfectly.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// RELATIONSHIPS //</div></div>
+
+<!-- RELATIONSHIP WEB -->
+<section class="rel-sec">
+  <div class="rel-inner">
+    <div class="rv">
+      <span class="sl">// RELATIONSHIP_WEB · THE_FORCES_HE_ORBITS //</span>
+      <h2 class="big-h">Every relationship is a<br><em>test, a resource, or a target.</em></h2>
+    </div>
+    <div class="rel-grid rv d1">
+      <div class="rel-card">
+        <span class="rc-who">// SOLARA · PRIMARY_OBSESSION //</span>
+        <div class="rc-name">Solara</div>
+        <span class="rc-dynamic">The True Flame · His Mirror · His Greatest Test</span>
+        <p class="rc-body">Represents everything Umbrax despises: blood-gifted Resonance, divine right, and reverence for flame traditions. But she is also <strong>the one force that might survive his Hollow Sun</strong>. He is obsessed with testing her limits — not because he wants to destroy her immediately, but because she is the proof of everything he claims is wrong with Ashura. If she can be broken, his thesis is correct. <em>He suspects she cannot be broken. This terrifies and thrills him equally.</em></p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// KAON · ENABLER_AND_RIVAL //</span>
+        <div class="rc-name">Kaon</div>
+        <span class="rc-dynamic">The Flame Scholar · Intellectual Equal · Future Victim</span>
+        <p class="rc-body">Umbrax sees Kaon as both enabler and rival — respects his mind, hates his elitism. Kaon thought he was manageable. <strong>This was the most consequential mistake anyone in the Fire Nation has made since Dante II married Seraphina.</strong> Umbrax will eventually try to absorb Kaon's Flame Codex and kill him to become the Last Fire Scholar. He already knows this. He is waiting for the right moment.</p>
+      </div>
+      <div class="rel-card">
+        <span class="rc-who">// CELESTRA · ARCHAIC_REMNANT //</span>
+        <div class="rc-name">Celestra</div>
+        <span class="rc-dynamic">Former Roxanna Protégée · Remnant of Archaic Fire Mysticism</span>
+        <p class="rc-body">Sees her as a <em>remnant of archaic fire mysticism</em> — either to be destroyed or converted into one of his Ashbound Lieges (undead fire oracles). Her connection to Roxanna's legacy makes her a symbolic target as much as a tactical one. Celestra embodies exactly the kind of inherited tradition Umbrax's entire existence is a repudiation of. <strong>He wants her converted, not killed — because conversion is the more complete statement.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn"><div class="orn-i">// PROJECT_HOLLOW_FLAME //</div></div>
+
+<!-- THE ENDGAME -->
+<section class="endgame-sec">
+  <div class="eg-inner">
+    <div class="rv">
+      <span class="sl">// SECRET_ENDGAME · CLASSIFIED · HOLLOW_SUN_PROTOCOL //</span>
+      <h2 class="big-h">Not to steal the fire.<br><em>To replace it entirely.</em></h2>
+    </div>
+    <div class="eg-block rv d1">
+      <div class="eg-c">
+        <div class="eg-badge">// PROJECT_HOLLOW_FLAME · STATUS: ACTIVE · STAGE: CONSTRUCTION //</div>
+        <h3 class="eg-title"><em>Project Hollow Flame</em> — The Hellstar Endgame</h3>
+        <p class="eg-body">Umbrax seeks to build a <strong>new Sun</strong> — forged from the ashes of the Fire Nation's sacred flame wells and powered by a colossus of soulless mages. He wants to extinguish the divine fire and replace it with a manmade hellstar: <em>a world-consuming source of "earned flame"</em> that acknowledges no bloodline, no divine mandate, no inherited Resonance. Only what has been taken.</p>
+        <p class="eg-body">The Hollow Sun Reactor in the deepest chamber of the Crypt of Emberglass is already under construction. The bone-lattice circuitry is live. The soul-debt capacity is at 74%. <strong>The dark star is growing.</strong> When it is complete, it will obliterate the distinction between divine and infernal fire — rewriting the rules of Resonance itself in Umbrax's image. Not just defeating Ashura. Not just destroying the Fire Gods' influence. Replacing the fundamental source of fire Essence in the Nine Realms with something that owes nothing to heritage and everything to hunger.</p>
+        <div class="quote-block" style="margin-top:24px;margin-bottom:0;">
+          <p class="qb-text">"They were born with fire. I became it. And when the Hollow Sun rises, the only flame left in the Nine Realms will be the kind you earn."</p>
+          <span class="qb-attr">— Umbrax, Exarch of the Secret Infernal Order</span>
+        </div>
+      </div>
+    </div>
+    <div class="rv d2" style="margin-top:3px;padding:22px 36px;border:1px solid rgba(42,96,16,0.1);background:rgba(4,6,4,0.6);">
+      <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(168,168,152,0.5);line-height:1.85;">"I don't want to steal your flame, Solara. <strong style="color:var(--parch-pale);font-style:normal;">I want you to watch what becomes of your gods when flame bows to no one.</strong>"</p>
+    </div>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('drain');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('drain');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=120;this.s=70;this.l=32;}
+      else if(t<.72){this.h=20;this.s=75;this.l=40;}
+      else if(t<.86){this.h=120+20;this.s=70-15;this.l=32+15;}
+      else{this.h=20+10;this.s=75-10;this.l=40+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sablea — Arcane City of the Dark Nation | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+:root{
+  --void:      #04020A;
+  --deep:      #070408;
+  --shadow:    #0A050C;
+  --obsidian:  #0C080E;
+  --dusk:      #100A12;
+
+  /* Blood sand */
+  --sand:      #8A4010;
+  --sand-mid:  #A85020;
+  --sand-pale: #D07030;
+  --sand-bright:#E89040;
+
+  /* Twin moon silver */
+  --moon-a:    #9080A8; /* Aara — transformation */
+  --moon-i:    #7090C0; /* Ira — power */
+  --lunar:     #B0A8C8;
+  --lunar-pale:#D8D0F0;
+  --lunar-dim: #504860;
+
+  /* Obsidian glass */
+  --glass:     #201828;
+  --glass-edge:#302440;
+
+  /* Arcane crimson */
+  --rune:      #6A0820;
+  --rune-mid:  #8A1030;
+  --rune-pale: #C04050;
+
+  --parch:     #C0B098;
+  --parch-pale:#E0C8B0;
+  --parch-dim: #706050;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;opacity:0.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px;}
+
+/* Desert heat haze */
+body::after{content:'';position:fixed;bottom:0;left:0;right:0;height:30vh;z-index:0;pointer-events:none;background:linear-gradient(to top,rgba(138,64,16,0.04),transparent);animation:heatHaze 8s ease-in-out infinite;}
+@keyframes heatHaze{0%,100%{opacity:0.6;}50%{opacity:1;}}
+
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:5px;height:5px;background:var(--sand-pale);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:30px;height:30px;border:1px solid rgba(138,64,16,0.4);border-radius:2px;transform:translate(-50%,-50%);transition:.45s cubic-bezier(.16,1,.3,1);}
+.cur-ring.desert{width:48px;height:48px;border-color:var(--sand-mid);box-shadow:0 0 12px rgba(138,64,16,0.25);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(4,2,10,0.97);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(138,64,16,0.1);}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{font-family:'Cinzel',serif;font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:0.2em;display:block;}
+.nav-brand-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:var(--sand-pale);opacity:0.7;letter-spacing:0.12em;display:block;margin-top:2px;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--sand-pale);border:1px solid rgba(138,64,16,0.3);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:var(--sand-mid);}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse 90% 70% at 50% 60%,#1A0808 0%,#0A0406 50%,var(--void) 80%);}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+
+/* Twin moon indicators */
+.twin-moons{position:absolute;top:14%;left:50%;transform:translateX(-50%);display:flex;gap:48px;pointer-events:none;z-index:1;}
+.t-moon{width:36px;height:36px;border-radius:50%;opacity:0;animation:moonRise 3s 1.5s ease forwards;}
+.tm-aara{background:radial-gradient(circle,rgba(144,128,168,0.6) 0%,transparent 70%);border:1px solid rgba(144,128,168,0.2);animation-delay:1.5s;}
+.tm-ira{background:radial-gradient(circle,rgba(112,144,192,0.6) 0%,transparent 70%);border:1px solid rgba(112,144,192,0.2);animation-delay:2s;}
+@keyframes moonRise{to{opacity:0.6;}}
+
+/* Desert dune silhouette */
+.dune-silhouette{position:absolute;bottom:0;left:0;right:0;height:200px;pointer-events:none;z-index:1;opacity:0.3;background:linear-gradient(to top,rgba(20,8,4,1) 0%,rgba(20,8,4,0.6) 40%,transparent 100%);}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+.h-pre{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;color:var(--sand-pale);text-transform:uppercase;opacity:0;animation:riseIn 1.2s .2s ease forwards;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.h-pre::before,.h-pre::after{content:'';display:block;width:44px;height:1px;background:linear-gradient(to right,transparent,var(--sand-mid));}
+.h-pre::after{transform:scaleX(-1);}
+.h-nation{font-family:'Cinzel',serif;font-size:clamp(10px,1.4vw,14px);letter-spacing:0.5em;text-transform:uppercase;color:var(--lunar-pale);opacity:0;animation:riseIn 1s .4s ease forwards;margin-bottom:8px;display:block;}
+.h-name{font-family:'Cinzel Decorative',serif;font-size:clamp(52px,12vw,150px);font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;text-shadow:0 0 120px rgba(138,64,16,0.4),0 0 60px rgba(106,8,32,0.2),0 4px 40px rgba(0,0,0,0.9);opacity:0;animation:riseIn 1.8s .5s ease forwards;}
+.h-sub{font-family:'Cinzel Decorative',serif;font-size:clamp(11px,1.6vw,18px);font-weight:400;color:var(--sand-pale);letter-spacing:0.2em;display:block;margin-top:8px;opacity:0;animation:riseIn 1s .8s ease forwards;}
+.h-rule{width:1px;height:0;background:linear-gradient(to bottom,var(--sand-mid),transparent);margin:24px auto;animation:lineGrow 1s 1.1s ease forwards;}
+@keyframes lineGrow{to{height:52px;}}
+.h-tagline{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,2vw,21px);color:rgba(192,176,152,0.45);max-width:700px;margin:0 auto 44px;line-height:1.8;opacity:0;animation:riseIn 1.2s 1.3s ease forwards;}
+.h-vitals{display:flex;justify-content:center;max-width:720px;margin:0 auto;border:1px solid rgba(138,64,16,0.15);opacity:0;animation:riseIn 1s 1.5s ease forwards;}
+.h-vital{flex:1;padding:18px 16px;text-align:center;border-right:1px solid rgba(138,64,16,0.1);}
+.h-vital:last-child{border-right:none;}
+.h-vval{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,2vw,24px);color:var(--sand-bright);line-height:1;margin-bottom:6px;}
+.h-vlabel{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);opacity:0.5;}
+.h-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:riseIn 1s 2s ease forwards;}
+.h-scroll span{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;}
+.s-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--sand-mid),transparent);animation:sPulse 2.5s ease-in-out infinite;}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes sPulse{0%{opacity:1;transform:scaleY(0);transform-origin:top;}50%{opacity:1;transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* ═══ UTILS ═══ */
+.sl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.5em;text-transform:uppercase;color:var(--sand-pale);opacity:0.55;display:block;margin-bottom:18px;}
+.orn{position:relative;display:flex;align-items:center;justify-content:center;}
+.orn::before{content:'';position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(138,64,16,0.15),transparent);}
+.orn span{position:relative;background:var(--void);padding:0 18px;font-size:16px;color:var(--sand-mid);opacity:0.35;z-index:1;}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+.rv.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.15s;}.d2{transition-delay:.3s;}.d3{transition-delay:.45s;}
+.big-h{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);line-height:1.15;margin-bottom:22px;}
+.big-h em{font-style:italic;color:var(--sand-bright);}
+.bp{font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,19px);color:rgba(192,176,152,0.6);line-height:1.9;margin-bottom:16px;}
+.bp strong{color:var(--parch-pale);font-weight:500;}
+.bp em{font-style:italic;color:var(--sand-bright);}
+.pull{margin:22px 0;padding:18px 24px;border-left:2px solid var(--sand-mid);background:rgba(138,64,16,0.04);}
+.pull p{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(16px,1.9vw,21px);color:rgba(192,176,152,0.75);line-height:1.75;}
+.pull cite{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--sand-pale);opacity:0.4;display:block;margin-top:10px;font-style:normal;}
+
+/* ═══ OVERVIEW ═══ */
+.overview{padding:110px 60px;background:var(--obsidian);position:relative;overflow:hidden;}
+.overview::before{content:'SABLEA';position:absolute;font-family:'Cinzel Decorative',serif;font-size:clamp(100px,18vw,240px);font-weight:900;color:rgba(138,64,16,0.025);top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.ov-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1.7fr;gap:90px;align-items:start;}
+.ov-aside .big-letter{font-family:'Cinzel Decorative',serif;font-size:clamp(80px,13vw,170px);font-weight:400;color:rgba(138,64,16,0.09);line-height:1;margin-left:-6px;}
+.ov-aside-tag{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;color:var(--sand-pale);opacity:0.5;text-transform:uppercase;}
+.ov-aside-note{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.3);margin-top:6px;line-height:1.6;}
+
+/* Citizen traits block */
+.citizen-traits{margin-top:32px;padding:22px 24px;border:1px solid rgba(138,64,16,0.1);background:rgba(138,64,16,0.03);}
+.ct-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:var(--sand-pale);opacity:0.5;display:block;margin-bottom:12px;}
+.ct-item{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start;}
+.ct-item:last-child{margin-bottom:0;}
+.ct-dot{width:5px;height:5px;border-radius:50%;background:var(--sand-mid);flex-shrink:0;margin-top:7px;opacity:0.6;}
+.ct-text{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.55);line-height:1.6;}
+.ct-text strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:40px;}
+.pg-cell{padding:18px 20px;border:1px solid rgba(138,64,16,0.08);background:rgba(138,64,16,0.02);transition:border-color .3s,background .3s;}
+.pg-cell:hover{border-color:rgba(138,64,16,0.22);background:rgba(138,64,16,0.05);}
+.pg-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--sand-pale);opacity:0.4;display:block;margin-bottom:6px;}
+.pg-val{font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.6);line-height:1.5;}
+
+/* ═══ THE THREE TOWERS ═══ */
+.towers{padding:110px 60px;background:var(--shadow);}
+.towers-inner{max-width:1100px;margin:0 auto;}
+.towers-header{margin-bottom:60px;}
+.towers-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.towers-title em{font-style:italic;color:var(--sand-bright);}
+.towers-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(192,176,152,0.4);max-width:560px;line-height:1.75;}
+
+/* Tower cards — vertical emphasis */
+.tower-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+.tower-card{
+  position:relative;overflow:hidden;
+  border:1px solid;
+  transition:border-color .3s;
+}
+.tw-west{border-color:rgba(160,128,80,0.12);background:linear-gradient(180deg,rgba(12,8,6,1) 0%,rgba(8,6,4,1) 100%);}
+.tw-east{border-color:rgba(106,8,32,0.15);background:linear-gradient(180deg,rgba(12,4,8,1) 0%,rgba(8,4,6,1) 100%);}
+.tw-south{border-color:rgba(74,16,128,0.12);background:linear-gradient(180deg,rgba(10,6,14,1) 0%,rgba(6,4,10,1) 100%);}
+.tw-west:hover{border-color:rgba(160,128,80,0.3);}
+.tw-east:hover{border-color:rgba(106,8,32,0.35);}
+.tw-south:hover{border-color:rgba(74,16,128,0.3);}
+
+/* Glow overlays */
+.tw-west::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 80%,rgba(160,128,80,0.06) 0%,transparent 70%);pointer-events:none;}
+.tw-east::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 80%,rgba(106,8,32,0.07) 0%,transparent 70%);pointer-events:none;}
+.tw-south::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 80%,rgba(74,16,128,0.07) 0%,transparent 70%);pointer-events:none;}
+
+/* Tower top accent line */
+.tower-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;transition:height .4s cubic-bezier(.16,1,.3,1);}
+.tower-card:hover::after{height:5px;}
+.tw-west::after{background:linear-gradient(to right,transparent,rgba(160,128,80,0.5),transparent);}
+.tw-east::after{background:linear-gradient(to right,transparent,rgba(106,8,32,0.7),transparent);}
+.tw-south::after{background:linear-gradient(to right,transparent,rgba(74,16,128,0.6),transparent);}
+
+.tower-inner{padding:44px 32px;position:relative;z-index:1;}
+.tower-ordinal{font-family:'Cinzel Decorative',serif;font-size:60px;font-weight:400;line-height:1;opacity:0.07;margin-bottom:12px;transition:opacity .3s;}
+.tower-card:hover .tower-ordinal{opacity:0.15;}
+.tw-west .tower-ordinal{color:rgba(160,128,80,1);}
+.tw-east .tower-ordinal{color:var(--rune-mid);}
+.tw-south .tower-ordinal{color:rgba(74,16,128,1);}
+.tower-tag{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;padding:4px 14px;border:1px solid;margin-bottom:14px;display:inline-block;opacity:0.7;}
+.tw-west .tower-tag{color:rgba(200,168,100,0.8);border-color:rgba(160,128,80,0.3);}
+.tw-east .tower-tag{color:var(--rune-pale);border-color:var(--rune-mid);}
+.tw-south .tower-tag{color:rgba(152,72,200,0.8);border-color:rgba(74,16,128,0.35);}
+.tower-name{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,32px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:6px;}
+.tower-subtitle{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:18px;}
+.tower-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.5vw,16px);color:rgba(192,176,152,0.55);line-height:1.8;margin-bottom:16px;}
+.tower-body strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+.tower-features{display:flex;flex-direction:column;gap:6px;margin-top:16px;}
+.tf-item{display:flex;gap:8px;align-items:flex-start;}
+.tf-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:8px;opacity:0.6;}
+.tw-west .tf-dot{background:rgba(160,128,80,0.8);}
+.tw-east .tf-dot{background:var(--rune-mid);}
+.tw-south .tf-dot{background:rgba(74,16,128,0.8);}
+.tf-text{font-family:'EB Garamond',serif;font-size:13px;color:rgba(192,176,152,0.45);line-height:1.5;}
+
+/* ═══ THE SABLEAN EXCHANGE ═══ */
+.exchange{padding:110px 60px;background:var(--obsidian);}
+.ex-inner{max-width:1100px;margin:0 auto;}
+.ex-header{margin-bottom:60px;}
+.ex-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.ex-title em{font-style:italic;color:var(--rune-pale);}
+.ex-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(192,176,152,0.4);max-width:580px;line-height:1.75;}
+
+/* Shop reveal cards */
+.shops-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;}
+.shop-card{
+  position:relative;overflow:hidden;
+  background:rgba(3,2,8,0.7);
+  border:1px solid rgba(138,64,16,0.07);
+  min-height:220px;cursor:pointer;
+  transition:border-color .3s;
+}
+.shop-card:hover{border-color:rgba(138,64,16,0.25);}
+
+/* Sealed */
+.shop-sealed{padding:32px 28px;display:flex;flex-direction:column;gap:8px;transition:opacity .4s;}
+.shop-card:hover .shop-sealed{opacity:0;}
+.shop-seal-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(138,64,16,0.3);margin-bottom:10px;}
+.seal-bar{background:rgba(3,2,8,0.95);height:13px;border-radius:1px;margin-bottom:6px;transition:opacity .4s,background .4s;}
+.shop-card:hover .seal-bar{opacity:0;}
+.shop-glyph-sealed{font-size:28px;opacity:0.12;transition:opacity .4s;}
+.shop-card:hover .shop-glyph-sealed{opacity:0;}
+
+/* Revealed */
+.shop-revealed{position:absolute;inset:0;padding:32px 28px;display:flex;flex-direction:column;justify-content:flex-start;opacity:0;transition:opacity .4s;pointer-events:none;}
+.shop-card:hover .shop-revealed{opacity:1;}
+.shop-glyph{font-size:22px;margin-bottom:10px;display:block;opacity:0.6;}
+.shop-tag{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--sand-pale);opacity:0.55;display:block;margin-bottom:8px;}
+.shop-name{font-family:'Cinzel',serif;font-size:clamp(13px,1.8vw,20px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;}
+.shop-owner{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.35);margin-bottom:10px;}
+.shop-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,16px);color:rgba(192,176,152,0.55);line-height:1.75;}
+.shop-warning{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.25em;text-transform:uppercase;margin-top:auto;padding-top:12px;border-top:1px solid rgba(138,64,16,0.1);color:var(--sand-pale);opacity:0.4;}
+
+/* Market of Moons */
+.market-moons{margin-top:3px;padding:40px;background:rgba(3,2,10,0.6);border:1px solid rgba(138,64,16,0.07);}
+.mm-title{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);margin-bottom:10px;}
+.mm-title em{font-style:italic;color:var(--sand-bright);}
+.mm-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:rgba(192,176,152,0.4);max-width:600px;line-height:1.7;margin-bottom:28px;}
+.mm-items{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+.mm-item{padding:18px 20px;border:1px solid rgba(138,64,16,0.07);background:rgba(3,2,8,0.4);transition:border-color .3s,background .3s;}
+.mm-item:hover{border-color:rgba(138,64,16,0.2);background:rgba(138,64,16,0.04);}
+.mm-glyph{font-size:18px;margin-bottom:8px;display:block;opacity:0.5;}
+.mm-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:6px;}
+.mm-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.45);line-height:1.6;}
+
+/* Reveal hint */
+.reveal-hint{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(138,64,16,0.25);text-align:center;margin-bottom:28px;animation:hintPulse 3s ease-in-out infinite;}
+@keyframes hintPulse{0%,100%{opacity:0.3;}50%{opacity:0.7;};}
+
+/* ═══ CULTURE & TRADITIONS ═══ */
+.culture{padding:110px 60px;background:var(--shadow);}
+.culture-inner{max-width:1100px;margin:0 auto;}
+.culture-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:52px;}
+.cult-card{padding:32px 28px;border:1px solid rgba(138,64,16,0.08);background:rgba(4,2,10,0.5);position:relative;overflow:hidden;transition:border-color .3s,background .3s;}
+.cult-card:hover{border-color:rgba(138,64,16,0.22);background:rgba(138,64,16,0.04);}
+.cult-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--sand-mid),var(--sand-bright));transform:scaleX(0);transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.cult-card:hover::before{transform:scaleX(1);}
+.cult-glyph{font-size:22px;margin-bottom:12px;opacity:0.55;display:block;}
+.cult-name{font-family:'Cinzel',serif;font-size:clamp(12px,1.8vw,18px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;}
+.cult-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(192,176,152,0.5);line-height:1.75;}
+
+/* ═══ THE WINDING VEINS ═══ */
+.veins{padding:110px 60px;background:var(--deep);position:relative;overflow:hidden;}
+.veins::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(106,8,32,0.05) 0%,transparent 70%);}
+.veins-inner{max-width:1100px;margin:0 auto;}
+.veins-title{font-family:'Cinzel Decorative',serif;font-size:clamp(24px,3.5vw,48px);font-weight:400;color:var(--parch-pale);line-height:1.1;margin-bottom:12px;}
+.veins-title em{font-style:italic;color:var(--rune-pale);}
+.veins-intro{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(192,176,152,0.4);max-width:560px;line-height:1.75;margin-bottom:52px;}
+
+/* Node network visualization */
+.vein-network{position:relative;padding:48px 0;margin-top:0;}
+.vein-nodes{display:flex;flex-wrap:wrap;gap:3px;}
+.vein-node{
+  padding:24px 26px;flex:1;min-width:220px;
+  border:1px solid rgba(106,8,32,0.1);
+  background:rgba(3,2,8,0.6);
+  position:relative;overflow:hidden;
+  transition:border-color .3s,background .3s;
+}
+.vein-node:hover{border-color:rgba(106,8,32,0.3);background:rgba(106,8,32,0.05);}
+.vein-node::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:var(--rune-mid);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.vein-node:hover::before{transform:scaleX(1);}
+.vn-id{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;color:var(--rune-pale);opacity:0.4;display:block;margin-bottom:8px;text-transform:uppercase;}
+.vn-name{font-family:'Cinzel',serif;font-size:clamp(11px,1.6vw,16px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;}
+.vn-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.4vw,15px);color:rgba(192,176,152,0.5);line-height:1.7;}
+
+/* ═══ MAGIC & CRAFTSMANSHIP ═══ */
+.craft{padding:110px 60px;background:var(--obsidian);}
+.craft-inner{max-width:1100px;margin:0 auto;}
+.craft-split{display:grid;grid-template-columns:1fr 1fr;gap:60px;}
+.craft-col{}
+.craft-title{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,3vw,36px);font-weight:400;color:var(--sand-bright);line-height:1.15;margin-bottom:18px;}
+.craft-title em{font-style:italic;color:var(--parch-pale);}
+.craft-items{display:flex;flex-direction:column;gap:2px;margin-top:28px;}
+.craft-item{padding:18px 20px;border:1px solid rgba(138,64,16,0.1);background:rgba(138,64,16,0.02);transition:border-color .3s;}
+.craft-item:hover{border-color:rgba(138,64,16,0.25);}
+.ci-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.4em;text-transform:uppercase;color:var(--sand-pale);opacity:0.5;display:block;margin-bottom:6px;}
+.ci-val{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(192,176,152,0.55);line-height:1.6;}
+.ci-val strong{color:var(--parch-pale);font-style:normal;font-weight:500;}
+
+/* ═══ RULERS SECTION ═══ */
+.rulers{padding:100px 60px;background:var(--shadow);}
+.rulers-inner{max-width:1100px;margin:0 auto;}
+.rulers-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:52px;}
+.ruler-card{padding:44px 40px;position:relative;overflow:hidden;border:1px solid;transition:border-color .3s;}
+.rc-vesper{border-color:rgba(106,8,32,0.15);background:linear-gradient(160deg,rgba(12,4,8,1) 0%,rgba(8,4,6,1) 100%);}
+.rc-vashti{border-color:rgba(74,16,128,0.12);background:linear-gradient(160deg,rgba(10,6,14,1) 0%,rgba(6,4,10,1) 100%);}
+.rc-vesper::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 30% 40%,rgba(106,8,32,0.08) 0%,transparent 70%);}
+.rc-vashti::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 70% 40%,rgba(74,16,128,0.08) 0%,transparent 70%);}
+.rc-vesper:hover{border-color:rgba(106,8,32,0.35);}
+.rc-vashti:hover{border-color:rgba(74,16,128,0.3);}
+.rc-inner{position:relative;z-index:1;}
+.rc-label{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;opacity:0.5;display:block;margin-bottom:12px;}
+.rc-vesper .rc-label{color:var(--rune-pale);}
+.rc-vashti .rc-label{color:rgba(152,72,200,0.8);}
+.rc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3vw,40px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;}
+.rc-role{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:16px;}
+.rc-body{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.85;}
+.rc-link{display:inline-block;margin-top:16px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;padding:9px 20px;text-decoration:none;border:1px solid;transition:border-color .3s,background .3s;}
+.rc-vesper .rc-link{color:var(--rune-pale);border-color:rgba(106,8,32,0.3);}
+.rc-vesper .rc-link:hover{border-color:var(--rune-mid);background:rgba(106,8,32,0.06);}
+.rc-vashti .rc-link{color:rgba(152,72,200,0.8);border-color:rgba(74,16,128,0.3);}
+.rc-vashti .rc-link:hover{border-color:rgba(74,16,128,0.5);background:rgba(74,16,128,0.05);}
+
+/* ═══ CTA ═══ */
+.page-cta{background:var(--void);padding:100px 60px;text-align:center;border-top:1px solid rgba(138,64,16,0.1);}
+.page-cta-inner{max-width:700px;margin:0 auto;}
+.page-cta h2{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,44px);font-weight:400;color:var(--parch-pale);margin-bottom:18px;line-height:1.2;}
+.page-cta h2 em{font-style:italic;color:var(--sand-bright);}
+.page-cta p{font-family:'EB Garamond',serif;font-style:italic;font-size:17px;color:rgba(192,176,152,0.4);max-width:480px;margin:0 auto 44px;line-height:1.75;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--void);background:var(--parch-pale);padding:15px 32px;text-decoration:none;transition:background .3s;}
+.btn-p:hover{background:#F0E0C8;}
+.btn-g{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(192,176,152,0.15);padding:15px 32px;text-decoration:none;transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;}
+.btn-g:hover{border-color:rgba(192,176,152,0.4);color:var(--parch-pale);}
+footer{background:var(--void);border-top:1px solid rgba(138,64,16,0.06);padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-family:'EB Garamond',serif;font-size:13px;color:rgba(192,176,152,0.18);}
+
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .overview,.towers,.exchange,.culture,.veins,.craft,.rulers,.page-cta{padding:80px 40px;}
+  .ov-inner{grid-template-columns:1fr;gap:40px;}
+  .tower-grid{grid-template-columns:1fr;}
+  .shops-grid{grid-template-columns:1fr;}
+  .mm-items{grid-template-columns:1fr 1fr;}
+  .culture-grid{grid-template-columns:1fr 1fr;}
+  .craft-split{grid-template-columns:1fr;}
+  .rulers-grid{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .h-vitals{flex-direction:column;}.h-vital{border-right:none;border-bottom:1px solid rgba(138,64,16,0.1);}.h-vital:last-child{border-bottom:none;}
+  .overview,.towers,.exchange,.culture,.veins,.craft,.rulers,.page-cta{padding:60px 24px;}
+  .profile-grid{grid-template-columns:1fr;}
+  .mm-items{grid-template-columns:1fr;}
+  .culture-grid{grid-template-columns:1fr;}
+  footer{padding:28px 24px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">Dark Nation · City of Sablea</span>
+  </a>
+  <div class="nav-right">
+    <a href="vesper.html" class="nav-link">Queen Vesper</a>
+    <a href="vashti.html" class="nav-link">Queen Vashti</a>
+    <a href="nine-realms-map.html" class="nav-link">World Map</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="twin-moons">
+    <div class="t-moon tm-aara"></div>
+    <div class="t-moon tm-ira"></div>
+  </div>
+  <div class="dune-silhouette"></div>
+  <div class="hero-content">
+    <p class="h-pre">Dark Nation · Desert City-State · Arcane Center</p>
+    <span class="h-nation">City of the Dark Nation · Ruled by the Sablean Sisters</span>
+    <h1 class="h-name">Sablea</h1>
+    <span class="h-sub">Arcane Oasis · City of Shadows · Keeper of the Twin Moons</span>
+    <div class="h-rule"></div>
+    <p class="h-tagline">Knowledge is both gift and weapon here. The line between ally and adversary is as shifting as the sands themselves. In Sablea, nothing is as it seems — and the price of secrets is always greater than the price of goods.</p>
+    <div class="h-vitals">
+      <div class="h-vital"><div class="h-vval">III</div><div class="h-vlabel">Ebony Towers</div></div>
+      <div class="h-vital"><div class="h-vval">☽☾</div><div class="h-vlabel">Twin Moon Gods</div></div>
+      <div class="h-vital"><div class="h-vval">∞</div><div class="h-vlabel">Arcane Secrets</div></div>
+      <div class="h-vital"><div class="h-vval">II</div><div class="h-vlabel">Ruling Sisters</div></div>
+    </div>
+  </div>
+  <div class="h-scroll"><span>Enter the City of Shadows</span><div class="s-line"></div></div>
+</section>
+
+<!-- OVERVIEW -->
+<section class="overview">
+  <div class="ov-inner">
+    <div class="rv">
+      <div>
+        <div class="big-letter">S</div>
+        <span class="ov-aside-tag">Desert City-State · Dark Nation</span>
+        <p class="ov-aside-note">Nestled in desolate desert wastes. Small in comparison to other Dark Nation cities. Commands respect through arcane mastery and the mystical energies of the desert and its twin moons.</p>
+        <div class="citizen-traits">
+          <span class="ct-label">The Citizens of Sablea</span>
+          <div class="ct-item"><span class="ct-dot"></span><span class="ct-text"><strong>Golden, sun-kissed skin</strong> — a natural adaptation that helps them blend seamlessly with the surrounding sands</span></div>
+          <div class="ct-item"><span class="ct-dot"></span><span class="ct-text"><strong>Light enchanted robes</strong> woven from fabrics that regulate temperature — decorated with arcane symbols and lunar motifs</span></div>
+          <div class="ct-item"><span class="ct-dot"></span><span class="ct-text"><strong>Elemental magic affinity</strong> — particularly sand and wind manipulation, making them formidable in battle and daily life</span></div>
+          <div class="ct-item"><span class="ct-dot"></span><span class="ct-text"><strong>Arcane asceticism</strong> — a philosophy of harmony with the desert and the moons. Serene and resolute. Fully capable of violence when provoked.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv d1">
+      <span class="sl">The City · Overview & Setting</span>
+      <h2 class="big-h">Built around sentinel towers<br>that <em>hum with arcane power.</em></h2>
+      <p class="bp">Sablea is strategically built around the <strong>Twin Ebony Towers</strong> — towering monoliths crafted from enchanted dark stone that glistens with almost otherworldly undertones. Their surfaces are engraved with intricate runes that channel the desert's latent magical energy. Surrounding the towers is a labyrinthine network of sandstone structures and arcane workshops forming the heart of the city.</p>
+      <p class="bp">Unlike the tightly packed sprawl of other cities, Sablea's architecture is more spread out, allowing desert winds to move freely through its streets. Pathways are adorned with <em>enchanted sand glowing subtly under moonlight</em>. The city is positioned near rugged cliffs and stone ravines that protect it from harsh desert winds and serve as natural defense. During the day, heat shimmers off the sands casting mirages that make navigation nearly impossible for outsiders. At night — <strong>the desert comes alive.</strong></p>
+      <div class="pull rv d2"><p>"In Sablea, knowledge is both a gift and a weapon, and the line between ally and adversary is as shifting as the sands themselves."</p><cite>— A Traveler's Forbidden Field Notes on the Dark Nation · Author Unknown</cite></div>
+      <div class="profile-grid rv d3">
+        <div class="pg-cell"><span class="pg-label">Location</span><span class="pg-val">Desert wastes of the Dark Nation · Protected by rugged cliffs and stone ravines</span></div>
+        <div class="pg-cell"><span class="pg-label">Scale</span><span class="pg-val">Small but commanding — commands respect through arcane mastery rather than size</span></div>
+        <div class="pg-cell"><span class="pg-label">Core Architecture</span><span class="pg-val">Three Ebony Towers · Sandstone halls · Circular street patterns reflecting lunar cycles</span></div>
+        <div class="pg-cell"><span class="pg-label">Primary Exports</span><span class="pg-val">Sablean desert glass artifacts · Moon-infused charms · Arcane enchanted weapons · Intelligence</span></div>
+        <div class="pg-cell"><span class="pg-label">Sacred Text</span><span class="pg-val">The Book of Moons — prophecies, spells, philosophies. Its most guarded pages held only by the Sablean Sisters.</span></div>
+        <div class="pg-cell"><span class="pg-label">Notable Alliance</span><span class="pg-val">King Orious of Amun-Re — tenuous, shrouded in secrecy, built on mutual interest in arcane resources</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shadow);"><span>⬥</span></div>
+
+<!-- THE THREE TOWERS -->
+<section class="towers">
+  <div class="towers-inner">
+    <div class="towers-header rv">
+      <span class="sl">Fortress · Temple · Lifeline · Three Functions in Three Monoliths</span>
+      <h2 class="towers-title">The Ebony<br><em>Towers of Sablea</em></h2>
+      <p class="towers-intro">Crafted from enchanted obsidian stone that absorbs sunlight by day — cloaking them in impenetrable darkness. By night, they exude an ethereal glow reflecting the twin moons, creating a haunting silhouette against the blood-red sky. Three towers. Three cities within a city.</p>
+    </div>
+    <div class="tower-grid rv d1">
+      <!-- WESTERN -->
+      <div class="tower-card tw-west">
+        <div class="tower-inner">
+          <div class="tower-ordinal">W</div>
+          <span class="tower-tag">The Tower of the People</span>
+          <h3 class="tower-name">The Western Ebony Tower</h3>
+          <p class="tower-subtitle">Commerce · Culture · Community · The Public Face</p>
+          <p class="tower-body">The bustling heart of Sablea — a self-contained city built vertically rather than sprawling outward. Its lower floors house the city's noble and elite classes. <strong>Markets, craft guilds, alchemical workshops, and training arenas</strong> are all built into its many floors, stacked one above the other. The most accessible tower, designed to function as a communal hub for Sablea's residents and dignitaries alike.</p>
+          <p class="tower-body">High-speed enchanted lifts transport residents to various floors in mere seconds. Higher levels house those of higher status, featuring more lavish quarters and access to specialized facilities, while lower levels teem with shops, food vendors, and apprentices learning the ancient arts of Sablean craftsmanship.</p>
+          <div class="tower-features">
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">Markets, craft guilds, alchemical workshops and training arenas — all vertically stacked</span></div>
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">Reinforced by dark metals and spell-infused obsidian — fortified against physical and magical threats</span></div>
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">An insular culture where gossip and political maneuvering spread like wildfire through its corridors</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- EASTERN -->
+      <div class="tower-card tw-east">
+        <div class="tower-inner">
+          <div class="tower-ordinal">E</div>
+          <span class="tower-tag">The Seat of Power</span>
+          <h3 class="tower-name">The Eastern Ebony Tower</h3>
+          <p class="tower-subtitle">The Sisters · Ritual · Forbidden Knowledge · The Sanctum</p>
+          <p class="tower-body">Reserved exclusively for the Sablean Sisters and their most trusted guests. Considerably quieter than its Western counterpart — an oppressive silence filling its darkened corridors. <strong>Every inch of stonework hums with arcane power</strong>, a constant reminder of the rituals and ancient spells that sustain Sablea.</p>
+          <p class="tower-body">The very top floor houses Queen Vesper and Queen Vashti's royal suites — rooms imbued with lunar energy and arcane defenses that only the sisters can bypass. <em>Enchanted mirrors allow the sisters to observe events occurring across the Nine Realms</em>, maintaining their watchful grasp on Sablea and beyond.</p>
+          <div class="tower-features">
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">Private libraries filled with forbidden tomes and personal sanctuaries for ritual work</span></div>
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">Walls engraved with cryptic symbols that shift slightly — revealing new meanings to those with arcane knowledge</span></div>
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">Lower floors are stark, unoccupied, oppressively silent — as if the walls themselves bear witness to secrets</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- SOUTHERN -->
+      <div class="tower-card tw-south">
+        <div class="tower-inner">
+          <div class="tower-ordinal">S</div>
+          <span class="tower-tag">Tower of Shadows & Sustenance</span>
+          <h3 class="tower-name">The Southern Ebony Tower</h3>
+          <p class="tower-subtitle">Council of Shadows · Underground Agriculture · The City's Lifeline</p>
+          <p class="tower-body">Shrouded in mystery — colloquially known as the <strong>Tower of Shadows</strong>. Houses Queen Vashti's clandestine network of dark sorcerers and serves as a hidden bastion for agriculture and survival. <em>Unlike the other towers, this one reaches deep below the earth</em>, containing underground spring wells and magically preserved crop chambers that provide Sablea with stable food and water despite its harsh desert location.</p>
+          <p class="tower-body">The upper levels house the Shadow Elite — Vashti's most loyal sorcerers who dedicate their lives to mastering forbidden magics. The lower agricultural chambers are expansive, filled with fruit-bearing vines, medicinal herbs, and rare alchemical plants grown in enchanted soil bathed in artificial moonlight.</p>
+          <div class="tower-features">
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">The most essential and most vulnerable part of Sablea's infrastructure — threat to this tower could bring the city to its knees</span></div>
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">An elaborate water filtration system purifies underground spring water through arcane devices channeling it throughout the city</span></div>
+            <div class="tf-item"><span class="tf-dot"></span><span class="tf-text">Those who attempt to breach its defenses describe a sense of disorientation — as if the walls themselves distort reality</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--obsidian);"><span>✦</span></div>
+
+<!-- THE SABLEAN EXCHANGE -->
+<section class="exchange">
+  <div class="ex-inner">
+    <div class="ex-header rv">
+      <span class="sl">Heart of Commerce · Arcane Trade · Clandestine Dealings</span>
+      <h2 class="ex-title">The Sablean<br><em>Exchange</em></h2>
+      <p class="ex-intro">Nestled beneath the watchful presence of the Ebony Towers — as much an arcane center as it is a place of trade. Shrouded in secrecy, mysticism, and a hint of danger. Here, the mundane and magical intermingle, and fortune and fate are exchanged as readily as coins.</p>
+    </div>
+
+    <p class="reveal-hint rv">[ Hover to enter the stall ]</p>
+
+    <div class="shops-grid rv d1">
+      <!-- Alchemist's Veil -->
+      <div class="shop-card">
+        <div class="shop-sealed">
+          <div class="shop-seal-label">// PROPRIETOR: SEALED · ENTRY: BY APPOINTMENT //</div>
+          <div class="shop-glyph-sealed">⚗</div>
+          <div class="seal-bar" style="width:88%"></div>
+          <div class="seal-bar" style="width:72%"></div>
+          <div class="seal-bar" style="width:80%"></div>
+        </div>
+        <div class="shop-revealed">
+          <span class="shop-glyph">⚗</span>
+          <span class="shop-tag">Potions · Elixirs · Alchemical Arts</span>
+          <div class="shop-name">The Alchemist's Veil</div>
+          <div class="shop-owner">Nimrah the Veiled · Sablean Alchemist</div>
+          <p class="shop-body">A dimly lit shop with vast arrays of potions, elixirs, and salves in meticulously labeled glass bottles. Nimrah is renowned for infusing desert herbs and minerals with arcane properties. Everything from enhanced strength potions to more sinister brews rumored to grant influence over others' thoughts or dreams.</p>
+          <div class="shop-warning">Known clientele: Nobles · Assassins · Those with darker intentions · Unknown third parties</div>
+        </div>
+      </div>
+
+      <!-- Forge of Shadows -->
+      <div class="shop-card">
+        <div class="shop-sealed">
+          <div class="shop-seal-label">// PROPRIETOR: SEALED · ENTRY: BY APPOINTMENT //</div>
+          <div class="shop-glyph-sealed">⚔</div>
+          <div class="seal-bar" style="width:92%"></div>
+          <div class="seal-bar" style="width:68%"></div>
+          <div class="seal-bar" style="width:85%"></div>
+        </div>
+        <div class="shop-revealed">
+          <span class="shop-glyph">⚔</span>
+          <span class="shop-tag">Weapons · Armor · Desert Glass Craft</span>
+          <div class="shop-name">The Forge of Shadows</div>
+          <div class="shop-owner">Threnos · Reclusive Artisan</div>
+          <p class="shop-body">A favorite among warriors and assassins. Crafts enchanted weapons and armor from Sablean desert glass — a rare, blackish-red material harvested from ancient glass formations deep in the desert. Weapons gleam with a haunting glow under moonlight, rumored to be unbreakable and capable of cutting through even enchanted steel.</p>
+          <div class="shop-warning">Products: Rumored unbreakable · Moonlight-reactive · Exclusive contract terms · No returns</div>
+        </div>
+      </div>
+
+      <!-- Obsidian Apothecary -->
+      <div class="shop-card">
+        <div class="shop-sealed">
+          <div class="shop-seal-label">// PROPRIETOR: SEALED · ENTRY: BY APPOINTMENT //</div>
+          <div class="shop-glyph-sealed">🌿</div>
+          <div class="seal-bar" style="width:80%"></div>
+          <div class="seal-bar" style="width:94%"></div>
+          <div class="seal-bar" style="width:70%"></div>
+        </div>
+        <div class="shop-revealed">
+          <span class="shop-glyph">🌿</span>
+          <span class="shop-tag">Cures · Poisons · Verdantian Flora</span>
+          <div class="shop-name">The Obsidian Apothecary</div>
+          <div class="shop-owner">Naraeth · Former Healer Turned Purveyor</div>
+          <p class="shop-body">A narrow, unassuming storefront concealing one of the Exchange's most popular alchemical shops. Specializes in potent cures, poisons, and everything in between. Known for her vast knowledge of Verdantian flora, Naraeth is rumored to possess rare Verdantian toxins that have nearly undetectable effects — making her products popular among those with darker intentions.</p>
+          <div class="shop-warning">Specialty: Nearly undetectable effects · Verdantian sourcing · Popular with political clientele</div>
+        </div>
+      </div>
+
+      <!-- Archive of Whispers -->
+      <div class="shop-card">
+        <div class="shop-sealed">
+          <div class="shop-seal-label">// PROPRIETOR: SEALED · ENTRY: BY APPOINTMENT //</div>
+          <div class="shop-glyph-sealed">👁</div>
+          <div class="seal-bar" style="width:86%"></div>
+          <div class="seal-bar" style="width:74%"></div>
+          <div class="seal-bar" style="width:90%"></div>
+        </div>
+        <div class="shop-revealed">
+          <span class="shop-glyph">👁</span>
+          <span class="shop-tag">Secrets · Intelligence · Information Brokerage</span>
+          <div class="shop-name">The Archive of Whispers</div>
+          <div class="shop-owner">Whisperer · Identity Unknown</div>
+          <p class="shop-body">A clandestine shop dealing in secrets and information rather than tangible goods. The Archive offers intel on the dealings of the Nine Realms through an intricate web of spies and informants. Nobles and merchants pay handsomely for access — information ranging from rumors of uprisings to hidden vulnerabilities of rival realms. Currency accepted: gold, favors, secrets, rare arcane materials.</p>
+          <div class="shop-warning">No tangible goods exchanged · Payment in secrets accepted · Operator identity: Completely unknown</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Market of Moons -->
+    <div class="market-moons rv d2">
+      <h3 class="mm-title">The Market of <em>Moons</em></h3>
+      <p class="mm-intro">A vibrant market square dedicated to moon-infused artifacts and charms. Where Sablean reverence for the celestial bodies is most palpable — and most purchasable.</p>
+      <div class="mm-items">
+        <div class="mm-item">
+          <span class="mm-glyph">🌙</span>
+          <div class="mm-name">Amulets of Aara</div>
+          <p class="mm-desc">Crafted by Sablean mystics, enchanted with lunar magic. Each amulet possesses a specific blessing based on the phase of the moon during which it was made. New Moon amulets grant discretion; Full Moon amulets enhance influence over others.</p>
+        </div>
+        <div class="mm-item">
+          <span class="mm-glyph">✨</span>
+          <div class="mm-name">Lunar Elixirs</div>
+          <p class="mm-desc">Special brews crafted under moonlight with properties tied to lunar cycles — sold in delicately etched bottles. The most potent amplify the drinker's elemental magic temporarily. Popular among Sablean citizens who believe in their efficacy. Not without risk.</p>
+        </div>
+        <div class="mm-item">
+          <span class="mm-glyph">⭕</span>
+          <div class="mm-name">Astrolabes of Alignment</div>
+          <p class="mm-desc">Enchanted astrolabes designed to aid in aligning one's magical energies with celestial bodies — blending alchemy with astrology. Particularly valued by elementalists seeking greater harmony with their magic during specific astrological alignments.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shadow);"><span>☽</span></div>
+
+<!-- CULTURE & TRADITIONS -->
+<section class="culture">
+  <div class="culture-inner">
+    <div class="rv">
+      <span class="sl">Rituals · Sacred Practice · The Living Culture of Sablea</span>
+      <h2 class="big-h">
+        A culture rooted in<br>
+        <em>lunar reverence and elemental mastery.</em>
+      </h2>
+      <p class="bp" style="max-width:660px;">Every transaction, every building, every hour of the day and night in Sablea is shaped by devotion to the twin moons Aara and Ira. The sacred and the secular are inseparable here — and the citizens prefer it that way.</p>
+    </div>
+    <div class="culture-grid rv d1">
+      <div class="cult-card">
+        <span class="cult-glyph">🌕</span>
+        <div class="cult-name">The Ritual of Moons</div>
+        <p class="cult-desc">Each month, as the moons reach their zenith, citizens gather around the towers to invoke desert winds and sand in an intricate dance of swirling shapes and symbols. Both a celebration of arcane strength and a moment of collective communion — renewing the bond between the people, the land, and the celestial forces that govern it.</p>
+      </div>
+      <div class="cult-card">
+        <span class="cult-glyph">📖</span>
+        <div class="cult-name">The Book of Moons</div>
+        <p class="cult-desc">An ancient tome containing prophecies, spells, and philosophies that guide Sablean spiritual and arcane practices. Considered essential reading for every mage and artisan. Speaks of cycles, transformation, and balance. Its most guarded pages are held exclusively by the Sablean Sisters and passed down through their lineage.</p>
+      </div>
+      <div class="cult-card">
+        <span class="cult-glyph">🌙</span>
+        <div class="cult-name">Devotion to Moon Goddess Aara</div>
+        <p class="cult-desc">Particularly revered among the twin deities for her powers of transformation and healing. Each month, vendors gather in the Market of Moons for a brief ceremony to offer thanks — chanting prayers and lighting incense that drifts up to the towers. Every evening transaction treated as a ritual, sealed with quiet murmurs to the moons.</p>
+      </div>
+      <div class="cult-card">
+        <span class="cult-glyph">✦</span>
+        <div class="cult-name">Arcane Asceticism</div>
+        <p class="cult-desc">A philosophy that emphasizes harmony with the desert and the moons above. This introspective nature has fostered a population that is both serene and resolute — a people who prioritize peace and personal growth, but who are fully capable of wielding their considerable powers in defense of their homeland if provoked.</p>
+      </div>
+      <div class="cult-card">
+        <span class="cult-glyph">🎆</span>
+        <div class="cult-name">The Lunar Convergence</div>
+        <p class="cult-desc">An annual festival coinciding with the alignment of the twin moons. Vendors offer rare goods and specially enchanted items available only during this period. The air fills with burning sage and melodic chants as mystics conduct public blessings. The Sablean Sisters appear silently on the highest balconies of the Ebony Towers — observing, never speaking.</p>
+      </div>
+      <div class="cult-card">
+        <span class="cult-glyph">🩸</span>
+        <div class="cult-name">The Silence Doctrine</div>
+        <p class="cult-desc">Instilled by Queen Vashti throughout the city — a deep-seated respect for silence and restraint, taught from a young age and reinforced by the Handmaidens. Sableans understand that their lives are governed by unseen forces. They accept this not with fear but with a reverence that has become indistinguishable from faith.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<div class="orn" style="background:var(--deep);"><span>⬥</span></div>
+
+<!-- THE WINDING VEINS -->
+<section class="veins">
+  <div class="veins-inner">
+    <div class="rv">
+      <span class="sl">The Underground Network · The City's Hidden Architecture</span>
+      <h2 class="veins-title">The Winding<br><em>Veins</em></h2>
+      <p class="veins-intro">A hidden network of secret tunnels and passageways running beneath the entire district, connecting shops, hideouts, and clandestine meeting rooms. Known only to a few — including the Sablean Sisters and their closest advisors. The city's shadow network. The veins beneath the stone skin of Sablea.</p>
+    </div>
+    <div class="vein-nodes rv d1">
+      <div class="vein-node">
+        <span class="vn-id">// NODE: 01 // ACCESS: RESTRICTED //</span>
+        <div class="vn-name">The Movement Channels</div>
+        <p class="vn-body">Allow spies, informants, and the sisters' agents to move unseen and conduct business without prying eyes. Those who use them describe a constant sense of being watched — because they are. Every node is monitored. Every passage is mapped only in Vashti's mind.</p>
+      </div>
+      <div class="vein-node">
+        <span class="vn-id">// NODE: 02 // ACCESS: COUNCIL ONLY //</span>
+        <div class="vn-name">The Council's Hidden Chambers</div>
+        <p class="vn-body">Used by the Council of Shadows — an underground society of information brokers, thieves, and dark mages loyal to Queen Vesper. Deals made here shape the fates of nations, often unknown even to those wandering the Exchange above. The most consequential conversations in the Nine Realms have no witnesses.</p>
+      </div>
+      <div class="vein-node">
+        <span class="vn-id">// NODE: 03 // ACCESS: UNKNOWN //</span>
+        <div class="vn-name">Shrines to Forbidden Gods</div>
+        <p class="vn-body">Rumored to exist in the deepest sections of the Winding Veins — shrines to ancient forces and forbidden deities that predate even the Sablean Sisters' rule. Only the bravest or most foolhardy venture this deep. Those who return describe a shifting sense of direction, as if the passages themselves are alive and unwilling.</p>
+      </div>
+      <div class="vein-node">
+        <span class="vn-id">// NODE: 04 // ACCESS: CONFIRMED //</span>
+        <div class="vn-name">The Abyssal Gate Connection</div>
+        <p class="vn-body">Somewhere in the deepest reaches of the Winding Veins lies the burial site of the Abyssal Gate — the structure Selena sought to reopen. Its exact location within the network is the most carefully guarded secret in Sablea, known perhaps to two people. Perhaps only one. Perhaps to no one still living.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--obsidian);"><span>✦</span></div>
+
+
+<div class="orn" style="background:var(--shadow);"><span>⚔</span></div>
+
+<!-- THE TWO GUILDS -->
+<section style="padding:110px 60px;background:var(--shadow);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="rv">
+      <span class="sl">The Two Arms of Sablean Power · Visible Strength and Hidden Force</span>
+      <h2 class="big-h">Two guilds.<br><em>Two queens. One city that never sleeps unguarded.</em></h2>
+      <p class="bp" style="max-width:660px;">While Vesper and Vashti govern through authority and shadow, Sablea's physical and arcane security is maintained by two distinct organizations — one that the public sees and honors, one that the public whispers about in fear. They answer to different queens. They never fully trust each other. They are both essential.</p>
+    </div>
+
+    <!-- SMG -->
+    <div class="rv d1" style="margin-top:52px;border:1px solid rgba(138,64,16,0.12);background:linear-gradient(160deg,#0E0A06 0%,#080806 100%);position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(138,64,16,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="display:grid;grid-template-columns:200px 1fr;position:relative;z-index:1;">
+        <div style="padding:44px 28px;border-right:1px solid rgba(138,64,16,0.08);display:flex;flex-direction:column;justify-content:flex-start;">
+          <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:var(--sand-pale);opacity:0.5;margin-bottom:10px;">Guild I</div>
+          <div style="font-family:'Cinzel Decorative',serif;font-size:52px;color:rgba(138,64,16,0.1);line-height:1;margin-bottom:14px;">SMG</div>
+          <span style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(200,160,80,0.7);border:1px solid rgba(138,64,16,0.3);padding:4px 12px;display:inline-block;">Loyal to Vesper</span>
+        </div>
+        <div style="padding:44px 44px;">
+          <h3 style="font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;">The Sandstrider Mercenary Guild</h3>
+          <p style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:16px;">Desert Warfare · Tactical Espionage · The Public Face of Sablean Defense</p>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.85;margin-bottom:14px;">Although Sablea does not possess a formal army, the Sandstriders are a versatile, well-organized militia capable of rapid deployment. They protect trade routes, enforce royal decrees, and covertly eliminate threats — operating under a <strong style="color:var(--parch-pale);font-style:normal;">code of honor</strong> that demands loyalty to Sablea and the protection of its people. Their missions range from city guard duties to assassinations in distant lands.</p>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.85;margin-bottom:18px;">Each member is trained in desert survival, sand and wind manipulation, and combat tactics that leverage terrain expertise. They are experts at ambushes, stealth attacks, and deception — using the desert's natural features as tactical tools. Their most celebrated achievement: the <strong style="color:var(--parch-pale);font-style:normal;">Battle of the Shifting Sands</strong>, where a handful of operatives used sandstorm diversions to spirit away an entire convoy of Sablean diplomats from marauders without losing a single life.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;">
+            <div style="padding:14px 16px;border:1px solid rgba(138,64,16,0.1);background:rgba(138,64,16,0.02);">
+              <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--sand-pale);opacity:0.5;margin-bottom:5px;">Appearance</div>
+              <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.5;">Light layered robes in sandy beige, deep brown, and muted grey. <strong style="font-style:normal;color:rgba(192,176,152,0.7);">Emblem of the desert fox</strong> worn as brooch or shoulder emboss. Faces wrapped against wind and identity.</p>
+            </div>
+            <div style="padding:14px 16px;border:1px solid rgba(138,64,16,0.1);background:rgba(138,64,16,0.02);">
+              <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--sand-pale);opacity:0.5;margin-bottom:5px;">Weaponry</div>
+              <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.5;">Curved scimitars · Sand-infused daggers that dissipate to dust if dropped · Hallucinogenic blow darts · Sand bombs creating temporary blinding storms in confined radius</p>
+            </div>
+            <div style="padding:14px 16px;border:1px solid rgba(138,64,16,0.1);background:rgba(138,64,16,0.02);">
+              <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--sand-pale);opacity:0.5;margin-bottom:5px;">Unique Capabilities</div>
+              <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.5;"><strong style="font-style:normal;color:rgba(192,176,152,0.7);">Sand-scrying</strong> · Arcane sand/wind manipulation · Hand signal and whistle code communication system · Quicksand trap deployment</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHADOW ELITE -->
+    <div class="rv d2" style="margin-top:3px;border:1px solid rgba(74,16,128,0.12);background:linear-gradient(160deg,#0A0614 0%,#080410 100%);position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 80% 50%,rgba(74,16,128,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="display:grid;grid-template-columns:200px 1fr;position:relative;z-index:1;">
+        <div style="padding:44px 28px;border-right:1px solid rgba(74,16,128,0.08);display:flex;flex-direction:column;justify-content:flex-start;">
+          <div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(160,120,200,0.5);margin-bottom:10px;">Guild II</div>
+          <div style="font-family:'Cinzel Decorative',serif;font-size:52px;color:rgba(74,16,128,0.12);line-height:1;margin-bottom:14px;">CSE</div>
+          <span style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(160,80,220,0.7);border:1px solid rgba(74,16,128,0.3);padding:4px 12px;display:inline-block;">Loyal to Vashti</span>
+        </div>
+        <div style="padding:44px 44px;">
+          <h3 style="font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,30px);font-weight:400;color:var(--parch-pale);line-height:1.05;margin-bottom:6px;">Council of Shadows — The Shadow Elite</h3>
+          <p style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--parch-dim);opacity:0.35;margin-bottom:16px;">Dark Sorcery · Intelligence Network · The Hidden Arm of Vashti's Authority</p>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.85;margin-bottom:14px;">Both an intelligence network and a secretive order of mystics, split into three branches: <strong style="color:var(--parch-pale);font-style:normal;">The Watchers</strong> (intelligence, vigil across the Nine Realms), <strong style="color:var(--parch-pale);font-style:normal;">The Veilbearers</strong> (arcane wards protecting Sablea's hidden chambers), and <strong style="color:var(--parch-pale);font-style:normal;">The Enforcers</strong> (hunters of rogue magic users who betray council secrets — feared for their ability to bend shadows and transform into creatures of the night).</p>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(14px,1.6vw,17px);color:rgba(192,176,152,0.55);line-height:1.85;margin-bottom:18px;">Their most feared act: the <strong style="color:var(--parch-pale);font-style:normal;">Purge of the Wayward</strong> — tracking down and eliminating a group of Sablean mystics who attempted to reveal Sablea's arcane secrets to outsiders. Swift, merciless, complete. No one has attempted it since.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;">
+            <div style="padding:14px 16px;border:1px solid rgba(74,16,128,0.1);background:rgba(74,16,128,0.02);">
+              <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(160,120,200,0.5);margin-bottom:5px;">Appearance</div>
+              <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.5;">Black or deep violet robes adorned with silver runes that <strong style="font-style:normal;color:rgba(192,176,152,0.7);">glow faintly under moonlight</strong>. Faces obscured by shifting-pattern hoods. Each bears the black crescent insignia as pendant or tattoo.</p>
+            </div>
+            <div style="padding:14px 16px;border:1px solid rgba(74,16,128,0.1);background:rgba(74,16,128,0.02);">
+              <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(160,120,200,0.5);margin-bottom:5px;">Artifacts</div>
+              <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.5;">Darkstone staves with binding runes · Amulets of the Moon · <strong style="font-style:normal;color:rgba(192,176,152,0.7);">Void Cloaks</strong> rendering wearer nearly invisible in darkness · Soul Stones from fallen members</p>
+            </div>
+            <div style="padding:14px 16px;border:1px solid rgba(74,16,128,0.1);background:rgba(74,16,128,0.02);">
+              <div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:rgba(160,120,200,0.5);margin-bottom:5px;">Communication</div>
+              <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.5;"><strong style="font-style:normal;color:rgba(192,176,152,0.7);">Glyph-based language</strong> carved into stones — glyphs change color in response to magical energies. Telepathic link granted by Vashti at initiation. Only Vashti can speak to the full guild simultaneously.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Silent Tension -->
+    <div class="rv d3" style="margin-top:3px;padding:22px 40px;border:1px solid rgba(192,176,152,0.05);background:rgba(4,2,8,0.4);text-align:center;">
+      <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,19px);color:rgba(192,176,152,0.45);line-height:1.75;max-width:720px;margin:0 auto;">The Sandstriders are honored by the public as protectors — visible, respected, present. The Shadow Elite are whispered about with reverence and fear. Both groups serve the Sablean Sisters. Both are bound to their respective queen in loyalty and purpose. <strong style="color:rgba(192,176,152,0.65);font-style:normal;">Their goals are aligned. Their methods are vastly different. Between them runs a silent tension that has never fully resolved.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- MAGIC & CRAFTSMANSHIP -->
+<section class="craft">
+  <div class="craft-inner">
+    <div class="rv" style="margin-bottom:52px;">
+      <span class="sl">The Arcane Arts · What Sablea Builds and What It Sells</span>
+      <h2 class="big-h">
+        Magic infused with desert.<br>
+        <em>Desert forged into art.</em>
+      </h2>
+      <p class="bp" style="max-width:600px;">The people of Sablea have perfected the art of infusing desert elements into magic, creating artifacts that draw upon the natural power of the sands and winds. These are not just functional — they are works of art sought across the Nine Realms.</p>
+    </div>
+    <div class="craft-split">
+      <div class="craft-col rv">
+        <h3 class="craft-title">Sablean <em>Desert Glass</em></h3>
+        <p class="bp">A rare, obsidian-like material forged in the heart of the desert's heat and imbued with protective enchantments. Used to craft armor, weapons, and jewelry — all highly valued throughout the Dark Nation. The blackish-red material gleams under moonlight with a haunting glow.</p>
+        <div class="craft-items">
+          <div class="craft-item"><span class="ci-label">Material Origin</span><span class="ci-val">Ancient glass formations deep within the desert · Heat-forged · Moon-imbued</span></div>
+          <div class="craft-item"><span class="ci-label">Properties</span><span class="ci-val">Rumored unbreakable · Moonlight-reactive · Capable of cutting enchanted steel</span></div>
+          <div class="craft-item"><span class="ci-label">Products</span><span class="ci-val">Armor · Weapons · Jewelry · Protective artifacts highly valued throughout the Dark Nation</span></div>
+          <div class="craft-item"><span class="ci-label">Distribution</span><span class="ci-val"><strong>Carefully regulated by the Council of Artisans</strong> — limiting trade to select allies and trusted merchants only</span></div>
+        </div>
+      </div>
+      <div class="craft-col rv d1">
+        <h3 class="craft-title">Transformation <em>Magic</em></h3>
+        <p class="bp">Inspired by the phases of the moons and the goddess Aara — Sablean mages are adept in allowing practitioners to shift forms, take on desert animal traits, or manipulate elements in fluid, graceful motions.</p>
+        <div class="craft-items">
+          <div class="craft-item"><span class="ci-label">Primary Inspiration</span><span class="ci-val">Phases of the twin moons · Goddess Aara's domain over transformation and healing</span></div>
+          <div class="craft-item"><span class="ci-label">Abilities</span><span class="ci-val">Form-shifting · Desert animal trait adoption · Elemental manipulation in fluid motions</span></div>
+          <div class="craft-item"><span class="ci-label">Advanced Technique</span><span class="ci-val"><strong>Merging with the sands</strong> — the most powerful mages can temporarily become part of the desert itself, emerging miles away</span></div>
+          <div class="craft-item"><span class="ci-label">Restriction</span><span class="ci-val">The Council of Artisans regulates all magical production — ensuring Sablean crafts remain exclusive and rare</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shadow);"><span>☾</span></div>
+
+<!-- ANCIENT LANGUAGES -->
+<section class="culture" style="background:var(--dusk);">
+  <div class="culture-inner">
+    <div class="rv">
+      <span class="sl">Five Tongues · From Raw Power to Shadow Whisper</span>
+      <h2 class="big-h">The Ancient Languages<br><em>of Shadows and Secrets</em></h2>
+      <p class="bp" style="max-width:660px;">The ancient languages of Sablea evolved over centuries from raw and aggressive dialects into subtle, nuanced forms of communication — reflecting the society's complex shift from brute power to elegant manipulation. In modern Sablea, all five still live in the dialect spoken today. The dual moons, Ira and Aara, continue to influence the language, reminding the people of their heritage.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;margin-top:52px;">
+      <div class="rv" style="display:grid;grid-template-columns:140px 1fr;border:1px solid rgba(138,64,16,0.1);background:rgba(4,2,8,0.5);overflow:hidden;"><div style="background:rgba(138,64,16,0.05);padding:26px 20px;border-right:1px solid rgba(138,64,16,0.08);"><div style="font-family:'Cinzel Decorative',serif;font-size:24px;color:rgba(138,64,16,0.2);margin-bottom:6px;">I</div><div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--sand-pale);opacity:0.5;">Day Tongue</div></div><div style="padding:24px 28px;"><div style="font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,24px);color:var(--parch-pale);margin-bottom:5px;">Zarathian</div><div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:10px;">Harsh Consonants · War Cries · Declarations of Power</div><p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(192,176,152,0.55);line-height:1.8;margin-bottom:10px;">The primary language of the early Sableans — harsh consonants and guttural sounds. Used in declarations of power, war cries, and rituals invoking the moons. Direct and forceful. Spoken primarily during the day, embodying the raw energy of the sun and the open honesty expected in daylight interactions. Its use diminished as the society evolved toward clandestine practices.</p><div style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.35);border-left:2px solid rgba(138,64,16,0.25);padding-left:12px;">"Zarath al'ira, kethar vash'ti!" &nbsp;·&nbsp; <em>"By the power of Ira, we conquer all!"</em></div></div></div>
+      <div class="rv d1" style="display:grid;grid-template-columns:140px 1fr;border:1px solid rgba(112,144,192,0.1);background:rgba(4,2,8,0.5);overflow:hidden;"><div style="background:rgba(112,144,192,0.04);padding:26px 20px;border-right:1px solid rgba(112,144,192,0.07);"><div style="font-family:'Cinzel Decorative',serif;font-size:24px;color:rgba(112,144,192,0.2);margin-bottom:6px;">II</div><div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--lunar-pale);opacity:0.5;">Night Tongue</div></div><div style="padding:24px 28px;"><div style="font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,24px);color:var(--parch-pale);margin-bottom:5px;">Mysara</div><div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:10px;">Soft Flowing Sounds · Hidden Meanings · The Language of Whispers</div><p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(192,176,152,0.55);line-height:1.8;margin-bottom:10px;">Emerged as the language of whispers and secrets — developed for clandestine dealings and covert communications. Features soft, flowing sounds and a complex system of metaphors, allowing speakers to convey hidden meanings without drawing attention. Used exclusively under the light of Ira and Aara. Reflects the Sableans' shift toward secrecy and manipulation.</p><div style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.35);border-left:2px solid rgba(112,144,192,0.25);padding-left:12px;">"Lira thal'ara, ven'keth." &nbsp;·&nbsp; <em>"The moon guides the hidden path."</em></div></div></div>
+      <div class="rv" style="display:grid;grid-template-columns:140px 1fr;border:1px solid rgba(106,8,32,0.12);background:rgba(4,2,8,0.5);overflow:hidden;"><div style="background:rgba(106,8,32,0.04);padding:26px 20px;border-right:1px solid rgba(106,8,32,0.08);"><div style="font-family:'Cinzel Decorative',serif;font-size:24px;color:rgba(106,8,32,0.22);margin-bottom:6px;">III</div><div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--rune-pale);opacity:0.5;">Power Tongue</div></div><div style="padding:24px 28px;"><div style="font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,24px);color:var(--parch-pale);margin-bottom:5px;">Draekon</div><div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:10px;">Sharp Commanding Tones · Dark Magic Vocabulary · Language of the Council of Shadows</div><p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(192,176,152,0.55);line-height:1.8;margin-bottom:10px;">The language of power and malevolence, associated with the Council of Shadows. Marked by sharp, commanding tones and a vocabulary rich in terms related to dark magic and manipulation. Used in rituals and ceremonies invoking dark forces, reinforcing the Council's authority. Symbolizes the darker aspects of Sablean culture — where power is wielded through fear and deception.</p><div style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.35);border-left:2px solid rgba(106,8,32,0.3);padding-left:12px;">"Draekon vash'ti, kethar al'ira." &nbsp;·&nbsp; <em>"Power is the shadow, the moon is our witness."</em></div></div></div>
+      <div class="rv d1" style="display:grid;grid-template-columns:140px 1fr;border:1px solid rgba(144,128,168,0.1);background:rgba(4,2,8,0.5);overflow:hidden;"><div style="background:rgba(144,128,168,0.04);padding:26px 20px;border-right:1px solid rgba(144,128,168,0.07);"><div style="font-family:'Cinzel Decorative',serif;font-size:24px;color:rgba(144,128,168,0.2);margin-bottom:6px;">IV</div><div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(184,168,200,0.6);">Seduction Tongue</div></div><div style="padding:24px 28px;"><div style="font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,24px);color:var(--parch-pale);margin-bottom:5px;">Elarian</div><div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:10px;">Melodic Tones · Poetic Structure · Seduction and Political Maneuvering</div><p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(192,176,152,0.55);line-height:1.8;margin-bottom:10px;">A lyrical language developed as a means of seduction and persuasion — characterized by melodic tones and poetic structure. Often used in courtship and political maneuvering. Reflects the art of manipulation and charm, allowing speakers to weave intricate narratives that captivate and deceive. Employed during social gatherings and negotiations where appearances are paramount.</p><div style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.35);border-left:2px solid rgba(144,128,168,0.25);padding-left:12px;">"Elaria ven'ara, thal'ira." &nbsp;·&nbsp; <em>"In the embrace of the moon, we find our truth."</em></div></div></div>
+      <div class="rv" style="display:grid;grid-template-columns:140px 1fr;border:1px solid rgba(80,72,120,0.1);background:rgba(4,2,8,0.5);overflow:hidden;"><div style="background:rgba(80,72,120,0.04);padding:26px 20px;border-right:1px solid rgba(80,72,120,0.07);"><div style="font-family:'Cinzel Decorative',serif;font-size:24px;color:rgba(80,72,120,0.22);margin-bottom:6px;">V</div><div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(160,152,200,0.55);">Deception Tongue</div></div><div style="padding:24px 28px;"><div style="font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,24px);color:var(--parch-pale);margin-bottom:5px;">Nythari</div><div style="font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);opacity:0.4;margin-bottom:10px;">Double Entendres · Obscured Intentions · Language of the Cunning</div><p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,16px);color:rgba(192,176,152,0.55);line-height:1.8;margin-bottom:10px;">A language of misdirection, designed to obscure true intentions and meanings. Employs a complex system of double entendres and ambiguous phrases, making it difficult for outsiders to discern the speaker's true motives. The language of the cunning and clever — used by those navigating the treacherous waters of Sablean politics. Allows speakers to maintain an air of innocence while concealing their true agendas.</p><div style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.35);border-left:2px solid rgba(80,72,120,0.25);padding-left:12px;">"Nythar al'ira, ven'keth thal'ara." &nbsp;·&nbsp; <em>"In the shadow of the moon, the path is unclear."</em></div></div></div>
+    </div>
+  </div>
+</section>
+
+
+<div class="orn" style="background:var(--shadow);"><span>⚜</span></div>
+
+<!-- FLAGS, SIGILS & COLORS -->
+<section style="padding:110px 60px;background:var(--obsidian);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="rv">
+      <span class="sl">Royal Flags · Sigils · Colors · The Language of Sablean Heraldry</span>
+      <h2 class="big-h">Not decoration.<br><em>Living symbols, each one a sacred binding.</em></h2>
+      <p class="bp" style="max-width:660px;">Unlike other realms where banners are meant to be read at a glance, the symbols of Sablea are designed to invoke mystery and reverence — hinting at layers of meaning known only to the initiated. Every element of Sablean heraldry is an outward expression of the Sisters' power, the city's cultural reverence for secrecy, and alignment with celestial and arcane forces. Each banner is woven from enchanted cloth — infused with subtle enchantments that cause it to ripple even in the absence of wind.</p>
+    </div>
+
+    <!-- Four Colors -->
+    <div class="rv d1" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:3px;margin-top:52px;">
+      <div style="padding:28px 22px;border:1px solid rgba(192,176,152,0.07);background:rgba(4,2,8,0.5);position:relative;overflow:hidden;transition:border-color .3s;" onmouseenter="this.style.borderColor='rgba(192,176,152,0.2)'" onmouseleave="this.style.borderColor='rgba(192,176,152,0.07)'">
+        <div style="font-size:20px;margin-bottom:12px;opacity:0.5;">⬛</div>
+        <div style="font-family:'Cinzel',serif;font-size:clamp(14px,2vw,20px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;">Black</div>
+        <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.7;">Mystery, secrecy, and the shadowed depths of the kingdom's power. The most dominant color — representing the pervasive influence of the Sablean Sisters and the Council of Shadows. Dominion over the desert's night-drenched landscape.</p>
+      </div>
+      <div style="padding:28px 22px;border:1px solid rgba(138,8,32,0.12);background:rgba(4,2,8,0.5);position:relative;overflow:hidden;transition:border-color .3s;" onmouseenter="this.style.borderColor='rgba(138,8,32,0.3)'" onmouseleave="this.style.borderColor='rgba(138,8,32,0.12)'">
+        <div style="font-size:20px;margin-bottom:12px;opacity:0.5;">🔴</div>
+        <div style="font-family:'Cinzel',serif;font-size:clamp(14px,2vw,20px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;">Crimson</div>
+        <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.7;">Strength, resilience, and the fierce will of the Sablean people. Also spiritual — representing the life force of the kingdom. Crimson banners raised in times of conflict signal that Sablea will protect its secrets and sovereignty with blood.</p>
+      </div>
+      <div style="padding:28px 22px;border:1px solid rgba(160,160,192,0.1);background:rgba(4,2,8,0.5);position:relative;overflow:hidden;transition:border-color .3s;" onmouseenter="this.style.borderColor='rgba(160,160,192,0.25)'" onmouseleave="this.style.borderColor='rgba(160,160,192,0.1)'">
+        <div style="font-size:20px;margin-bottom:12px;opacity:0.5;">⚪</div>
+        <div style="font-family:'Cinzel',serif;font-size:clamp(14px,2vw,20px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;">Silver</div>
+        <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.7;">Wisdom, purity, and the light of the twin moons Ira and Aara. Never pure white — always muted, ghostly, as though to suggest faint ethereal moonlight rather than brightness. Connection to the divine guidance of the moons.</p>
+      </div>
+      <div style="padding:28px 22px;border:1px solid rgba(74,16,128,0.12);background:rgba(4,2,8,0.5);position:relative;overflow:hidden;transition:border-color .3s;" onmouseenter="this.style.borderColor='rgba(74,16,128,0.3)'" onmouseleave="this.style.borderColor='rgba(74,16,128,0.12)'">
+        <div style="font-size:20px;margin-bottom:12px;opacity:0.5;">🟣</div>
+        <div style="font-family:'Cinzel',serif;font-size:clamp(14px,2vw,20px);letter-spacing:0.18em;color:var(--parch-pale);margin-bottom:8px;">Violet</div>
+        <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(192,176,152,0.5);line-height:1.7;">Royalty, arcane mastery, and divine otherworldly influence. Connected to the dark arts and the Council's elite. Reserved for the highest echelons only — rarely seen, deeply significant when displayed.</p>
+      </div>
+    </div>
+
+    <!-- Four Sigils -->
+    <div class="rv d2" style="margin-top:36px;">
+      <span class="sl" style="margin-bottom:20px;">The Four Sigils · Each One a Ritual, Not a Logo</span>
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <div style="display:grid;grid-template-columns:80px 1fr;border:1px solid rgba(192,176,152,0.07);overflow:hidden;">
+          <div style="background:rgba(192,176,152,0.03);display:flex;align-items:center;justify-content:center;font-size:24px;border-right:1px solid rgba(192,176,152,0.06);padding:0 16px;">☽☾</div>
+          <div style="padding:18px 24px;">
+            <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:5px;">The Crescent Moons of Ira and Aara</div>
+            <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.5);line-height:1.6;">Common motif across all Sablean banners — twin interlocking crescents, one silver and one violet, representing the balance between order and chaos, knowledge and secrecy. Most prominently displayed on the Eastern Ebony Tower banners, embodying the Sisters' divine mandate to rule. Enchanted to emit a faint phosphorescent glow under moonlight.</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:80px 1fr;border:1px solid rgba(192,176,152,0.07);overflow:hidden;">
+          <div style="background:rgba(192,176,152,0.03);display:flex;align-items:center;justify-content:center;font-size:24px;border-right:1px solid rgba(192,176,152,0.06);padding:0 16px;">🦊</div>
+          <div style="padding:18px 24px;">
+            <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:5px;">The Desert Fox</div>
+            <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.5);line-height:1.6;">Emblem of the Sandstrider Mercenary Guild — a black silhouette of a fox poised under a crescent moon, embroidered in silver thread on crimson banners. Symbolizes cunning, adaptability, stealth, and survival. The Western Ebony Tower's banners bear this sigil. By day the crimson deepens; by night the fabric shimmers as if reflecting hidden fires.</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:80px 1fr;border:1px solid rgba(192,176,152,0.07);overflow:hidden;">
+          <div style="background:rgba(192,176,152,0.03);display:flex;align-items:center;justify-content:center;font-size:24px;border-right:1px solid rgba(192,176,152,0.06);padding:0 16px;">🐍</div>
+          <div style="padding:18px 24px;">
+            <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:5px;">The Shadowed Serpent</div>
+            <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.5);line-height:1.6;">Sigil of the Council of Shadows and the Southern Ebony Tower — a dark figure coiled around a moon, mouth open as if whispering secrets. Woven in violet and silver, almost invisible until moonlight catches it. Only those permitted by the Council may bear the serpent insignia. It is carefully guarded and subtly embedded into fabrics to avoid drawing attention.</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:80px 1fr;border:1px solid rgba(192,176,152,0.07);overflow:hidden;">
+          <div style="background:rgba(192,176,152,0.03);display:flex;align-items:center;justify-content:center;font-size:24px;border-right:1px solid rgba(192,176,192,0.06);padding:0 16px;">🗼</div>
+          <div style="padding:18px 24px;">
+            <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:5px;">The Obsidian Tower</div>
+            <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.5);line-height:1.6;">Representing all three Ebony Towers — three slender dark towers rising against a crescent moon. Rarely used but deeply revered. Woven in black and silver, set against crimson to denote the blood and sacrifice in the towers' construction. Only displayed during the Night of Dual Moons when large banners bearing this sigil are raised at the base of each tower — the city's rarest public display of unity.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ceremonial Events -->
+    <div class="rv d3" style="margin-top:36px;padding:32px 36px;border:1px solid rgba(192,176,152,0.07);background:rgba(4,2,8,0.4);">
+      <span class="sl" style="margin-bottom:16px;">Ceremonial Display · When the Banners Come Out</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+        <div style="padding:18px 20px;border:1px solid rgba(192,176,152,0.06);background:rgba(4,2,8,0.3);">
+          <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:7px;">The Night of Dual Moons</div>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.45);line-height:1.65;">Large Obsidian Tower banners raised at the base of each Ebony Tower — the rarest public display of Sablean unity. Enchanted fabrics shimmer with faint light under the twin moons, creating a mesmerizing effect across the city.</p>
+        </div>
+        <div style="padding:18px 20px;border:1px solid rgba(192,176,152,0.06);background:rgba(4,2,8,0.3);">
+          <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.2em;color:var(--parch-pale);margin-bottom:7px;">The Night of Veils</div>
+          <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(192,176,152,0.45);line-height:1.65;">When new initiates join the Sablean coven, twin-moon ceremonial flags are raised in the city square. Positioned so that moonlight passes through them — casting eerie shadows onto the ground, symbols of the delicate balance of light and shadow that Sablea embodies.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="orn" style="background:var(--shadow);"><span>☾</span></div>
+
+<!-- THE RULING SISTERS -->
+<section class="rulers">
+  <div class="rulers-inner">
+    <div class="rv">
+      <span class="sl">The Two Queens · Custodians of Sablea's Ancient Heritage</span>
+      <h2 class="big-h">
+        Together they are absolute.<br>
+        <em>Separately they are each other's greatest risk.</em>
+      </h2>
+      <p class="bp" style="max-width:660px;">Queen Vesper and Queen Vashti govern with a steady but enigmatic hand — not as harsh overseers, but as custodians of the city's ancient magical heritage. They view themselves as Sablea's protectors. The city's secrets know otherwise.</p>
+    </div>
+    <div class="rulers-grid rv d1">
+      <div class="ruler-card rc-vesper">
+        <div class="rc-inner">
+          <span class="rc-label">The Primary Ruler · Political Authority</span>
+          <h3 class="rc-name">Queen Vesper</h3>
+          <p class="rc-role">Crimson Monarch of Sablea · The Bloodborne Sovereign</p>
+          <p class="rc-body">Known for her calculated intellect and diplomatic finesse — extending her power through a network of alliances with neighboring realms. Her influence is felt in the city's diplomatic dealings and political strategies. The face Sablea shows to the world. The hand that signs treaties and wages wars.</p>
+          <a href="vesper.html" class="rc-link">Full Chronicle →</a>
+        </div>
+      </div>
+      <div class="ruler-card rc-vashti">
+        <div class="rc-inner">
+          <span class="rc-label">The Theocratic Monarch · Spiritual Authority</span>
+          <h3 class="rc-name">Queen Vashti</h3>
+          <p class="rc-role">The Dark Heart · Warden of Sablea's Mysteries</p>
+          <p class="rc-body">More reclusive — dedicating her time to the magical arts and ensuring the city's arcane traditions remain unbroken. The guardian of Sablea's spiritual life. Controls the Council of Shadows. Mentors Eris. Commands the Handmaidens. The shadow behind every decree. The silence beneath every word of power in the city.</p>
+          <a href="vashti.html" class="rc-link">Full Chronicle →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+try{
+
+/* === PAGE REPAIR SCRIPT === */
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+if(dot&&ring){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+}
+document.querySelectorAll('a[href],[class*="card"],[class*="-row"],[class*="-item"],[class*="zone"],[class*="phase"],[class*="-block"],[class*="faction"],[class*="act-"],[class*="cycle"],[class*="era"],[class*="son-card"]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{if(ring)ring.classList.add('lit');});
+  el.addEventListener('mouseleave',()=>{if(ring)ring.classList.remove('lit');});
+});
+const mainNav=document.getElementById('mainNav');
+if(mainNav)window.addEventListener('scroll',()=>mainNav.classList.toggle('scrolled',scrollY>50));
+const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.rv').forEach(el=>revObs.observe(el));
+const heroC=document.getElementById('heroCanvas');
+if(heroC){
+  const ctx=heroC.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=heroC.width=heroC.offsetWidth;H=heroC.height=heroC.offsetHeight;}
+  window.addEventListener('resize',resize);resize();
+  class Mote{
+    constructor(){this.reset(true);}
+    reset(init=false){
+      this.x=Math.random()*W;this.y=init?Math.random()*H:H+6;
+      this.vx=(Math.random()-.5)*.55;this.vy=-(Math.random()*.75+.1);
+      this.r=Math.random()*2+.2;this.life=init?Math.random():1;
+      this.decay=Math.random()*.004+.001;this.wobble=(Math.random()-.5)*.02;
+      const t=Math.random();
+      if(t<.45){this.h=350;this.s=60;this.l=42;}
+      else if(t<.72){this.h=260;this.s=40;this.l=38;}
+      else if(t<.86){this.h=350+20;this.s=60-15;this.l=42+15;}
+      else{this.h=260+10;this.s=40-10;this.l=38+10;}
+    }
+    update(){this.x+=this.vx+Math.sin(Date.now()*.0005+this.x*.008)*this.wobble;this.y+=this.vy;this.life-=this.decay;if(this.life<=0||this.y<-6)this.reset();}
+    draw(){ctx.save();ctx.globalAlpha=this.life*.55;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`hsl(${this.h},${this.s}%,${this.l}%)`;if(this.r>1.1){ctx.shadowBlur=5;ctx.shadowColor=`hsl(${this.h},80%,${this.l+15}%)`;}ctx.fill();ctx.restore();}
+  }
+  for(let i=0;i<72;i++)pts.push(new Mote());
+  (function animate(){ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);})();
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>

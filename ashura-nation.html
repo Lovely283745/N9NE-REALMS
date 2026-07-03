@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ashura — The Fire Nation | Nine Realms</title>
+<style>
+/* Font fallbacks — graceful degradation when external fonts unavailable */
+body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
+.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
+[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
+[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
+  font-family: 'Courier New', Courier, monospace;
+}
+.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
+.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
+.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
+.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
+</style>
+<style>
+/* ═══════════════════════════════
+   TOKENS
+═══════════════════════════════ */
+:root {
+  --void:      #06030A;
+  --ash:       #100808;
+  --coal:      #1A0C0A;
+  --ember:     #C04020;
+  --ember-mid: #E06030;
+  --ember-pale:#F0A060;
+  --gold:      #C08030;
+  --gold-pale: #E0B060;
+  --iron:      #604030;
+  --parch:     #D4B090;
+  --parch-dim: #8A6050;
+  --parch-pale:#EDE0CE;
+  --smoke:     rgba(200,80,30,0.06);
+
+  /* City-state accent colors */
+  --valyra:    #C04020;
+  --pyros:     #E06020;
+  --emberhold: #8030C0;
+  --flamefell: #C03020;
+  --ignethar:  #C09030;
+  --solferra:  #2080C0;
+  --burnfall:  #804020;
+  --searpoint: #4060A0;
+  --moltenspire:#D04010;
+  --ashmere:   #C08040;
+}
+
+/* ═══════════════════════════════
+   BASE
+═══════════════════════════════ */
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--void);
+  color:var(--parch);
+  font-family:'EB Garamond',serif;
+  font-weight:400;
+  overflow-x:hidden;
+  cursor:none;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Grain overlay */
+body::before{
+  content:'';position:fixed;inset:0;z-index:1000;
+  pointer-events:none;opacity:0.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:128px;
+}
+
+/* Cursor */
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:6px;height:6px;background:var(--parch);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cur-ring{width:34px;height:34px;border:1px solid rgba(192,64,32,0.4);border-radius:50%;transform:translate(-50%,-50%);transition:transform .5s cubic-bezier(.16,1,.3,1),width .3s,height .3s,border-color .3s;}
+.cur-ring.hot{width:50px;height:50px;border-color:var(--ember);}
+
+/* ═══════════════════════════════
+   NAV
+═══════════════════════════════ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  padding:24px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s,padding .3s;
+}
+.nav.scrolled{
+  background:rgba(6,3,10,0.96);
+  backdrop-filter:blur(12px);
+  padding:15px 60px;
+  border-bottom:1px solid rgba(192,64,32,0.1);
+}
+.nav-brand{text-decoration:none;}
+.nav-brand-name{
+  font-family:'Cinzel',serif;font-size:14px;font-weight:500;
+  color:var(--parch);letter-spacing:0.2em;display:block;
+}
+.nav-brand-sub{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:11px;color:var(--ember);opacity:0.7;
+  letter-spacing:0.12em;display:block;margin-top:1px;
+}
+.nav-right{display:flex;align-items:center;gap:32px;}
+.nav-link{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.35em;
+  text-transform:uppercase;color:var(--parch-dim);
+  text-decoration:none;transition:color .3s;
+}
+.nav-link:hover{color:var(--parch);}
+.nav-cta{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--ember);
+  border:1px solid rgba(192,64,32,0.35);padding:9px 20px;
+  text-decoration:none;transition:border-color .3s,background .3s;
+}
+.nav-cta:hover{border-color:var(--ember);background:rgba(192,64,32,0.08);}
+
+/* ═══════════════════════════════
+   HERO
+═══════════════════════════════ */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:radial-gradient(ellipse 80% 80% at 50% 60%, #1A0808 0%, var(--void) 70%);
+}
+
+/* Particle canvas */
+#heroCanvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;z-index:1;
+}
+
+/* Radiating heat rings */
+.heat-ring{
+  position:absolute;left:50%;top:60%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;border:1px solid rgba(192,64,32,0.06);
+  pointer-events:none;z-index:0;
+}
+.heat-ring:nth-child(1){width:300px;height:300px;animation:heatPulse 4s ease-in-out infinite;}
+.heat-ring:nth-child(2){width:600px;height:600px;animation:heatPulse 4s 1s ease-in-out infinite;}
+.heat-ring:nth-child(3){width:900px;height:900px;animation:heatPulse 4s 2s ease-in-out infinite;}
+.heat-ring:nth-child(4){width:1200px;height:1200px;animation:heatPulse 4s 3s ease-in-out infinite;}
+@keyframes heatPulse{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(0.8);}
+  50%{opacity:1;}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.2);}
+}
+
+.hero-content{position:relative;z-index:2;padding:0 24px;}
+
+.hero-eyebrow{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.55em;
+  color:var(--ember);text-transform:uppercase;opacity:0;
+  animation:riseIn 1.2s .3s ease forwards;
+  margin-bottom:28px;
+  display:flex;align-items:center;justify-content:center;gap:18px;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';display:block;width:48px;height:1px;
+  background:linear-gradient(to right,transparent,var(--ember));
+}
+.hero-eyebrow::after{transform:scaleX(-1);}
+
+.hero-nation{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(48px,11vw,140px);
+  font-weight:900;color:var(--parch-pale);
+  letter-spacing:0.05em;line-height:0.92;
+  opacity:0;animation:riseIn 1.8s .5s ease forwards;
+  text-shadow:0 0 100px rgba(192,64,32,0.3),0 4px 30px rgba(0,0,0,0.8);
+}
+.hero-subtitle{
+  font-family:'Cinzel',serif;font-size:clamp(10px,1.5vw,14px);
+  letter-spacing:0.4em;color:var(--ember-pale);
+  text-transform:uppercase;opacity:0;
+  animation:riseIn 1.2s .8s ease forwards;
+  margin-top:14px;margin-bottom:28px;
+}
+
+.hero-rule{width:1px;height:0;background:linear-gradient(to bottom,var(--ember),transparent);margin:0 auto 28px;animation:lineGrow 1.2s 1.1s ease forwards;}
+@keyframes lineGrow{to{height:60px;}}
+
+.hero-tagline{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(16px,2.5vw,24px);color:rgba(212,176,144,0.55);
+  max-width:600px;margin:0 auto 50px;line-height:1.7;
+  opacity:0;animation:riseIn 1.2s 1.3s ease forwards;
+}
+
+.hero-stats{
+  display:flex;justify-content:center;gap:60px;flex-wrap:wrap;
+  opacity:0;animation:riseIn 1.2s 1.6s ease forwards;
+}
+.hero-stat{}
+.hero-stat-num{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(28px,4vw,48px);
+  font-weight:400;color:var(--ember-pale);line-height:1;
+}
+.hero-stat-label{
+  font-family:'Cinzel',serif;font-size:8px;
+  letter-spacing:0.35em;text-transform:uppercase;
+  color:var(--parch-dim);opacity:0.5;margin-top:5px;
+}
+
+.hero-scroll{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;animation:riseIn 1s 2.2s ease forwards;
+}
+.hero-scroll span{font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.4em;color:var(--parch-dim);opacity:0.4;text-transform:uppercase;}
+.hero-scroll-line{width:1px;height:42px;background:linear-gradient(to bottom,var(--ember),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+@keyframes scrollPulse{
+  0%{opacity:1;transform:scaleY(0);transform-origin:top;}
+  50%{opacity:1;transform:scaleY(1);transform-origin:top;}
+  51%{transform-origin:bottom;}
+  100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}
+}
+
+@keyframes riseIn{
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ═══════════════════════════════
+   NATION OVERVIEW
+═══════════════════════════════ */
+.overview{
+  background:var(--ash);
+  padding:120px 60px;
+  position:relative;overflow:hidden;
+}
+.overview::before{
+  content:'ASHURA';
+  position:absolute;
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(100px,20vw,260px);font-weight:900;
+  color:rgba(192,64,32,0.025);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  white-space:nowrap;pointer-events:none;
+  letter-spacing:0.1em;
+}
+.overview-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1.8fr;
+  gap:100px;align-items:start;
+}
+.overview-aside{}
+.overview-aside-roman{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(80px,12vw,160px);font-weight:400;
+  color:rgba(192,64,32,0.08);line-height:1;
+  margin-bottom:-10px;margin-left:-6px;
+}
+.overview-aside-tag{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.4em;
+  color:var(--ember);text-transform:uppercase;opacity:0.6;
+}
+.overview-body{}
+.section-label{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.45em;
+  color:var(--ember);text-transform:uppercase;opacity:0.6;
+  display:block;margin-bottom:22px;
+}
+.overview-headline{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(28px,4vw,52px);font-weight:400;
+  color:var(--parch-pale);line-height:1.15;margin-bottom:28px;
+}
+.overview-headline em{font-style:italic;color:var(--ember-pale);font-weight:400;}
+.overview-body-text{
+  font-family:'EB Garamond',serif;font-size:clamp(16px,1.8vw,20px);
+  color:rgba(212,176,144,0.65);line-height:1.9;margin-bottom:20px;
+}
+.overview-body-text strong{color:var(--parch);font-weight:500;}
+
+/* Power matrix -->  */
+.power-matrix{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:2px;margin-top:48px;
+}
+.power-cell{
+  background:rgba(192,64,32,0.04);
+  border:1px solid rgba(192,64,32,0.08);
+  padding:20px 22px;
+  transition:background .3s,border-color .3s;
+}
+.power-cell:hover{
+  background:rgba(192,64,32,0.08);
+  border-color:rgba(192,64,32,0.2);
+}
+.power-cell-num{
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;
+  color:var(--ember);opacity:0.4;margin-bottom:6px;
+}
+.power-cell-name{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.2em;
+  color:var(--parch);text-transform:uppercase;margin-bottom:4px;
+}
+.power-cell-type{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;color:rgba(212,176,144,0.4);
+}
+
+/* ═══════════════════════════════
+   DIVIDER
+═══════════════════════════════ */
+.flare-divider{
+  width:100%;height:1px;
+  background:linear-gradient(to right,transparent,var(--ember),rgba(192,64,32,0.3),var(--ember),transparent);
+  opacity:0.2;position:relative;
+}
+.flare-divider-mark{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  font-size:18px;color:var(--ember);
+  background:var(--void);padding:0 16px;
+  opacity:0.5;
+}
+
+/* ═══════════════════════════════
+   CITY-STATES SECTION HEADER
+═══════════════════════════════ */
+.states-header{
+  padding:100px 60px 60px;
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:flex-end;
+  justify-content:space-between;gap:40px;flex-wrap:wrap;
+}
+.states-header-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(28px,4.5vw,56px);font-weight:400;
+  color:var(--parch-pale);line-height:1.1;
+}
+.states-header-title em{font-style:italic;color:var(--ember-pale);}
+.states-header-intro{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:17px;color:rgba(212,176,144,0.4);
+  max-width:340px;line-height:1.75;text-align:right;
+}
+
+/* ═══════════════════════════════
+   CITY-STATE CARDS
+═══════════════════════════════ */
+.states-wrapper{padding:0 60px 120px;max-width:1200px;margin:0 auto;}
+
+.state-entry{
+  display:grid;
+  grid-template-columns:60px 1fr;
+  gap:0 48px;
+  padding:70px 0;
+  border-bottom:1px solid rgba(192,64,32,0.06);
+  position:relative;
+  opacity:0;transform:translateY(32px);
+  transition:opacity .9s ease,transform .9s ease;
+}
+.state-entry.visible{opacity:1;transform:translateY(0);}
+.state-entry:last-child{border-bottom:none;}
+
+/* Left accent bar -->  */
+.state-entry::before{
+  content:'';position:absolute;left:0;top:0;
+  width:2px;height:0;
+  transition:height .7s cubic-bezier(.16,1,.3,1);
+}
+.state-entry:hover::before{height:100%;}
+
+/* Accent colors per city-state */
+.state-valyra::before    {background:var(--valyra);}
+.state-pyros::before     {background:var(--pyros);}
+.state-emberhold::before {background:var(--emberhold);}
+.state-flamefell::before {background:var(--flamefell);}
+.state-ignethar::before  {background:var(--ignethar);}
+.state-solferra::before  {background:var(--solferra);}
+.state-burnfall::before  {background:var(--burnfall);}
+.state-searpoint::before {background:var(--searpoint);}
+.state-moltenspire::before{background:var(--moltenspire);}
+.state-ashmere::before   {background:var(--ashmere);}
+
+/* Number column -->  */
+.state-num-col{
+  display:flex;flex-direction:column;
+  align-items:flex-end;padding-top:4px;
+}
+.state-roman{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(42px,5vw,72px);font-weight:400;
+  line-height:1;opacity:0.1;
+  transition:opacity .4s;
+}
+.state-entry:hover .state-roman{opacity:0.22;}
+.state-divider-line{
+  width:1px;flex:1;min-height:28px;margin-top:10px;
+  opacity:0.4;
+}
+
+/* Body -->  */
+.state-body{}
+.state-meta{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:16px;flex-wrap:wrap;
+}
+.state-tag{
+  font-family:'Cinzel',serif;font-size:8px;
+  letter-spacing:0.4em;text-transform:uppercase;
+  padding:5px 14px;border:1px solid;opacity:0.7;
+  transition:opacity .3s;
+}
+.state-entry:hover .state-tag{opacity:1;}
+.state-power-badge{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;color:rgba(212,176,144,0.35);
+}
+
+.state-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,3.5vw,46px);font-weight:400;
+  color:var(--parch-pale);line-height:1.1;margin-bottom:6px;
+}
+.state-ruler{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;
+  text-transform:uppercase;margin-bottom:24px;
+  opacity:0.45;
+}
+
+/* Atmosphere quote — the vivid lore sentence -->  */
+.state-atmosphere{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:clamp(17px,2vw,21px);
+  color:rgba(212,176,144,0.75);
+  line-height:1.75;max-width:680px;margin-bottom:24px;
+  padding-left:20px;border-left:2px solid;
+  transition:border-color .3s;
+}
+
+.state-desc{
+  font-family:'EB Garamond',serif;
+  font-size:clamp(14px,1.6vw,17px);
+  color:rgba(212,176,144,0.5);
+  line-height:1.9;max-width:680px;margin-bottom:32px;
+}
+
+/* Cultural markers grid -->  */
+.state-markers{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:2px;margin-bottom:28px;
+}
+.state-marker{
+  background:rgba(192,64,32,0.03);
+  border:1px solid rgba(192,64,32,0.06);
+  padding:14px 16px;
+  transition:background .3s,border-color .3s;
+}
+.state-entry:hover .state-marker{
+  background:rgba(192,64,32,0.06);
+  border-color:rgba(192,64,32,0.12);
+}
+.state-marker-label{
+  font-family:'Cinzel',serif;font-size:7px;
+  letter-spacing:0.35em;text-transform:uppercase;
+  opacity:0.35;margin-bottom:5px;display:block;
+}
+.state-marker-val{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;color:rgba(212,176,144,0.55);line-height:1.5;
+}
+
+/* Mood tag -->  */
+.state-mood{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.25em;
+  text-transform:uppercase;color:rgba(212,176,144,0.4);
+  padding:8px 0;border-top:1px solid rgba(192,64,32,0.08);
+  width:100%;
+}
+.state-mood-dot{
+  width:6px;height:6px;border-radius:50%;flex-shrink:0;
+}
+
+/* Accent colors per state for text -->  */
+.state-valyra .state-roman,
+.state-valyra .state-divider-line    {color:var(--valyra);background:var(--valyra);}
+.state-valyra .state-tag             {color:var(--valyra);border-color:var(--valyra);}
+.state-valyra .state-atmosphere      {border-color:var(--valyra);}
+.state-valyra .state-mood-dot        {background:var(--valyra);}
+
+.state-pyros .state-roman,
+.state-pyros .state-divider-line     {color:var(--pyros);background:var(--pyros);}
+.state-pyros .state-tag              {color:var(--pyros);border-color:var(--pyros);}
+.state-pyros .state-atmosphere       {border-color:var(--pyros);}
+.state-pyros .state-mood-dot         {background:var(--pyros);}
+
+.state-emberhold .state-roman,
+.state-emberhold .state-divider-line {color:var(--emberhold);background:var(--emberhold);}
+.state-emberhold .state-tag          {color:var(--emberhold);border-color:var(--emberhold);}
+.state-emberhold .state-atmosphere   {border-color:var(--emberhold);}
+.state-emberhold .state-mood-dot     {background:var(--emberhold);}
+
+.state-flamefell .state-roman,
+.state-flamefell .state-divider-line {color:var(--flamefell);background:var(--flamefell);}
+.state-flamefell .state-tag          {color:var(--flamefell);border-color:var(--flamefell);}
+.state-flamefell .state-atmosphere   {border-color:var(--flamefell);}
+.state-flamefell .state-mood-dot     {background:var(--flamefell);}
+
+.state-ignethar .state-roman,
+.state-ignethar .state-divider-line  {color:var(--ignethar);background:var(--ignethar);}
+.state-ignethar .state-tag           {color:var(--ignethar);border-color:var(--ignethar);}
+.state-ignethar .state-atmosphere    {border-color:var(--ignethar);}
+.state-ignethar .state-mood-dot      {background:var(--ignethar);}
+
+.state-solferra .state-roman,
+.state-solferra .state-divider-line  {color:var(--solferra);background:var(--solferra);}
+.state-solferra .state-tag           {color:var(--solferra);border-color:var(--solferra);}
+.state-solferra .state-atmosphere    {border-color:var(--solferra);}
+.state-solferra .state-mood-dot      {background:var(--solferra);}
+
+.state-burnfall .state-roman,
+.state-burnfall .state-divider-line  {color:var(--burnfall);background:var(--burnfall);}
+.state-burnfall .state-tag           {color:var(--burnfall);border-color:var(--burnfall);}
+.state-burnfall .state-atmosphere    {border-color:var(--burnfall);}
+.state-burnfall .state-mood-dot      {background:var(--burnfall);}
+
+.state-searpoint .state-roman,
+.state-searpoint .state-divider-line {color:var(--searpoint);background:var(--searpoint);}
+.state-searpoint .state-tag          {color:var(--searpoint);border-color:var(--searpoint);}
+.state-searpoint .state-atmosphere   {border-color:var(--searpoint);}
+.state-searpoint .state-mood-dot     {background:var(--searpoint);}
+
+.state-moltenspire .state-roman,
+.state-moltenspire .state-divider-line{color:var(--moltenspire);background:var(--moltenspire);}
+.state-moltenspire .state-tag        {color:var(--moltenspire);border-color:var(--moltenspire);}
+.state-moltenspire .state-atmosphere {border-color:var(--moltenspire);}
+.state-moltenspire .state-mood-dot   {background:var(--moltenspire);}
+
+.state-ashmere .state-roman,
+.state-ashmere .state-divider-line   {color:var(--ashmere);background:var(--ashmere);}
+.state-ashmere .state-tag            {color:var(--ashmere);border-color:var(--ashmere);}
+.state-ashmere .state-atmosphere     {border-color:var(--ashmere);}
+.state-ashmere .state-mood-dot       {background:var(--ashmere);}
+
+/* ═══════════════════════════════
+   BIOME IMAGE GALLERY
+═══════════════════════════════ */
+.biome-section{
+  background:var(--coal);
+  padding:100px 60px;
+}
+.biome-section-inner{max-width:1200px;margin:0 auto;}
+.biome-header{margin-bottom:52px;}
+.biome-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(24px,3.5vw,46px);font-weight:400;
+  color:var(--parch-pale);line-height:1.1;
+}
+.biome-title em{font-style:italic;color:var(--ember-pale);}
+.biome-subtitle{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:16px;color:rgba(212,176,144,0.4);
+  margin-top:10px;line-height:1.7;max-width:500px;
+}
+
+/* Asymmetric mosaic grid -->  */
+.biome-mosaic{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  grid-template-rows:repeat(3,220px);
+  gap:3px;
+}
+.biome-tile{
+  position:relative;overflow:hidden;
+  background:var(--ash);
+  cursor:pointer;
+}
+.biome-tile:nth-child(1){grid-column:span 5;grid-row:span 2;}
+.biome-tile:nth-child(2){grid-column:span 4;grid-row:span 1;}
+.biome-tile:nth-child(3){grid-column:span 3;grid-row:span 1;}
+.biome-tile:nth-child(4){grid-column:span 4;grid-row:span 1;}
+.biome-tile:nth-child(5){grid-column:span 3;grid-row:span 1;}
+.biome-tile:nth-child(6){grid-column:span 4;grid-row:span 1;}
+.biome-tile:nth-child(7){grid-column:span 4;grid-row:span 1;}
+.biome-tile:nth-child(8){grid-column:span 4;grid-row:span 1;}
+
+.biome-tile img{
+  width:100%;height:100%;
+  object-fit:cover;display:block;
+  filter:brightness(0.7) saturate(0.9);
+  transition:filter .5s ease,transform .6s cubic-bezier(.16,1,.3,1);
+}
+.biome-tile:hover img{
+  filter:brightness(0.9) saturate(1.2);
+  transform:scale(1.04);
+}
+.biome-tile-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,3,10,0.7) 0%,transparent 50%);
+  pointer-events:none;
+}
+.biome-tile-label{
+  position:absolute;bottom:14px;left:16px;
+  font-family:'Cinzel',serif;font-size:8px;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:rgba(212,176,144,0.6);pointer-events:none;
+}
+
+/* Placeholder for tiles without images yet -->  */
+.biome-tile.placeholder{
+  background:linear-gradient(135deg,#100808,#1A0C0A);
+  display:flex;align-items:center;justify-content:center;
+}
+.biome-tile.placeholder .placeholder-text{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;
+  text-transform:uppercase;color:rgba(192,64,32,0.2);
+}
+
+/* ═══════════════════════════════
+   CTA / FOOTER BAND
+═══════════════════════════════ */
+.nation-cta{
+  background:var(--void);
+  padding:100px 60px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.nation-cta::before{
+  content:'🔥';
+  position:absolute;
+  font-size:clamp(200px,35vw,400px);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  opacity:0.015;pointer-events:none;
+}
+.nation-cta-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;}
+.nation-cta h2{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(26px,4vw,52px);font-weight:400;
+  color:var(--parch-pale);margin-bottom:20px;line-height:1.2;
+}
+.nation-cta h2 em{font-style:italic;color:var(--ember-pale);}
+.nation-cta p{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:18px;color:rgba(212,176,144,0.4);
+  max-width:500px;margin:0 auto 48px;line-height:1.75;
+}
+.cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.btn-fire{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--void);
+  background:var(--parch);padding:16px 36px;
+  text-decoration:none;display:inline-block;
+  transition:background .3s;
+}
+.btn-fire:hover{background:var(--ember-pale);}
+.btn-ghost{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--parch-dim);
+  border:1px solid rgba(212,176,144,0.15);
+  padding:16px 36px;text-decoration:none;
+  transition:border-color .3s,color .3s;display:inline-flex;align-items:center;gap:10px;
+}
+.btn-ghost:hover{border-color:rgba(212,176,144,0.4);color:var(--parch);}
+
+/* Footer -->  */
+footer{
+  background:var(--void);
+  border-top:1px solid rgba(192,64,32,0.08);
+  padding:40px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+}
+.footer-copy{font-family:'EB Garamond',serif;font-size:13px;color:rgba(212,176,144,0.2);}
+
+/* Scroll reveal -->  */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .9s ease,transform .9s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* Responsive -->  */
+@media(max-width:1024px){
+  .nav{padding:20px 40px;}
+  .nav.scrolled{padding:14px 40px;}
+  .overview{padding:90px 40px;}
+  .overview-inner{grid-template-columns:1fr;gap:40px;}
+  .states-header{padding:80px 40px 50px;}
+  .states-wrapper{padding:0 40px 90px;}
+  .state-entry{grid-template-columns:48px 1fr;gap:0 28px;}
+  .biome-section{padding:80px 40px;}
+  .biome-mosaic{grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,200px);}
+  .biome-tile:nth-child(n){grid-column:span 1;grid-row:span 1;}
+  .biome-tile:nth-child(1){grid-column:span 2;grid-row:span 1;}
+}
+@media(max-width:768px){
+  .nav{padding:16px 24px;}
+  .nav.scrolled{padding:12px 24px;}
+  .nav-right .nav-link{display:none;}
+  .hero-stats{gap:36px;}
+  .overview{padding:70px 24px;}
+  .power-matrix{grid-template-columns:1fr;}
+  .states-header{padding:60px 24px 40px;}
+  .states-wrapper{padding:0 24px 70px;}
+  .state-entry{grid-template-columns:1fr;gap:0;}
+  .state-num-col{flex-direction:row;align-items:center;gap:12px;margin-bottom:20px;}
+  .state-divider-line{width:40px;height:1px;margin:0;flex:0;}
+  .biome-section{padding:60px 24px;}
+  .biome-mosaic{grid-template-columns:1fr;grid-template-rows:auto;}
+  .biome-tile{height:200px;}
+  .biome-tile:nth-child(n){grid-column:span 1;grid-row:span 1;}
+  .nation-cta{padding:70px 24px;}
+  footer{padding:30px 24px;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">Fire Nation · Ashura</span>
+  </a>
+  <div class="nav-right">
+    <a href="nine-realms-map.html" class="nav-link">World Map</a>
+    <a href="nine-realms-story-arcs.html" class="nav-link">Chronicles</a>
+    <a href="nine-realms-hub.html" class="nav-cta">← Return to Hub</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="heat-ring"></div>
+  <div class="heat-ring"></div>
+  <div class="heat-ring"></div>
+  <div class="heat-ring"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">The Fire Nation · Nine Realms Universe</p>
+    <h1 class="hero-nation">Ashura</h1>
+    <p class="hero-subtitle">The Emberous Dominion · Ten City-States · One Eternal Flame</p>
+    <div class="hero-rule"></div>
+    <p class="hero-tagline">
+      "A nation that sees fire not as a tool, but as divinity incarnate —
+      where to burn is to serve, and to serve is to endure."
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">X</div>
+        <div class="hero-stat-label">City-States</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">10</div>
+        <div class="hero-stat-label">Power Archetypes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">I</div>
+        <div class="hero-stat-label">Eternal Flame</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Descend into the flame</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══ OVERVIEW ═══ -->
+<section class="overview">
+  <div class="overview-inner">
+    <div class="overview-aside reveal">
+      <div class="overview-aside-roman">V</div>
+      <span class="overview-aside-tag">Nation Five · Fire</span>
+    </div>
+    <div class="overview-body">
+      <span class="section-label reveal">The Soul of the Nation</span>
+      <h2 class="overview-headline reveal">
+        Ten cities.<br>
+        <em>One nation forged</em><br>
+        in the Eternal Flame.
+      </h2>
+      <p class="overview-body-text reveal">
+        Ashura is not merely a kingdom — it is a <strong>cosmology</strong>. Every city-state is a
+        different expression of the same sacred fire: ritual in Valyra, military discipline in Pyros,
+        intellectual ambition in Emberhold, industrial sacrifice in Burnfall. Together they form a
+        civilization that treats fire as both god and government.
+      </p>
+      <p class="overview-body-text reveal">
+        Under <strong>Queen Calypso</strong>, Ashura walks a blade's edge between its ancient devotion
+        and the dangerous future the Emberfall Accord promises. The nation is disciplined, proud,
+        and fatalistic — a people who have convinced themselves that to burn is not destruction,
+        but the highest form of becoming.
+      </p>
+
+      <!-- Power matrix -->
+      <div class="power-matrix reveal">
+        <div class="power-cell">
+          <div class="power-cell-num">I · Valyra</div>
+          <div class="power-cell-name">Ritual Power</div>
+          <div class="power-cell-type">Theocratic monarchy. Discipline and devotion.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">II · Pyros</div>
+          <div class="power-cell-name">Military Power</div>
+          <div class="power-cell-type">Brutal unity through strength.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">III · Emberhold</div>
+          <div class="power-cell-name">Intellectual Power</div>
+          <div class="power-cell-type">Knowledge, corruption, and ambition.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">IV · Flamefell</div>
+          <div class="power-cell-name">Martial Power</div>
+          <div class="power-cell-type">Loyalty, obedience, and fear of peace.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">V · Ignethar</div>
+          <div class="power-cell-name">Creative Power</div>
+          <div class="power-cell-type">Art as worship.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">VI · Solferra</div>
+          <div class="power-cell-name">Economic Power</div>
+          <div class="power-cell-type">Trade, deceit, and dual faith.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">VII · Burnfall</div>
+          <div class="power-cell-name">Industrial Power</div>
+          <div class="power-cell-type">Progress as penance.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">VIII · Searpoint</div>
+          <div class="power-cell-name">Naval Power</div>
+          <div class="power-cell-type">Faithful endurance.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">IX · Moltenspire</div>
+          <div class="power-cell-name">Resource Power</div>
+          <div class="power-cell-type">Devotion through danger.</div>
+        </div>
+        <div class="power-cell">
+          <div class="power-cell-num">X · Ashmere</div>
+          <div class="power-cell-name">Spiritual Power</div>
+          <div class="power-cell-type">Purity, pilgrimage, prophecy.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="flare-divider"><span class="flare-divider-mark">✦</span></div>
+
+<!-- ═══ CITY-STATES HEADER ═══ -->
+<div class="states-header">
+  <div>
+    <span class="section-label reveal">The Ten City-States</span>
+    <h2 class="states-header-title reveal">
+      Ten Flames.<br><em>One Nation.</em>
+    </h2>
+  </div>
+  <p class="states-header-intro reveal">
+    Each city-state is a different expression of the same sacred fire —
+    ten distinct civilizations bound by the Eternal Flame.
+  </p>
+</div>
+
+<!-- ═══ CITY-STATES ═══ -->
+<div class="states-wrapper">
+
+  <!-- I. VALYRA -->
+  <div class="state-entry state-valyra">
+    <div class="state-num-col">
+      <span class="state-roman">I</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Capital · Fire Nation</span>
+        <span class="state-power-badge">Ritual Power · Theocratic Monarchy</span>
+      </div>
+      <h3 class="state-name">Valyra</h3>
+      <p class="state-ruler">The Burning Heart of Ashura · Ruled by Queen Calypso Sybil</p>
+      <p class="state-atmosphere">
+        "A vast volcanic citadel surrounded by flowing rivers of magma that glimmer at night
+        like veins of a living god. The skies are never dark — auroras of fire bathe the city
+        in crimson light. The air carries the scent of heated stone and sanctified oils."
+      </p>
+      <p class="state-desc">
+        The Valyrian citizen sees fire not as a tool, but as divinity incarnate. Most are temple-bound laborers,
+        forge monks, spirit scribes, and elemental chanters. Their daily life is steeped in ritual discipline —
+        sunrise chants, molten offerings, and evening purifications. Commoners bear small ember sigils burned
+        into their skin as both proof of loyalty and spiritual protection. They live by the maxim:
+        <em>"To burn is to serve."</em>
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">The Eternal Flame Cult. Every civic building is also a shrine.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Carved basalt towers, molten glass spires, gold-veined domes. Every bridge is a reliquary.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Smoked over magma vents; crimson root stews; Sulfire Elixir in iron flasks.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Flame relics, spiritual armaments, ritual magitek; exports Embersteel to Pyros.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Discipline and fear disguised as devotion. Valyra adores its young queen — but the silence around Dante II's death hums like a secret everyone is afraid to name.
+      </div>
+    </div>
+  </div>
+
+  <!-- II. PYROS -->
+  <div class="state-entry state-pyros">
+    <div class="state-num-col">
+      <span class="state-roman">II</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Capital of Ignis</span>
+        <span class="state-power-badge">Military Power · Brutal Unity</span>
+      </div>
+      <h3 class="state-name">Pyros</h3>
+      <p class="state-ruler">The Iron Flame Citadel · Ruled by King Ignatius</p>
+      <p class="state-atmosphere">
+        "A city that never cools. It sits upon the lip of the Ashen Ravine, where liquid fire pours
+        endlessly from underground chasms. The landscape is scarred by forge smoke and black sand plains.
+        Pyros is a furnace of civilization — brutal, efficient, proud."
+      </p>
+      <p class="state-desc">
+        Pyrosians are forged, not born. Children are placed in ash schools at five, trained in endurance and flame control.
+        At thirteen, branded with their House mark during The Ashing. The Pyrosian mindset: weakness is treason.
+        They respect artisans and warriors equally — creation and destruction are two edges of the same sword.
+        Soldiers quietly trade in information and contraband. They fear peace more than death.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">The Ember Guardians; warrior-monks who see combat as prayer.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Half-fortress, half-factory — jagged iron citadels with open lava moats.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Flame-grilled meats in salt ash; Charblood liquor; molten spice bread.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Siegefire, napalm alchemy, and volatile rune weaponry.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Unquestioning loyalty. Pyrosians love their king because he demands strength and gives them a cause. They fear peace more than death.
+      </div>
+    </div>
+  </div>
+
+  <!-- III. EMBERHOLD -->
+  <div class="state-entry state-emberhold">
+    <div class="state-num-col">
+      <span class="state-roman">III</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Capital of Cindara</span>
+        <span class="state-power-badge">Intellectual Power · Knowledge & Corruption</span>
+      </div>
+      <h3 class="state-name">Emberhold</h3>
+      <p class="state-ruler">The City of Fire and Thought · High Sorcerer Kaon & Chancellor Vireen</p>
+      <p class="state-atmosphere">
+        "A city of brilliance and deception — rising from the coast like a cathedral of glass and smoke.
+        Evenings shimmer with mist from geothermal vents that light up with blue and violet flame reflections.
+        Beneath the streets, the forbidden Alchemical Labs hum with the reek of metal, ozone, and distilled flame essence."
+      </p>
+      <p class="state-desc">
+        Citizens are cosmopolitan — scholars, artificers, merchants, and mages. They prize intellect, wit, and
+        adaptability. Most speak multiple languages and see fire as a science rather than a religion.
+        Beneath this progressive sheen lies quiet paranoia. Information is currency; betrayal is tradition.
+        Students compete in public Combustive Debates, where spells are argued through flame projection.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">Fragmented — science and spirituality coexist uncomfortably.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Curved towers breathing heat through embedded runes; moving stairways; obsidian bridges.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Fusion — volcanic meats with coastal herbs, geothermal-baked breads, vapor tea.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Heart of alchemical advancement; potions, spell gems, experimental magitek.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Intellectual bloom shadowed by moral rot. Citizens whisper that their rulers see the future — and it burns.
+      </div>
+    </div>
+  </div>
+
+  <!-- IV. FLAMEFELL -->
+  <div class="state-entry state-flamefell">
+    <div class="state-num-col">
+      <span class="state-roman">IV</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Military City-State</span>
+        <span class="state-power-badge">Martial Power · Absolute Loyalty</span>
+      </div>
+      <h3 class="state-name">Flamefell</h3>
+      <p class="state-ruler">The Southern Garrison · Governed by the Emberguard Generals</p>
+      <p class="state-atmosphere">
+        "A fortress city built into the desert's scarred horizon — all flame towers, sand, and crimson banners
+        snapping against the dry wind. The air crackles with the energy of constant drills and siege testing."
+      </p>
+      <p class="state-desc">
+        Citizens are born soldiers. Every man and woman trains in basic pyro tactics from childhood.
+        Children grow up playing games of mock sieges; the elderly serve as chroniclers of warfare.
+        Loyalty to the Crown is absolute, but so is pragmatism — soldiers quietly trade in information
+        and contraband. They live for the next conflict.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">Secular militarism; honors the Flame as Discipline incarnate.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Layered citadels and ember barracks; siege towers that double as temples.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Spartan — dried emberfruit, forge bread, fire-roasted roots.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Pyro-shielding, siege artillery enchantments, rune-armaments.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Obedient yet restless. The rank and file fear no enemy, but dread a peace they don't understand.
+      </div>
+    </div>
+  </div>
+
+  <!-- V. IGNETHAR -->
+  <div class="state-entry state-ignethar">
+    <div class="state-num-col">
+      <span class="state-roman">V</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">City of Artisans</span>
+        <span class="state-power-badge">Creative Power · Art as Worship</span>
+      </div>
+      <h3 class="state-name">Ignethar</h3>
+      <p class="state-ruler">The Forge of Memory · The Artisan's Council</p>
+      <p class="state-atmosphere">
+        "A city that gleams like obsidian and breathes like a bellows. Streets built of cooled lava glass,
+        the air heavy with molten gold and burning oils. The music of hammer against anvil echoes perpetually
+        through every district, as sacred as any prayer."
+      </p>
+      <p class="state-desc">
+        To create is sacred labor in Ignethar — every blade, shield, and sculpture carries its maker's
+        essence sealed inside. Families pass down forge chants: rhythmic invocations blending artistry and magic.
+        Children learn precision through sculpture before they ever touch fire. To fail to create beauty is shame.
+        To steal another's design is heresy. Their craft is Ashura's immortality.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">The Flame as Inspiration; artisans offer molten prayers to the Forge Spirits.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Flowing shapes, glass domes, spiraling forges. Buildings reflect literal artistry.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Simple, hearty — smoked breads, molten honey, roasted ore-grains.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Soulforging — binding fragments of a person's will into their work.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Proud and meticulous. Every citizen believes Ignethar's craft defines the Fire Nation's immortality.
+      </div>
+    </div>
+  </div>
+
+  <!-- VI. SOLFERRA -->
+  <div class="state-entry state-solferra">
+    <div class="state-num-col">
+      <span class="state-roman">VI</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Coastal Trade Hub</span>
+        <span class="state-power-badge">Economic Power · Dual Faith</span>
+      </div>
+      <h3 class="state-name">Solferra</h3>
+      <p class="state-ruler">The Crimson Port · The Harbor Council</p>
+      <p class="state-atmosphere">
+        "Where the Fire Nation kisses the Ocean Nation's waves, Solferra blazes with lanterns and trade ships.
+        The coastline glows red at sunset as if the sea itself catches fire. The docks are lined with brass towers
+        and netted embers used for navigation."
+      </p>
+      <p class="state-desc">
+        Citizens are traders, smugglers, and sea mages who navigate both flame and tide. Their dialect is laced
+        with foreign words; their morality, with flexibility. They see loyalty as negotiable, but honor as absolute.
+        The rich run fleets and trade guilds; the poor live in ember barges — floating shanties of glowing glass.
+        Solferra's culture is loud, multicultural, and opportunistic.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">The Tidefire Sect — a hybrid cult blending Fire and Water faiths.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Brass domes, sea-fire docks, coral-ash buildings.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Spicy seafoods, smoked coral fish, brinefire stew.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Hybrid magitek; naval enchantments; saltfire rituals.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Prosperous but suspicious. Solferra thrives on deals and rumors. Every smile hides a contract.
+      </div>
+    </div>
+  </div>
+
+  <!-- VII. BURNFALL -->
+  <div class="state-entry state-burnfall">
+    <div class="state-num-col">
+      <span class="state-roman">VII</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Factory City</span>
+        <span class="state-power-badge">Industrial Power · Progress as Penance</span>
+      </div>
+      <h3 class="state-name">Burnfall</h3>
+      <p class="state-ruler">The Industrial Inferno · The Industrial Syndicate</p>
+      <p class="state-atmosphere">
+        "A city of smoke and constant flame. Burnfall glows day and night under the haze of its foundries.
+        The horizon burns orange; the ground vibrates from hammer strikes and magitek engines.
+        Workers rotate in shifts, sleeping in stacked barracks above the forges."
+      </p>
+      <p class="state-desc">
+        Burnfall's people are laborers, engineers, and soldiers' kin. The city never sleeps.
+        The air burns their lungs, but they believe the smoke is sacred proof of progress.
+        Commoners see themselves as martyrs for Ashura's glory. Their children learn to read from
+        factory ledgers and prayer scrolls nailed beside boilers. They work themselves toward death,
+        believing paradise waits in the next fire.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">Industrial Flame Doctrine — progress is worship.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Metal veins, smoke towers, lava canals.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Heavy miner's food — ashbread, salted meats, boiled roots.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Emberstone refining, forge golems, engine enchantments.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Productive despair — the people work themselves toward death, believing paradise waits in the next fire.
+      </div>
+    </div>
+  </div>
+
+  <!-- VIII. SEARPOINT -->
+  <div class="state-entry state-searpoint">
+    <div class="state-num-col">
+      <span class="state-roman">VIII</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Naval Stronghold</span>
+        <span class="state-power-badge">Naval Power · Faithful Endurance</span>
+      </div>
+      <h3 class="state-name">Searpoint</h3>
+      <p class="state-ruler">The Sea's Edge Fortress · The Flamewardens</p>
+      <p class="state-atmosphere">
+        "A fortress city carved into the cliffs above the sea. The winds howl with ash and salt.
+        The cliffs glow faintly red at night from volcanic fissures beneath — a nightly reminder
+        that even the stone is alive with fire."
+      </p>
+      <p class="state-desc">
+        Citizens are sailors, flame monks, and widows of war. The sea is both holy and feared — a mirror
+        to the Fire's reflection. The city's priests perform nightly Ash-Tide Rites, casting glowing embers
+        into the sea to "feed the drowned." Every family has lost someone to war or sea.
+        Grief is ritualized; mourning songs echo through the cliffs at dawn.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">The Flame of Passage — honoring those lost to the sea.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Carved cliffside sanctuaries, basalt harbors, ash gardens.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Salted fish, emberwine, sea-roasted shellfruit.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Naval wards, oceanic enchantments, sea-forge production.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Stoic melancholy. The people endure, for endurance itself is sacred.
+      </div>
+    </div>
+  </div>
+
+  <!-- IX. MOLTENSPIRE -->
+  <div class="state-entry state-moltenspire">
+    <div class="state-num-col">
+      <span class="state-roman">IX</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Mining Fortress</span>
+        <span class="state-power-badge">Resource Power · Devotion Through Danger</span>
+      </div>
+      <h3 class="state-name">Moltenspire</h3>
+      <p class="state-ruler">The Heart of the Ember Mines · The Emberstone Consortium</p>
+      <p class="state-atmosphere">
+        "A citadel city built atop the Ember Mines — glowing pits that pulse with internal magma light.
+        The air is choked with metallic dust and ember mist. Vertical hive-like fortresses rise on platforms
+        suspended over the pits below, where sleeping fire gods wait."
+      </p>
+      <p class="state-desc">
+        Miners and mages are hard people with calloused hands and bright eyes. They worship the earth's fire
+        as a living deity. Every emberstone mined is blessed before removal — they believe the stones carry
+        sleeping spirits. Children begin mining apprenticeships at ten. To strike the earth wrongly is sacrilege;
+        to die in a cave-in is to become one with the Flame.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">The Deepfire Cult — reverence for subterranean flame gods.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Vertical hive-like fortresses, platforms suspended over glowing pits.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Dense breads, root stews, mineral brews.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Emberstone mining, rune infusions, underground smelting.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Devout and fatalistic — they live knowing every shift could be their last, and that the Flame remembers every sacrifice.
+      </div>
+    </div>
+  </div>
+
+  <!-- X. ASHMERE -->
+  <div class="state-entry state-ashmere">
+    <div class="state-num-col">
+      <span class="state-roman">X</span>
+      <div class="state-divider-line"></div>
+    </div>
+    <div class="state-body">
+      <div class="state-meta">
+        <span class="state-tag">Religious Settlement · Holiest Site</span>
+        <span class="state-power-badge">Spiritual Power · Purity & Prophecy</span>
+      </div>
+      <h3 class="state-name">Ashmere</h3>
+      <p class="state-ruler">The Pilgrim's Sanctuary · The Order of the Ember Guardians</p>
+      <p class="state-atmosphere">
+        "At the foothills of a dormant volcano, surrounded by steaming hot springs and ashen meadows.
+        The sky here always glows soft orange. The air smells of sacred incense and sulfur — the closest
+        thing in Ashura to silence is the sound of prayer in the Sanctified Springs."
+      </p>
+      <p class="state-desc">
+        Ashmere's residents are priests, pilgrims, and healers. It operates more like a monastery than a city.
+        Pilgrims from all over Ashura come to bathe in the Sanctified Springs, said to cleanse both flame and soul.
+        The Ember Guardians train initiates here, performing sacred Flame Pilgrimages. The people are calm, kind,
+        and deeply introspective — but the volcano stirs, and with it, the old gods wake.
+      </p>
+      <div class="state-markers">
+        <div class="state-marker"><span class="state-marker-label">Faith</span><span class="state-marker-val">The Order of the Ember Guardians — preservation of the Eternal Flame.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Architecture</span><span class="state-marker-val">Terraced sanctuaries, obsidian bathhouses, fire shrines carved into stone.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Cuisine</span><span class="state-marker-val">Purification meals — bland volcanic roots and sacred mineral teas.</span></div>
+        <div class="state-marker"><span class="state-marker-label">Magic & Trade</span><span class="state-marker-val">Spiritual healing, purification rituals, flame blessing ceremonies.</span></div>
+      </div>
+      <div class="state-mood">
+        <div class="state-mood-dot"></div>
+        Tranquil but wary — rumors say the volcano stirs once more, and with it, the old gods.
+      </div>
+    </div>
+  </div>
+
+</div><!-- states-wrapper -->
+
+<div class="flare-divider"><span class="flare-divider-mark">✦</span></div>
+
+<!-- ═══ BIOME IMAGE GALLERY ═══ -->
+<section class="biome-section">
+  <div class="biome-section-inner">
+    <div class="biome-header reveal">
+      <span class="section-label">The Ashura Biome · Visual Archive</span>
+      <h2 class="biome-title">Landscapes of<br><em>the Emberous Dominion</em></h2>
+      <p class="biome-subtitle">
+        Volcanic terrain, magma flows, forge cities, and ember skies —
+        the visual world of Ashura from your Canva biome collection.
+      </p>
+    </div>
+
+    <div class="biome-mosaic reveal">
+      <!-- Replace src values with your actual Canva image URLs or local paths -->
+      <div class="biome-tile">
+        <img src="https://media.canva.com/v2/image-resize/format:JPG/height:550/quality:92/uri:ifs%3A%2F%2FM%2F67fefd10-c71f-4787-b54b-87bb6e64f852/watermark:F/width:550?csig=AAAAAAAAAAAAAAAAAAAAAPvPeSdtwe3-NtB89Wsz0QN0qwp5wQiCo7ze7CVifwgF&exp=1773844853&osig=AAAAAAAAAAAAAAAAAAAAAPvjsaRiRtaDiiEnAy2by5m62uvCboragLImEJdYTCVF&signer=media-rpc&x-canva-quality=thumbnail_large" alt="Ashura Biome"/>
+        <div class="biome-tile-overlay"></div>
+        <span class="biome-tile-label">Volcanic Terrain</span>
+      </div>
+      <div class="biome-tile">
+        <img src="https://media.canva.com/v2/image-resize/format:JPG/height:200/quality:75/uri:ifs%3A%2F%2FM%2F405c3cd8-79e7-4ef6-8852-4ff50c1b88f1/watermark:F/width:133?csig=AAAAAAAAAAAAAAAAAAAAAAXwVbzjlPrNLUiPX91iA8RW40-Mb2kPK-TY5BOjA9W4&exp=1773845242&osig=AAAAAAAAAAAAAAAAAAAAAAtlGzZSiWcOPQ2nZmFiecV_ngrK9FYUtvLVxHuOhvYK&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 2"/>
+        <div class="biome-tile-overlay"></div>
+        <span class="biome-tile-label">Ember Fields</span>
+      </div>
+      <div class="biome-tile">
+        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F957881ec-b887-4fc2-a288-93f86d424a68/watermark:F/width:133?csig=AAAAAAAAAAAAAAAAAAAAAMsbLva-nKEEPzU8Fi6SbVc7IKfwmBuzrpWw8g9FCIYD&exp=1773844151&osig=AAAAAAAAAAAAAAAAAAAAAJwhYdyNDo_HjH6j4tKHSqiJQ_LemwuliDpbAbKsys9M&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 3"/>
+        <div class="biome-tile-overlay"></div>
+        <span class="biome-tile-label">Magma Flows</span>
+      </div>
+      <div class="biome-tile">
+        <img src="https://media.canva.com/v2/image-resize/format:JPG/height:200/quality:75/uri:ifs%3A%2F%2FM%2Fb6251e7e-251a-4e7c-896a-e620b0cc2411/watermark:F/width:133?csig=AAAAAAAAAAAAAAAAAAAAAFIT7Tq9DF04pIFxsKMpy45rTOaPIYMbmWOG8Bl-sIxu&exp=1773844315&osig=AAAAAAAAAAAAAAAAAAAAAALbk6SYJKP_YzMwCtLv-YGrv0xOtQK7Dp36-A-Ay6qi&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 4"/>
+        <div class="biome-tile-overlay"></div>
+        <span class="biome-tile-label">Ashen Plains</span>
+      </div>
+      <div class="biome-tile">
+        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2Fed7b049c-d6d0-4207-9423-16ce8baf5a2d/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAANihrQWrak9_24x7Jm1W0PEhi1dsje4cpL8JXF9CtErb&exp=1773842773&osig=AAAAAAAAAAAAAAAAAAAAADByrwBsYa5-61_P_6mFyZemgljc2tvBg3ogB_xODRfJ&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 5"/>
+        <div class="biome-tile-overlay"></div>
+        <span class="biome-tile-label">Forge District</span>
+      </div>
+      <div class="biome-tile">
+        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F1699c58d-653c-4d92-9292-fd7a005013b1/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAALP12MDIlMiAXzf24b-cBegRppC1jcR1N9rV86Gk_Ryp&exp=1773843544&osig=AAAAAAAAAAAAAAAAAAAAAEae4KkMXFeWJehDMckEhkSQtEUBL9SHkbnbU-ZC6mCj&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 6"/>
+        <div class="biome-tile-overlay"></div>
+        <span class="biome-tile-label">Crimson Skies</span>
+      </div>
+      <div class="biome-tile">
+        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F2da97630-3709-4ced-abc0-210cc4de26b4/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAMpiuPPsC8BdckY_Voy00Ptf4dW60gL1d5_UGpt0mvQB&exp=1773842710&osig=AAAAAAAAAAAAAAAAAAAAAJHMcpjzNLUfDQoBbh_ilIu5crWBJ3MLvN0VvKeDvyIz&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 7"/>
+        <div class="biome-tile-overlay"></div>
+        <span class="biome-tile-label">Volcanic Citadel</span>
+      </div>
+      <div class="biome-tile">
+        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2FM%2F7d845329-d85e-4f2b-b8f5-f7f6cc0952fa/watermark:F/width:200?csig=AAAAAAAAAAAAAAAAAAAAAOWBRYrfKT6SdJsUMiseNp9vD7twUUX5-MY2UbBsLkL9&exp=1773845209&osig=AAAAAAAAAAAAAAAAAAAAALWcxHtEKnewMZy671ZIc-YN7RRoMD3vLwAHY1hJnBJI&signer=media-rpc&x-canva-quality=thumbnail" alt="Ashura Biome 8"/>
+        <div class="biome-tile-overlay"></div>
+        <span class="biome-tile-label">Ember Mines</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<div class="nation-cta">
+  <div class="nation-cta-inner reveal">
+    <span class="section-label" style="display:block;text-align:center;margin-bottom:20px;">The Emberous Dominion Awaits</span>
+    <h2>Ten cities.<br><em>One eternal flame.</em></h2>
+    <p>
+      From Valyra's volcanic throne to Ashmere's pilgrim springs —
+      Ashura is a nation that does not merely survive its fire.
+      It is made of it.
+    </p>
+    <div class="cta-actions">
+      <a href="nine-realms-map.html" class="btn-fire">View on World Map</a>
+      <a href="nine-realms-story-arcs.html" class="btn-ghost">Read the Story Arcs →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-copy">Nine Realms Universe — Ashura · Fire Nation · Original IP</span>
+  <span class="footer-copy">Created by Ron</span>
+</footer>
+
+<script>
+try{
+
+/* ── Cursor ── */
+const dot=document.getElementById('curDot');
+const ring=document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dot.style.left=mx+'px';dot.style.top=my+'px';
+});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+document.querySelectorAll('.territory,.state-entry,.biome-tile,.power-cell').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('hot'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('hot'));
+});
+
+/* ── Nav scroll ── */
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+
+/* ── Scroll reveal ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.state-entry').forEach(el=>obs.observe(el));
+
+/* ── Hero ember particle canvas ── */
+const canvas=document.getElementById('heroCanvas');
+const ctx=canvas.getContext('2d');
+let W,H,particles=[];
+
+function resize(){
+  W=canvas.width=canvas.offsetWidth;
+  H=canvas.height=canvas.offsetHeight;
+}
+window.addEventListener('resize',resize);
+resize();
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+<!-- ═══════════════════════════════════════
+     UNIVERSAL NINE REALMS LORE NAVIGATOR
+═══════════════════════════════════════ -->
+<style>
+.nr-float{position:fixed;bottom:28px;right:28px;z-index:8000;}
+.nr-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;background:rgba(8,6,14,0.95);color:rgba(212,184,150,0.7);border:1px solid rgba(212,184,150,0.18);padding:11px 20px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:border-color .3s,color .3s,background .3s;backdrop-filter:blur(12px);white-space:nowrap;}
+.nr-btn:hover{border-color:rgba(212,184,150,0.45);color:rgba(212,184,150,1);background:rgba(12,8,20,0.98);}
+.nr-btn-dot{width:6px;height:6px;border-radius:50%;background:rgba(192,64,24,0.8);flex-shrink:0;animation:nrPulse 2s ease-in-out infinite;}
+@keyframes nrPulse{0%,100%{opacity:0.5;}50%{opacity:1;box-shadow:0 0 8px rgba(192,64,24,0.8);}}
+.nr-drawer{position:fixed;top:0;right:0;bottom:0;z-index:7999;width:min(400px,90vw);background:rgba(6,4,10,0.99);border-left:1px solid rgba(212,184,150,0.08);transform:translateX(100%);transition:transform .5s cubic-bezier(.16,1,.3,1);overflow-y:auto;backdrop-filter:blur(24px);}
+.nr-drawer.nr-open{transform:translateX(0);}
+.nr-overlay{position:fixed;inset:0;z-index:7998;background:rgba(0,0,0,0);pointer-events:none;transition:background .4s;}
+.nr-overlay.nr-open{background:rgba(0,0,0,0.5);pointer-events:all;}
+.nr-head{padding:32px 32px 20px;border-bottom:1px solid rgba(212,184,150,0.07);display:flex;align-items:flex-start;justify-content:space-between;}
+.nr-head-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:rgba(212,184,150,0.35);}
+.nr-head-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(212,184,150,0.2);margin-top:4px;}
+.nr-close{background:none;border:1px solid rgba(212,184,150,0.12);color:rgba(212,184,150,0.35);font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.3em;padding:7px 13px;cursor:pointer;transition:border-color .3s,color .3s;flex-shrink:0;}
+.nr-close:hover{border-color:rgba(212,184,150,0.4);color:rgba(212,184,150,0.8);}
+.nr-body{padding:24px 32px 48px;}
+.nr-section{margin-bottom:28px;}
+.nr-section-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.45em;text-transform:uppercase;color:rgba(192,64,24,0.55);display:block;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(192,64,24,0.1);}
+.nr-link{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid rgba(212,184,150,0.04);text-decoration:none;transition:padding-left .3s;cursor:pointer;}
+.nr-link:last-child{border-bottom:none;}
+.nr-link:hover{padding-left:6px;}
+.nr-link:hover .nr-link-name{color:rgba(212,184,150,0.95);}
+.nr-link:hover .nr-link-arrow{opacity:1;}
+.nr-link-icon{width:26px;height:26px;border:1px solid rgba(212,184,150,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;margin-top:1px;transition:border-color .3s;}
+.nr-link:hover .nr-link-icon{border-color:rgba(212,184,150,0.25);}
+.nr-link-text{flex:1;}
+.nr-link-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.15em;color:rgba(212,184,150,0.55);display:block;margin-bottom:2px;transition:color .3s;}
+.nr-link-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:rgba(212,184,150,0.22);line-height:1.4;}
+.nr-link-arrow{font-family:'Cinzel',serif;font-size:10px;color:rgba(212,184,150,0.2);opacity:0;transition:opacity .3s;flex-shrink:0;padding-top:1px;}
+.nr-current{background:rgba(212,184,150,0.03);border-left:2px solid rgba(192,64,24,0.4);margin-left:-2px;padding-left:10px;}
+.nr-current .nr-link-name{color:rgba(212,184,150,0.8);}
+.nr-current .nr-link-arrow{opacity:0.4;}
+.nr-footer{padding:20px 32px;border-top:1px solid rgba(212,184,150,0.06);font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:rgba(212,184,150,0.2);text-align:center;line-height:1.6;}
+</style>
+<div class="nr-float"><button class="nr-btn" onclick="nrOpen()"><span class="nr-btn-dot"></span>Lore Navigator</button></div>
+<div class="nr-overlay" id="nrOverlay" onclick="nrClose()"></div>
+<div class="nr-drawer" id="nrDrawer">
+  <div class="nr-head">
+    <div><div class="nr-head-title">Nine Realms Universe</div><div class="nr-head-sub">Complete Lore Navigation</div></div>
+    <button class="nr-close" onclick="nrClose()">✕ Close</button>
+  </div>
+  <div class="nr-body">
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(136,152,184,0.6);border-color:rgba(136,152,184,0.12);">🏛 Sacred Locations</span>
+      <a href="ancient-monastery.html" class="nr-link"><div class="nr-link-icon">☽</div><div class="nr-link-text"><span class="nr-link-name">Ancient Northern Monastery</span><span class="nr-link-desc">Gateway to the Winding Veins · Nine Obelisks · Faceless Red Monks · Crysen's crucible</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
+      <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="nine-realms-sigils.html" class="nr-link"><div class="nr-link-icon">⚜</div><div class="nr-link-text"><span class="nr-link-name">Sigil Library</span><span class="nr-link-desc">All 36 nation and city-state sigils with lore</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.6);border-color:rgba(192,64,24,0.12);">🔥 Nations · The Realms</span>
+      <a href="ashura-nation.html" class="nr-link"><div class="nr-link-icon">🌋</div><div class="nr-link-text"><span class="nr-link-name">Ashura — The Fire Nation</span><span class="nr-link-desc">Ten city-states · biome gallery · complete cultural lore</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sablea-city.html" class="nr-link"><div class="nr-link-icon">🏜</div><div class="nr-link-text"><span class="nr-link-name">Sablea — Dark Nation City</span><span class="nr-link-desc">Three Towers · Exchange · Winding Veins · five ancient languages</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(176,128,32,0.6);border-color:rgba(176,128,32,0.1);">♛ Royal Dynasty — Ashura</span>
+      <a href="dante-i.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">King Dante I</span><span class="nr-link-desc">The Unstoppable Warlord · The banned Ember Testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="dante-ii.html" class="nr-link"><div class="nr-link-icon">♛</div><div class="nr-link-text"><span class="nr-link-name">King Dante II</span><span class="nr-link-desc">The Golden Reign · Seraphina vs. Vesper · the sealed testament</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sybil-sisters.html" class="nr-link"><div class="nr-link-icon">👑</div><div class="nr-link-text"><span class="nr-link-name">The Sybil Sisters</span><span class="nr-link-desc">Calypso · Thorne · Nxia — three kingdoms, one father's legacy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="calypso-arc.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Calypso: Aftermath & Ascension</span><span class="nr-link-desc">Eight chapters · Sorynn · Orious · the twin daughters born of betrayal</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(192,64,24,0.55);border-color:rgba(192,64,24,0.1);">◈ Ashura Characters</span>
+      <a href="solara.html" class="nr-link"><div class="nr-link-icon">🦅</div><div class="nr-link-text"><span class="nr-link-name">Solara Valyrix</span><span class="nr-link-desc">The Infernal Phoenix · four-act arc · mage hierarchy</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="aurelian-vireen.html" class="nr-link"><div class="nr-link-icon">⚗</div><div class="nr-link-text"><span class="nr-link-name">Aurelian & Vireen</span><span class="nr-link-desc">The Emberfall Conspiracy · four doctrines · Project CINDER-X</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selvarra.html" class="nr-link"><div class="nr-link-icon">⬡</div><div class="nr-link-text"><span class="nr-link-name">High Priestess Selvarra Lyne</span><span class="nr-link-desc">Composed Catastrophe · Thren'kai Voryn · Flame Lattice · Last of the Red Pyre</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="umbrax.html" class="nr-link"><div class="nr-link-icon">☠</div><div class="nr-link-text"><span class="nr-link-name">Umbrax</span><span class="nr-link-desc">Exarch · Flame Thief · Crypt of Emberglass · Project Hollow Flame</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="crysen-showcase.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Lady Crysen</span><span class="nr-link-desc">The Ascendant Balance · Oracle · The Celestial Twelve · protagonist</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(74,16,144,0.65);border-color:rgba(74,16,144,0.15);">🏔 Mountain Nation · Allies</span>
+      <a href="draven.html" class="nr-link"><div class="nr-link-icon">🐉</div><div class="nr-link-text"><span class="nr-link-name">Draven</span><span class="nr-link-desc">The Shadow Seeker · Chief Scout · Noctyss · Dragon Form · Eris</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(106,8,32,0.7);border-color:rgba(106,8,32,0.15);">🌑 Dark Nation · Sablea</span>
+      <a href="yzmina.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Yzmina</span><span class="nr-link-desc">Eternal Dark Priestess · Former Vessel of Ira · Third Generation · 700+ years</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="morghanna.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Empress Morghanna of Morvanna</span><span class="nr-link-desc">Sovereign of Morvanna · Blood Magic · Mother of Vesper &amp; Vashti · Wraithlands · Vyzion's Celestial Hand</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vesper.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">Queen Vesper</span><span class="nr-link-desc">The Bloodborne Sovereign · The Four Secrets · The affair with Dante II</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vashti.html" class="nr-link"><div class="nr-link-icon">🌒</div><div class="nr-link-text"><span class="nr-link-name">Queen Vashti</span><span class="nr-link-desc">The Theocratic Monarch · The Handmaidens · Eris's mentor</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="vyktor.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lord Vyktor</span><span class="nr-link-desc">Vice Lord · Baron of Driftpost · Shroud of 13 Fates · Temporal Triad</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="selena.html" class="nr-link"><div class="nr-link-icon">🪶</div><div class="nr-link-text"><span class="nr-link-name">Selena</span><span class="nr-link-desc">Supreme Witch of Sisters of Ira · Chairwoman · The Hidden Sovereign</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="four-secrets.html" class="nr-link"><div class="nr-link-icon">⚔</div><div class="nr-link-text"><span class="nr-link-name">The Four Secrets</span><span class="nr-link-desc">Loryxan · Thalrik · Calivor · Sanguinor · born of blood moons</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="eris.html" class="nr-link"><div class="nr-link-icon">🔥</div><div class="nr-link-text"><span class="nr-link-name">Lady Eris</span><span class="nr-link-desc">The Hidden Heir · Vashti's protégée · Dark fire magic · The vessel of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+  </div>
+  <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
+</div>
+<script>
+try{
+
+function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
+function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')nrClose();});
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
+
+</body>
+</html>
