@@ -3,1054 +3,315 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nine Realms — World Map</title>
+<title>Elunar — The Nine Realms | Interactive World</title>
 <style>
-/* Font fallbacks — graceful degradation when external fonts unavailable */
-body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; }
-.nav-brand-name, .nav-link, .nav-back, .sl, .h-sys, .h-clan, .h-label, .h-vlabel,
-[class*="badge"], [class*="tag"], [class*="-label"], [class*="-role"], [class*="-period"],
-[class*="-tier"], [class*="mono"], .srk, .pi-label, .lc-tome {
-  font-family: 'Courier New', Courier, monospace;
+:root{
+  --void:#02030A;
+  --parch:#C8CCD8; --parch-pale:#E8ECF4; --parch-dim:#484C58;
+  --gold:#E8B840;
 }
-.h-name, .h-title, .h-amp, .h-title2, .big-h, .ab-title, .ob-title, .vb-title,
-.ab2-title, .ca-name, .disc-name, .tp-title, .cy-name, .son-name, .sect-name,
-.er-name, .rel-name, .gc-name, .hb-title, .pb-title, .aa-name, [class*="Decorative"],
-.nav-brand-name { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; }
-</style>
-<style>
-:root {
-  --ink:   #06050A;
-  --ocean: #0A1828;
-  --parch: #D4B896;
-  --ember: #B8732A;
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--void);color:var(--parch);font-family:'Palatino Linotype','Book Antiqua',Palatino,Georgia,serif;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased;}
+.mono{font-family:'Courier New',Courier,monospace;}
 
-  /* Nation colors */
-  --c-fire:     #C84020;
-  --c-ice:      #60B0D8;
-  --c-sky:      #4888C0;
-  --c-mountain: #907860;
-  --c-ocean:    #2878A8;
-  --c-flora:    #489838;
-  --c-desert:   #C89830;
-  --c-dark:     #7030A0;
-  --c-celestial:#C8A830;
-}
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:26px;height:26px;border:1px solid rgba(232,184,64,.35);border-radius:50%;transform:translate(-50%,-50%);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.lit{width:52px;height:52px;border-color:var(--gold);box-shadow:0 0 20px rgba(232,184,64,.35);}
 
-*{ margin:0; padding:0; box-sizing:border-box; }
-html,body{ width:100%; height:100%; overflow:hidden; }
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:22px 60px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,padding .3s;}
+.nav.scrolled{background:rgba(2,3,10,.95);backdrop-filter:blur(12px);padding:14px 60px;border-bottom:1px solid rgba(232,184,64,.1);}
+.nav-brand-name{font-size:13px;font-weight:500;color:var(--parch-pale);letter-spacing:.2em;display:block;}
+.nav-brand-sub{font-family:'Courier New',monospace;font-size:9px;color:var(--gold);opacity:.5;display:block;margin-top:2px;letter-spacing:.06em;}
+.nav-brand{text-decoration:none;}
+.nav-right{display:flex;align-items:center;gap:26px;}
+.nav-link{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--parch-dim);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--parch-pale);}
+.nav-back{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(232,184,64,.25);padding:9px 20px;text-decoration:none;transition:border-color .3s;}
+.nav-back:hover{border-color:rgba(232,184,64,.5);}
 
-body{
-  background:var(--ink);
-  font-family:'Jost',sans-serif;
-  font-weight:300;
-  color:var(--parch);
-  cursor:none;
-  -webkit-font-smoothing:antialiased;
-}
+.stage{position:relative;width:100%;height:100vh;min-height:640px;overflow:hidden;background:#02030A;}
+#starCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
+.planet-wrap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1600px,150vw);aspect-ratio:1448/1086;z-index:2;transition:transform 1.4s cubic-bezier(.16,1,.3,1),filter 1.4s ease;}
+.planet-wrap.zoomed{transform:translate(-50%,-50%) scale(1.55);filter:brightness(.7) saturate(1.1);}
+.planet-img{width:100%;height:100%;object-fit:cover;display:block;filter:drop-shadow(0 0 120px rgba(120,140,200,0.15));}
 
-/* Custom cursor */
-.cur{ position:fixed;pointer-events:none;z-index:9999; }
-.cur-dot{ width:6px;height:6px;background:var(--parch);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:difference; }
-.cur-ring{ width:32px;height:32px;border:1px solid rgba(212,184,150,0.4);border-radius:50%;transform:translate(-50%,-50%);transition:transform .4s cubic-bezier(.16,1,.3,1),width .3s,height .3s; }
-.cur-ring.hovering{ width:48px;height:48px;border-color:var(--ember); }
+.hotspot-layer{position:absolute;inset:0;z-index:3;}
+.hotspot{position:absolute;transform:translate(-50%,-50%);width:34px;height:34px;cursor:none;}
+.hs-core{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,var(--rc,#E8B840) 0%,transparent 70%);opacity:.85;animation:hsPulse 3s ease-in-out infinite;}
+.hs-ring{position:absolute;inset:-8px;border-radius:50%;border:1px solid var(--rc,#E8B840);opacity:.5;animation:hsRing 3s ease-in-out infinite;}
+.hs-ring2{position:absolute;inset:-18px;border-radius:50%;border:1px solid var(--rc,#E8B840);opacity:0;transition:opacity .4s ease;}
+.hotspot:hover .hs-ring2{opacity:.35;}
+.hotspot:hover .hs-core{opacity:1;transform:scale(1.3);}
+@keyframes hsPulse{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.15);}}
+@keyframes hsRing{0%,100%{transform:scale(1);opacity:.5;}50%{transform:scale(1.4);opacity:.15;}}
+.hotspot.hidden-pre{opacity:0;pointer-events:none;}
 
-/* NAV */
-.nav{
-  position:fixed;top:0;left:0;right:0;z-index:800;
-  padding:22px 50px;
-  display:flex;align-items:center;justify-content:space-between;
-  background:linear-gradient(to bottom,rgba(6,5,10,0.95),transparent);
-  pointer-events:none;
-}
-.nav-logo{ font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--parch);letter-spacing:0.12em;pointer-events:all; }
-.nav-sub{ font-family:'Jost',sans-serif;font-size:8px;letter-spacing:0.4em;color:var(--ember);opacity:0.7;text-transform:uppercase; }
-.nav-back{
-  font-family:'Jost',sans-serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;
-  color:rgba(212,184,150,0.5);text-decoration:none;
-  border:1px solid rgba(212,184,150,0.15);padding:8px 18px;
-  transition:color .3s,border-color .3s;pointer-events:all;
-}
-.nav-back:hover{ color:var(--parch);border-color:rgba(212,184,150,0.4); }
+.hs-label{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%) translateY(6px);white-space:nowrap;padding:8px 16px;background:rgba(3,4,12,.92);border:1px solid var(--rc,#E8B840);opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease;}
+.hotspot:hover .hs-label{opacity:1;transform:translateX(-50%) translateY(0);}
+.hsl-name{font-family:'Cinzel',serif,'Palatino Linotype';font-size:13px;letter-spacing:.08em;color:var(--parch-pale);display:block;}
+.hsl-title{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--rc,#E8B840);opacity:.8;display:block;margin-top:2px;}
 
-/* MAP CONTAINER */
-.map-wrap{
-  position:fixed;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
-}
+.comet{position:absolute;z-index:4;pointer-events:none;width:3px;height:120px;border-radius:2px;transform-origin:top center;opacity:0;}
+.impact-flash{position:absolute;z-index:5;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;}
 
-.map-stage{
-  position:relative;
-  width:min(100vw, 177.78vh);
-  height:min(100vh, 56.25vw);
-}
+.stage-title{position:absolute;top:14%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;pointer-events:none;opacity:0;transition:opacity 1.5s ease;}
+.stage-title.show{opacity:1;}
+.st-eyebrow{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.5em;color:var(--gold);opacity:.7;text-transform:uppercase;margin-bottom:10px;}
+.st-name{font-family:'Cinzel Decorative',serif,'Palatino Linotype';font-size:clamp(40px,7vw,96px);font-weight:900;color:var(--parch-pale);letter-spacing:.06em;text-shadow:0 0 100px rgba(232,184,64,.3),0 4px 40px rgba(0,0,0,.9);}
+.st-sub{font-family:'Palatino Linotype',serif;font-style:italic;font-size:clamp(11px,1.6vw,16px);color:rgba(200,204,216,.5);letter-spacing:.1em;margin-top:8px;}
 
-/* SVG fills full stage */
-#worldMap{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-}
+.stage-control{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:7;display:flex;gap:10px;opacity:0;transition:opacity 1s ease;}
+.stage-control.show{opacity:1;}
+.sc-btn{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(200,204,216,.15);background:rgba(3,4,12,.5);padding:9px 18px;cursor:none;transition:border-color .3s,color .3s;}
+.sc-btn:hover{border-color:var(--gold);color:var(--gold);}
 
-/* Ocean base */
-.ocean-base{ fill:var(--ocean); }
+.reveal-overlay{position:fixed;inset:0;z-index:800;display:flex;align-items:center;justify-content:center;background:rgba(2,3,10,0);pointer-events:none;transition:background .5s ease;padding:24px;}
+.reveal-overlay.open{background:rgba(2,3,10,.75);pointer-events:auto;backdrop-filter:blur(4px);}
+.reveal-card{max-width:680px;width:100%;background:linear-gradient(160deg,rgba(8,9,18,.98) 0%,rgba(4,5,12,.98) 100%);border:1px solid var(--rc,#E8B840);position:relative;overflow:hidden;transform:scale(.9) translateY(30px);opacity:0;transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .5s ease;}
+.reveal-overlay.open .reveal-card{transform:scale(1) translateY(0);opacity:1;}
+.reveal-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,var(--rc,#E8B840) 0%,transparent 70%);opacity:.08;pointer-events:none;}
+.reveal-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--rc,#E8B840),transparent);}
+.rc-close{position:absolute;top:18px;right:20px;font-family:'Courier New',monospace;font-size:11px;color:var(--parch-dim);cursor:none;z-index:2;letter-spacing:.1em;transition:color .3s;}
+.rc-close:hover{color:var(--parch-pale);}
+.rc-body{position:relative;z-index:1;padding:44px 40px 40px;}
+.rc-eyebrow{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--rc,#E8B840);opacity:.75;margin-bottom:14px;}
+.rc-name{font-family:'Cinzel Decorative',serif,'Palatino Linotype';font-size:clamp(26px,4vw,42px);font-weight:900;color:var(--parch-pale);letter-spacing:.04em;line-height:1;margin-bottom:6px;}
+.rc-title{font-style:italic;font-size:14px;color:rgba(200,204,216,.5);margin-bottom:22px;}
+.rc-meta{display:flex;gap:0;border:1px solid rgba(200,204,216,.1);margin-bottom:20px;}
+.rc-meta-item{flex:1;padding:12px 16px;border-right:1px solid rgba(200,204,216,.08);}
+.rc-meta-item:last-child{border-right:none;}
+.rc-meta-label{font-family:'Courier New',monospace;font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--parch-dim);display:block;margin-bottom:4px;}
+.rc-meta-val{font-size:13px;color:var(--parch-pale);}
+.rc-desc{font-style:italic;font-size:15px;color:rgba(200,204,216,.65);line-height:1.8;margin-bottom:28px;}
+.rc-link{display:inline-flex;align-items:center;gap:10px;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--void);background:var(--rc,#E8B840);padding:14px 26px;text-decoration:none;transition:filter .3s;}
+.rc-link:hover{filter:brightness(1.15);}
 
-/* Land fills — base state */
-.territory{
-  transition:fill .5s ease, filter .5s ease, opacity .5s ease;
-  cursor:pointer;
-}
+.info-strip{padding:80px 60px;background:#050610;text-align:center;}
+.is-inner{max-width:720px;margin:0 auto;}
+.is-eyebrow{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.3em;color:var(--gold);opacity:.6;text-transform:uppercase;margin-bottom:16px;}
+.is-title{font-family:'Cinzel Decorative',serif,'Palatino Linotype';font-size:clamp(20px,2.8vw,32px);color:var(--parch-pale);margin-bottom:16px;line-height:1.2;}
+.is-title em{font-style:italic;color:var(--gold);}
+.is-body{font-style:italic;font-size:15px;color:rgba(200,204,216,.45);line-height:1.85;}
+footer{background:#02030A;border-top:1px solid rgba(232,184,64,.06);padding:32px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+.fc{font-size:12px;color:rgba(200,204,216,.18);}
 
-/* Nation fill colors — dark, moody, painterly */
-.t-ice      { fill:#0E2030; }
-.t-mountain { fill:#1C1610; }
-.t-sky      { fill:#0E1828; }
-.t-desert   { fill:#241808; }
-.t-fire     { fill:#200808; }
-.t-flora    { fill:#0A1808; }
-.t-ocean    { fill:#081828; }
-.t-dark     { fill:#140818; }
-.t-celestial{ fill:#1A1408; }
-
-/* Dimmed state when another nation is selected */
-.territory.dimmed{
-  opacity:0.15;
-  filter:saturate(0);
-}
-
-/* Active / hovered state */
-.territory.hovered{ filter:brightness(2.5) saturate(1.8); cursor:pointer; }
-
-.t-ice.hovered       { fill:#1A4060; filter:brightness(2.2) saturate(2) drop-shadow(0 0 20px #60B0D8); }
-.t-mountain.hovered  { fill:#3A2A18; filter:brightness(2) saturate(2) drop-shadow(0 0 16px #907860); }
-.t-sky.hovered       { fill:#142040; filter:brightness(2.2) saturate(2) drop-shadow(0 0 18px #4888C0); }
-.t-desert.hovered    { fill:#402808; filter:brightness(2.2) saturate(2) drop-shadow(0 0 18px #C89830); }
-.t-fire.hovered      { fill:#401008; filter:brightness(2.5) saturate(2) drop-shadow(0 0 22px #C84020); }
-.t-flora.hovered     { fill:#0E2808; filter:brightness(2.2) saturate(2) drop-shadow(0 0 18px #489838); }
-.t-ocean.hovered     { fill:#0E2840; filter:brightness(2.2) saturate(2) drop-shadow(0 0 18px #2878A8); }
-.t-dark.hovered      { fill:#200830; filter:brightness(2.2) saturate(2) drop-shadow(0 0 20px #7030A0); }
-.t-celestial.hovered { fill:#302008; filter:brightness(2.2) saturate(2) drop-shadow(0 0 18px #C8A830); }
-
-/* Nation labels on map */
-.map-label{
-  font-family:'Jost',sans-serif;
-  font-size:11px;letter-spacing:0.3em;text-transform:uppercase;
-  fill:rgba(212,184,150,0.45);
-  pointer-events:none;
-  transition:fill .4s;
-  user-select:none;
-}
-.map-label.bright{ fill:rgba(212,184,150,0.9); }
-
-/* Capital dot markers */
-.capital-dot{
-  fill:rgba(212,184,150,0.3);
-  stroke:rgba(212,184,150,0.5);
-  stroke-width:1;
-  pointer-events:none;
-  transition:fill .4s,r .3s;
-}
-
-/* === ATMOSPHERE PARTICLES === */
-.particles-layer{ pointer-events:none; }
-
-/* ember sparks */
-.spark{
-  fill:var(--c-fire);
-  animation:sparkFloat linear infinite;
-  opacity:0;
-}
-@keyframes sparkFloat{
-  0%{opacity:0;transform:translate(0,0) scale(0);}
-  15%{opacity:.8;}
-  85%{opacity:.3;}
-  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.5);}
-}
-
-/* ice crystals */
-.ice-flake{
-  fill:var(--c-ice);
-  animation:flakeFloat linear infinite;
-  opacity:0;
-}
-@keyframes flakeFloat{
-  0%{opacity:0;transform:translate(0,0) rotate(0deg);}
-  20%{opacity:.6;}
-  80%{opacity:.2;}
-  100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(180deg);}
-}
-
-/* aurora streaks */
-.aurora{
-  stroke-width:2;
-  opacity:0;
-  stroke-linecap:round;
-  animation:auroraShimmer ease-in-out infinite;
-}
-.aurora-1{ stroke:#40D090; }
-.aurora-2{ stroke:#60B0E0; }
-.aurora-3{ stroke:#8060D0; }
-@keyframes auroraShimmer{
-  0%,100%{opacity:0;stroke-width:1;}
-  40%{opacity:.5;stroke-width:2.5;}
-  60%{opacity:.3;stroke-width:1.5;}
-}
-
-/* void tendrils — dark nation */
-.void-tendril{
-  stroke:var(--c-dark);
-  stroke-width:1;
-  fill:none;
-  opacity:0;
-  animation:voidPulse ease-in-out infinite;
-}
-@keyframes voidPulse{
-  0%,100%{opacity:0;stroke-dashoffset:100;}
-  50%{opacity:.4;stroke-dashoffset:0;}
-}
-
-/* forest wisps — flora */
-.wisp{
-  fill:none;
-  stroke:var(--c-flora);
-  stroke-width:1;
-  opacity:0;
-  animation:wispFloat ease-in-out infinite;
-}
-@keyframes wispFloat{
-  0%,100%{opacity:0;transform:translateY(0);}
-  50%{opacity:.5;transform:translateY(-8px);}
-}
-
-/* COMPASS */
-.compass{
-  position:absolute;
-  bottom:30px;right:40px;
-  width:60px;height:60px;
-  opacity:0.4;
-  pointer-events:none;
-}
-
-/* SCALE BAR */
-.scale-bar{
-  position:absolute;
-  bottom:38px;left:50px;
-  display:flex;flex-direction:column;gap:4px;
-  opacity:0.3;pointer-events:none;
-}
-.scale-line{ width:80px;height:1px;background:var(--parch); }
-.scale-text{ font-size:8px;letter-spacing:0.25em;color:var(--parch); }
-
-/* INFO PANEL */
-.info-panel{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  z-index:700;
-  transform:translateY(100%);
-  transition:transform .6s cubic-bezier(.16,1,.3,1);
-  pointer-events:none;
-}
-.info-panel.open{
-  transform:translateY(0);
-  pointer-events:all;
-}
-
-.panel-inner{
-  margin:0 auto;
-  max-width:1200px;
-  background:rgba(6,5,10,0.97);
-  border-top:1px solid rgba(212,184,150,0.12);
-  padding:36px 60px 40px;
-  display:grid;
-  grid-template-columns:auto 1fr auto auto;
-  gap:0 50px;
-  align-items:start;
-  position:relative;
-}
-
-.panel-accent{
-  width:3px;
-  height:100%;
-  min-height:80px;
-  border-radius:2px;
-  position:absolute;
-  left:0;top:0;
-}
-
-.panel-num{
-  font-family:'Cormorant Garamond',serif;
-  font-size:72px;font-weight:300;
-  line-height:1;
-  opacity:0.1;
-  margin-top:-8px;
-  min-width:60px;
-}
-
-.panel-content{}
-.panel-tag{
-  font-family:'Jost',sans-serif;font-size:8px;
-  letter-spacing:0.45em;text-transform:uppercase;
-  margin-bottom:8px;display:block;opacity:0.6;
-}
-.panel-name{
-  font-family:'Cormorant Garamond',serif;
-  font-size:clamp(22px,3vw,38px);font-weight:400;
-  color:var(--parch-pale,#EDE0CE);line-height:1.1;
-  margin-bottom:6px;
-}
-.panel-epithet{
-  font-family:'Cormorant Garamond',serif;
-  font-style:italic;font-size:15px;
-  color:rgba(212,184,150,0.45);margin-bottom:12px;
-}
-.panel-desc{
-  font-family:'Cormorant Garamond',serif;
-  font-style:italic;font-size:15px;
-  color:rgba(212,184,150,0.6);line-height:1.75;
-  max-width:520px;
-}
-
-.panel-stats{
-  display:flex;flex-direction:column;gap:16px;
-  min-width:180px;
-  border-left:1px solid rgba(212,184,150,0.08);
-  padding-left:40px;
-}
-.panel-stat-item{}
-.panel-stat-label{
-  font-family:'Jost',sans-serif;font-size:7px;
-  letter-spacing:0.4em;text-transform:uppercase;
-  color:rgba(212,184,150,0.35);margin-bottom:3px;
-}
-.panel-stat-val{
-  font-family:'Cormorant Garamond',serif;
-  font-size:13px;color:rgba(212,184,150,0.7);
-}
-
-.panel-actions{
-  display:flex;flex-direction:column;gap:10px;
-  align-items:flex-end;min-width:160px;
-  justify-content:flex-start;
-}
-.panel-link{
-  font-family:'Jost',sans-serif;font-size:9px;
-  letter-spacing:0.3em;text-transform:uppercase;
-  color:var(--parch);text-decoration:none;
-  padding:10px 20px;border:1px solid rgba(212,184,150,0.25);
-  display:inline-block;
-  transition:border-color .3s,background .3s;
-  white-space:nowrap;
-}
-.panel-link:hover{ border-color:rgba(212,184,150,0.6);background:rgba(212,184,150,0.05); }
-.panel-link.primary{
-  background:var(--parch);color:#08060A;border-color:var(--parch);
-  font-weight:500;
-}
-.panel-link.primary:hover{ background:#EDE0CE; }
-.panel-close{
-  position:absolute;top:20px;right:24px;
-  background:none;border:none;
-  font-family:'Jost',sans-serif;font-size:8px;
-  letter-spacing:0.3em;color:rgba(212,184,150,0.3);
-  cursor:pointer;text-transform:uppercase;
-  transition:color .3s;padding:6px;
-}
-.panel-close:hover{ color:var(--parch); }
-
-/* LEGEND -->  */
-.legend{
-  position:absolute;
-  top:80px;right:24px;
-  display:flex;flex-direction:column;gap:6px;
-  pointer-events:none;
-}
-.legend-item{
-  display:flex;align-items:center;gap:8px;
-  font-family:'Jost',sans-serif;font-size:8px;
-  letter-spacing:0.25em;text-transform:uppercase;
-  color:rgba(212,184,150,0.35);
-}
-.legend-dot{
-  width:8px;height:8px;border-radius:50%;flex-shrink:0;
-}
-
-/* hint -->  */
-.map-hint{
-  position:absolute;
-  bottom:80px;left:50%;transform:translateX(-50%);
-  font-family:'Jost',sans-serif;font-size:9px;
-  letter-spacing:0.35em;text-transform:uppercase;
-  color:rgba(212,184,150,0.3);
-  pointer-events:none;
-  animation:hintPulse 3s ease-in-out infinite;
-  white-space:nowrap;
-}
-@keyframes hintPulse{
-  0%,100%{opacity:0.3;}50%{opacity:0.7;}
-}
-
-/* Responsive */
 @media(max-width:768px){
-  .panel-inner{
-    grid-template-columns:1fr;
-    gap:16px;padding:24px;
-  }
-  .panel-num{display:none;}
-  .panel-stats{border-left:none;padding-left:0;border-top:1px solid rgba(212,184,150,0.08);padding-top:16px;}
-  .panel-actions{align-items:flex-start;}
-  .legend{display:none;}
-  .nav{padding:16px 20px;}
+  .nav{padding:16px 24px;}.nav.scrolled{padding:12px 24px;}.nav-link{display:none;}
+  .stage{min-height:100vh;}
+  .planet-wrap{width:220vw;}
+  .rc-body{padding:32px 24px 28px;}
+  .rc-meta{flex-wrap:wrap;}
+  .rc-meta-item{flex:1 1 50%;border-bottom:1px solid rgba(200,204,216,.08);}
+  .info-strip{padding:60px 24px;}
 }
 </style>
 </head>
 <body>
-
 <div class="cur" id="curDot"><div class="cur-dot"></div></div>
 <div class="cur" id="curRing"><div class="cur-ring"></div></div>
 
-<!-- NAV -->
-<nav class="nav">
-  <div>
-    <div class="nav-logo">Nine Realms</div>
-    <div class="nav-sub">World Map</div>
+<nav class="nav" id="mainNav">
+  <a href="nine-realms-hub.html" class="nav-brand">
+    <span class="nav-brand-name">Nine Realms</span>
+    <span class="nav-brand-sub">// ELUNAR · INTERACTIVE WORLD · NINE IMPACT ZONES //</span>
+  </a>
+  <div class="nav-right">
+    <a href="nine-realms-hub.html" class="nav-link">Hub</a>
+    <a href="chronicles-registry.html" class="nav-link">Chronicles</a>
+    <a href="nine-realms-hub.html" class="nav-back">← Hub</a>
   </div>
-  <a href="nine-realms-hub.html" class="nav-back">← Return to Hub</a>
 </nav>
 
-<!-- MAP -->
-<div class="map-wrap">
-<div class="map-stage">
+<section class="stage" id="stage">
+  <canvas id="starCanvas"></canvas>
 
-<svg id="worldMap" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <!-- Ocean gradient -->
-    <radialGradient id="oceanGrad" cx="50%" cy="50%">
-      <stop offset="0%" stop-color="#0E2040"/>
-      <stop offset="100%" stop-color="#060E1A"/>
-    </radialGradient>
+  <div class="stage-title" id="stageTitle">
+    <div class="st-eyebrow">Nine Stars Fell. Nine Realms Rose.</div>
+    <h1 class="st-name">Elunar</h1>
+    <div class="st-sub">Select a realm to descend</div>
+  </div>
 
-    <!-- Glow filters per nation -->
-    <filter id="glowFire" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="8" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="glowIce" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
+  <div class="planet-wrap" id="planetWrap">
+    <img class="planet-img" src="assets/images/elunar-planet.jpg" alt="Elunar — the world of the Nine Realms, seen from orbit">
+    <div class="hotspot-layer" id="hotspotLayer"></div>
+  </div>
 
-    <!-- Noise texture -->
-    <filter id="noise">
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
-      <feColorMatrix type="saturate" values="0"/>
-      <feBlend in="SourceGraphic" mode="multiply" result="blend"/>
-      <feComposite in="blend" in2="SourceGraphic" operator="in"/>
-    </filter>
+  <div class="stage-control" id="stageControl">
+    <button class="sc-btn" id="skipBtn">Skip Intro</button>
+    <button class="sc-btn" id="replayBtn">Replay Descent</button>
+  </div>
+</section>
 
-    <!-- Clip paths for territories -->
-    <clipPath id="clip-west"><rect x="0" y="0" width="560" height="700"/></clipPath>
-    <clipPath id="clip-east"><rect x="580" y="0" width="620" height="700"/></clipPath>
-  </defs>
-
-  <!-- ═══ OCEAN BASE ═══ -->
-  <rect width="1200" height="700" fill="url(#oceanGrad)"/>
-
-  <!-- Ocean texture overlay -->
-  <rect width="1200" height="700" fill="none" stroke="rgba(40,120,180,0.04)" stroke-width="0.5"/>
-
-  <!-- Subtle wave lines -->
-  <g stroke="rgba(40,100,160,0.06)" stroke-width="0.5" fill="none">
-    <path d="M560,200 Q575,190 590,200 Q605,210 620,200"/>
-    <path d="M545,240 Q562,230 580,240 Q598,250 615,240"/>
-    <path d="M550,280 Q570,270 590,280 Q610,290 630,280"/>
-    <path d="M548,320 Q568,310 588,320 Q608,330 628,320"/>
-    <path d="M552,360 Q572,350 592,360 Q612,370 632,360"/>
-    <path d="M555,400 Q575,390 595,400 Q615,410 635,400"/>
-    <path d="M620,160 Q640,152 660,160 Q680,168 700,160"/>
-    <path d="M625,190 Q648,180 670,190"/>
-  </g>
-
-  <!-- ═══════════════════════════════════════
-       WEST CONTINENT
-  ═══════════════════════════════════════ -->
-
-  <!-- ICE NATION — Northwest -->
-  <g class="territory t-ice" id="nation-ice"
-     onclick="selectNation('ice')"
-     onmouseenter="hoverNation('ice')"
-     onmouseleave="unhoverNation('ice')">
-    <path d="
-      M20,15 L180,15 L220,25 L260,20 L300,35 L320,30 L340,50
-      L360,55 L380,45 L390,65 L380,85 L360,95 L340,90
-      L320,105 L300,120 L280,115 L260,130 L240,125
-      L220,140 L200,135 L180,150 L160,145 L140,160
-      L120,155 L100,165 L80,155 L60,165 L40,158 L20,165
-      L15,140 L10,110 L8,80 L10,50 L15,30 Z
-    "/>
-  </g>
-
-  <!-- MOUNTAIN NATION — West -->
-  <g class="territory t-mountain" id="nation-mountain"
-     onclick="selectNation('mountain')"
-     onmouseenter="hoverNation('mountain')"
-     onmouseleave="unhoverNation('mountain')">
-    <path d="
-      M15,170 L40,162 L60,168 L80,158 L100,168 L120,158
-      L140,163 L160,148 L180,153 L200,138 L220,143
-      L240,128 L260,133 L280,118 L300,123 L320,108
-      L340,93 L358,98 L376,88 L392,68
-      L408,88 L420,110 L415,135 L425,155
-      L415,175 L408,200 L400,225 L390,250
-      L375,270 L355,285 L340,305 L325,320
-      L305,330 L285,340 L265,350 L245,360
-      L225,368 L205,372 L185,380 L165,385
-      L145,390 L125,388 L105,392 L85,388
-      L65,392 L45,388 L25,392 L15,385
-      L10,360 L8,330 L10,300 L8,270 L10,240
-      L8,210 L12,185 Z
-    "/>
-  </g>
-
-  <!-- SKY NATION — Central West -->
-  <g class="territory t-sky" id="nation-sky"
-     onclick="selectNation('sky')"
-     onmouseenter="hoverNation('sky')"
-     onmouseleave="unhoverNation('sky')">
-    <path d="
-      M395,70 L415,55 L440,45 L465,50 L490,42 L515,48
-      L538,42 L555,55 L558,75 L555,95 L548,115
-      L538,135 L525,155 L508,170 L490,182
-      L470,190 L450,195 L430,192 L412,200
-      L400,210 L390,228 L395,208 L400,188
-      L408,170 L412,150 L415,130 L418,108
-      L410,88 Z
-    "/>
-  </g>
-
-  <!-- DESERT NATION — Central -->
-  <g class="territory t-desert" id="nation-desert"
-     onclick="selectNation('desert')"
-     onmouseenter="hoverNation('desert')"
-     onmouseleave="unhoverNation('desert')">
-    <path d="
-      M265,355 L285,342 L305,333 L325,322 L342,308
-      L358,288 L375,272 L392,252 L402,228
-      L412,202 L415,178 L425,158 L418,138
-      L425,115 L432,94 L442,78 L455,68
-      L468,78 L480,92 L490,108 L498,128
-      L505,150 L510,172 L515,192 L518,212
-      L515,232 L510,252 L505,270 L498,288
-      L490,305 L480,320 L468,332 L455,342
-      L442,350 L428,356 L415,360 L400,364
-      L385,368 L368,370 L350,372 L332,374
-      L315,375 L298,375 L282,373 Z
-    "/>
-  </g>
-
-  <!-- FIRE NATION — South West (two regions) -->
-  <g class="territory t-fire" id="nation-fire"
-     onclick="selectNation('fire')"
-     onmouseenter="hoverNation('fire')"
-     onmouseleave="unhoverNation('fire')">
-    <!-- Main southern fire region -->
-    <path d="
-      M60,395 L85,390 L105,395 L125,390 L145,394
-      L165,388 L185,383 L205,375 L225,371
-      L245,363 L265,353 L283,376 L298,378
-      L315,378 L332,377 L350,375 L368,372
-      L385,371 L400,367 L415,363 L425,358
-      L435,370 L440,390 L445,412 L448,435
-      L445,458 L440,478 L432,498 L422,515
-      L408,528 L392,538 L375,545 L358,550
-      L340,552 L320,550 L302,545 L285,538
-      L268,528 L252,515 L238,500 L225,485
-      L212,468 L200,450 L188,432 L178,412
-      L165,395 L148,398 L128,396 L108,400
-      L88,396 L68,400 L48,396 L28,400
-      L18,388 L12,368 L18,350 L28,370 L42,382 Z
-    "/>
-    <!-- Coastal fire peninsula bottom left -->
-    <path d="
-      M20,405 L45,400 L55,415 L62,440 L68,462
-      L72,485 L70,505 L62,520 L50,528 L35,530
-      L22,525 L12,512 L8,495 L10,475 L12,455
-      L14,435 L16,418 Z
-    "/>
-  </g>
-
-  <!-- ═══════════════════════════════════════
-       EAST CONTINENT
-  ═══════════════════════════════════════ -->
-
-  <!-- CELESTIAL NATION — Northeast -->
-  <g class="territory t-celestial" id="nation-celestial"
-     onclick="selectNation('celestial')"
-     onmouseenter="hoverNation('celestial')"
-     onmouseleave="unhoverNation('celestial')">
-    <path d="
-      M820,15 L900,15 L960,20 L1010,28 L1055,38
-      L1085,52 L1105,68 L1118,88 L1125,110
-      L1120,132 L1110,150 L1095,165 L1075,175
-      L1052,180 L1028,178 L1005,172 L982,165
-      L958,158 L935,152 L912,148 L888,145
-      L865,148 L842,152 L820,158 L800,165
-      L782,175 L765,188 L750,202 L738,218
-      L728,235 L722,252 L718,270 L720,252
-      L724,234 L732,218 L742,203 L755,190
-      L770,178 L788,168 L808,158 L825,148
-      L840,138 L848,122 L850,105 L845,88
-      L835,72 L820,58 L808,42 Z
-    "/>
-  </g>
-
-  <!-- FLORA NATION — East central + northeast forests -->
-  <g class="territory t-flora" id="nation-flora"
-     onclick="selectNation('flora')"
-     onmouseenter="hoverNation('flora')"
-     onmouseleave="unhoverNation('flora')">
-    <!-- Main flora region -->
-    <path d="
-      M718,272 L722,254 L728,237 L738,220
-      L750,205 L765,192 L782,178 L800,168
-      L818,158 L840,140 L845,122 L848,105
-      L845,88 L835,72 L822,58 L808,42 L820,15
-      L800,20 L775,25 L748,28 L720,30 L695,28
-      L668,25 L645,30 L622,38 L602,50 L585,65
-      L572,82 L562,100 L558,118 L560,138
-      L565,158 L572,178 L580,198 L590,215
-      L602,230 L615,244 L628,256 L642,266
-      L656,274 L670,280 L684,284 L698,286 Z
-    "/>
-    <!-- Southern flora region -->
-    <path d="
-      M558,540 L575,530 L595,522 L618,516
-      L640,512 L662,510 L682,512 L700,518
-      L715,528 L725,542 L730,558 L728,575
-      L722,590 L710,602 L695,610 L678,615
-      L658,615 L638,612 L618,605 L600,595
-      L582,582 L568,568 Z
-    "/>
-  </g>
-
-  <!-- OCEAN NATION — Central channel + eastern coast -->
-  <g class="territory t-ocean" id="nation-ocean"
-     onclick="selectNation('ocean')"
-     onmouseenter="hoverNation('ocean')"
-     onmouseleave="unhoverNation('ocean')">
-    <!-- Central ocean islands/straits -->
-    <path d="
-      M560,140 L572,130 L585,122 L598,118
-      L610,120 L620,128 L625,140 L622,155
-      L612,165 L598,172 L582,175 L568,170
-      L558,162 Z
-    "/>
-    <!-- Eastern coastal ocean territory -->
-    <path d="
-      M1000,290 L1020,278 L1042,268 L1065,262
-      L1088,258 L1110,258 L1130,262 L1148,270
-      L1162,282 L1172,298 L1178,315 L1180,335
-      L1178,355 L1172,372 L1162,388 L1148,400
-      L1132,410 L1114,416 L1094,418 L1072,415
-      L1050,408 L1030,398 L1012,385 L998,370
-      L988,352 L982,332 L982,312 Z
-    "/>
-  </g>
-
-  <!-- DARK NATION — Southeast -->
-  <g class="territory t-dark" id="nation-dark"
-     onclick="selectNation('dark')"
-     onmouseenter="hoverNation('dark')"
-     onmouseleave="unhoverNation('dark')">
-    <path d="
-      M700,290 L718,274 L735,262 L752,252
-      L770,245 L790,240 L810,238 L830,240
-      L848,245 L864,252 L878,262 L888,275
-      L895,290 L898,308 L895,325 L888,342
-      L878,358 L865,372 L850,384 L832,394
-      L812,402 L792,408 L770,410 L748,408
-      L728,402 L710,392 L695,380 L682,366
-      L672,350 L665,332 L662,314 L665,298 Z
-    "/>
-    <!-- Dark southeastern peninsula -->
-    <path d="
-      M880,425 L900,415 L922,408 L945,405
-      L968,406 L990,410 L1008,418 L1022,430
-      L1030,446 L1032,462 L1028,478 L1018,492
-      L1005,504 L988,512 L968,516 L948,515
-      L928,510 L910,500 L895,488 L882,472
-      L874,455 L872,438 Z
-    "/>
-  </g>
-
-  <!-- ═══ ATMOSPHERE PARTICLES ═══ -->
-  <g class="particles-layer" id="particles">
-
-    <!-- Fire sparks — south west -->
-    <g id="fire-sparks">
-      <circle class="spark" cx="200" cy="480" r="1.5" style="--dx:-8px;--dy:-25px;animation-duration:3s;animation-delay:0s;"/>
-      <circle class="spark" cx="220" cy="500" r="1" style="--dx:5px;--dy:-30px;animation-duration:4s;animation-delay:.8s;"/>
-      <circle class="spark" cx="180" cy="510" r="1.5" style="--dx:-5px;--dy:-22px;animation-duration:3.5s;animation-delay:1.5s;"/>
-      <circle class="spark" cx="240" cy="470" r="1" style="--dx:8px;--dy:-28px;animation-duration:3.2s;animation-delay:2.2s;"/>
-      <circle class="spark" cx="160" cy="490" r="2" style="--dx:-3px;--dy:-18px;animation-duration:4.5s;animation-delay:.4s;"/>
-      <circle class="spark" cx="210" cy="455" r="1" style="--dx:6px;--dy:-32px;animation-duration:3.8s;animation-delay:3s;"/>
-      <circle class="spark" cx="260" cy="495" r="1.5" style="--dx:-7px;--dy:-20px;animation-duration:3.1s;animation-delay:1.2s;"/>
-      <circle class="spark" cx="290" cy="510" r="1" style="--dx:4px;--dy:-26px;animation-duration:4.2s;animation-delay:2.8s;"/>
-      <circle class="spark" cx="100" cy="470" r="1.5" style="--dx:-6px;--dy:-24px;animation-duration:3.6s;animation-delay:.6s;"/>
-    </g>
-
-    <!-- Ice flakes — northwest -->
-    <g id="ice-flakes">
-      <rect class="ice-flake" x="80" y="60" width="3" height="3" style="--dx:5px;--dy:15px;animation-duration:6s;animation-delay:0s;"/>
-      <rect class="ice-flake" x="140" y="80" width="2" height="2" style="--dx:-4px;--dy:12px;animation-duration:7s;animation-delay:1s;"/>
-      <rect class="ice-flake" x="200" y="55" width="3" height="3" style="--dx:6px;--dy:18px;animation-duration:5.5s;animation-delay:2s;"/>
-      <rect class="ice-flake" x="120" y="100" width="2" height="2" style="--dx:-5px;--dy:14px;animation-duration:6.5s;animation-delay:3s;"/>
-      <rect class="ice-flake" x="60" y="90" width="2.5" height="2.5" style="--dx:3px;--dy:16px;animation-duration:7.5s;animation-delay:.5s;"/>
-      <rect class="ice-flake" x="260" y="70" width="2" height="2" style="--dx:-6px;--dy:10px;animation-duration:6.2s;animation-delay:2.5s;"/>
-      <rect class="ice-flake" x="180" y="130" width="2.5" height="2.5" style="--dx:4px;--dy:12px;animation-duration:5.8s;animation-delay:1.5s;"/>
-    </g>
-
-    <!-- Aurora streaks — ice/celestial top -->
-    <g id="aurora-streaks">
-      <path class="aurora aurora-1" d="M50,40 Q120,20 200,35 Q280,50 340,30" style="animation-duration:5s;animation-delay:0s;"/>
-      <path class="aurora aurora-2" d="M60,55 Q150,35 240,48 Q320,62 380,45" style="animation-duration:6s;animation-delay:1.5s;"/>
-      <path class="aurora aurora-3" d="M40,68 Q130,50 220,62 Q300,75 355,58" style="animation-duration:7s;animation-delay:3s;"/>
-      <!-- Celestial auroras east -->
-      <path class="aurora aurora-1" d="M840,25 Q920,12 1000,22 Q1080,32 1130,18" style="animation-duration:5.5s;animation-delay:.8s;"/>
-      <path class="aurora aurora-2" d="M850,40 Q930,28 1010,38 Q1090,48 1140,35" style="animation-duration:6.5s;animation-delay:2.2s;"/>
-      <path class="aurora aurora-3" d="M830,55 Q915,43 998,52 Q1080,62 1135,50" style="animation-duration:8s;animation-delay:4s;"/>
-    </g>
-
-    <!-- Void tendrils — dark nation -->
-    <g id="void-tendrils">
-      <path class="void-tendril" d="M780,380 Q800,360 820,380 Q800,400 780,380Z" style="animation-duration:4s;animation-delay:0s;stroke-dasharray:30;"/>
-      <path class="void-tendril" d="M850,420 Q870,400 890,420 Q870,440 850,420Z" style="animation-duration:5s;animation-delay:1.5s;stroke-dasharray:30;"/>
-      <path class="void-tendril" d="M920,460 Q940,438 958,458 Q940,478 920,460Z" style="animation-duration:4.5s;animation-delay:.8s;stroke-dasharray:30;"/>
-      <path class="void-tendril" d="M760,340 Q785,318 805,338 Q785,358 760,340Z" style="animation-duration:6s;animation-delay:2s;stroke-dasharray:30;"/>
-    </g>
-
-    <!-- Forest wisps — flora -->
-    <g id="flora-wisps">
-      <path class="wisp" d="M660,240 Q670,230 680,240" style="animation-duration:4s;animation-delay:0s;"/>
-      <path class="wisp" d="M620,210 Q632,198 644,210" style="animation-duration:5s;animation-delay:1s;"/>
-      <path class="wisp" d="M700,260 Q712,248 724,260" style="animation-duration:4.5s;animation-delay:2s;"/>
-      <path class="wisp" d="M640,180 Q652,168 664,180" style="animation-duration:3.8s;animation-delay:.5s;"/>
-      <path class="wisp" d="M600,200 Q612,188 624,200" style="animation-duration:5.5s;animation-delay:1.8s;"/>
-    </g>
-
-  </g>
-
-  <!-- ═══ NATION LABELS ═══ -->
-  <g id="map-labels">
-    <text class="map-label" id="lbl-ice" x="160" y="90" text-anchor="middle" font-size="11">ICE</text>
-    <text class="map-label" id="lbl-mountain" x="140" y="310" text-anchor="middle" font-size="11">MOUNTAIN</text>
-    <text class="map-label" id="lbl-sky" x="478" y="130" text-anchor="middle" font-size="10">SKY</text>
-    <text class="map-label" id="lbl-desert" x="448" y="255" text-anchor="middle" font-size="10">DESERT</text>
-    <text class="map-label" id="lbl-fire" x="240" y="490" text-anchor="middle" font-size="11">FIRE</text>
-    <text class="map-label" id="lbl-celestial" x="940" y="95" text-anchor="middle" font-size="10">CELESTIAL</text>
-    <text class="map-label" id="lbl-flora" x="648" y="190" text-anchor="middle" font-size="10">FLORA</text>
-    <text class="map-label" id="lbl-ocean" x="590" y="148" text-anchor="middle" font-size="9">OCEAN</text>
-    <text class="map-label" id="lbl-dark" x="800" y="350" text-anchor="middle" font-size="11">DARK</text>
-  </g>
-
-  <!-- ═══ CAPITAL MARKERS ═══ -->
-  <g id="capital-markers">
-    <!-- Ice: Icehaven -->
-    <circle class="capital-dot" cx="155" cy="100" r="3"/>
-    <!-- Mountain: Drakenhold -->
-    <circle class="capital-dot" cx="135" cy="320" r="3"/>
-    <!-- Sky: Aerilon -->
-    <circle class="capital-dot" cx="475" cy="140" r="3"/>
-    <!-- Desert: Oasis of Amun-Re -->
-    <circle class="capital-dot" cx="445" cy="265" r="3"/>
-    <!-- Fire: Valyra -->
-    <circle class="capital-dot" cx="235" cy="500" r="3"/>
-    <!-- Celestial: Starspire -->
-    <circle class="capital-dot" cx="935" cy="108" r="3"/>
-    <!-- Flora: Sylvanhold -->
-    <circle class="capital-dot" cx="645" cy="205" r="3"/>
-    <!-- Ocean: Marisport -->
-    <circle class="capital-dot" cx="590" cy="152" r="3"/>
-    <!-- Dark: Shadowhold -->
-    <circle class="capital-dot" cx="795" cy="362" r="3"/>
-  </g>
-
-  <!-- ═══ COMPASS ROSE ═══ -->
-  <g id="compass" transform="translate(1140,640)">
-    <circle cx="0" cy="0" r="28" fill="none" stroke="rgba(212,184,150,0.2)" stroke-width="1"/>
-    <circle cx="0" cy="0" r="20" fill="none" stroke="rgba(212,184,150,0.1)" stroke-width="0.5"/>
-    <!-- N arrow -->
-    <polygon points="0,-26 -5,-10 5,-10" fill="rgba(212,184,150,0.5)"/>
-    <polygon points="0,26 -5,10 5,10" fill="rgba(212,184,150,0.2)"/>
-    <polygon points="-26,0 -10,-5 -10,5" fill="rgba(212,184,150,0.2)"/>
-    <polygon points="26,0 10,-5 10,5" fill="rgba(212,184,150,0.2)"/>
-    <circle cx="0" cy="0" r="4" fill="none" stroke="rgba(212,184,150,0.3)" stroke-width="1"/>
-    <circle cx="0" cy="0" r="1.5" fill="rgba(212,184,150,0.4)"/>
-    <text x="0" y="-32" text-anchor="middle" font-size="7" fill="rgba(212,184,150,0.5)" font-family="Jost,sans-serif" letter-spacing="0.1em">N</text>
-  </g>
-
-  <!-- Scale bar -->
-  <g transform="translate(30,670)">
-    <line x1="0" y1="0" x2="80" y2="0" stroke="rgba(212,184,150,0.25)" stroke-width="1"/>
-    <line x1="0" y1="-4" x2="0" y2="4" stroke="rgba(212,184,150,0.25)" stroke-width="1"/>
-    <line x1="80" y1="-4" x2="80" y2="4" stroke="rgba(212,184,150,0.25)" stroke-width="1"/>
-    <text x="40" y="-6" text-anchor="middle" font-size="6" fill="rgba(212,184,150,0.25)" font-family="Jost,sans-serif" letter-spacing="0.2em">SCALE</text>
-  </g>
-
-</svg>
-
-<!-- LEGEND -->
-<div class="legend" id="legend">
-  <div class="legend-item"><div class="legend-dot" style="background:#1A4060;"></div>Ice Nation</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#3A2A18;"></div>Mountain Nation</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#142040;"></div>Sky Nation</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#402808;"></div>Desert Nation</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#401008;"></div>Fire Nation</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#302008;"></div>Celestial Nation</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#0E2808;"></div>Flora Nation</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#0E2840;"></div>Ocean Nation</div>
-  <div class="legend-item"><div class="legend-dot" style="background:#200830;"></div>Dark Nation</div>
-</div>
-
-<!-- Hint -->
-<div class="map-hint" id="mapHint">Select a nation to explore</div>
-
-</div><!-- map-stage -->
-</div><!-- map-wrap -->
-
-<!-- INFO PANEL -->
-<div class="info-panel" id="infoPanel">
-  <div class="panel-inner">
-    <div class="panel-accent" id="panelAccent"></div>
-    <div class="panel-num" id="panelNum">I</div>
-    <div class="panel-content">
-      <span class="panel-tag" id="panelTag"></span>
-      <h2 class="panel-name" id="panelName"></h2>
-      <p class="panel-epithet" id="panelEpithet"></p>
-      <p class="panel-desc" id="panelDesc"></p>
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-card" id="revealCard">
+    <span class="rc-close" id="revealClose">✕ CLOSE</span>
+    <div class="rc-body">
+      <div class="rc-eyebrow" id="rcEyebrow">// REALM //</div>
+      <h2 class="rc-name" id="rcName">—</h2>
+      <div class="rc-title" id="rcTitle">—</div>
+      <div class="rc-meta">
+        <div class="rc-meta-item"><span class="rc-meta-label">Capital / Seat</span><div class="rc-meta-val" id="rcCapital">—</div></div>
+        <div class="rc-meta-item"><span class="rc-meta-label">Ruling Figure</span><div class="rc-meta-val" id="rcFigure">—</div></div>
+      </div>
+      <p class="rc-desc" id="rcDesc">—</p>
+      <a href="#" class="rc-link" id="rcLink">Enter the Realm →</a>
     </div>
-    <div class="panel-stats" id="panelStats"></div>
-    <div class="panel-actions" id="panelActions"></div>
-    <button class="panel-close" onclick="closePanel()">✕ Close</button>
   </div>
 </div>
+
+<section class="info-strip">
+  <div class="is-inner">
+    <div class="is-eyebrow">// THE MYTH OF ELUNAR //</div>
+    <h2 class="is-title">Nine stars fell from the void.<br><em>Where they struck, the Essence took root.</em></h2>
+    <p class="is-body">Before the nations, before the queens and gods, there was only the Celestial Aether — formless, unclaimed. When it fractured across the dark and fell to Elunar as nine burning stars, each impact seeded a different expression of that power into the land itself: fire into stone, frost into peak, shadow into hollow. The Nine Realms were not built. They were <em style="color:#E8B840;">struck into being.</em></p>
+  </div>
+</section>
+
+<footer><span class="fc">Nine Realms Universe — Elunar · The Nine Realms Interactive World · Original IP</span><span class="fc">Created by Ron</span></footer>
 
 <script>
 try{
-
-// ── Cursor ──
-const dot=document.getElementById('curDot');
-const ring=document.getElementById('curRing');
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
 let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{
-  mx=e.clientX;my=e.clientY;
-  dot.style.left=mx+'px';dot.style.top=my+'px';
-});
-(function loop(){
-  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
-  ring.style.left=rx+'px';ring.style.top=ry+'px';
-  requestAnimationFrame(loop);
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+
+const starCanvas=document.getElementById('starCanvas');
+const sctx=starCanvas.getContext('2d');
+let SW,SH,stars=[];
+function resizeStars(){SW=starCanvas.width=starCanvas.offsetWidth;SH=starCanvas.height=starCanvas.offsetHeight;}
+window.addEventListener('resize',resizeStars);resizeStars();
+for(let i=0;i<180;i++){stars.push({x:Math.random()*SW,y:Math.random()*SH,r:Math.random()*1.3+.2,tw:Math.random()*Math.PI*2,sp:Math.random()*.02+.005});}
+(function animStars(){
+  sctx.clearRect(0,0,SW,SH);
+  stars.forEach(s=>{
+    s.tw+=s.sp;
+    const a=(Math.sin(s.tw)+1)/2*.7+.2;
+    sctx.beginPath();sctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    sctx.fillStyle=`rgba(220,225,240,${a})`;sctx.fill();
+  });
+  requestAnimationFrame(animStars);
 })();
 
-// ── Nation Data ──
-const NATIONS = {
-  ice: {
-    num:'I', tag:'Ice Nation · Eternal Frost',
-    name:'The Eternal Frost',
-    epithet:'Where winter never ends and the cold is both weapon and shield',
-    desc:'A land of glaciers, aurora-lit skies, and ice mages whose power rivals any army. Glaciana, Frostreach, and Borealis each hold a different relationship with the cold — as fortress, as wasteland, as sacred beauty.',
-    biome:'Glacial tundra · Ice peaks · Aurora fields',
-    capital:'Icehaven (Glaciana)',
-    magic:'Ice sorcery · Frost barriers',
-    accent:'#60B0D8',
-    stats:[
-      {label:'Biome',val:'Frozen Tundra · Aurora Fields'},
-      {label:'Capital',val:'Icehaven'},
-      {label:'Magic',val:'Ice Sorcery · Frost Barriers'},
-      {label:'States',val:'Glaciana · Frostreach · Borealis'},
-    ]
-  },
-  mountain: {
-    num:'II', tag:'Mountain Nation · Dragon Peaks',
-    name:'The Dragon Peaks',
-    epithet:'Indomitable fortresses carved into the highest peaks of the known world',
-    desc:'Dragon riders train in cold winds above the clouds. Drakenheim, Tauron, and Valkyris are bound by an unyielding spirit — and by the ancient alliance with the Fire Nation that King Sorynn fights to restore.',
-    accent:'#907860',
-    stats:[
-      {label:'Biome',val:'Alpine Peaks · Dragon Valleys'},
-      {label:'Capital',val:'Drakenhold'},
-      {label:'Magic',val:'Dragon Bonding · Stone Fortification'},
-      {label:'States',val:'Drakenheim · Tauron · Valkyris'},
-    ]
-  },
-  sky: {
-    num:'III', tag:'Sky Nation · Aetherian Reaches',
-    name:'The Aetherian Reaches',
-    epithet:'Freedom, intelligence, and aerial supremacy above the clouds',
-    desc:'Floating islands suspended by wind magic drift above the tundra. Darrius of Aerilon commands skyships and wind temples. Stratos houses the greatest scholars in the Nine Realms. The sky is not empty here — it is populated.',
-    accent:'#4888C0',
-    stats:[
-      {label:'Biome',val:'Floating Islands · Cold Tundra'},
-      {label:'Capital',val:'Aerilon (Aetheria)'},
-      {label:'Magic',val:'Wind Magic · Aerial Navigation'},
-      {label:'States',val:'Aetheria · Zephyra · Stratos'},
-    ]
-  },
-  desert: {
-    num:'IV', tag:'Desert Nation · Golden Sands',
-    name:'The Golden Sands of Amun-Re',
-    epithet:'Vast wealth, ancient mysticism, and the prophecy of divine rulership',
-    desc:'King Orious pursues the ancient prophecy of Amun-Re — to become Divine Ruler of all Nine Realms. His kingdom controls pure water wells, gold mines, and desert mages who guard the oldest secrets in known history.',
-    accent:'#C89830',
-    stats:[
-      {label:'Biome',val:'Vast Desert · Oases · Canyons'},
-      {label:'Capital',val:'Oasis of Amun-Re'},
-      {label:'Magic',val:'Desert Mysticism · Ancient Rites'},
-      {label:'States',val:'Amun-Re · Saharae · Khemara'},
-    ]
-  },
-  fire: {
-    num:'V', tag:'Fire Nation · Emberous Dominion',
-    name:'The Emberous Dominion',
-    epithet:'Born of sacrifice. Burdened by destiny. Defined by fire.',
-    desc:'Queen Calypso of Ashura rules over volcanic landscapes and military supremacy. The Emberfall Accord threatens catastrophic eruption. The Secret Infernal Order rises. The Sibyl sisters of Valyra carry a legacy no prophecy can contain.',
-    accent:'#C84020',
-    stats:[
-      {label:'Biome',val:'Volcanoes · Lava Fields · Ash Plains'},
-      {label:'Capital',val:'Valyra (Ashura)'},
-      {label:'Magic',val:'Fire Magic · Volcanic Forging'},
-      {label:'States',val:'Ashura · Ignis · Cindara'},
-    ]
-  },
-  celestial: {
-    num:'VI', tag:'Celestial Nation · Heavenly Dominion',
-    name:'The Heavenly Dominion',
-    epithet:'Where the stars and heavens guide all things — prophecy is the only truth',
-    desc:'From Starspire\'s oracle plateau to Moonshadow\'s blessed rulers, the divine speaks through every soul born under these skies. The Celestial Nation stands in eternal opposition to the Dark — and its oracles see further than any would wish.',
-    accent:'#C8A830',
-    stats:[
-      {label:'Biome',val:'High Plateaus · Starfields · Sacred Groves'},
-      {label:'Capital',val:'Starspire (Astraea)'},
-      {label:'Magic',val:'Prophecy · Stellar Divination · Solar Power'},
-      {label:'States',val:'Astraea · Sol · Lunar'},
-    ]
-  },
-  flora: {
-    num:'VII', tag:'Flora Nation · Ancient Woodland',
-    name:'The Ancient Woodland Realm',
-    epithet:'Harmony, wisdom, and the spiritual connection that binds all living things',
-    desc:'Ancient forests where druids thrive and nature spirits walk openly. Queen Seraphina rules Verdantia — the birthplace of Lady Crysen\'s father. From the towering trees of Arborea to the flowering meadows of Petalbloom, the Flora Nation remembers everything.',
-    accent:'#489838',
-    stats:[
-      {label:'Biome',val:'Ancient Forests · Sacred Groves · Jungles'},
-      {label:'Capital',val:'Sylvanhold (Verdantia)'},
-      {label:'Magic',val:'Nature Magic · Druid Communion · Earth Binding'},
-      {label:'States',val:'Verdantia · Arborea · Floria'},
-    ]
-  },
-  ocean: {
-    num:'VIII', tag:'Ocean Nation · Thalassic Depths',
-    name:'The Thalassic Depths',
-    epithet:'Fluidity, adaptability, and mastery over the deep',
-    desc:'Queen Nxia rules Thalassara — a kingdom split above and below the waves. Marisport is both a port city and an underwater metropolis. In the deepest waters of Pelagia, ancient water spirits guard secrets no surface-dweller has ever seen.',
-    accent:'#2878A8',
-    stats:[
-      {label:'Biome',val:'Open Seas · Coral Reefs · Coastal Plains'},
-      {label:'Capital',val:'Marisport (Thalassara)'},
-      {label:'Magic',val:'Water Sorcery · Tidal Control · Healing'},
-      {label:'States',val:'Thalassara · Nereidia · Pelagia'},
-    ]
-  },
-  dark: {
-    num:'IX', tag:'Dark Nation · The Shadow Courts',
-    name:'The Shadow Courts',
-    epithet:'Eight kingdoms. Eight disciplines. One nation bound by darkness.',
-    desc:'Nyxaleth\'s eternal night. Sablea\'s ebony towers. Noctura\'s moonlit ruins. Erebos\' necromancers. Umbraeth\'s blood magic. Vanthelon\'s abyssal pits. Morvanna\'s wraithlands. Tenebris\' shadowforged constructs. Queen Vesper\'s court controls all.',
-    accent:'#7030A0',
-    stats:[
-      {label:'Biome',val:'Eternal Night · Twilight Forests · Marshlands'},
-      {label:'Capital',val:'Ebonyspire (Sablea)'},
-      {label:'Magic',val:'Shadow · Void · Necromancy · Blood · Lunar · Alchemy'},
-      {label:'Kingdoms',val:'8 Kingdoms · 8 Magic Disciplines'},
-    ]
-  },
-};
+const REALMS=[
+  {id:'fire',      name:'Ashura',      title:'The Fire Realm',      x:75.6, y:70.4, color:'#E85A28', capital:'Ashura City · Ten City-States', figure:'Solara Valyrix, Grand Sorceress', desc:"Born from the star that struck deepest — a realm of flame-forged dynasty, the Ashen Phoenix, and the Infernal Order's hidden war beneath a golden throne.", link:'ashura-nation.html'},
+  {id:'ocean',     name:'Thalassara',  title:'The Ocean Realm',     x:77.0, y:53.4, color:'#3898D8', capital:'The Tidal Court', figure:'Queen Nxia, Voice of Restraint', desc:"The youngest queen's domain — where diplomacy runs as deep as the current, and the Tidal Essence answers to patience rather than command.", link:'sybil-sisters.html'},
+  {id:'mountain',  name:'Drakenheim',  title:'The Mountain Realm',  x:24.5, y:56.6, color:'#C88840', capital:'The Dragon Fleet Aeries', figure:'Draven, the Shadow Seeker', desc:"Home to the Bronze Dragon Caste and Noctyss the Soulflame Dragon — a realm of stone, sky, and the eternal watch between two nations at war.", link:'draven.html'},
+  {id:'flora',     name:'Verdantia',   title:'The Flora Realm',     x:48.7, y:38.7, color:'#4CA850', capital:'The Verdant Canopy', figure:'Queen Thorne, the Quiet Blade', desc:"Where cunning grows as thick as the forest itself — Thorne's coalition-building and the Verdant Spirit's patient, expanding reach.", link:'sybil-sisters.html'},
+  {id:'ice',       name:'Glaciana',    title:'The Ice Realm',       x:24.5, y:31.8, color:'#78C8E8', capital:'The Frostbound Reaches', figure:'The Frostbound Essence', desc:"Clarity, discipline, and preservation given form in permafrost — a realm whose strategic silence conceals absolute resolve.", link:'essence-resonance.html'},
+  {id:'desert',    name:'Amun-Re',     title:'The Desert Realm',    x:38.3, y:65.8, color:'#E8B858', capital:'The Sandstorm Reaches', figure:'King Orious, the Divine Ruler', desc:"A realm of prophecy and endurance, where the Sandstorm Force shapes both land and legend beneath a self-proclaimed destiny.", link:'essence-resonance.html'},
+  {id:'sky',       name:'Aetheria',    title:'The Sky Realm',       x:20.0, y:47.9, color:'#98C8E0', capital:'The Floating Reaches', figure:'The Aetherial Wind', desc:"Freedom given altitude — a realm of visionaries and idealists who measure sovereignty in open air rather than open ground.", link:'essence-resonance.html'},
+  {id:'dark',      name:'Sablea',      title:'The Dark Nation',     x:42.1, y:85.2, color:'#9848C8', capital:'The Southern Ebony Tower', figure:'Queen Vesper & Queen Vashti', desc:"Eight kingdoms of shadow and ambition — blood magic, forbidden pacts, and the Sisters of Ira's quiet war beneath every throne.", link:'sablea-city.html'},
+  {id:'celestial', name:'Astraea',     title:'The Celestial Realm', x:74.9, y:31.3, color:'#F0D888', capital:"The Divine Light's Seat", figure:'The Custodians of the Aether', desc:'The source realm — origin of the Celestial Aether itself, and the only nation that predates the eight stars that followed it down.', link:'essence-resonance.html'}
+];
 
-// ── State ──
-let activeNation = null;
-let hovered = null;
-const allTerritories = document.querySelectorAll('.territory');
+const layer=document.getElementById('hotspotLayer');
+REALMS.forEach(r=>{
+  const hs=document.createElement('div');
+  hs.className='hotspot hidden-pre';
+  hs.style.left=r.x+'%';hs.style.top=r.y+'%';hs.style.setProperty('--rc',r.color);
+  hs.dataset.id=r.id;
+  hs.innerHTML=`<div class="hs-ring2"></div><div class="hs-ring"></div><div class="hs-core"></div><div class="hs-label"><span class="hsl-name">${r.name}</span><span class="hsl-title">${r.title}</span></div>`;
+  hs.addEventListener('click',()=>openReveal(r));
+  hs.addEventListener('mouseenter',()=>ring.classList.add('lit'));
+  hs.addEventListener('mouseleave',()=>ring.classList.remove('lit'));
+  layer.appendChild(hs);
+});
 
-// ── Hover ──
-function hoverNation(id){
-  if(activeNation && activeNation!==id) return;
-  hovered=id;
-  document.getElementById('nation-'+id).classList.add('hovered');
-  document.getElementById('curRing').classList.add('hovering');
-  const lbl=document.getElementById('lbl-'+id);
-  if(lbl) lbl.classList.add('bright');
+const overlay=document.getElementById('revealOverlay');
+const planetWrap=document.getElementById('planetWrap');
+function openReveal(r){
+  document.getElementById('rcEyebrow').textContent='// '+r.title.toUpperCase()+' //';
+  document.getElementById('rcName').textContent=r.name;
+  document.getElementById('rcTitle').textContent=r.title;
+  document.getElementById('rcCapital').textContent=r.capital;
+  document.getElementById('rcFigure').textContent=r.figure;
+  document.getElementById('rcDesc').textContent=r.desc;
+  const link=document.getElementById('rcLink');
+  link.href=r.link;link.style.setProperty('--rc',r.color);
+  document.getElementById('revealCard').style.setProperty('--rc',r.color);
+  planetWrap.classList.add('zoomed');
+  overlay.classList.add('open');
 }
-function unhoverNation(id){
-  hovered=null;
-  if(activeNation===id) return;
-  document.getElementById('nation-'+id).classList.remove('hovered');
-  document.getElementById('curRing').classList.remove('hovering');
-  const lbl=document.getElementById('lbl-'+id);
-  if(lbl) lbl.classList.remove('bright');
-}
+function closeReveal(){overlay.classList.remove('open');planetWrap.classList.remove('zoomed');}
+document.getElementById('revealClose').addEventListener('click',closeReveal);
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeReveal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeReveal();});
 
-// ── Select ──
-function selectNation(id){
-  if(activeNation===id){ closePanel(); return; }
+const stage=document.getElementById('stage');
+const stageTitle=document.getElementById('stageTitle');
+const stageControl=document.getElementById('stageControl');
+const allHotspots=()=>document.querySelectorAll('.hotspot');
 
-  // Dim all others
-  allTerritories.forEach(t=>{
-    t.classList.remove('hovered');
-    t.classList.add('dimmed');
+function runIntro(){
+  const rect=planetWrap.getBoundingClientRect();
+  const stageRect=stage.getBoundingClientRect();
+  stageTitle.classList.add('show');
+  REALMS.forEach((r,i)=>{
+    setTimeout(()=>{
+      const targetX=rect.left-stageRect.left+(r.x/100)*rect.width;
+      const targetY=rect.top-stageRect.top+(r.y/100)*rect.height;
+      const startX=targetX+(Math.random()*160-80);
+      const startY=-140;
+      const comet=document.createElement('div');
+      comet.className='comet';
+      comet.style.background=`linear-gradient(to bottom, transparent, ${r.color})`;
+      comet.style.boxShadow=`0 0 12px ${r.color}`;
+      comet.style.left=startX+'px';comet.style.top=startY+'px';
+      const angle=Math.atan2(targetY-startY,targetX-startX)*180/Math.PI-90;
+      comet.style.transform=`rotate(${angle}deg)`;
+      stage.appendChild(comet);
+      comet.animate([
+        {top:startY+'px',left:startX+'px',opacity:0},
+        {opacity:1,offset:0.08},
+        {top:targetY+'px',left:targetX+'px',opacity:1}
+      ],{duration:900,easing:'cubic-bezier(.55,0,.85,.35)'}).onfinish=()=>{
+        comet.remove();
+        const flash=document.createElement('div');
+        flash.className='impact-flash';
+        flash.style.left=targetX+'px';flash.style.top=targetY+'px';
+        flash.style.background=`radial-gradient(circle,#fff 0%,${r.color} 40%,transparent 75%)`;
+        stage.appendChild(flash);
+        flash.animate([
+          {opacity:1,width:'10px',height:'10px'},
+          {opacity:0,width:'160px',height:'160px'}
+        ],{duration:600,easing:'ease-out'}).onfinish=()=>flash.remove();
+        const hs=document.querySelector(`.hotspot[data-id="${r.id}"]`);
+        if(hs)hs.classList.remove('hidden-pre');
+      };
+    }, i*280);
   });
-
-  // Illuminate selected
-  const el=document.getElementById('nation-'+id);
-  el.classList.remove('dimmed');
-  el.classList.add('hovered');
-  activeNation=id;
-
-  // Dim hint
-  document.getElementById('mapHint').style.opacity='0';
-  document.getElementById('legend').style.opacity='0.2';
-
-  // Populate panel
-  const n=NATIONS[id];
-  document.getElementById('panelNum').textContent=n.num;
-  document.getElementById('panelTag').textContent=n.tag;
-  document.getElementById('panelName').textContent=n.name;
-  document.getElementById('panelEpithet').textContent=n.epithet;
-  document.getElementById('panelDesc').textContent=n.desc;
-  document.getElementById('panelAccent').style.background=n.accent;
-  document.getElementById('panelTag').style.color=n.accent;
-  document.getElementById('panelNum').style.color=n.accent;
-
-  // Stats
-  const statsEl=document.getElementById('panelStats');
-  statsEl.innerHTML=n.stats.map(s=>`
-    <div class="panel-stat-item">
-      <div class="panel-stat-label">${s.label}</div>
-      <div class="panel-stat-val">${s.val}</div>
-    </div>
-  `).join('');
-
-  // Actions
-  const actEl=document.getElementById('panelActions');
-  actEl.innerHTML=`
-    <a href="nine-realms-hub.html#realms" class="panel-link primary">Explore Nation</a>
-    <a href="nine-realms-hub.html#chronicle" class="panel-link">View Lore</a>
-  `;
+  setTimeout(()=>{stageControl.classList.add('show');}, REALMS.length*280+700);
 }
-}catch(e){console.warn("Map script:",e.message);}
-</script>
 
+function skipIntro(){
+  allHotspots().forEach(h=>h.classList.remove('hidden-pre'));
+  stageTitle.classList.add('show');
+  stageControl.classList.add('show');
+  document.querySelectorAll('.comet,.impact-flash').forEach(el=>el.remove());
+}
+
+document.getElementById('skipBtn').addEventListener('click',skipIntro);
+document.getElementById('replayBtn').addEventListener('click',()=>{
+  allHotspots().forEach(h=>h.classList.add('hidden-pre'));
+  document.querySelectorAll('.comet,.impact-flash').forEach(el=>el.remove());
+  runIntro();
+});
+
+if(sessionStorage.getItem('elunar_intro_seen')){
+  skipIntro();
+}else{
+  setTimeout(runIntro,400);
+  sessionStorage.setItem('elunar_intro_seen','1');
+}
+
+}catch(e){console.warn("Script:",e.message);}
+</script>
 <!-- ═══════════════════════════════════════
      UNIVERSAL NINE REALMS LORE NAVIGATOR
 ═══════════════════════════════════════ -->
@@ -1104,6 +365,8 @@ function selectNation(id){
       <span class="nr-section-label" style="color:rgba(64,160,80,0.6);border-color:rgba(64,160,80,0.12);">◈ World · Foundation</span>
       <a href="essence-resonance.html" class="nr-link"><div class="nr-link-icon">✦</div><div class="nr-link-text"><span class="nr-link-name">Essence &amp; Resonance</span><span class="nr-link-desc">The power system · Celestial Aether · Umbral Essence · Nine elemental sources · Three disciplines</span></div><span class="nr-link-arrow">→</span></a>
       <a href="chronicles-registry.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">Chronicles Registry</span><span class="nr-link-desc">Canonical birth years · ages · Volume I timeline · 17 characters</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="characters.html" class="nr-link"><div class="nr-link-icon">🎭</div><div class="nr-link-text"><span class="nr-link-name">All Characters</span><span class="nr-link-desc">Complete character index — every name, one click away</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="lore.html" class="nr-link"><div class="nr-link-icon">📖</div><div class="nr-link-text"><span class="nr-link-name">Lore &amp; Settings</span><span class="nr-link-desc">Magic systems, sacred places, and nation profiles</span></div><span class="nr-link-arrow">→</span></a>
       <a href="nine-realms-hub.html" class="nr-link"><div class="nr-link-icon">🌐</div><div class="nr-link-text"><span class="nr-link-name">The Hub</span><span class="nr-link-desc">Main entry — all nine nations, featured characters, story arcs</span></div><span class="nr-link-arrow">→</span></a>
       <a href="nine-realms-map.html" class="nr-link"><div class="nr-link-icon">🗺</div><div class="nr-link-text"><span class="nr-link-name">World Map</span><span class="nr-link-desc">Interactive SVG map — click any nation to explore</span></div><span class="nr-link-arrow">→</span></a>
       <a href="nine-realms-story-arcs.html" class="nr-link"><div class="nr-link-icon">📜</div><div class="nr-link-text"><span class="nr-link-name">All 12 Story Arcs</span><span class="nr-link-desc">Complete chronicle — Emberfall Accord through Ashen Phoenix</span></div><span class="nr-link-arrow">→</span></a>
@@ -1146,6 +409,13 @@ function selectNation(id){
       <a href="lady-nyxara.html" class="nr-link"><div class="nr-link-icon">◆</div><div class="nr-link-text"><span class="nr-link-name">Lady Nyxara of Tenebris</span><span class="nr-link-desc">Ruler of Tenebris · Aetherium Suite · Scholar turned Sovereign · Zyphor &amp; Kyphos · Post-1355</span></div><span class="nr-link-arrow">→</span></a>
       <a href="duke-valtor.html" class="nr-link"><div class="nr-link-icon">⚙</div><div class="nr-link-text"><span class="nr-link-name">Duke Valtor of Vanthelon</span><span class="nr-link-desc">Oathkeeper · Iron Kingdom of Cursed Souls · Pre-1355 · Zyphor &amp; Kyphos's father</span></div><span class="nr-link-arrow">→</span></a>
       <a href="new-sablea.html" class="nr-link"><div class="nr-link-icon">🏙</div><div class="nr-link-text"><span class="nr-link-name">New Sablea</span><span class="nr-link-desc">The Underworld Perdition · future timeline · Ironforge Realm teaser</span></div><span class="nr-link-arrow">→</span></a>
+    </div>
+    <div class="nr-section">
+      <span class="nr-section-label" style="color:rgba(140,40,150,0.6);border-color:rgba(140,40,150,0.15);">⛓ Factions &amp; Incidents</span>
+      <a href="sisters-of-ira.html" class="nr-link"><div class="nr-link-icon">🩸</div><div class="nr-link-text"><span class="nr-link-name">The Sisters of Ira</span><span class="nr-link-desc">Faction Codex · Selena's cult · vessel logic · Council of Shadows</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="sisters-of-ytixus.html" class="nr-link"><div class="nr-link-icon">☥</div><div class="nr-link-text"><span class="nr-link-name">The Sisters of Ytixus</span><span class="nr-link-desc">Verified Faith · rival order to the Sisters of Ira</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="the-unchosen-ones.html" class="nr-link"><div class="nr-link-icon">🗝</div><div class="nr-link-text"><span class="nr-link-name">The Unchosen Ones</span><span class="nr-link-desc">Sister Maeryth Vonn · the Veltryn Stone extraction mission gone wrong</span></div><span class="nr-link-arrow">→</span></a>
+      <a href="veltryn-null.html" class="nr-link"><div class="nr-link-icon">⛓</div><div class="nr-link-text"><span class="nr-link-name">Veltryn Null</span><span class="nr-link-desc">The First Continuum Directorate · the sealed colony around the artifact</span></div><span class="nr-link-arrow">→</span></a>
     </div>
   </div>
   <div class="nr-footer">Nine Realms Universe · Original IP<br>Created by Ron</div>
