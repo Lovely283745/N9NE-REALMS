@@ -45,25 +45,71 @@ body{background:var(--void);color:var(--parch);font-family:'EB Garamond',serif;o
 body::before{content:'';position:fixed;top:0;left:0;right:0;height:50vh;z-index:0;pointer-events:none;background:radial-gradient(ellipse 50% 60% at 50% 0%,rgba(144,96,0,0.05) 0%,transparent 60%);}
 body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;opacity:0.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px;}
 
-/* HEADER */
-.site-header{
-  position:relative;z-index:1;
-  padding:80px 60px 60px;
-  text-align:center;
-  background:linear-gradient(180deg,#180E04 0%,#0C0A10 60%,var(--void) 100%);
-  border-bottom:1px solid rgba(200,136,32,0.12);
-}
-.sh-eyebrow{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--gold-mid);opacity:0.6;letter-spacing:0.08em;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:12px;}
-.sh-eyebrow::before,.sh-eyebrow::after{content:'';display:block;width:40px;height:1px;background:linear-gradient(to right,transparent,rgba(200,136,32,0.3));}
+/* CURSOR */
+body{cursor:none;}
+.cur{position:fixed;pointer-events:none;z-index:9999;}
+.cur-dot{width:4px;height:4px;background:var(--gold-bright);border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{width:26px;height:26px;border:1px solid rgba(232,176,64,.35);border-radius:50%;transform:translate(-50%,-50%);transition:.4s cubic-bezier(.16,1,.3,1);}
+.cur-ring.lit{width:50px;height:50px;border-color:var(--gold-bright);box-shadow:0 0 18px rgba(232,176,64,.35);}
+@media(max-width:768px){body{cursor:auto;}.cur{display:none;}}
+
+/* ═══ CINEMATIC STAGE HEADER ═══ */
+.stage{position:relative;width:100%;height:88vh;min-height:560px;overflow:hidden;background:#02030A;}
+#starCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
+.planet-wrap{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:min(1500px,150vw);aspect-ratio:1448/1086;z-index:2;transition:transform 1.4s cubic-bezier(.16,1,.3,1),filter 1.4s ease;}
+.planet-wrap.zoomed{transform:translate(-50%,-50%) scale(1.55);filter:brightness(.7) saturate(1.1);}
+.planet-img{width:100%;height:100%;object-fit:cover;display:block;filter:drop-shadow(0 0 120px rgba(120,140,200,0.15));}
+.hotspot-layer{position:absolute;inset:0;z-index:3;}
+.hotspot{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;cursor:none;}
+.hs-core{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,var(--rc,#E8B840) 0%,transparent 70%);opacity:.85;animation:hsPulse 3s ease-in-out infinite;}
+.hs-ring{position:absolute;inset:-8px;border-radius:50%;border:1px solid var(--rc,#E8B840);opacity:.5;animation:hsRing 3s ease-in-out infinite;}
+.hs-ring2{position:absolute;inset:-16px;border-radius:50%;border:1px solid var(--rc,#E8B840);opacity:0;transition:opacity .4s ease;}
+.hotspot:hover .hs-ring2{opacity:.35;}
+.hotspot:hover .hs-core{opacity:1;transform:scale(1.3);}
+@keyframes hsPulse{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.15);}}
+@keyframes hsRing{0%,100%{transform:scale(1);opacity:.5;}50%{transform:scale(1.4);opacity:.15;}}
+.hotspot.hidden-pre{opacity:0;pointer-events:none;}
+.hs-label{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(6px);white-space:nowrap;padding:7px 14px;background:rgba(3,4,12,.92);border:1px solid var(--rc,#E8B840);opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s ease;}
+.hotspot:hover .hs-label{opacity:1;transform:translateX(-50%) translateY(0);}
+.hsl-name{font-size:12px;letter-spacing:.08em;color:var(--parch-pale);display:block;}
+.hsl-title{font-family:'Courier New',monospace;font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--rc,#E8B840);opacity:.8;display:block;margin-top:2px;}
+.comet{position:absolute;z-index:4;pointer-events:none;width:3px;height:100px;border-radius:2px;transform-origin:top center;opacity:0;}
+.impact-flash{position:absolute;z-index:5;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;}
+.stage-title{position:absolute;top:13%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;pointer-events:none;opacity:0;transition:opacity 1.5s ease;padding:0 24px;}
+.stage-title.show{opacity:1;}
+.sh-eyebrow{font-family:'Courier New',monospace;font-size:10px;color:var(--gold-mid);opacity:0.75;letter-spacing:0.35em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:12px;}
+.sh-eyebrow::before,.sh-eyebrow::after{content:'';display:block;width:32px;height:1px;background:linear-gradient(to right,transparent,rgba(200,136,32,0.3));}
 .sh-eyebrow::after{transform:scaleX(-1);}
 .sh-title{font-family:'Cinzel Decorative',serif;font-size:clamp(32px,6vw,80px);font-weight:900;color:var(--parch-pale);letter-spacing:0.04em;line-height:0.9;text-shadow:0 0 80px rgba(200,136,32,0.3),0 4px 40px rgba(0,0,0,0.8);margin-bottom:10px;}
-.sh-subtitle{font-family:'Cinzel',serif;font-size:clamp(10px,1.5vw,16px);letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-bright);opacity:0.7;margin-bottom:20px;display:block;}
-.sh-rule{width:200px;height:1px;background:linear-gradient(to right,transparent,rgba(200,136,32,0.4),transparent);margin:0 auto 24px;}
-.sh-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(15px,1.8vw,19px);color:rgba(176,168,160,0.45);max-width:640px;margin:0 auto 36px;line-height:1.8;}
-.sh-meta{display:flex;gap:36px;justify-content:center;flex-wrap:wrap;}
+.sh-subtitle{font-family:'Cinzel',serif;font-size:clamp(10px,1.5vw,16px);letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-bright);opacity:0.7;margin-bottom:16px;display:block;}
+.sh-desc{font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.6vw,17px);color:rgba(200,204,216,0.5);max-width:560px;margin:0 auto;line-height:1.75;}
+.sh-meta{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin-top:20px;pointer-events:auto;}
 .shm-item{text-align:center;}
-.shm-val{font-family:'Cinzel Decorative',serif;font-size:clamp(18px,2.5vw,28px);color:var(--gold-bright);display:block;line-height:1;}
+.shm-val{font-family:'Cinzel Decorative',serif;font-size:clamp(16px,2.2vw,24px);color:var(--gold-bright);display:block;line-height:1;}
 .shm-label{font-family:'Cinzel',serif;font-size:7px;letter-spacing:0.35em;text-transform:uppercase;color:var(--parch-dim);margin-top:4px;display:block;opacity:0.6;}
+.stage-control{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:7;display:flex;gap:10px;opacity:0;transition:opacity 1s ease;}
+.stage-control.show{opacity:1;}
+.sc-btn{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--parch-dim);border:1px solid rgba(200,136,32,.15);background:rgba(3,4,12,.5);padding:8px 16px;cursor:none;transition:border-color .3s,color .3s;}
+.sc-btn:hover{border-color:var(--gold-bright);color:var(--gold-bright);}
+.reveal-overlay{position:fixed;inset:0;z-index:8500;display:flex;align-items:center;justify-content:center;background:rgba(3,4,8,0);pointer-events:none;transition:background .5s ease;padding:24px;}
+.reveal-overlay.open{background:rgba(3,4,8,.8);pointer-events:auto;backdrop-filter:blur(4px);}
+.reveal-card{max-width:600px;width:100%;background:linear-gradient(160deg,rgba(10,8,4,.98) 0%,rgba(5,4,2,.98) 100%);border:1px solid var(--rc,#E8B840);position:relative;overflow:hidden;transform:scale(.9) translateY(30px);opacity:0;transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .5s ease;}
+.reveal-overlay.open .reveal-card{transform:scale(1) translateY(0);opacity:1;}
+.reveal-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--rc,#E8B840),transparent);}
+.rc-close{position:absolute;top:16px;right:18px;font-family:'Courier New',monospace;font-size:10px;color:var(--parch-dim);cursor:none;z-index:2;letter-spacing:.1em;transition:color .3s;}
+.rc-close:hover{color:var(--parch-pale);}
+.rc-body{position:relative;z-index:1;padding:36px 32px 32px;}
+.rc-eyebrow{font-family:'Courier New',monospace;font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--rc,#E8B840);opacity:.75;margin-bottom:12px;}
+.rc-name{font-family:'Cinzel Decorative',serif;font-size:clamp(22px,3.2vw,34px);font-weight:900;color:var(--parch-pale);letter-spacing:.04em;line-height:1;margin-bottom:6px;}
+.rc-title{font-style:italic;font-size:12.5px;color:rgba(200,204,216,.5);margin-bottom:18px;}
+.rc-meta{display:flex;gap:0;border:1px solid rgba(200,204,216,.1);margin-bottom:16px;}
+.rc-meta-item{flex:1;padding:10px 13px;border-right:1px solid rgba(200,204,216,.08);}
+.rc-meta-item:last-child{border-right:none;}
+.rc-meta-label{font-family:'Courier New',monospace;font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--parch-dim);display:block;margin-bottom:4px;}
+.rc-meta-val{font-size:12px;color:var(--parch-pale);}
+.rc-desc{font-style:italic;font-size:13.5px;color:rgba(200,204,216,.65);line-height:1.75;margin-bottom:22px;}
+.rc-link{display:inline-flex;align-items:center;gap:9px;font-family:'Courier New',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--void);background:var(--rc,#E8B840);padding:12px 22px;text-decoration:none;transition:filter .3s;}
+.rc-link:hover{filter:brightness(1.15);}
 
 /* SEARCH BAR */
 .search-wrap{position:sticky;top:0;z-index:500;padding:14px 60px;background:rgba(3,4,8,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,136,32,0.08);display:flex;align-items:center;gap:16px;}
@@ -127,6 +173,12 @@ body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;o
 /* Hidden class for search */
 .page-card.hidden{display:none;}
 
+/* FOOTER */
+.site-footer{padding:40px 60px;border-top:1px solid rgba(200,136,32,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;background:var(--void);}
+.sf-brand{font-family:'Cinzel Decorative',serif;font-size:16px;color:var(--parch-pale);letter-spacing:0.08em;}
+.sf-note{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:rgba(176,168,160,0.2);}
+.sf-credit{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(176,168,160,0.15);letter-spacing:0.04em;}
+
 /* Responsive */
 @media(max-width:1024px){.main{padding:40px 40px 80px;}.search-wrap{padding:12px 40px;}}
 @media(max-width:768px){
@@ -134,26 +186,60 @@ body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;o
   .main{padding:28px 24px 60px;}
   .search-wrap{padding:12px 24px;flex-wrap:wrap;} #search-count{display:none;}
   .pages-grid,.pages-grid.wide{grid-template-columns:1fr;}
+  .site-footer{padding:28px 24px;}
 }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="site-header">
-  <div class="sh-eyebrow">// NINE REALMS UNIVERSE · COMPLETE INDEX //</div>
-  <h1 class="sh-title">Nine Realms</h1>
-  <span class="sh-subtitle">Original IP · Complete Lore Index</span>
-  <div class="sh-rule"></div>
-  <p class="sh-desc">Every page of the Nine Realms Universe — all characters, nations, locations, and lore systems — connected in one place. Created by Ron.</p>
-  <div class="sh-meta">
-    <div class="shm-item"><span class="shm-val">32</span><span class="shm-label">Pages</span></div>
-    <div class="shm-item"><span class="shm-val">9</span><span class="shm-label">Nations</span></div>
-    <div class="shm-item"><span class="shm-val">20+</span><span class="shm-label">Characters</span></div>
-    <div class="shm-item"><span class="shm-val">12</span><span class="shm-label">Story Arcs</span></div>
-    <div class="shm-item"><span class="shm-val">1355</span><span class="shm-label">Present Year</span></div>
+<div class="cur" id="curDot"><div class="cur-dot"></div></div>
+<div class="cur" id="curRing"><div class="cur-ring"></div></div>
+
+<!-- CINEMATIC STAGE HEADER -->
+<section class="stage" id="stage">
+  <canvas id="starCanvas"></canvas>
+
+  <div class="stage-title" id="stageTitle">
+    <div class="sh-eyebrow">// NINE REALMS UNIVERSE · COMPLETE INDEX //</div>
+    <h1 class="sh-title">Nine Realms</h1>
+    <span class="sh-subtitle">Original IP · Welcome to Elunar</span>
+    <p class="sh-desc">Every page of the Nine Realms Universe — all characters, nations, locations, and lore systems — connected in one place. Created by Ron.</p>
+    <div class="sh-meta">
+      <div class="shm-item"><span class="shm-val">34</span><span class="shm-label">Pages</span></div>
+      <div class="shm-item"><span class="shm-val">9</span><span class="shm-label">Realms</span></div>
+      <div class="shm-item"><span class="shm-val">30+</span><span class="shm-label">Characters</span></div>
+      <div class="shm-item"><span class="shm-val">12</span><span class="shm-label">Story Arcs</span></div>
+      <div class="shm-item"><span class="shm-val">1355</span><span class="shm-label">Present Year</span></div>
+    </div>
   </div>
-</header>
+
+  <div class="planet-wrap" id="planetWrap">
+    <img class="planet-img" src="assets/images/elunar-planet.jpg" alt="Elunar — the world of the Nine Realms, seen from orbit">
+    <div class="hotspot-layer" id="hotspotLayer"></div>
+  </div>
+
+  <div class="stage-control" id="stageControl">
+    <button class="sc-btn" id="skipBtn">Skip Intro</button>
+    <button class="sc-btn" id="replayBtn">Replay Descent</button>
+  </div>
+</section>
+
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-card" id="revealCard">
+    <span class="rc-close" id="revealClose">✕ CLOSE</span>
+    <div class="rc-body">
+      <div class="rc-eyebrow mono" id="rcEyebrow">// REALM //</div>
+      <h2 class="rc-name" id="rcName">—</h2>
+      <div class="rc-title" id="rcTitle">—</div>
+      <div class="rc-meta">
+        <div class="rc-meta-item"><span class="rc-meta-label">Capital / Seat</span><div class="rc-meta-val" id="rcCapital">—</div></div>
+        <div class="rc-meta-item"><span class="rc-meta-label">Ruling Figure</span><div class="rc-meta-val" id="rcFigure">—</div></div>
+      </div>
+      <p class="rc-desc" id="rcDesc">—</p>
+      <a href="#" class="rc-link" id="rcLink">Enter the Realm →</a>
+    </div>
+  </div>
+</div>
 
 <!-- SEARCH -->
 <div class="search-wrap">
@@ -161,7 +247,7 @@ body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;o
     <span class="search-icon">🔍</span>
     <input id="search" type="text" placeholder="Search pages, characters, locations..." autocomplete="off">
   </div>
-  <span id="search-count">32 of 32</span>
+  <span id="search-count">27 of 27</span>
   <a href="nine-realms-hub.html">Enter the Hub →</a>
 </div>
 
@@ -176,7 +262,7 @@ body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;o
         <div class="cat-label">// CATEGORY //</div>
         <div class="cat-name">World Foundation</div>
       </div>
-      <span class="cat-count">7 pages</span>
+      <span class="cat-count">5 pages</span>
     </div>
     <div class="pages-grid wide">
       <a href="nine-realms-hub.html" class="page-card card-sys" data-search="hub main entry gateway overview">
@@ -213,18 +299,6 @@ body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;o
         <div class="pc-top"><span class="pc-icon">📅</span><div class="pc-titles"><span class="pc-name">Chronicles Registry</span><div class="pc-role">Canonical Timeline</div></div></div>
         <p class="pc-desc">Official canonical record — all 17 Volume I characters with birth years, ages in 1355, six active arc timelines, the Crysen triptych, and continuity locks.</p>
         <div class="pc-tags"><span class="pc-tag">Canon</span><span class="pc-tag">Timeline</span><span class="pc-tag">1299–1364</span></div>
-        <span class="pc-arrow">→</span>
-      </a>
-      <a href="characters.html" class="page-card card-sys" data-search="characters index all names cards">
-        <div class="pc-top"><span class="pc-icon">🎭</span><div class="pc-titles"><span class="pc-name">All Characters</span><div class="pc-role">Complete Character Index</div></div></div>
-        <p class="pc-desc">Every named character across the Nine Realms Universe, gathered in one browsable index — click through to any character's full page.</p>
-        <div class="pc-tags"><span class="pc-tag">Index</span><span class="pc-tag">20 Characters</span></div>
-        <span class="pc-arrow">→</span>
-      </a>
-      <a href="lore.html" class="page-card card-sys" data-search="lore settings systems factions locations index">
-        <div class="pc-top"><span class="pc-icon">📖</span><div class="pc-titles"><span class="pc-name">Lore &amp; Settings</span><div class="pc-role">Systems, Places &amp; Factions Index</div></div></div>
-        <p class="pc-desc">Magic systems, sacred and forbidden places, and nation profiles — the foundation beneath the characters and thrones.</p>
-        <div class="pc-tags"><span class="pc-tag">Index</span><span class="pc-tag">Growing</span></div>
         <span class="pc-arrow">→</span>
       </a>
     </div>
@@ -426,46 +500,51 @@ body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;o
     </div>
   </section>
 
-  <!-- FACTIONS & INCIDENTS -->
-  <section class="cat-section">
+  <!-- DEPLOYMENT GUIDE -->
+  <section class="cat-section" style="margin-top:64px;">
     <div class="cat-head">
-      <span class="cat-icon">⛓</span>
+      <span class="cat-icon">🚀</span>
       <div>
-        <div class="cat-label">// CATEGORY //</div>
-        <div class="cat-name">Factions &amp; Incidents</div>
+        <div class="cat-label">// PUBLISHING //</div>
+        <div class="cat-name">How to Go Live</div>
       </div>
-      <span class="cat-count">4 pages</span>
     </div>
-    <div class="pages-grid wide">
-      <a href="sisters-of-ira.html" class="page-card card-dark" data-search="sisters of ira faction codex selena cult vessel logic council of shadows">
-        <div class="pc-top"><span class="pc-icon">🩸</span><div class="pc-titles"><span class="pc-name">The Sisters of Ira</span><div class="pc-role">Faction Codex</div></div></div>
-        <p class="pc-desc">Selena's cult of vessel logic and shadow governance — origins, doctrine, and the ten linked mission arcs that built her Supreme Witch title.</p>
-        <div class="pc-tags"><span class="pc-tag">Faction</span><span class="pc-tag">Dark Nation</span></div>
-        <span class="pc-arrow">→</span>
-      </a>
-      <a href="sisters-of-ytixus.html" class="page-card card-dark" data-search="sisters of ytixus verified faith rival order faction">
-        <div class="pc-top"><span class="pc-icon">☥</span><div class="pc-titles"><span class="pc-name">The Sisters of Ytixus</span><div class="pc-role">Verified Faith</div></div></div>
-        <p class="pc-desc">The rival faith and order to the Sisters of Ira — a competing claim on legitimacy, doctrine, and the vessel question.</p>
-        <div class="pc-tags"><span class="pc-tag">Faction</span><span class="pc-tag">Rival Order</span></div>
-        <span class="pc-arrow">→</span>
-      </a>
-      <a href="the-unchosen-ones.html" class="page-card card-dark" data-search="the unchosen ones maeryth vonn veltryn stone extraction mission sisters of ira">
-        <div class="pc-top"><span class="pc-icon">🗝</span><div class="pc-titles"><span class="pc-name">The Unchosen Ones</span><div class="pc-role">Sister Maeryth Vonn · Extraction Mission</div></div></div>
-        <p class="pc-desc">A deniable Sisters of Ira extraction mission into the Veltryn Null colony that became a containment atrocity — the mission that fractures Maeryth Vonn's trust in Selena.</p>
-        <div class="pc-tags"><span class="pc-tag">Incident</span><span class="pc-tag">Veltryn Stone</span></div>
-        <span class="pc-arrow">→</span>
-      </a>
-      <a href="veltryn-null.html" class="page-card card-dark" data-search="veltryn null first continuum directorate colony artifact temple">
-        <div class="pc-top"><span class="pc-icon">⛓</span><div class="pc-titles"><span class="pc-name">Veltryn Null</span><div class="pc-role">The First Continuum Directorate</div></div></div>
-        <p class="pc-desc">The sealed research colony built around the Veltryn Stone — twelve Directorate officers, and a structure that became the danger it was built to contain.</p>
-        <div class="pc-tags"><span class="pc-tag">Location</span><span class="pc-tag">Directorate</span></div>
-        <span class="pc-arrow">→</span>
-      </a>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;">
+
+      <div style="padding:28px 26px;border:1px solid rgba(80,120,180,0.12);background:rgba(4,6,12,0.7);">
+        <div style="font-size:24px;margin-bottom:12px;opacity:0.6;">⚡</div>
+        <div style="font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.15em;color:#D8D0C0;margin-bottom:8px;">Netlify Drop</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(80,160,220,0.6);margin-bottom:10px;letter-spacing:0.05em;">// FASTEST · FREE · NO ACCOUNT //</div>
+        <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,160,0.5);line-height:1.65;">Go to <strong style="color:#D8D0C0;font-style:normal;">netlify.com/drop</strong>, drag the entire folder containing all 27 HTML files onto the page. Live URL generated in under 60 seconds. Free forever for static sites.</p>
+      </div>
+
+      <div style="padding:28px 26px;border:1px solid rgba(80,120,180,0.12);background:rgba(4,6,12,0.7);">
+        <div style="font-size:24px;margin-bottom:12px;opacity:0.6;">📁</div>
+        <div style="font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.15em;color:#D8D0C0;margin-bottom:8px;">What to Download</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(80,160,220,0.6);margin-bottom:10px;letter-spacing:0.05em;">// ALL 27 FILES · ONE FOLDER //</div>
+        <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,160,0.5);line-height:1.65;">Download all 27 HTML files from the outputs panel. Keep them <strong style="color:#D8D0C0;font-style:normal;">in one flat folder</strong> — no subfolders needed. All links are relative and will work immediately after deploy.</p>
+      </div>
+
+      <div style="padding:28px 26px;border:1px solid rgba(80,120,180,0.12);background:rgba(4,6,12,0.7);">
+        <div style="font-size:24px;margin-bottom:12px;opacity:0.6;">🌐</div>
+        <div style="font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.15em;color:#D8D0C0;margin-bottom:8px;">Custom Domain</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:8px;color:rgba(80,160,220,0.6);margin-bottom:10px;letter-spacing:0.05em;">// OPTIONAL · LATER STEP //</div>
+        <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:rgba(176,168,160,0.5);line-height:1.65;">After deploying, Netlify gives you a random URL like <strong style="color:#D8D0C0;font-style:normal;">nine-realms-xyz.netlify.app</strong>. You can point a custom domain (e.g. nine-realms.com) to it in Netlify's settings anytime later.</p>
+      </div>
+
+    </div>
+    <div style="margin-top:3px;padding:18px 26px;border:1px solid rgba(80,120,180,0.1);background:rgba(4,6,12,0.5);">
+      <p style="font-family:'EB Garamond',serif;font-style:italic;font-size:clamp(13px,1.5vw,15px);color:rgba(176,168,160,0.45);line-height:1.7;"><strong style="color:#D8D0C0;font-style:normal;">Recommended entry point after going live:</strong> Set <code style="font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(80,160,220,0.7);">index.html</code> (this file) as the homepage, so visitors land on the complete index first. Alternatively, set <code style="font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(80,160,220,0.7);">nine-realms-hub.html</code> as the entry point for a direct immersive experience. Both work — it depends on whether you want discovery-first or immersion-first.</p>
     </div>
   </section>
 
 </main>
 
+<footer class="site-footer">
+  <div class="sf-brand">Nine Realms</div>
+  <div class="sf-note">26 pages · 101 cross-links · Original IP</div>
+  <div class="sf-credit">Created by Ron · Built for Netlify Drop</div>
+</footer>
 <!-- ═══════════════════════════════════════
      UNIVERSAL NINE REALMS LORE NAVIGATOR
 ═══════════════════════════════════════ -->
@@ -576,23 +655,6 @@ body::after{content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;o
 </div>
 <script>
 try{
-
-const searchInput=document.getElementById('search');
-const searchCount=document.getElementById('search-count');
-const pageCards=document.querySelectorAll('.page-card');
-const totalCards=pageCards.length;
-if(searchInput){
-  searchInput.addEventListener('input',()=>{
-    const q=searchInput.value.trim().toLowerCase();
-    let shown=0;
-    pageCards.forEach(card=>{
-      const match=!q||(card.getAttribute('data-search')||'').toLowerCase().includes(q);
-      card.classList.toggle('hidden',!match);
-      if(match)shown++;
-    });
-    if(searchCount)searchCount.textContent=`${shown} of ${totalCards}`;
-  });
-}
 
 function nrOpen(){document.getElementById('nrDrawer').classList.add('nr-open');document.getElementById('nrOverlay').classList.add('nr-open');try{document.body.style.overflow='hidden';}catch(e){};const cur=window.location.pathname.split('/').pop();document.querySelectorAll('.nr-link').forEach(a=>{a.classList.remove('nr-current');if(a.getAttribute('href')===cur)a.classList.add('nr-current');});}
 function nrClose(){document.getElementById('nrDrawer').classList.remove('nr-open');document.getElementById('nrOverlay').classList.remove('nr-open');try{document.body.style.overflow='';}catch(e){};}
